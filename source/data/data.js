@@ -17,29 +17,39 @@ define(
                 var lawnchair = new Lawnchair({name:'Interactions'}, function(){
                     this.exists(model.get('name'), function(exists){
                         if (exists){
-                            this.get(model.get('name'), function(data){
+                            this.get(model.get('name'), function(result){
                                 console.log('Result fetched from cache');
-                                options.success(model, data, options);
+                                if ((new Date().getTime() - result.timestamp) > 60000){
+                                    console.log('Result too old, fetching new copy');
+                                    data.fetchInteraction(model, options, this);
+                                } else {
+                                    options.success(model, result, options);
+                                }
                             });
                         } else {
-                            API.getInteraction(model.get('siteName'), model.get('name'))
-                                .done(function(data, status, xhr){
-                                    if (data.name){
-                                        data.key = data.name;
-                                    } else {
-                                        data.key = data.siteName;
-                                    }
-                                    lawnchair.save(data, function(){
-                                        console.log('Cached result in Offline Storage');
-                                    });
-                                    options.success(model, data, options);
-                                })
-                                .fail(function(xhr, status, error){
-                                    options.error(model, xhr, options);
-                                });
+                            data.fetchInteraction(model, options, this);
                         }
                     });
                 });
+            },
+
+            fetchInteraction: function(model, options, lawnchair){
+                API.getInteraction(model.get('siteName'), model.get('name'))
+                    .done(function(data, status, xhr){
+                        if (data.name){
+                            data.key = data.name;
+                            data.timestamp = new Date().getTime();
+                        } else {
+                            data.key = data.siteName;
+                        }
+                        lawnchair.save(data, function(){
+                            console.log('Cached result in Offline Storage');
+                        });
+                        options.success(model, data, options);
+                    })
+                    .fail(function(xhr, status, error){
+                        options.error(model, xhr, options);
+                    });
             },
 
             readAS: function(model, options){
