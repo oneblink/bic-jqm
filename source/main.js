@@ -1,16 +1,17 @@
 requirejs.config({
+    baseUrl: '/_BICv3_/source',
     paths:{
-        text: ['../assets/js/text', 'https://raw.github.com/requirejs/text/latest/text'],
-        jquery: ['../assets/js/jquery.min', 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min'],
-        'jquery.mobile': ['../assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
-        underscore: ['../assets/js/underscore-min', 'http://underscorejs.org/underscore-min'],
-        backbone: ['../assets/js/backbone', '../assets/js/backbone-min', 'http://backbonejs.org/backbone-min'],
-        mustache: ['../assets/js/mustache', 'https://raw.github.com/janl/mustache.js/master/mustache'],
-        json2: ['../assets/js/json2'],
-        lawnchair: ['../assets/js/lawnchair'],
-        'lawnchair-indexed-db': ['../assets/js/lawnchair-indexed-db'],
-        'lawnchair-webkit-sqlite': ['../assets/js/lawnchair-webkit-sqlite'],
-        bforms3: ['../assets/js/bforms3.min']
+        text: ['/_BICv3_/assets/js/text', 'https://raw.github.com/requirejs/text/latest/text'],
+        jquery: ['/_BICv3_/assets/js/jquery.min', 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min'],
+        'jquery.mobile': ['/_BICv3_/assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
+        underscore: ['/_BICv3_/assets/js/underscore-min', 'http://underscorejs.org/underscore-min'],
+        backbone: ['/_BICv3_/assets/js/backbone', '../assets/js/backbone-min', 'http://backbonejs.org/backbone-min'],
+        mustache: ['/_BICv3_/assets/js/mustache', 'https://raw.github.com/janl/mustache.js/master/mustache'],
+        json2: ['/_BICv3_/assets/js/json2'],
+        lawnchair: ['/_BICv3_/assets/js/lawnchair'],
+        'lawnchair-indexed-db': ['/_BICv3_/assets/js/lawnchair-indexed-db'],
+        'lawnchair-webkit-sqlite': ['/_BICv3_/assets/js/lawnchair-webkit-sqlite'],
+        'BForms-jQM': ['/_BICv3_/assets/js/BForms-jQM.min']
     },
     shim: {
         'underscore': {
@@ -29,15 +30,17 @@ requirejs.config({
             exports: 'Lawnchair'
         },
         'lawnchair-indexed-db': {
-            deps: ['lawnchair']
+            deps: ['lawnchair'],
+            exports: 'Lawnchair'
         },
         'lawnchair-webkit-sqlite': {
-            deps: ['lawnchair']
+            deps: ['lawnchair'],
+            exports: 'Lawnchair'
         }
     }
 });
 
-require(
+define(
     ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquery.mobile'],
     function (Backbone, router, InteractionView, app, $) {
         //jQuery Mobile attributes we need to disable for routing

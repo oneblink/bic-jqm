@@ -4,7 +4,7 @@
         <title>BICv3</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="/_BICv3_/assets/css/jquery.mobile.min.css" />
-        <script data-main="/_BICv3_/source/main" src="/_BICv3_/assets/js/require.js"></script>
+        <script data-main="/_BICv3_/source/main" src="/_BICv3_/assets/js/require.min.js"></script>
     </head>
     <body>
         <?php
