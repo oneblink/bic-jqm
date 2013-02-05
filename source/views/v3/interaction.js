@@ -29,7 +29,8 @@ define(
                 "click [login]" : "blinklink",
 
                 // Standard HTML Stuffs
-                "click a [target]" : "link"
+                "click a [target]" : "link",
+                "click a:not([data-rel=back],[rel=external],[data-ajax=false],[keyword],[interaction],[category],[masterCategory],[back],[home],[login],[target])" : "link"
             },
 
             attributes: {
@@ -38,13 +39,20 @@ define(
 
             link: function(e) {
                 e.preventDefault();
+                console.log('Matched normal link');
                 var router = require('routers/v3/router');
                 // TODO: Come back to this for IE
-                router.navigate(e.currentTarget.pathname.substr(1), {trigger: true});
+                if (e.target.tagName !== 'A') {
+                    path = $(e.target).parents('a')[0].pathname;
+                } else {
+                    path = e.target.pathname;
+                }
+                router.navigate(path, {trigger: true});
             },
 
             blinklink: function(e) {
                 e.preventDefault();
+                console.log('Matched a BlinkLink');
                 var router = require('routers/v3/router');
                 // TODO: Come back to this for IE AND fix it up to work with _args
                 router.navigate(Backbone.history.fragment + "/" + e.currentTarget.attributes["interaction"].textContent, {trigger: true});
