@@ -21,7 +21,6 @@ define(
                 if ((!(this.has("footer"))) || this.get("footer") === ""){
                     this.set({footer: this.get("parent").get("footer")});
                 }
-                console.log(this);
                 return this;
             }
 
