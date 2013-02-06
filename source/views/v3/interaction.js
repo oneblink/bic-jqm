@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'jquerymobile'],
-    function ($, Backbone, Mustache, Template) {
+    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'models/v3/application', 'jquerymobile'],
+    function ($, Backbone, Mustache, Template, app) {
         var InteractionView = Backbone.View.extend({
 
             initialize: function(){
@@ -16,24 +16,29 @@ define(
             },
 
             events: {
-                // jQuery Compatability Stuffs
+                // jQuery Mobile Compatability Stuffs
                 "click [data-rel=back]" : "back",
                 "click [rel=external]" : "external",
                 "click [data-ajax=false]" : "external",
                 //"click [data-rel='back']" : "back"
 
-                // Previous Link Format Stuffs
+                // Blink Link Format Stuffs
                 "click [keyword]" : "blinklink",
                 "click [interaction]" : "blinklink",
                 "click [category]" : "blinklink",
                 "click [masterCategory]" : "blinklink",
-                "click [back]" : "blinklink",
+                "click [back]" : "back",
                 "click [home]" : "blinklink",
                 "click [login]" : "blinklink",
 
                 // Standard HTML Stuffs
-                "click a [target]" : "link",
+                "click a [target]" : "external",
+
+                // OMG A NORMAL LINK WTF BRO
+                // You seriously dont want to mess with this when doing one of the above methods
                 "click a:not([data-rel=back],[rel=external],[data-ajax=false],[keyword],[interaction],[category],[masterCategory],[back],[home],[login],[target])" : "link"
+
+                // And if people decide to combine the above attributes, well, they are asking for trouble anyway
             },
 
             attributes: {
@@ -44,7 +49,6 @@ define(
                 e.preventDefault();
                 console.log('Matched normal link');
                 var router = require('routers/v3/router');
-                // TODO: Come back to this for IE
                 if (e.target.tagName !== 'A') {
                     path = $(e.target).parents('a')[0].pathname;
                 } else {
@@ -57,14 +61,37 @@ define(
                 e.preventDefault();
                 console.log('Matched a BlinkLink');
                 var router = require('routers/v3/router');
-                // TODO: Come back to this for IE AND fix it up to work with _args
-                router.navigate(Backbone.history.fragment + "/" + e.currentTarget.attributes["interaction"].textContent, {trigger: true});
+                // TODO: Fix it up to work with _args
+                if (e.target.tagName !== 'A') {
+                    $element = $(e.target).parents('a');
+                } else {
+                    $element = $(e.target);
+                }
+                
+                if ($element.attr("keyword")){
+                    path = $element.attr("keyword");
+                } else if ($element.attr("interaction")){
+                    path = $element.attr("interaction");
+                } else if ($element.attr("category")){
+                    path = $element.attr("category");
+                } else if ($element.attr("masterCategory")){
+                    path = $element.attr("masterCategory");
+                } else if ($element.attr("home")){
+                    path = this.get("siteName");
+                } else if ($element.attr("login")){
+                    path = this.get("siteName");
+                }
+                router.navigate(Backbone.history.fragment + "/" + path, {trigger: true});
             },
 
             back: function(e) {
                 e.preventDefault();
                 console.log('Going back!');
-                Backbone.history.history.back();
+                if (app.has("previousURL")){
+                    var router = require('routers/v3/router');
+                    //router.navigate(app.get("previousURL"), {trigger: true});
+                    history.back();
+                }
             },
 
             external: function(e) {

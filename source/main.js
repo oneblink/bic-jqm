@@ -3,7 +3,7 @@ requirejs.config({
     paths:{
         text: ['/_BICv3_/assets/js/text', 'https://raw.github.com/requirejs/text/latest/text'],
         jquery: ['/_BICv3_/assets/js/jquery.min', 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min'],
-        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
+        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile', '/_BICv3_/assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
         underscore: ['/_BICv3_/assets/js/underscore-min', 'http://underscorejs.org/underscore-min'],
         backbone: ['/_BICv3_/assets/js/backbone', '../assets/js/backbone-min', 'http://backbonejs.org/backbone-min'],
         mustache: ['/_BICv3_/assets/js/mustache', 'https://raw.github.com/janl/mustache.js/master/mustache'],
@@ -41,11 +41,14 @@ requirejs.config({
 });
 
 define(
-    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquerymobile', 'BForms'],
+    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'BForms'],
     function (Backbone, router, InteractionView, app, $) {
         //jQuery Mobile attributes we need to disable for routing
-        $.mobile.linkBindingEnabled = false;
-        $.mobile.hashListeningEnabled = false;
+
+        $(document).on("mobileinit", function(){
+            $.mobile.linkBindingEnabled = false;
+            $.mobile.hashListeningEnabled = false;
+        });
 
         Backbone.history.start({pushState: true, silent: true});
 
@@ -55,10 +58,12 @@ define(
         var tempview = new InteractionView({
             el: '[id="' + urlfragmentparts[urlfragmentparts.length - 1] + '"]'
         });
-        app.set("currentPage", tempview);
+
+        app.set("currentView", tempview);
+        app.set("currentURL", Backbone.history.fragment);
 
         // TODO: delay until window.load
         $('body').on('pagechange', function(){
-            router.clean();
+            //router.clean();
         });
 });

@@ -18,30 +18,6 @@ define(
                     console.log("Using default home interaction");
                     this.interaction(answerspace, null, answerspace);
                 }
-                // $.mobile.loading('show');
-                // app.interactions.add({
-                //     name: answerspace
-                // }).where({name: answerspace})[0].fetch({
-                //     success: function(model, response, options){
-                //         model.inherit();
-                //         var view = new InteractionView({
-                //             id: model.get("name"),
-                //             tagName: 'div',
-                //             model: model
-                //         }).render().trigger("changePage");
-
-                //         $.mobile.loading('hide');
-                //     },
-                //     error: function(model, xhr, options){
-                //         $.mobile.loading('hide');
-                //         console.log("Error loading page");
-                //         // $.mobile.loading('show', {
-                //         //     text: "Error Loading Page",
-                //         //     textOnly: true,
-                //         //     theme: "e"
-                //         // });
-                //     }
-                // });
             },
 
             interaction: function(answerspace, path, name) {
@@ -79,7 +55,9 @@ define(
                                 model: model
                             }).render().trigger("changePage");
                             
-                            options.app.set("currentPage", view);
+                            options.app.set("currentView", view);
+                            options.app.set("currentURL", Backbone.history.fragment);
+
                             options.$.mobile.loading('hide');
                             
                             //options.router.clean();
@@ -102,17 +80,20 @@ define(
 
             history: function() {
                 console.log("Updating history");
-                if (app.has("currentPage")){
-                    app.set("previousPage", app.get("currentPage"));
+                if (app.has("currentURL")){
+                    app.set("previousURL", app.get("currentURL"));
+                }
+                if (app.has("currentView")){
+                    app.set("previousView", app.get("currentView"));
                 }
             },
 
             clean: function(){
                 console.log("Performing DOM clean");
-                if(app.has("previousPage")){
+                if(app.has("previousView")){
                     //app.interactions.remove(app.get("previousPage").model);
                     //console.log(app.get("previousPage"));
-                    app.get("previousPage").remove();
+                    app.get("previousView").remove();
                 }
             }
 
