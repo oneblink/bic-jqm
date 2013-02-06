@@ -1,5 +1,5 @@
 define(
-    ['backbone', 'models/v3/application', 'models/v3/interaction', 'views/v3/interaction', 'jquery', 'json2', 'jquery.mobile'],
+    ['backbone', 'models/v3/application', 'models/v3/interaction', 'views/v3/interaction', 'jquery', 'json2', 'jquerymobile'],
     function(Backbone, app, InteractionModel, InteractionView, $, JSON){
         var Router = Backbone.Router.extend({
 

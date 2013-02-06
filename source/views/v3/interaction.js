@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'jquery.mobile'],
+    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'jquerymobile'],
     function ($, Backbone, Mustache, Template) {
         var InteractionView = Backbone.View.extend({
 

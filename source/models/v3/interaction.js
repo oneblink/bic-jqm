@@ -1,5 +1,5 @@
 define(
-    ['data/data', 'jquery', 'jquery.mobile'],
+    ['data/data', 'jquery', 'jquerymobile'],
     function(Backbone, $){
         var Interaction = Backbone.Model.extend({
 

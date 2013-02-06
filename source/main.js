@@ -3,7 +3,7 @@ requirejs.config({
     paths:{
         text: ['/_BICv3_/assets/js/text', 'https://raw.github.com/requirejs/text/latest/text'],
         jquery: ['/_BICv3_/assets/js/jquery.min', 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min'],
-        'jquery.mobile': ['/_BICv3_/assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
+        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile.min', 'http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js'],
         underscore: ['/_BICv3_/assets/js/underscore-min', 'http://underscorejs.org/underscore-min'],
         backbone: ['/_BICv3_/assets/js/backbone', '../assets/js/backbone-min', 'http://backbonejs.org/backbone-min'],
         mustache: ['/_BICv3_/assets/js/mustache', 'https://raw.github.com/janl/mustache.js/master/mustache'],
@@ -11,7 +11,7 @@ requirejs.config({
         lawnchair: ['/_BICv3_/assets/js/lawnchair'],
         'lawnchair-indexed-db': ['/_BICv3_/assets/js/lawnchair-indexed-db'],
         'lawnchair-webkit-sqlite': ['/_BICv3_/assets/js/lawnchair-webkit-sqlite'],
-        'BForms-jQM': ['/_BICv3_/assets/js/BForms-jQM.min']
+        BForms: ['/_BICv3_/assets/js/BlinkForms-jQueryMobile']
     },
     shim: {
         'underscore': {
@@ -41,7 +41,7 @@ requirejs.config({
 });
 
 define(
-    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquery.mobile'],
+    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquerymobile', 'BForms'],
     function (Backbone, router, InteractionView, app, $) {
         //jQuery Mobile attributes we need to disable for routing
         $.mobile.linkBindingEnabled = false;
