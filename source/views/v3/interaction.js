@@ -6,6 +6,9 @@ define(
             initialize: function(){
                 if (this.model){
                     this.listenTo(this.model, "change", this.render);
+                    if (this.model.has("themeSwatch")){
+                        this.$el.attr("data-theme", this.model.get("themeSwatch"));
+                    }
                 }
                 this.on('changePage', this.changePage);
 

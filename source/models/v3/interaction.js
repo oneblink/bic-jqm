@@ -15,11 +15,15 @@ define(
             },
 
             inherit: function(){
-                if ((!(this.has("header"))) || this.get("header") === ""){
-                    this.set({header: this.get("parent").get("header")});
-                }
-                if ((!(this.has("footer"))) || this.get("footer") === ""){
-                    this.set({footer: this.get("parent").get("footer")});
+                if (this.has("parent")){
+                    if (this.get("parent").has("parent")){
+                        this.get("parent").inherit();
+                    }
+                    for (var attribute in this.get("parent").attributes){
+                        if (!this.has(attribute)){
+                            this.set(attribute, this.get("parent").get(attribute));
+                        }
+                    }
                 }
                 return this;
             }

@@ -49,16 +49,19 @@ define(
                 //this.history();
                 
                 //if(app.has("answerspace")){
+                    
                     // Load in any items along the path
                     var parent = app;
-                    // if (path){
-                    //     var interactions = path.split('/');
-                    //     for (var index = 0; index < interactions.length; index ++){
-                    //         app.interactions.add({
-                    //             name: interactions[index]
-                    //         });
-                    //     }
-                    // }
+                    if (path){
+                        var interactions = path.split('/');
+                        for (var index = 0; index < interactions.length; index ++){
+                            app.interactions.add({
+                                name: interactions[index],
+                                parent: parent
+                            }).where({name: interactions[index]})[0].fetch();
+                            parent = app.interactions.where({name: interactions[index]})[0];
+                        }
+                    }
 
                     // And then the actual requested thingy too
                     $.mobile.loading('show');
