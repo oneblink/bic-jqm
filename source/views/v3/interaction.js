@@ -10,18 +10,11 @@ define(
                         this.$el.attr("data-theme", this.model.get("themeSwatch"));
                     }
                 }
-                this.on('changePage', this.changePage);
 
                 $('body').append(this.$el);
             },
 
             events: {
-                // jQuery Mobile Compatability Stuffs
-                "click [data-rel=back]" : "back",
-                "click [rel=external]" : "external",
-                "click [data-ajax=false]" : "external",
-                //"click [data-rel='back']" : "back"
-
                 // Blink Link Format Stuffs
                 "click [keyword]" : "blinklink",
                 "click [interaction]" : "blinklink",
@@ -29,32 +22,11 @@ define(
                 "click [masterCategory]" : "blinklink",
                 "click [back]" : "back",
                 "click [home]" : "blinklink",
-                "click [login]" : "blinklink",
-
-                // Standard HTML Stuffs
-                "click a [target]" : "external",
-
-                // OMG A NORMAL LINK WTF BRO
-                // You seriously dont want to mess with this when doing one of the above methods
-                "click a:not([data-rel=back],[rel=external],[data-ajax=false],[keyword],[interaction],[category],[masterCategory],[back],[home],[login],[target])" : "link"
-
-                // And if people decide to combine the above attributes, well, they are asking for trouble anyway
+                "click [login]" : "blinklink"
             },
 
             attributes: {
                 "data-role": "page"
-            },
-
-            link: function(e) {
-                e.preventDefault();
-                console.log('Matched normal link');
-                var router = require('routers/v3/router');
-                if (e.target.tagName !== 'A') {
-                    path = $(e.target).parents('a')[0].pathname;
-                } else {
-                    path = e.target.pathname;
-                }
-                router.navigate(path, {trigger: true});
             },
 
             blinklink: function(e) {
@@ -81,32 +53,18 @@ define(
                 } else if ($element.attr("login")){
                     path = this.get("siteName");
                 }
-                router.navigate(Backbone.history.fragment + "/" + path, {trigger: true});
+                //router.navigate(Backbone.history.fragment + "/" + path, {trigger: true});
+                $.mobile.changePage(path);
             },
 
             back: function(e) {
                 e.preventDefault();
-                console.log('Going back!');
-                if (app.has("previousURL")){
-                    var router = require('routers/v3/router');
-                    //router.navigate(app.get("previousURL"), {trigger: true});
-                    history.back();
-                }
-            },
-
-            external: function(e) {
-                e.preventDefault();
-                console.log("Not yet implemented");
+                history.back();
             },
 
             render: function() {
                 this.$el.html(Mustache.render(Template, this.model.attributes));
-                this.$el.page().trigger("pagecreate");
-                return this;
-            },
-
-            changePage: function() {
-                $.mobile.changePage("#" + this.model.get("name"), { changeHash: false });
+                //this.$el.page().trigger("pagecreate");
                 return this;
             }
 

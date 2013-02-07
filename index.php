@@ -32,14 +32,9 @@
 
             $getConfigs = new GetConfigs();
 
-            $path = explode('/', $_SERVER['REQUEST_URI']);
-            $name = array_slice($path, -1, 1);
-
             $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 
-            //echo $content;
-
-            echo '<div data-role="page" id="' . $name[0] . '">';
+            echo '<div data-role="page">';
             echo $content['header'];
             echo '<div data-role="content">';
             echo $content['content'];

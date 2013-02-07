@@ -82,10 +82,12 @@ define(
 
             switch (method) {
                 case "read":
-                    if(model.has("name")){
+                    if(model.get("type") === "interaction"){
                         data.readInteraction(model, options);
-                    } else {
+                    } else if (model.get("type") === "answerSpace"){
                         data.readAS(model, options);
+                    } else {
+                        options.error(model, null, options);
                     }
                     break;
 
