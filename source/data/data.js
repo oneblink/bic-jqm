@@ -17,17 +17,36 @@ define(
                 var lawnchair = new Lawnchair({name:'Interactions'}, function(){
                     this.exists(model.get('name'), function(exists){
                         if (exists){
+                            // We have a previously cached copy of this interaction
                             this.get(model.get('name'), function(result){
                                 console.log('Result fetched from cache');
                                 if ((new Date().getTime() - result.timestamp) > 60000){
-                                    console.log('Result too old, fetching new copy');
-                                    data.fetchInteraction(model, options, this);
+                                    // More than 60 seconds old. Fetch a newer copy
+                                    if (navigator.onLine === false){
+                                        console.log('Offline: returning stale copy');
+                                        options.success(model, result, options);
+                                    } else {
+                                        console.log('Result too old, fetching new copy');
+                                        data.fetchInteraction(model, options, this);
+                                    }
                                 } else {
+                                    // Still fresh. Return copy.
                                     options.success(model, result, options);
                                 }
                             });
                         } else {
-                            data.fetchInteraction(model, options, this);
+                            if (navigator.onLine === false){
+                                // No cache, no internet connection. Fetch now and cache
+                                console.log("Offline: not cached");
+                                var xhr = {
+                                    responseText: "Browser offline and interaction is not cached."
+                                };
+                                options.error(model, xhr, options);
+                            } else {
+                                // No cache, internet connection. Fetch now and cache
+                                console.log("Fetching");
+                                data.fetchInteraction(model, options, this);
+                            }
                         }
                     });
                 });
@@ -57,14 +76,14 @@ define(
                     this.exists(model.get('siteName'), function(exists){
                         if (exists){
                             this.get(model.get('siteName'), function(data){
-                                console.log('Result fetched from cache');
+                                console.log('AS fetched from cache');
                                 options.success(model, data, options);
                             });
                         } else {
                             API.getAnswerSpace(model.get('siteName'))
                                 .done(function(data, status, xhr){
                                     lawnchair.save(data, function(){
-                                        console.log('Cached result in Offline Storage');
+                                        console.log('Cached AS in Offline Storage');
                                     });
                                     options.success(model, data, options);
                                 })
