@@ -3,10 +3,6 @@ define(
     function(Backbone, $){
         var Interaction = Backbone.Model.extend({
 
-            initialize: function(){
-                this.set("siteName", this.get("parent").get("siteName"));
-            },
-
             defaults: {
                 header: null,
                 content: null,
@@ -16,12 +12,19 @@ define(
 
             inherit: function(){
                 if (this.has("parent")){
-                    if (this.get("parent").has("parent")){
-                        this.get("parent").inherit();
+                    var app = require('models/v3/application');
+                    var parent;
+                    if (this.get("parent") !== "app"){
+                        // Not the answerSpace config, so go deeper
+                        parent = app.interactions.get(this.get("parent"));
+                        parent.inherit();
+                    } else {
+                        parent = app;
                     }
-                    for (var attribute in this.get("parent").attributes){
+                    console.log(parent);
+                    for (var attribute in parent.attributes){
                         if (!this.has(attribute)){
-                            this.set(attribute, this.get("parent").get(attribute));
+                            this.set(attribute, parent.get(attribute));
                         }
                     }
                 }

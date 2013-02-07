@@ -6,7 +6,6 @@ define(
             initialize: function() {
                 // Nested interactions
                 this.interactions = new InteractionCollection();
-                this.interactions.app = this;
             }
 
             // url: function() {
