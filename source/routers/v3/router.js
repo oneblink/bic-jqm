@@ -15,10 +15,10 @@ define(
                     var end = path.pop();
                     var interaction, args;
                     if (end.substr(0,1) === "?"){
-                        args = end;
+                        args = "&" + end.substr(1);
                         interaction = path.pop();
                     } else {
-                        args = null;
+                        args = "";
                         interaction = end;
                     }
                     
@@ -29,6 +29,7 @@ define(
                             var tempmodel = new InteractionModel({
                                 name: path[index],
                                 parent: parent,
+                                siteName: app.get("siteName"),
                                 type: "interaction"
                             });
                             app.interactions.add(tempmodel);
@@ -41,7 +42,8 @@ define(
                         name: interaction,
                         parent: parent,
                         siteName: app.get("siteName"),
-                        type: "interaction"
+                        type: "interaction",
+                        args: args
                     });
                     app.interactions.add(model);
                     model.fetch({
@@ -49,8 +51,7 @@ define(
                             model.inherit();
                             var view = new InteractionView({
                                 tagName: 'div',
-                                model: model,
-                                args: args
+                                model: model
                             }).render();
                             view.$el.attr("data-url", options.data.dataUrl);
                             view.$el.attr("data-external-page", true);

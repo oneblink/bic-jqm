@@ -3,11 +3,7 @@ define(
     function ($) {
         var API = {
             getInteraction: function(answerspace, interaction, args, options){
-                var argstring = '';
-                if (args){
-                    argstring = '&args=' + args;
-                }
-                return $.ajax('/_BICv3_/xhr/GetInteraction.php?asn=' + answerspace + '&iact=' + interaction + argstring);
+                return $.ajax('/_BICv3_/xhr/GetInteraction.php?asn=' + answerspace + '&iact=' + interaction + args);
             },
 
             getAnswerSpace: function(answerspace, options){
