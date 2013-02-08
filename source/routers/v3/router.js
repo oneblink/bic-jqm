@@ -11,15 +11,28 @@ define(
 
                     var path = data.dataUrl.substr(1).split('/');
 
-                    var answerspace = path.shift();
-                    var end = path.pop();
-                    var interaction, args;
-                    if (end.substr(0,1) === "?"){
-                        args = "&" + end.substr(1);
-                        interaction = path.pop();
+                    var answerspace, interaction, args;
+                    if (path.length === 1){
+                        if (app.has("homeScreen") && app.get("homeScreen" === true)){
+                            answerspace = app.get("siteName");
+                            interaction = app.get("homeInteraction");
+                            args = "";
+                        } else {
+                            answerspace = app.get("siteName");
+                            interaction = app.get("siteName");
+                            args = "";
+                        }
+                        path = [];
                     } else {
-                        args = "";
-                        interaction = end;
+                        answerspace = path.shift();
+                        var end = path.pop();
+                        if (end && end.substr(0,1) === "?"){
+                            args = "&" + end.substr(1);
+                            interaction = path.pop();
+                        } else {
+                            args = "";
+                            interaction = end;
+                        }
                     }
                     
                     var parent = "app";
