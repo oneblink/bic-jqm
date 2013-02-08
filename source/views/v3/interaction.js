@@ -32,27 +32,51 @@ define(
             blinklink: function(e) {
                 e.preventDefault();
                 console.log('Matched a BlinkLink');
+
+                // Get the actual element
                 if (e.target.tagName !== 'A') {
                     $element = $(e.target).parents('a');
                 } else {
                     $element = $(e.target);
                 }
                 
+                var location = "";
+                // Get the thing we are supposed to get to
                 if ($element.attr("keyword")){
-                    path = $element.attr("keyword");
+                    location = $element.attr("keyword");
                 } else if ($element.attr("interaction")){
-                    path = $element.attr("interaction");
+                    location = $element.attr("interaction");
                 } else if ($element.attr("category")){
-                    path = $element.attr("category");
+                    location = $element.attr("category");
                 } else if ($element.attr("masterCategory")){
-                    path = $element.attr("masterCategory");
+                    location = $element.attr("masterCategory");
                 } else if ($element.attr("home")){
-                    path = this.get("siteName");
+                    location = this.get("siteName");
                 } else if ($element.attr("login")){
-                    path = this.get("siteName");
+                    location = this.get("siteName");
                 }
-                //router.navigate(Backbone.history.fragment + "/" + path, {trigger: true});
-                $.mobile.changePage($.mobile.path.parseLocation().pathname + '/' + path);
+
+                // Get the _attributes we need to pass along
+                var attributes = "", first = true;
+                for (var count = 0; count < $element[0].attributes.length; count++){
+                    if ($element[0].attributes[count].name.substr(0,1) === "_"){
+                        if (!first) {
+                            attributes += "&args[" + $element[0].attributes[count].name + "]=" + $element[0].attributes[count].value;
+                        } else {
+                            first = false;
+                            attributes = "/?args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
+                        }
+                        
+                    }
+                }
+
+                // Fix any irregulatities with the path (old args, etc)
+                var path = $.mobile.path.parseLocation().pathname;
+                if ($.mobile.path.parseLocation().search) {
+                    path = $.mobile.path.parseLocation().pathname.substr(0, $.mobile.path.parseLocation().pathname.length - 1);
+                }
+
+                $.mobile.changePage(path + '/' + location + attributes);
             },
 
             back: function(e) {

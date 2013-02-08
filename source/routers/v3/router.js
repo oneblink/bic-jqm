@@ -10,9 +10,18 @@ define(
                     console.log("Time to navigate!");
 
                     var path = data.dataUrl.substr(1).split('/');
-                    var answerspace = path.shift();
-                    var interaction = path.pop();
 
+                    var answerspace = path.shift();
+                    var end = path.pop();
+                    var interaction, args;
+                    if (end.substr(0,1) === "?"){
+                        args = end;
+                        interaction = path.pop();
+                    } else {
+                        args = null;
+                        interaction = end;
+                    }
+                    
                     var parent = "app";
 
                     if (path.length > 0){
@@ -40,7 +49,8 @@ define(
                             model.inherit();
                             var view = new InteractionView({
                                 tagName: 'div',
-                                model: model
+                                model: model,
+                                args: args
                             }).render();
                             view.$el.attr("data-url", options.data.dataUrl);
                             view.$el.attr("data-external-page", true);
