@@ -32,8 +32,6 @@ define(
             blinklink: function(e) {
                 e.preventDefault();
                 console.log('Matched a BlinkLink');
-                var router = require('routers/v3/router');
-                // TODO: Fix it up to work with _args
                 if (e.target.tagName !== 'A') {
                     $element = $(e.target).parents('a');
                 } else {
@@ -54,7 +52,7 @@ define(
                     path = this.get("siteName");
                 }
                 //router.navigate(Backbone.history.fragment + "/" + path, {trigger: true});
-                $.mobile.changePage(path);
+                $.mobile.changePage($.mobile.path.parseLocation().pathname + '/' + path);
             },
 
             back: function(e) {
