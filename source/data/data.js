@@ -44,7 +44,7 @@ define(
                                 options.error(model, xhr, options);
                             } else {
                                 // No cache, internet connection. Fetch now and cache
-                                console.log("Fetching");
+                                console.log("Online: Fetching");
                                 data.fetchInteraction(model, options, this);
                             }
                         }
@@ -97,8 +97,6 @@ define(
         };
 
         Backbone.sync = function(method, model, options){
-            
-
             switch (method) {
                 case "read":
                     if(model.get("type") === "interaction"){
