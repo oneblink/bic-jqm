@@ -10,9 +10,18 @@ define(
                     console.log("Time to navigate!");
 
                     var path = data.dataUrl.substr(1).split('/');
-                    var answerspace = path.shift();
-                    var interaction = path.pop();
 
+                    var answerspace = path.shift();
+                    var end = path.pop();
+                    var interaction, args;
+                    if (end.substr(0,1) === "?"){
+                        args = "&" + end.substr(1);
+                        interaction = path.pop();
+                    } else {
+                        args = "";
+                        interaction = end;
+                    }
+                    
                     var parent = "app";
 
                     if (path.length > 0){
@@ -20,6 +29,7 @@ define(
                             var tempmodel = new InteractionModel({
                                 name: path[index],
                                 parent: parent,
+                                siteName: app.get("siteName"),
                                 type: "interaction"
                             });
                             app.interactions.add(tempmodel);
@@ -32,7 +42,8 @@ define(
                         name: interaction,
                         parent: parent,
                         siteName: app.get("siteName"),
-                        type: "interaction"
+                        type: "interaction",
+                        args: args
                     });
                     app.interactions.add(model);
                     model.fetch({

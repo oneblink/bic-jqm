@@ -21,7 +21,6 @@ define(
                     } else {
                         parent = app;
                     }
-                    console.log(parent);
                     for (var attribute in parent.attributes){
                         if (!this.has(attribute)){
                             this.set(attribute, parent.get(attribute));

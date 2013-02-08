@@ -19,14 +19,14 @@ define(
                         if (exists){
                             // We have a previously cached copy of this interaction
                             this.get(model.get('name'), function(result){
-                                console.log('Result fetched from cache');
+                                console.log('DB: Contains result');
                                 if ((new Date().getTime() - result.timestamp) > 60000){
                                     // More than 60 seconds old. Fetch a newer copy
                                     if (navigator.onLine === false){
                                         console.log('Offline: returning stale copy');
                                         options.success(model, result, options);
                                     } else {
-                                        console.log('Result too old, fetching new copy');
+                                        console.log('Online: Result too old, fetching new copy');
                                         data.fetchInteraction(model, options, this);
                                     }
                                 } else {
@@ -44,7 +44,7 @@ define(
                                 options.error(model, xhr, options);
                             } else {
                                 // No cache, internet connection. Fetch now and cache
-                                console.log("Fetching");
+                                console.log("Online: Fetching");
                                 data.fetchInteraction(model, options, this);
                             }
                         }
@@ -53,7 +53,7 @@ define(
             },
 
             fetchInteraction: function(model, options, lawnchair){
-                API.getInteraction(model.get('siteName'), model.get('name'))
+                API.getInteraction(model.get('siteName'), model.get('name'), model.get('args'))
                     .done(function(data, status, xhr){
                         if (data.name){
                             data.key = data.name;
@@ -62,7 +62,7 @@ define(
                             data.key = data.siteName;
                         }
                         lawnchair.save(data, function(){
-                            console.log('Cached result in Offline Storage');
+                            console.log('DB: Cached result');
                         });
                         options.success(model, data, options);
                     })
@@ -97,8 +97,6 @@ define(
         };
 
         Backbone.sync = function(method, model, options){
-            
-
             switch (method) {
                 case "read":
                     if(model.get("type") === "interaction"){

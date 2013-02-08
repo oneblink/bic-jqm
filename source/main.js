@@ -46,9 +46,8 @@ define(
 
         var location = $.mobile.path.parseLocation();
 
-        var urlfragmentparts = location.pathname.substr(1).split('/');
         app.set({
-            "siteName": urlfragmentparts[0],
+            "siteName": location.pathname.substr(1).split('/')[0],
             "type": "answerSpace"
         }).fetch() ;
 
