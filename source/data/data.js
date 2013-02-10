@@ -20,8 +20,19 @@ define(
                             // We have a previously cached copy of this interaction
                             this.get(model.get('name'), function(result){
                                 console.log('DB: Contains result');
-                                if ((new Date().getTime() - result.timestamp) > 60000){
-                                    // More than 60 seconds old. Fetch a newer copy
+                                var timeout;
+                                if (result.deviceCacheTime || result.deviceCacheTime === 0) {
+                                    if (result.deviceCacheTime === 0){
+                                        timeout = false;
+                                    } else {
+                                        timeout = result.deviceCacheTime * 1000;
+                                    }
+                                } else {
+                                    timeout = 60000;
+                                }
+                                if ((timeout && (new Date().getTime() - result.timestamp) > timeout) || (model.has("args") && model.get('args') !== "")){
+                                    // Not permanently cached More than 60 seconds old OR There are Args involved
+                                    //Fetch a newer copy
                                     if (navigator.onLine === false){
                                         console.log('Offline: returning stale copy');
                                         options.success(model, result, options);
