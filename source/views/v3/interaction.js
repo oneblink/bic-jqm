@@ -86,10 +86,18 @@ define(
 
             render: function() {
                 this.$el.html(Mustache.render(Template, this.model.attributes));
+                this.maps();
                 //this.$el.page().trigger("pagecreate");
                 return this;
-            }
+            },
 
+            maps: function() {
+                var mapdiv = this.$el.find("[class=googlemap]");
+                if (mapdiv.length !== 0){
+                    this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
+                    this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+                }
+            }
         });
 
         return InteractionView;
