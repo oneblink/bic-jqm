@@ -40,7 +40,8 @@
                     $attrs = '';
                 }
 
-                echo '<div data-role="page" ' . $attrs . '>';
+                echo '<noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>';
+                echo '<div data-role="page" ' . $attrs . ' class="ui-page">';
                 echo $content['header'];
                 echo '<div data-role="content">';
                 echo $content['content'];
