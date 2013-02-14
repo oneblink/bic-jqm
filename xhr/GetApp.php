@@ -77,7 +77,7 @@ require_once 'deviceConfig/config.php';
 		header('HTTP/1.1 404 Not Found', true, 404);
 		exit('answerSpace ' . $_REQUEST['asn'] . ' could not be located');
 	}
-	// $answer_space_id = $rs->fields['id'];
+	$answer_space_id = $rs->fields['id'];
 // 	$answerSpace = new Config($rs->fields, $_SESSION['mydot_device']['features'], $sp);
 // 	$answerSpace = $answerSpace->config['pertinent'];
 // 	$microtime['answerSpace_fetched'] = microtime(true) - $microtime['start'];
@@ -150,5 +150,27 @@ $config['key'] = $_REQUEST['asn'];
 //if ($config['homeInteraction']) {
 //    $config['homeInteraction'] = 'home';
 //}
+
+$config['DataSuitcases'] = array();
+
+require_once 'deviceConfig/answerSpaceMap.php';
+$siteMap = new answerSpaceMap($answer_space_id);
+$siteMap = $siteMap->retrieve();
+$interactions = $siteMap['interactions'];
+
+foreach ($interactions as $interaction){
+    $db->SetFetchMode(ADODB_FETCH_ASSOC);
+    $rs = $db->Execute('SELECT `config` FROM keyword WHERE `id` = ?', array($interaction));
+    $json = json_decode($rs->fields['config']);
+    foreach ($json as $override){
+        foreach ($override as $field => $value){
+            if ($field === "xml"){
+                if (array_search($value, $config['DataSuitcases']) === FALSE){
+                    $config['DataSuitcases'][] = $value;
+                }
+            }
+        }
+    }
+}
 
 echo json_encode($config);

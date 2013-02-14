@@ -104,7 +104,32 @@ define(
                         }
                     });
                 });
+            },
+
+            readDataSuitcase: function(model, options){
+                var lawnchair = new Lawnchair({name:'DataSuitcases'}, function(){
+                    this.exists(model.get('name'), function(exists){
+                        if (exists){
+                            this.get(model.get('name'), function(data){
+                                console.log('DS fetched from cache');
+                                options.success(model, data, options);
+                            });
+                        } else {
+                            API.getDataSuitcase(model.get('siteName'), model.get("name"))
+                                .done(function(data, status, xhr){
+                                    lawnchair.save(data, function(){
+                                        console.log('Cached DS in Offline Storage');
+                                    });
+                                    options.success(model, data, options);
+                                })
+                                .fail(function(xhr, status, error){
+                                    options.error(model, xhr, options);
+                                });
+                        }
+                    });
+                });
             }
+
         };
 
         Backbone.sync = function(method, model, options){
@@ -114,6 +139,8 @@ define(
                         data.readInteraction(model, options);
                     } else if (model.get("type") === "answerSpace"){
                         data.readAS(model, options);
+                    } else if (model.get("type") === "DataSuitcase"){
+                        data.readDataSuitcase(model, options);
                     } else {
                         options.error(model, null, options);
                     }

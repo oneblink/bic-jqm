@@ -85,9 +85,12 @@ define(
             },
 
             render: function() {
+                if (this.model.has("type") && this.model.get("type") === "xslt") {
+                    console.log("Performing XSLT magick");
+                    this.model.performXSLT();
+                }
                 this.$el.html(Mustache.render(Template, this.model.attributes));
                 this.maps();
-                //this.$el.page().trigger("pagecreate");
                 return this;
             },
 
@@ -97,7 +100,8 @@ define(
                     this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
                     this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
                 }
-            }
+            },
+
         });
 
         return InteractionView;
