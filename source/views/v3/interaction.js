@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'models/v3/application', 'jquerymobile'],
-    function ($, Backbone, Mustache, Template, app) {
+    ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'jquerymobile'],
+    function ($, Backbone, Mustache, Template, FormTemplate, app) {
         var InteractionView = Backbone.View.extend({
 
             initialize: function(){
@@ -85,8 +85,19 @@ define(
             },
 
             render: function() {
-                if (this.model.has("type") && this.model.get("type") === "xslt") {
-                    console.log("Performing XSLT magick");
+                if (this.model.has("inputPrompt") && !(this.model.has("args"))){
+                    var form;
+                    var rawform = this.model.get("inputPrompt");
+                    if (rawform.substr(0, 6) === "<form>") {
+                        form = rawform;
+                    } else {
+                        form = Mustache.render(FormTemplate, {inputs: rawform});
+                    }
+                    this.$el.html(Mustache.render(Template, {
+                        header: this.model.get("header"), 
+                        footer: this.model.get("footer"),
+                        content: form}));
+                } else if (this.model.has("type") && this.model.get("type") === "xslt") {
                     this.model.performXSLT();
                     if (typeof(this.model.get("content")) === 'object') {
                         this.$el.html(Mustache.render(Template, {

@@ -185,5 +185,9 @@ if (!$content['name']){
 	$content['name'] = $_REQUEST['asn'];
 }
 
+if (array_key_exists('inputPrompt', $content)){
+    $content['inputPrompt'] = getInputs($content['inputPrompt']);
+}
+
 header('Content-Type: application/json');
 echo json_encode($content);
