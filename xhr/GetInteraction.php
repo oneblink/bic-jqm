@@ -167,7 +167,7 @@ $handler = new RequestHandler();
 $getConfigs = new GetConfigs();
 
 //$content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
-$content = $handler->objects(array($_REQUEST['asn'], $_REQUEST['iact']), $_REQUEST['args'] ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array(), $cdnp, $cdna, $getConfigs);
+$content = $handler->objects(array($_REQUEST['asn'], $_REQUEST['iact']), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array(), $cdnp, $cdna, $getConfigs);
 
 //$configs = $getConfigs->getConfigsByNames($_REQUEST['iact']);
 //$args = $_REQUEST['args'] ? $_REQUEST['args'] : NULL;

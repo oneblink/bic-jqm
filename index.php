@@ -34,7 +34,7 @@
 
                 $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 
-                if ($content['themeSwatch']){
+                if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
                     $attrs = 'data-theme="' . $content['themeSwatch'] . '"';
                 } else {
                     $attrs = '';
