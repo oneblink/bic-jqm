@@ -1,17 +1,15 @@
 requirejs.config({
     baseUrl: '/_BICv3_/source',
     paths:{
-        text: ['/_BICv3_/assets/js/text'],
-        jquery: ['/_BICv3_/assets/js/jquery.min'],
-        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile.min'],
-        underscore: ['/_BICv3_/assets/js/underscore-min'],
-        backbone: ['/_BICv3_/assets/js/backbone'],
-        mustache: ['/_BICv3_/assets/js/mustache'],
-        json2: ['/_BICv3_/assets/js/json2'],
+        text: ['https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/text'],
+        jquery: ['https://d1c6dfkb81l78v.cloudfront.net/jquery/1.8.3/jq.min'],
+        jquerymobile: ['https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.min'],
+        underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
+        backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
+        mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],
         lawnchair: ['/_BICv3_/assets/js/lawnchair'],
         'lawnchair-indexed-db': ['/_BICv3_/assets/js/lawnchair-indexed-db'],
-        'lawnchair-webkit-sqlite': ['/_BICv3_/assets/js/lawnchair-webkit-sqlite'],
-        BForms: ['/_BICv3_/assets/js/BlinkForms-jQueryMobile']
+        'lawnchair-webkit-sqlite': ['/_BICv3_/assets/js/lawnchair-webkit-sqlite']
     },
     shim: {
         'underscore': {
@@ -20,10 +18,6 @@ requirejs.config({
         'backbone': {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
-        },
-        'json2': {
-            deps: [],
-            exports: 'JSON'
         },
         'lawnchair': {
             deps: [],
@@ -41,7 +35,7 @@ requirejs.config({
 });
 
 define(
-    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery', 'BForms'],
+    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery'],
     function (Backbone, router, InteractionView, app, $) {
 
         var location = $.mobile.path.parseLocation();
