@@ -145,6 +145,7 @@ require_once 'deviceConfig/config.php';
 
 // Ron's BIC thang
 require_once('blink/bic/getConfigs.php');
+require_once('tools.php');
 
 // BB's BIC Components
 require_once('blink/bic/router.php');
@@ -183,6 +184,10 @@ $content = $handler->objects(array($_REQUEST['asn'], $_REQUEST['iact']), array_k
 
 if (!$content['name']){
 	$content['name'] = $_REQUEST['asn'];
+}
+
+if (array_key_exists('type', $content) && $content['type'] === 'xslt'){
+    $content['content'] = '';
 }
 
 if (array_key_exists('inputPrompt', $content)){
