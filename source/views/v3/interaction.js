@@ -88,9 +88,19 @@ define(
                 if (this.model.has("type") && this.model.get("type") === "xslt") {
                     console.log("Performing XSLT magick");
                     this.model.performXSLT();
+                    if (typeof(this.model.get("content")) === 'object') {
+                        this.$el.html(Mustache.render(Template, {
+                            header: this.model.get("header"),
+                            footer: this.model.get("footer"),
+                            content: ''}));
+                        console.log(this.$el.children('[data-role=content]')[0]);
+                        console.log(this.model.get("content"));
+                        this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
+                    }
+                } else {
+                    this.$el.html(Mustache.render(Template, this.model.attributes));
+                    this.maps();
                 }
-                this.$el.html(Mustache.render(Template, this.model.attributes));
-                this.maps();
                 return this;
             },
 
