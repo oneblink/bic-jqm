@@ -37,7 +37,14 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
     <head>
         <title>BICv3</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.min.css" />
+        <?php
+        if(array_key_exists('themePack', $content) && strlen($content['themePack']) > 0){
+            echo '<link rel="stylesheet" href="' . $cdna->getURI($asConfig['themePack']) . '" />';
+        } else {
+            echo '<link rel="stylesheet" href="' . $cdnp->getURL('jquery.mobile/1.2.0/jqm.theme.min.css') . '" />';
+        }
+        ?>
+        <link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.structure.min.css" />
         <script data-main="/_BICv3_/source/main" src="https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/require.min.js"></script>
     </head>
         <body>
