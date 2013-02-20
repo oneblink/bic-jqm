@@ -54,5 +54,7 @@ define(
             model: tempmodel,
             el: '[data-url="' + location.pathname + '"]'
         }).render();
+        tempview.$el.attr("data-external-page", true);
+        tempview.$el.one('pagecreate', $.mobile._bindPageRemove);
         tempview.$el.page().trigger('pagecreate');
 });
