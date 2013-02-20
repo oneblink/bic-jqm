@@ -43,8 +43,10 @@ define(
         app.set({
             "siteName": location.pathname.substr(1).split('/')[0],
             "type": "answerSpace"
-        }).fetch() ;
-
+        }).fetch({success: function(model, response, options){
+            $.mobile.defaultPageTransition = model.get("defaultTransition");
+        }});
+            
         var bootstrap = JSON.parse($('#bootstrap').first().html());
         var tempmodel = new InteractionModel(bootstrap);
         $('#bootstrap').remove();
