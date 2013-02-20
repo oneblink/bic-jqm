@@ -72,14 +72,11 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
     </head>
         <body>
             <noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>
+            <script type="text/json" id="bootstrap">
             <?php
-            echo '<div data-role="page" ' . $attrs . ' class="ui-page">';
-            echo $content['header'];
-            echo '<div data-role="content">';
-            echo $content['content'];
-            echo '</div>';
-            echo $content['footer'];
-            echo '</div>';
+            echo json_encode($content);
             ?>
+            </script>
+            <div data-role="page" <?php echo $attrs ?>></div>
         </body>
     </html>

@@ -35,8 +35,8 @@ requirejs.config({
 });
 
 define(
-    ['backbone', 'routers/v3/router', 'views/v3/interaction', 'models/v3/application', 'jquery'],
-    function (Backbone, router, InteractionView, app, $) {
+    ['backbone', 'routers/v3/router', 'models/v3/interaction', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquerymobile'],
+    function (Backbone, router, InteractionModel, InteractionView, app, $) {
 
         var location = $.mobile.path.parseLocation();
 
@@ -45,7 +45,12 @@ define(
             "type": "answerSpace"
         }).fetch() ;
 
+        var bootstrap = JSON.parse($('#bootstrap').first().html());
+        var tempmodel = new InteractionModel(bootstrap);
+        $('#bootstrap').remove();
         var tempview = new InteractionView({
+            model: tempmodel,
             el: '[data-url="' + location.pathname + '"]'
-        });
+        }).render();
+        tempview.$el.page().trigger('pagecreate');
 });
