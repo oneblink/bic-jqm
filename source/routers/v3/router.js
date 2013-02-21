@@ -13,7 +13,7 @@ define(
 
                     var answerspace, interaction, args;
                     if (path.length === 1){
-                        if (app.has("homeScreen") && app.get("homeScreen" === true)){
+                        if (app.has("homeScreen") && app.get("homeScreen") === true){
                             answerspace = app.get("siteName");
                             interaction = app.get("homeInteraction");
                             args = "";
@@ -103,3 +103,4 @@ define(
 
         return new Router();
     });
+
