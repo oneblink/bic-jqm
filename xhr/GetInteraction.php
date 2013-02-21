@@ -78,7 +78,28 @@ require_once 'deviceConfig/config.php';
 	}
 	$answer_space_id = $rs->fields['id'];
 	$asConfig = new Config($rs->fields, $_SESSION['mydot_device']['features'], $sp);
-	$asConfig = $asConfig->config['pertinent'];
+    $asConfig = $asConfig->config['pertinent'];
+
+
+
+    if (is_numeric($_REQUEST['iact'])) {
+        $db->SetFetchMode(ADODB_FETCH_ASSOC);
+    	$rs = $db->Execute('SELECT keyword FROM keyword WHERE id = ?', array($_REQUEST['iact']));
+	    if ($rs === false || empty($rs->fields)) {
+		    header('HTTP/1.1 404 Not Found', true, 404);
+    		exit('interaction id ' . $_REQUEST['iact'] . ' could not be located');
+        }
+        $interaction = $rs->fields['keyword'];
+    } else {
+        $interaction = $_REQUEST['iact'];
+    }
+
+
+
+
+
+
+
 // // 	$microtime['answerSpace_fetched'] = microtime(true) - $microtime['start'];
 // // }
 
@@ -168,7 +189,7 @@ $handler = new RequestHandler();
 $getConfigs = new GetConfigs();
 
 //$content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
-$content = $handler->objects(array($_REQUEST['asn'], $_REQUEST['iact']), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array(), $cdnp, $cdna, $getConfigs);
+$content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array(), $cdnp, $cdna, $getConfigs);
 
 //$configs = $getConfigs->getConfigsByNames($_REQUEST['iact']);
 //$args = $_REQUEST['args'] ? $_REQUEST['args'] : NULL;
