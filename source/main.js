@@ -45,13 +45,12 @@ define(
             "type": "answerSpace"
         }).fetch({success: function(model, response, options){
             $.mobile.defaultPageTransition = model.get("defaultTransition");
+            $.mobile.changePage(location.pathname, {
+                changeHash: false,
+                reloadPage: true,
+                transition: 'fade'
+            });
         }});
-            
-        $.mobile.changePage(location.pathname, {
-            changeHash: false,
-            reloadPage: true,
-            transition: 'fade'
-        });
         
         $(document).on('pageshow', function(){
             console.log('time to remove temp');
