@@ -53,7 +53,6 @@ define(
         }});
         
         $(document).on('pageshow', function(){
-            console.log('time to remove temp');
             $('#temp').remove();
         });
     });
