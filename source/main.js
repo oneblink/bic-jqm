@@ -3,7 +3,7 @@ requirejs.config({
     paths:{
         text: ['https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/text'],
         jquery: ['https://d1c6dfkb81l78v.cloudfront.net/jquery/1.8.3/jq.min'],
-        jquerymobile: ['https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.min'],
+        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile.min', 'https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.min'],
         underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
         backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
         mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],
@@ -47,14 +47,14 @@ define(
             $.mobile.defaultPageTransition = model.get("defaultTransition");
         }});
             
-        var bootstrap = JSON.parse($('#bootstrap').first().html());
-        var tempmodel = new InteractionModel(bootstrap);
-        $('#bootstrap').remove();
-        var tempview = new InteractionView({
-            model: tempmodel,
-            el: '[data-url="' + location.pathname + '"]'
-        }).render();
-        tempview.$el.attr("data-external-page", true);
-        tempview.$el.one('pagecreate', $.mobile._bindPageRemove);
-        tempview.$el.page().trigger('pagecreate');
-});
+        $.mobile.changePage(location.pathname, {
+            changeHash: false,
+            reloadPage: true,
+            transition: 'fade'
+        });
+        
+        $(document).on('pageshow', function(){
+            console.log('time to remove temp');
+            $('#temp').remove();
+        });
+    });
