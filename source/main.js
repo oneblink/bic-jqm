@@ -3,7 +3,7 @@ requirejs.config({
     paths:{
         text: ['https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/text'],
         jquery: ['https://d1c6dfkb81l78v.cloudfront.net/jquery/1.8.3/jq.min'],
-        jquerymobile: ['/_BICv3_/assets/js/jquery.mobile.min', 'https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.2.0/jqm.min'],
+        jquerymobile: ['https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.min'],
         underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
         backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
         mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],

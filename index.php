@@ -41,10 +41,10 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
         if(array_key_exists('themePack', $content) && strlen($content['themePack']) > 0){
             echo '<link rel="stylesheet" href="' . $cdna->getURI($asConfig['themePack']) . '" />';
         } else {
-            echo '<link rel="stylesheet" href="/_BICv3_/assets/css/jquery.mobile.theme.min.css" />';
+            echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.theme.min.css" />';
         }
         ?>
-        <link rel="stylesheet" href="/_BICv3_/assets/css/jquery.mobile.structure.min.css" />
+        <link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.structure.min.css" />
         <script data-main="/_BICv3_/source/main" src="https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/require.min.js"></script>
         <?php
         if(array_key_exists('externalJavaScript', $content) && strlen($content['externalJavaScript']) > 0){
