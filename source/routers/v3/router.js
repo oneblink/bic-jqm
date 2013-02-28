@@ -26,32 +26,24 @@ define(
                     } else {
                         answerspace = path.shift();
                         var end = path.pop();
-                        if (end && end.indexOf('?') !== -1){
-                            args = {};
-                            var finalparam = end.split('?');
-                            var tempargs = finalparam.pop().split('&');
-                            $.each(tempargs, function(index, string) {
-                                var equalIndex, name, value;
-                                if (string.length !== 0 && (equalIndex = string.indexOf('=')) !== -1) {
-                                    name = string.substring(0, equalIndex);
-                                    value = string.substring(equalIndex + 1);
-                                    if (value) {
-                                        args[decodeURIComponent(name)] = decodeURIComponent(value);
-                                    }
-                                }
-                            });
-
+                        console.log(end);
+                        console.log(end.indexOf('?'));
+                        if (end && end.indexOf('?') !== -1 && end.indexOf('?') !== 0){
+                            finalparam = end.split('?');
+                            console.log(finalparam);
+                            args = assembleArgs(finalparam.pop());
                             interaction = finalparam.pop();
-                            if (interaction.substr(-1, 1) === '/'){
-                                interaction = interaction.substr(-1, 1);
-                                console.log(interaction);
-                            }
+                        } else if (end && end.indexOf('?') !== -1 && end.indexOf('?') === 0){
+                            interaction = path.pop();
+                            args = assembleArgs(end.slice(1));
                         } else {
                             args = null;
                             interaction = end;
                         }
                     }
-                    
+                    console.log(interaction);
+                    console.log(args);
+
                     var parent = "app";
 
                     if (path.length > 0){
@@ -97,6 +89,22 @@ define(
                         data: data,
                         app: app
                     });
+
+                    function assembleArgs(argstring){
+                        argarray = argstring.split('&');
+                        var args = {};
+                        $.each(argarray, function(index, string) {
+                            var equalIndex, name, value;
+                            if (string.length !== 0 && (equalIndex = string.indexOf('=')) !== -1) {
+                                name = string.substring(0, equalIndex);
+                                value = string.substring(equalIndex + 1);
+                                if (value) {
+                                    args[decodeURIComponent(name)] = decodeURIComponent(value);
+                                }
+                            }
+                        });
+                        return args;
+                    }
                 });
             }
         });
