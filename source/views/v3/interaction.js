@@ -66,7 +66,6 @@ define(
                             first = false;
                             attributes = "/?args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
                         }
-                        
                     }
                 }
 
@@ -121,7 +120,7 @@ define(
                     this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
                     this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
                 }
-            },
+            }
 
         });
 

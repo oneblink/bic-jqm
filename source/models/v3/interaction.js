@@ -46,15 +46,15 @@ define(
                         xsl = xsl.replace(placeholders[p], value);
                     }
                 } else {
-                    xsl = this.get("xsl")
+                    xsl = this.get("xsl");
                 }
                 app = require('models/v3/application');
-                var xmlString = app.datasuitcases.where({name: this.get("xml")})[0].get("data");;
+                var xmlString = app.datasuitcases.where({name: this.get("xml")})[0].get("data");
                 var xslString = xsl;
-                var html, xml, xsl, processor, transformer;
+                var html, xml, processor, transformer;
                 if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
                     this.set("content", 'XSLT failed due to poorly formed XML or XSL.');
-                    return
+                    return;
                 }
                 xml = $.parseXML(xmlString);
                 xsl = $.parseXML(xslString);

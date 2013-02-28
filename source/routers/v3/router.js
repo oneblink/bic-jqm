@@ -10,7 +10,6 @@ define(
                     console.log("Time to navigate!");
 
                     var path = data.dataUrl.substr(1).split('/');
-
                     var answerspace, interaction, args;
                     if (path.length === 1){
                         if (app.has("homeScreen") && app.get("homeScreen") === true){
@@ -78,7 +77,6 @@ define(
                             view.$el.attr("data-url", options.data.dataUrl);
                             view.$el.attr("data-external-page", true);
                             view.$el.one('pagecreate', $.mobile._bindPageRemove);
-                            
                             options.data.deferred.resolve(options.data.absUrl, options.data.options, view.$el);
                         },
                         error: function(model, xhr, options){
