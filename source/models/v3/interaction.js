@@ -76,8 +76,11 @@ define(
                 if (html){
                     this.set("content", html);
                 }
+          _.each(parent.attributes, function (value, key, list) {
+            if (!this.has(key)) {
+              this.set(key, parent.get(key));
             }
-        });
+          }, this);
 
         return Interaction;
     });
