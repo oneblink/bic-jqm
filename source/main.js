@@ -7,9 +7,7 @@ requirejs.config({
         underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
         backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
         mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],
-        lawnchair: ['/_BICv3_/assets/js/lawnchair'],
-        'lawnchair-indexed-db': ['/_BICv3_/assets/js/lawnchair-indexed-db'],
-        'lawnchair-webkit-sqlite': ['/_BICv3_/assets/js/lawnchair-webkit-sqlite']
+        lawnchair: ['/_BICv3_/assets/js/lawnchair-min']
     },
     shim: {
         'underscore': {
@@ -21,14 +19,6 @@ requirejs.config({
         },
         'lawnchair': {
             deps: [],
-            exports: 'Lawnchair'
-        },
-        'lawnchair-indexed-db': {
-            deps: ['lawnchair'],
-            exports: 'Lawnchair'
-        },
-        'lawnchair-webkit-sqlite': {
-            deps: ['lawnchair'],
             exports: 'Lawnchair'
         }
     }
@@ -51,7 +41,6 @@ define(
                 transition: 'fade'
             });
         }});
-        
         $(document).on('pageshow', function(){
             $('#temp').remove();
         });
