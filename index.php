@@ -66,8 +66,8 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
         }
         ?>
     </head>
-        <body>
-            <noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>
-            <div data-role="page" id="temp">Loading, please wait.</div>
-        </body>
-    </html>
+    <body>
+        <noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>
+        <div data-role="page" id="temp">Loading, please wait.</div>
+    </body>
+</html>

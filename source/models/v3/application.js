@@ -1,43 +1,42 @@
 define(
-    ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/DataSuitcase'],
-    function(Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase){
-        var Application = Backbone.Model.extend({
+  ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/DataSuitcase'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase) {
+    "use strict";
+    var Application = Backbone.Model.extend({
 
-            initialize: function() {
+      initialize: function () {
                 // Nested interactions
-                this.interactions = new InteractionCollection();
+        this.interactions = new InteractionCollection();
 
                 // Nested Data Suitcases
-                this.datasuitcases = new DataSuitcaseCollection();
+        this.datasuitcases = new DataSuitcaseCollection();
 
-                this.on('change', this.update);
-            },
+        this.on('change', this.update);
+      },
 
-            update: function() {
-                if (this.has("DataSuitcases")){
-                   var ds = this.get("DataSuitcases");
-                   for (var int = 0; int < ds.length; int++) {
-                       if (this.datasuitcases.where({name: ds[int]}).length === 0){
-                            console.log("We don't have this data suitcase yet!")
-                            var dsmodel = new DataSuitcase({
-                                name: ds[int],
-                                siteName: this.get("siteName"),
-                                type: "DataSuitcase"
-                            });
-                            this.datasuitcases.add(dsmodel);
-                            dsmodel.fetch();
-                       }
-                   }
-                }
+      update: function () {
+        if (this.has("DataSuitcases")) {
+          var ds = this.get("DataSuitcases"),
+            count,
+            dsmodel;
+          for (count = 0; count < ds.length; count = count + 1) {
+            if (this.datasuitcases.where({name: ds[count]}).length === 0) {
+              dsmodel = new DataSuitcase({
+                name: ds[count],
+                siteName: this.get("siteName"),
+                type: "DataSuitcase"
+              });
+              this.datasuitcases.add(dsmodel);
+              dsmodel.fetch();
             }
+          }
+        }
+      }
+    }),
+      app;
 
-            // url: function() {
-            //     return "/_BICv3_/xhr/GetApp.php?asn=" + this.get("answerspace");
-            // }
+    app = new Application();
 
-        });
-
-        var app = new Application();
-
-        return app;
-    });
+    return app;
+  }
+);

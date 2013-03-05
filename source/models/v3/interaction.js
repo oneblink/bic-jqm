@@ -43,7 +43,8 @@ define(
           placeholders,
           pLength,
           p,
-          value;
+          value,
+          app;
         if (this.has("args")) {
           args = this.get("args");
           placeholders = xsl.match(/\$args\[[\w\:][\w\:\-\.]*\]/g);
