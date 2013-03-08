@@ -1,0 +1,12 @@
+{
+  "name": "BICv3",
+  "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
+  "version": "0.0.1",
+  "main": "Gruntfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-jslint": "~0.2.5",
+    "grunt-mocha": "~0.2.2"
+  }
+}
