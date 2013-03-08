@@ -11,24 +11,30 @@ define(
         name: null
       },
 
-      inherit: function () {
+      inherit: function (config) {
         if (this.has("parent")) {
           var app = require('models/v3/application'),
             parent;
+
+          _.each(this.attributes, function (value, key, list) {
+            if (!_.has(config, key) || !config[key]) {
+              config[key] = value;
+            }
+          }, this);
+
           if (this.get("parent") !== "app") {
             // Not the answerSpace config, so go deeper
             parent = app.interactions.get(this.get("parent"));
-            parent.inherit();
+            parent.inherit(config);
           } else {
-            parent = app;
+            _.each(app.attributes, function (value, key, list) {
+              if (!_.has(config, key) || !config[key]) {
+                config[key] = value;
+              }
+            }, app);
           }
-          _.each(parent.attributes, function (value, key, list) {
-            if (!this.has(key)) {
-              this.set(key, parent.get(key));
-            }
-          }, this);
         }
-        return this;
+        return config;
       },
 
       performXSLT: function () {

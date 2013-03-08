@@ -1,16 +1,10 @@
 define(
-  ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, FormTemplate, app) {
+  ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'underscore', 'jquerymobile'],
+  function ($, Backbone, Mustache, Template, FormTemplate, app, _) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
       initialize: function () {
-        if (this.model) {
-          if (this.model.has("themeSwatch")) {
-            this.$el.attr("data-theme", this.model.get("themeSwatch"));
-          }
-        }
-
         $('body').append(this.$el);
       },
 
@@ -84,9 +78,12 @@ define(
       },
 
       render: function () {
+        var form,
+          rawform,
+          inheritedAttributes;
+
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
-          var form,
-            rawform = this.model.get("inputPrompt");
+          rawform = this.model.get("inputPrompt");
           if (rawform.substr(0, 6) === "<form>") {
             form = rawform;
           } else {
@@ -108,7 +105,11 @@ define(
             this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
           }
         } else {
-          this.$el.html(Mustache.render(Template, this.model.attributes));
+          inheritedAttributes = this.model.inherit({});
+          if (_.has(inheritedAttributes, "themeSwatch")) {
+            this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
+          }
+          this.$el.html(Mustache.render(Template, inheritedAttributes));
           this.maps();
         }
         return this;
