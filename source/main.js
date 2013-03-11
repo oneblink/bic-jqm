@@ -7,7 +7,6 @@ requirejs.config({
     underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
     backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
     mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],
-    lawnchair: ['/_BICv3_/assets/js/lawnchair-min']
   },
   shim: {
     'underscore': {
@@ -17,9 +16,6 @@ requirejs.config({
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'
     },
-    'lawnchair': {
-      deps: [],
-      exports: 'Lawnchair'
     }
   }
 });
