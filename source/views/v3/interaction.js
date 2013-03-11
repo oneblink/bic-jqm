@@ -94,7 +94,7 @@ define(
             footer: this.model.get("footer"),
             content: form
           }));
-        } else if (this.model.has("type") && this.model.get("type") === "xslt") {
+        } else if (this.model.has("BICtype") && this.model.get("BICtype") === "xslt") {
           this.model.performXSLT();
           if (typeof (this.model.get("content")) === 'object') {
             this.$el.html(Mustache.render(Template, {

@@ -31,8 +31,8 @@ define(
     var location = $.mobile.path.parseLocation();
 
     app.set({
-      "siteName": location.pathname.substr(1).split('/')[0],
-      "type": "answerSpace"
+      siteName: location.pathname.substr(1).split('/')[0],
+      BICtype: "answerSpace"
     }).fetch({success: function (model, response, options) {
       $.mobile.defaultPageTransition = model.get("defaultTransition");
       $.mobile.changePage(location.pathname, {

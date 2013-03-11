@@ -22,7 +22,7 @@ define(
           options.error(model, xhr, options);
         };
 
-        switch (model.get("type")) {
+        switch (model.get("BICtype")) {
         case "interaction":
           jqXHR = API.getInteraction(model.get('siteName'), model.get('name'), model.get('args')).done(done).fail(fail);
           break;

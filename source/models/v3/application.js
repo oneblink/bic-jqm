@@ -24,7 +24,7 @@ define(
               dsmodel = new DataSuitcase({
                 name: ds[count],
                 siteName: this.get("siteName"),
-                type: "DataSuitcase"
+                BICtype: "DataSuitcase"
               });
               this.datasuitcases.add(dsmodel);
               dsmodel.fetch();
