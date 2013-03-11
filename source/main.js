@@ -7,7 +7,9 @@ requirejs.config({
     underscore: ['https://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.3/u.min'],
     backbone: ['https://d1c6dfkb81l78v.cloudfront.net/backbonejs/0.9.10/backbone.min'],
     mustache: ['https://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min'],
-    BlinkForms: ['/_BICv3_/assets/js/BlinkForms.min']
+    BlinkForms: ['/_BICv3_/assets/js/BlinkForms.min'],
+    rivets: ['https://d1c6dfkb81l78v.cloudfront.net/rivets/0.4.5/rivets.min'],
+    q: ['https://d1c6dfkb81l78v.cloudfront.net/q/0.8.11/q.min'],
   },
   shim: {
     'underscore': {
@@ -19,13 +21,16 @@ requirejs.config({
     },
     'BlinkForms': {
       exports: 'BlinkForms'
+    },
+    'rivets': {
+      exports: 'rivets'
     }
   }
 });
 
 define(
-  ['backbone', 'routers/v3/router', 'models/v3/interaction', 'views/v3/interaction', 'models/v3/application', 'jquery', 'BlinkForms', 'jquerymobile'],
-  function (Backbone, router, InteractionModel, InteractionView, app, $, Forms) {
+  ['backbone', 'routers/v3/router', 'models/v3/interaction', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquerymobile'],
+  function (Backbone, router, InteractionModel, InteractionView, app, $) {
     "use strict";
     var location = $.mobile.path.parseLocation();
 

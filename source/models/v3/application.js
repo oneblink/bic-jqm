@@ -1,6 +1,6 @@
 define(
-  ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/DataSuitcase'],
-  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase) {
+  ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/DataSuitcase', 'collections/v3/forms', 'models/v3/form'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form) {
     "use strict";
     var Application = Backbone.Model.extend({
 
