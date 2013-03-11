@@ -33,7 +33,6 @@ define(
           jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("name")).done(done).fail(fail);
           break;
         default:
-          options.error(model, null, options);
           jqXHR = null;
           break;
         }
