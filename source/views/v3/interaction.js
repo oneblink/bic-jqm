@@ -104,6 +104,16 @@ define(
             }));
             this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
           }
+        } else if (this.model.has("type") && this.model.get("type") === "form") {
+          // Form
+          var formobject = forms.getForm();
+          console.log(formobject);
+          this.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: '<div id="BlinkForm"></div>'
+          }));
+          $('#BlinkForm').append(formobject.$form);
         } else {
           inheritedAttributes = this.model.inherit({});
           if (_.has(inheritedAttributes, "themeSwatch")) {
