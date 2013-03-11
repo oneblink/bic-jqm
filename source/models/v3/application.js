@@ -10,24 +10,32 @@ define(
 
                 // Nested Data Suitcases
         this.datasuitcases = new DataSuitcaseCollection();
+        this.forms = new FormCollection();
 
         this.on('change', this.update);
       },
 
       update: function () {
+        var modelArray = this.get("DataSuitcases"),
+          count,
+          model,
+          children = {
+            DataSuitcases: this.datasuitcases,
+            Forms: this.forms
+          };
+
+
         if (this.has("DataSuitcases")) {
-          var ds = this.get("DataSuitcases"),
-            count,
-            dsmodel;
-          for (count = 0; count < ds.length; count = count + 1) {
-            if (this.datasuitcases.where({name: ds[count]}).length === 0) {
-              dsmodel = new DataSuitcase({
-                name: ds[count],
+          modelArray = this.get("DataSuitcases");
+          for (count = 0; count < modelArray.length; count = count + 1) {
+            if (this.datasuitcases.where({name: modelArray[count]}).length === 0) {
+              model = new DataSuitcase({
+                name: modelArray[count],
                 siteName: this.get("siteName"),
                 BICtype: "DataSuitcase"
               });
-              this.datasuitcases.add(dsmodel);
-              dsmodel.fetch();
+              this.datasuitcases.add(model);
+              model.fetch();
             }
           }
         }
