@@ -1,6 +1,6 @@
 define(
-  ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'underscore', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, FormTemplate, app, _) {
+  ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'underscore', 'forms/forms', 'jquerymobile'],
+  function ($, Backbone, Mustache, Template, FormTemplate, app, _, forms) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -80,8 +80,10 @@ define(
       render: function () {
         var form,
           rawform,
-          inheritedAttributes;
+          inheritedAttributes = this.model.inherit({}),
+          BlinkForms;
 
+        // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
           rawform = this.model.get("inputPrompt");
           if (rawform.substr(0, 6) === "<form>") {
@@ -90,16 +92,17 @@ define(
             form = Mustache.render(FormTemplate, {inputs: rawform});
           }
           this.$el.html(Mustache.render(Template, {
-            header: this.model.get("header"),
-            footer: this.model.get("footer"),
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
             content: form
           }));
-        } else if (this.model.has("BICtype") && this.model.get("BICtype") === "xslt") {
+        } else if (this.model.has("type") && this.model.get("type") === "xslt") {
+          // XSLT
           this.model.performXSLT();
           if (typeof (this.model.get("content")) === 'object') {
             this.$el.html(Mustache.render(Template, {
-              header: this.model.get("header"),
-              footer: this.model.get("footer"),
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
               content: ''
             }));
             this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
@@ -115,7 +118,6 @@ define(
           }));
           $('#BlinkForm').append(formobject.$form);
         } else {
-          inheritedAttributes = this.model.inherit({});
           if (_.has(inheritedAttributes, "themeSwatch")) {
             this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
           }
