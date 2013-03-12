@@ -19,7 +19,9 @@ define(
           options.success(model, data, options);
         };
         fail = function (xhr, status, error) {
-          options.error(model, xhr, options);
+          if (options.error) {
+            options.error(model, xhr, options);
+          }
         };
 
         switch (model.get("BICtype")) {
@@ -32,7 +34,11 @@ define(
         case "DataSuitcase":
           jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("name")).done(done).fail(fail);
           break;
+        case "Form":
+          jqXHR = API.getForm(model.get('siteName'), model.get("name")).done(done).fail(fail);
+          break;
         default:
+          options.error(model, null, options);
           jqXHR = null;
           break;
         }

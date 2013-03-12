@@ -19,6 +19,10 @@ define(
 
       getDataSuitcase: function (answerspace, datasuitcase, options) {
         return $.ajax('/_BICv3_/xhr/GetDataSuitcase.php?asn=' + answerspace + '&ds=' + datasuitcase);
+      },
+
+      getForm: function (answerspace, form, options) {
+        return $.ajax('/_BICv3_/xhr/GetForm.php?asn=' + answerspace + '&form=' + form);
       }
     };
 
