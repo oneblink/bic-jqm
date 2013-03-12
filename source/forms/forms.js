@@ -1,150 +1,34 @@
 define(
-  ['data/data', 'BlinkForms', 'underscore'],
-  function (Backbone, BlinkForms, _) {
+  ['data/data', 'BlinkForms', 'underscore', 'models/v3/application'],
+  function (Backbone, BlinkForms, _, app) {
     "use strict";
     var Forms = Backbone.Model.extend({
       initialize: function () {
-        var Sample1 = {
-          default: {
-            name: 'form1',
-            label: 'Form 1',
-            _elements: [
-              {
-                default: {
-                  name: 'id',
-                  type: 'hidden'
-                }
-              },
-              {
-                default: {
-                  name: 'date',
-                  label: 'Date',
-                  type: 'date'
-                }
-              },
-              {
-                default: {
-                  name: 'time',
-                  label: 'Time',
-                  type: 'time'
-                }
-              },
-              {
-                default: {
-                  name: 'datetime',
-                  label: 'Date + Time',
-                  type: 'datetime'
-                }
-              },
-              {
-                default: {
-                  name: 'file',
-                  label: 'File',
-                  type: 'file'
-                }
-              },
-              {
-                default: {
-                  name: 'image',
-                  label: 'Image',
-                  type: 'image'
-                }
-              },
-              {
-                default: {
-                  name: 'selectc',
-                  label: 'Select C',
-                  type: 'select',
-                  mode: 'collapsed',
-                  options: {
-                    a: 'alpha',
-                    b: 'beta',
-                    g: 'gamma'
-                  }
-                }
-              },
-              {
-                default: {
-                  name: 'selecte',
-                  label: 'Select E',
-                  type: 'select',
-                  mode: 'expanded',
-                  layout: 'horizontal',
-                  options: {
-                    a: 'alpha',
-                    b: 'beta',
-                    g: 'gamma'
-                  }
-                }
-              },
-              {
-                default: {
-                  name: 'multic',
-                  label: 'Multi C',
-                  type: 'multi',
-                  mode: 'collapsed',
-                  options: {
-                    a: 'alpha',
-                    b: 'beta',
-                    g: 'gamma'
-                  }
-                }
-              },
-              {
-                default: {
-                  name: 'multie',
-                  label: 'Multi E',
-                  type: 'multi',
-                  mode: 'expanded',
-                  options: {
-                    a: 'alpha',
-                    b: 'beta',
-                    g: 'gamma'
-                  }
-                }
-              },
-              {
-                default: {
-                  name: 'boolean',
-                  label: 'Boolean',
-                  type: 'boolean',
-                  options: {
-                    0: 'false',
-                    1: 'true'
-                  }
-                }
-              },
-              {
-                default: {
-                  name: 'question',
-                  label: 'Question',
-                  type: 'boolean',
-                  options: {
-                    n: 'no',
-                    y: 'yes'
-                  }
-                }
-              }
-            ]
-          }
-        };
-
         BlinkForms.getDefinition = function (name, action) {
-          var collapseAction = function (d) {
+          var definition = app.forms.where({name: name})[0].get('definition'),
+            collapseAction,
+            collapsed;
+
+          console.log(definition);
+
+          return definition.default;
+
+          collapseAction = function (d) {
             var attrs = d.default || {};
             if (action && d[action]) {
               _.extend(attrs, d[action]);
             }
             return attrs;
-          },
-            definition = {
-              default: {
-                name: name
-              }
-            };
+          };
 
-          definition.default._elements = _.map(Sample1.default._elements, collapseAction);
-          return definition.default;
+          collapsed = {
+            default: {
+              name: name
+            }
+          };
+
+          collapsed.default._elements = _.map(definition.default._elements, collapseAction);
+          return collapsed.default;
         };
       },
 

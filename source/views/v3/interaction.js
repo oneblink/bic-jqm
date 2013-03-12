@@ -81,7 +81,7 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          BlinkForms;
+          formobject;
 
         // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
@@ -109,8 +109,7 @@ define(
           }
         } else if (this.model.has("type") && this.model.get("type") === "form") {
           // Form
-          var formobject = forms.getForm();
-          console.log(formobject);
+          formobject = forms.getForm(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction"));
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
