@@ -1,5 +1,5 @@
 define(
-    ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/DataSuitcase'],
+    ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/datasuitcase'],
     function(Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase){
         var Application = Backbone.Model.extend({
 
