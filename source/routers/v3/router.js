@@ -76,7 +76,7 @@ define(
             }
           }
 
-          $.when.apply($, promises).done(function () {
+          $.when.apply($, promises).then(function () {
             model = new InteractionModel({
               name: interaction,
               parent: parent,
@@ -105,6 +105,10 @@ define(
               data: data,
               app: app
             });
+          }, function () {
+            data.deferred.reject(data.absUrl, data.options);
+            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+            setTimeout($.mobile.hidePageLoadingMsg, 1500);
           });
         });
       }
