@@ -45,6 +45,15 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
         }
         ?>
         <link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.structure.min.css" />
+        <script>
+          <?php
+          if (strpos($_SERVER[HTTP_USER_AGENT], 'BlinkGap') === FALSE){
+            echo 'window.NativeApp = false;';
+          } else {
+            echo 'window.NativeApp = true;';
+          }
+          ?>
+        </script>
         <script data-main="/_BICv3_/source/main" src="https://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/require.min.js"></script>
         <?php
         if(array_key_exists('externalJavaScript', $content) && strlen($content['externalJavaScript']) > 0){
