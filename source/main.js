@@ -10,6 +10,7 @@ requirejs.config({
     BlinkForms: ['/_BICv3_/assets/js/BlinkForms.min'],
     rivets: ['https://d1c6dfkb81l78v.cloudfront.net/rivets/0.4.5/rivets.min'],
     q: ['https://d1c6dfkb81l78v.cloudfront.net/q/0.8.11/q.min'],
+    pouchdb: ['https://192.168.12.6/_BICv3_/assets/js/pouchdb-nightly']
   },
   shim: {
     'underscore': {
@@ -24,6 +25,9 @@ requirejs.config({
     },
     'rivets': {
       exports: 'rivets'
+    },
+    'pouchdb': {
+      exports: 'Pouch'
     }
   }
 });
