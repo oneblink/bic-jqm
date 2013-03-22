@@ -53,7 +53,6 @@ define(
         if (window.NativeApp === true) {
           if (cordova.available === true) {
             start();
-            alert("Cordova ready!");
           } else {
             // Poll
             window.setTimeout(init(), 1000);
