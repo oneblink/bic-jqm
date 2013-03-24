@@ -25,10 +25,10 @@ define(
         };
 
         switch (model.get("BICtype")) {
-        case "interaction":
+        case "Interaction":
           jqXHR = API.getInteraction(model.get('siteName'), model.get('name'), model.get('args')).done(done).fail(fail);
           break;
-        case "answerSpace":
+        case "AnswerSpace":
           jqXHR = API.getAnswerSpace(model.get('siteName')).done(done).fail(fail);
           break;
         case "DataSuitcase":

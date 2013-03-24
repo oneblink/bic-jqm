@@ -68,7 +68,7 @@ define(
                 name: path[index],
                 parent: parent,
                 siteName: app.get("siteName"),
-                BICtype: "interaction"
+                BICtype: "Interaction"
               });
               app.interactions.add(tempmodel);
               promises.push(tempmodel.fetch());
@@ -81,7 +81,7 @@ define(
               name: interaction,
               parent: parent,
               siteName: app.get("siteName"),
-              BICtype: "interaction",
+              BICtype: "Interaction",
               args: args
             });
             app.interactions.add(model);
