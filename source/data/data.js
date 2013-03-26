@@ -4,7 +4,7 @@ define(
     "use strict";
     var data = {
       getModel: function (model, options) {
-        var done, fail, jqXHR, fetch, dbType, createDocument, retreiveDocument, doc;
+        var done, fail, jqXHR, fetch, dbType, createDocument, retrieveDocument, doc;
 
         done = function (data, status, xhr) {
           options.success(model, data, options);
@@ -68,7 +68,7 @@ define(
           });
         };
 
-        retreiveDocument = function () {
+        retrieveDocument = function () {
           var docdfrd = $.Deferred();
           Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
             var d = new Date();
@@ -100,7 +100,7 @@ define(
         };
 
         if (dbType !== false) {
-          retreiveDocument().then(function (doc) {
+          retrieveDocument().then(function (doc) {
             options.dfrd.resolve(doc);
             options.success(model, doc, options);
           }, function () {
