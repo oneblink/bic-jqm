@@ -39,6 +39,6 @@ header('Content-Type: application/json');
 
 $ds['data'] = $rs->fields['data'];
 $ds['name'] = $_REQUEST['ds'];
-$ds['key'] = $ds['name'];
+$ds['_id'] = $ds['name'];
 
 echo json_encode($ds);

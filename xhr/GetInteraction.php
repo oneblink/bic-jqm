@@ -215,5 +215,9 @@ if (array_key_exists('inputPrompt', $content)){
     $content['inputPrompt'] = getInputs($content['inputPrompt']);
 }
 
+if (!$content['_id']){
+    $content['_id'] = $content['name'];
+}
+
 header('Content-Type: application/json');
 echo json_encode($content);
