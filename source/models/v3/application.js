@@ -16,6 +16,8 @@ define(
         this.on('change', this.update);
       },
 
+      idAttribute: "_id",
+
       update: function () {
         var modelArray,
           count,
