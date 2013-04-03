@@ -145,7 +145,7 @@ header('Content-Type: application/json');
 //echo json_encode($rs->fields("config"));
 $config = json_decode($rs->fields("config"), TRUE);
 $config = array_merge($config["all"], $config["default"]);
-$config['key'] = $_REQUEST['asn'];
+//$config['key'] = $_REQUEST['asn'];
 
 //if ($config['homeInteraction']) {
 //    $config['homeInteraction'] = 'home';
@@ -171,6 +171,10 @@ foreach ($interactions as $interaction){
             }
         }
     }
+}
+
+if (!$config['_id']){
+    $config['_id'] = $_REQUEST['asn'];
 }
 
 echo json_encode($config);

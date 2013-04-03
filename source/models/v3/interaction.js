@@ -4,6 +4,8 @@ define(
     "use strict";
     var Interaction = Backbone.Model.extend({
 
+      idAttribute: "_id",
+
       defaults: {
         header: null,
         content: null,

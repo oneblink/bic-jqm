@@ -11,10 +11,12 @@ define(
         this.forms = new FormCollection();
 
         // Sample Forms
-        this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
+        //this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
 
         this.on('change', this.update);
       },
+
+      idAttribute: "_id",
 
       update: function () {
         var modelArray,
@@ -33,14 +35,14 @@ define(
                 switch (index) {
                 case "DataSuitcases":
                   model = new DataSuitcase({
-                    name: modelArray[count],
+                    _id: modelArray[count],
                     siteName: this.get("siteName"),
                     BICtype: "DataSuitcase"
                   });
                   break;
                 case "Forms":
                   model = new Form({
-                    name: modelArray[count],
+                    _id: modelArray[count],
                     siteName: this.get("siteName"),
                     BICtype: "Form"
                   });
