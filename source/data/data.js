@@ -52,14 +52,18 @@ define(
           }
         }
 
-        createDocument = function (jqXHR) {
+        createDocument = function (jqXHR, revision) {
           jqXHR.done(function (data, textStatus, jqXHR) {
             Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
               if (err) {
                 console.log(err);
               } else {
                 var d = new Date();
-                data.fetchTime = d.getTime();
+
+                if (revision) {
+                  data._rev = revision;
+                }
+
                 db.put(data, function (err, response) {
                   if (err) {
                     console.log(err);
@@ -107,7 +111,12 @@ define(
             options.success(model, doc, options);
           }, function (err, doc) {
             fetch();
-            createDocument(jqXHR);
+
+            var revision;
+            if (doc) {
+              revision = doc._rev;
+            }
+            createDocument(jqXHR, revision);
           });
         } else {
           fetch();
