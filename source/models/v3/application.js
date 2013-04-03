@@ -35,14 +35,14 @@ define(
                 switch (index) {
                 case "DataSuitcases":
                   model = new DataSuitcase({
-                    name: modelArray[count],
+                    _id: modelArray[count],
                     siteName: this.get("siteName"),
                     BICtype: "DataSuitcase"
                   });
                   break;
                 case "Forms":
                   model = new Form({
-                    name: modelArray[count],
+                    _id: modelArray[count],
                     siteName: this.get("siteName"),
                     BICtype: "Form"
                   });

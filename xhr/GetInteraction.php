@@ -203,9 +203,9 @@ $content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_ex
 // echo '</div>';
 // echo $content['footer'];
 
-if (!$content['name']){
-	$content['name'] = $_REQUEST['asn'];
-}
+// if (!$content['name']){
+// 	$content['name'] = $_REQUEST['asn'];
+// }
 
 if (array_key_exists('type', $content) && $content['type'] === 'xslt'){
     $content['content'] = '';

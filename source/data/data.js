@@ -19,16 +19,16 @@ define(
         fetch = function () {
           switch (model.get("BICtype")) {
           case "Interaction":
-            jqXHR = API.getInteraction(model.get('siteName'), model.get('name'), model.get('args')).done(done).fail(fail);
+            jqXHR = API.getInteraction(model.get('siteName'), model.get('_id'), model.get('args')).done(done).fail(fail);
             break;
           case "AnswerSpace":
             jqXHR = API.getAnswerSpace(model.get('siteName')).done(done).fail(fail);
             break;
           case "DataSuitcase":
-            jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("name")).done(done).fail(fail);
+            jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("_id")).done(done).fail(fail);
             break;
           case "Form":
-            jqXHR = API.getForm(model.get('siteName'), model.get("name")).done(done).fail(fail);
+            jqXHR = API.getForm(model.get('siteName'), model.get("_id")).done(done).fail(fail);
             break;
           default:
             options.error(model, null, options);
@@ -75,10 +75,10 @@ define(
             if (err) {
               docdfrd.reject(err);
             } else {
-              if (!model.has("name")) {
+              if (!model.has("_id")) {
                 docdfrd.reject();
               } else {
-                db.get(model.get('name'), function (err, doc) {
+                db.get(model.get('_id'), function (err, doc) {
                   if (err) {
                     docdfrd.reject();
                   } else {

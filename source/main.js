@@ -39,6 +39,7 @@ define(
     var start = function () {
         var location = $.mobile.path.parseLocation();
         app.set({
+          _id: location.pathname.substr(1).split('/')[0],
           siteName: location.pathname.substr(1).split('/')[0],
           BICtype: "AnswerSpace"
         }).fetch({success: function (model, response, options) {
