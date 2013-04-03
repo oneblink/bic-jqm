@@ -11,7 +11,7 @@ define(
         this.forms = new FormCollection();
 
         // Sample Forms
-        this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
+        //this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
 
         this.on('change', this.update);
       },
