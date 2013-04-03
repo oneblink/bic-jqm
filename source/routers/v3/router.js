@@ -92,6 +92,9 @@ define(
           } else {
             dfrd = $.Deferred();
             promise = dfrd.promise();
+            if (options) {
+              options.success(app.interactions.get(interaction), 'Collection', options);
+            }
             dfrd.resolve();
           }
           app.interactions.get(interaction).set("parent", parent);
