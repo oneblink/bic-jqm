@@ -35,8 +35,10 @@ define(
             jqXHR = null;
             break;
           }
-          jqXHR.done(function (data, textStatus, jqXHR) {
-            options.dfrd.resolve(data);
+          jqXHR.then(function (data, textStatus, jqXHR) {
+            options.dfrd.resolve(data, textStatus, jqXHR);
+          }, function (jqXHR, textStatus, errorThrown) {
+            options.dfrd.reject(jqXHR, textStatus, errorThrown);
           });
         };
 
@@ -85,11 +87,11 @@ define(
                     if (doc.deviceCacheTime === 0) {
                       docdfrd.resolve(doc);
                     } else if (model.has("args")) {
-                      docdfrd.reject();
+                      docdfrd.reject('Interaction has arguments', doc);
                     } else if ((d.getTime() - doc.fetchTime) < (doc.deviceCacheTime * 1000)) {
                       docdfrd.resolve(doc);
                     } else {
-                      docdfrd.reject();
+                      docdfrd.reject('Interaction too old', doc);
                     }
                   }
                 });
@@ -103,7 +105,7 @@ define(
           retrieveDocument().then(function (doc) {
             options.dfrd.resolve(doc);
             options.success(model, doc, options);
-          }, function () {
+          }, function (err, doc) {
             fetch();
             createDocument(jqXHR);
           });
