@@ -24,6 +24,10 @@ define(
           index,
           promises = [];
 
+        if (path[path.length - 1] === "") {
+          path.pop();
+        }
+
         if (path.length === 1) {
           // Home page of app
           if (app.has("homeScreen") && app.get("homeScreen") === true) {
