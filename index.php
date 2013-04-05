@@ -38,19 +38,13 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
         <title>BICv3</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
-        if (array_key_exists('themePack', $content) && strlen($content['themePack']) > 0) {
+        if(array_key_exists('themePack', $content) && strlen($content['themePack']) > 0){
             echo '<link rel="stylesheet" href="' . $cdna->getURI($asConfig['themePack']) . '" />';
         } else {
-            if (array_key_exists('platformCSS', $content) && strlen($content['platformCSS']) > 0 && $content['platformCSS'] === 'default') {
-                echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.theme.min.css" />';
-            }
-        }
-
-        if (array_key_exists('platformCSS', $content) && strlen($content['platformCSS']) > 0 && $content['platformCSS'] !== 'none') {
-            echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.structure.min.css" />';
+            echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.theme.min.css" />';
         }
         ?>
-       
+        <link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.structure.min.css" />
         <script>
           <?php
           if (strpos($_SERVER[HTTP_USER_AGENT], 'BlinkGap') === FALSE){
