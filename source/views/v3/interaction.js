@@ -69,6 +69,10 @@ define(
           path = $.mobile.path.parseLocation().pathname.substr(0, $.mobile.path.parseLocation().pathname.length - 1);
         }
 
+        if (path.slice(-1) === "/") {
+          path = path.slice(0, path.length - 1);
+        }
+
         $.mobile.changePage(path + '/' + location + attributes);
       },
 
