@@ -1,15 +1,17 @@
 define(
-    ['backbone', 'models/v3/interaction'],
-    function(Backbone, Interaction){
-        var InteractionCollection = Backbone.Collection.extend({
+  ['backbone', 'models/v3/interaction'],
+  function (Backbone, Interaction) {
+    "use strict";
+    var InteractionCollection = Backbone.Collection.extend({
 
-            model: Interaction,
+      model: Interaction,
 
-            url: function() {
-                return "/_BICv3_/xhr/GetInteraction.php?asn=" + this.app.get("answerspace");
-            }
+      url: function () {
+        return "/_BICv3_/xhr/GetInteraction.php?asn=" + this.app.get("answerspace");
+      }
 
-        });
-
-        return InteractionCollection;
     });
+
+    return InteractionCollection;
+  }
+);

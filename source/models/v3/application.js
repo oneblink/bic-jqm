@@ -1,43 +1,65 @@
 define(
-    ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/datasuitcase'],
-    function(Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase){
-        var Application = Backbone.Model.extend({
+  ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/datasuitcase', 'collections/v3/forms', 'models/v3/form', 'underscore'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _) {
+    "use strict";
+    var Application = Backbone.Model.extend({
 
-            initialize: function() {
-                // Nested interactions
-                this.interactions = new InteractionCollection();
+      initialize: function () {
+        // Nested Collections
+        this.interactions = new InteractionCollection();
+        this.datasuitcases = new DataSuitcaseCollection();
+        this.forms = new FormCollection();
 
-                // Nested Data Suitcases
-                this.datasuitcases = new DataSuitcaseCollection();
+        // Sample Forms
+        //this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
 
-                this.on('change', this.update);
-            },
+        this.on('change', this.update);
+      },
 
-            update: function() {
-                if (this.has("DataSuitcases")){
-                   var ds = this.get("DataSuitcases");
-                   for (var int = 0; int < ds.length; int++) {
-                       if (this.datasuitcases.where({name: ds[int]}).length === 0){
-                            console.log("We don't have this data suitcase yet!")
-                            var dsmodel = new DataSuitcase({
-                                name: ds[int],
-                                siteName: this.get("siteName"),
-                                type: "DataSuitcase"
-                            });
-                            this.datasuitcases.add(dsmodel);
-                            dsmodel.fetch();
-                       }
-                   }
+      idAttribute: "_id",
+
+      update: function () {
+        var modelArray,
+          count,
+          model,
+          children = {
+            DataSuitcases: this.datasuitcases,
+            Forms: this.forms
+          };
+
+        _.each(children, function (element, index, list) {
+          if (this.has(index)) {
+            modelArray = this.get(index);
+            for (count = 0; count < modelArray.length; count = count + 1) {
+              if (element.where({name: modelArray[count]}).length === 0) {
+                switch (index) {
+                case "DataSuitcases":
+                  model = new DataSuitcase({
+                    _id: modelArray[count],
+                    siteName: this.get("siteName"),
+                    BICtype: "DataSuitcase"
+                  });
+                  break;
+                case "Forms":
+                  model = new Form({
+                    _id: modelArray[count],
+                    siteName: this.get("siteName"),
+                    BICtype: "Form"
+                  });
+                  break;
                 }
+                element.add(model);
+                model.fetch();
+              }
             }
+          }
+        }, this);
+      }
+    }),
+      app;
 
-            // url: function() {
-            //     return "/_BICv3_/xhr/GetApp.php?asn=" + this.get("answerspace");
-            // }
+    app = new Application();
 
-        });
-
-        var app = new Application();
-
-        return app;
-    });
+    return app;
+  }
+);

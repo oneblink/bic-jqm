@@ -1,187 +1,134 @@
-//The method signature of Backbone.sync is sync(method, model, [options])
-//method – the CRUD method ("create", "read", "update", or "delete")
-//model – the model to be saved (or collection to be read)
-//options – success and error callbacks, and all other jQuery request options
-//when Backbone.sync sends up a request to save a model, its attributes will be passed, serialized as JSON, and sent in the HTTP body with content-type application/json
-//When returning a JSON response, send down the attributes of the model that have been changed by the server
-//When responding to a "read" request from a collection (Collection#fetch), send down an array of model attribute objects.
-//Whenever a model or collection begins a sync with the server, a "request" event is emitted.
-//If the request completes successfully you'll get a "sync" event,
-//and an "error" event if not.
-
 define(
-    ['backbone', 'api/API', 'lawnchair'],
-    // ['backbone', 'api/API'],
-    function(Backbone, API, Lawnchair){
-    // function(Backbone, API){
-       var data = {
-           readInteraction: function(model, options){
-               var lawnchair = new Lawnchair({name:'Interactions'}, function(){
-                   this.exists(model.get('name'), function(exists){
-                       if (exists){
-                           // We have a previously cached copy of this interaction
-                           this.get(model.get('name'), function(result){
-                               console.log('DB: Contains result');
-                               var timeout;
-                               if (result.deviceCacheTime || result.deviceCacheTime === 0) {
-                                   if (result.deviceCacheTime === 0){
-                                       timeout = false;
-                                   } else {
-                                       timeout = result.deviceCacheTime * 1000;
-                                   }
-                               } else {
-                                   timeout = 60000;
-                               }
-                               if ((timeout && (new Date().getTime() - result.timestamp) > timeout) || (model.has("args") && model.get('args') !== "")){
-                                   // Not permanently cached More than 60 seconds old OR There are Args involved
-                                   //Fetch a newer copy
-                                   if (navigator.onLine === false){
-                                       console.log('Offline: returning stale copy');
-                                       options.success(model, result, options);
-                                   } else {
-                                       console.log('Online: Result too old, fetching new copy');
-                                       data.fetchInteraction(model, options, this);
-                                   }
-                               } else {
-                                   // Still fresh. Return copy.
-                                   options.success(model, result, options);
-                               }
-                           });
-                       } else {
-                           if (navigator.onLine === false){
-                               // No cache, no internet connection. Fetch now and cache
-                               console.log("Offline: not cached");
-                               var xhr = {
-                                   responseText: "Browser offline and interaction is not cached."
-                               };
-                               options.error(model, xhr, options);
-                           } else {
-                               // No cache, internet connection. Fetch now and cache
-                               console.log("Online: Fetching");
-                               data.fetchInteraction(model, options, this);
-                           }
-                       }
-                   });
-               });
-           },
+  ['backbone', 'api/API', 'pouchdb', 'jquery'],
+  function (Backbone, API, Pouch, $) {
+    "use strict";
+    var data = {
+      getModel: function (model, options) {
+        var done, fail, jqXHR, fetch, dbType, createDocument, retrieveDocument, doc;
 
-           fetchInteraction: function(model, options, lawnchair){
-               API.getInteraction(model.get('siteName'), model.get('name'), model.get('args'))
-                   .done(function(data, status, xhr){
-                       if (data.name){
-                           data.key = data.name;
-                           data.timestamp = new Date().getTime();
-                       } else {
-                           data.key = data.siteName;
-                       }
-                       lawnchair.save(data, function(){
-                           console.log('DB: Cached result');
-                       });
-                       options.success(model, data, options);
-                   })
-                   .fail(function(xhr, status, error){
-                       options.error(model, xhr, options);
-                   });
-           },
-
-           readAS: function(model, options){
-               var lawnchair = new Lawnchair({name:'answerSpace'}, function(){
-                   this.exists(model.get('siteName'), function(exists){
-                       if (exists){
-                           this.get(model.get('siteName'), function(data){
-                               console.log('AS fetched from cache');
-                               options.success(model, data, options);
-                           });
-                       } else {
-                           API.getAnswerSpace(model.get('siteName'))
-                               .done(function(data, status, xhr){
-                                   lawnchair.save(data, function(){
-                                       console.log('Cached AS in Offline Storage');
-                                   });
-                                   options.success(model, data, options);
-                               })
-                               .fail(function(xhr, status, error){
-                                   options.error(model, xhr, options);
-                               });
-                       }
-                   });
-               });
-           },
-
-           readDataSuitcase: function(model, options){
-               var lawnchair = new Lawnchair({name:'DataSuitcases'}, function(){
-                   this.exists(model.get('name'), function(exists){
-                       if (exists){
-                           this.get(model.get('name'), function(data){
-                               console.log('DS fetched from cache');
-                               options.success(model, data, options);
-                           });
-                       } else {
-                           API.getDataSuitcase(model.get('siteName'), model.get("name"))
-                               .done(function(data, status, xhr){
-                                   lawnchair.save(data, function(){
-                                       console.log('Cached DS in Offline Storage');
-                                   });
-                                   options.success(model, data, options);
-                               })
-                               .fail(function(xhr, status, error){
-                                   options.error(model, xhr, options);
-                               });
-                       }
-                   });
-               });
-           }
-
-       };
-
-        Backbone.sync = function(method, model, options){
-            switch (method) {
-                case "read":
-                    if(model.get("type") === "interaction"){
-                        data.readInteraction(model, options);
-                        // API.getInteraction(model.get('siteName'), model.get('name'), model.get('args'))
-                        //    .done(function(data, status, xhr){
-                        //         options.success(model, data, options);
-                        //     })
-                        //     .fail(function(xhr, status, error){
-                        //         options.error(model, xhr, options);
-                        //     });
-
-                    } else if (model.get("type") === "answerSpace"){
-                        data.readAS(model, options);
-                        // API.getAnswerSpace(model.get('siteName'))
-                        //     .done(function(data, status, xhr){
-                        //         options.success(model, data, options);
-                        //     })
-                        //     .fail(function(xhr, status, error){
-                        //         options.error(model, xhr, options);
-                        //     });
-                    } else if (model.get("type") === "DataSuitcase"){
-                        data.readDataSuitcase(model, options);
-                          // API.getDataSuitcase(model.get('siteName'), model.get("name"))
-                          //     .done(function(data, status, xhr){
-                          //         options.success(model, data, options);
-                          //     })
-                          //     .fail(function(xhr, status, error){
-                          //         options.error(model, xhr, options);
-                          //     });
-                    } else {
-                        options.error(model, null, options);
-                    }
-                    break;
-
-                case "create":
-                    console.log("Method = create");
-                    break;
-                case "update":
-                    console.log("Method = update");
-                    break;
-                case "delete":
-                    console.log("Method = delete");
-                    break;
-            }
+        done = function (data, status, xhr) {
+          options.success(model, data, options);
         };
 
-        return Backbone;
-    }
+        fail = function (xhr, status, error) {
+          if (options.error) {
+            options.error(model, xhr, options);
+          }
+        };
+
+        fetch = function () {
+          switch (model.get("BICtype")) {
+          case "Interaction":
+            jqXHR = API.getInteraction(model.get('siteName'), model.get('_id'), model.get('args')).done(done).fail(fail);
+            break;
+          case "AnswerSpace":
+            jqXHR = API.getAnswerSpace(model.get('siteName')).done(done).fail(fail);
+            break;
+          case "DataSuitcase":
+            jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("_id")).done(done).fail(fail);
+            break;
+          case "Form":
+            jqXHR = API.getForm(model.get('siteName'), model.get("_id")).done(done).fail(fail);
+            break;
+          default:
+            options.error(model, null, options);
+            jqXHR = null;
+            break;
+          }
+          jqXHR.then(function (data, textStatus, jqXHR) {
+            options.dfrd.resolve(data, textStatus, jqXHR);
+          }, function (jqXHR, textStatus, errorThrown) {
+            options.dfrd.reject(jqXHR, textStatus, errorThrown);
+          });
+        };
+
+        if (window.NativeApp === true && Pouch.adapters.websql) {
+          dbType = 'websql://';
+        } else {
+          if (Pouch.adapters.idb) {
+            dbType = 'idb://';
+          } else {
+            dbType = false;
+          }
+        }
+
+        createDocument = function (jqXHR, revision) {
+          jqXHR.done(function (data, textStatus, jqXHR) {
+            Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+              if (err) {
+                console.log(err);
+              } else {
+                var d = new Date();
+
+                if (revision) {
+                  data._rev = revision;
+                }
+
+                db.put(data, function (err, response) {
+                  if (err) {
+                    console.log(err);
+                  }
+                });
+              }
+            });
+          });
+        };
+
+        retrieveDocument = function () {
+          var docdfrd = $.Deferred();
+          Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+            var d = new Date();
+            if (err) {
+              docdfrd.reject(err);
+            } else {
+              if (!model.has("_id")) {
+                docdfrd.reject();
+              } else {
+                db.get(model.get('_id'), function (err, doc) {
+                  if (err) {
+                    docdfrd.reject();
+                  } else {
+                    if (doc.deviceCacheTime === 0) {
+                      docdfrd.resolve(doc);
+                    } else if (model.has("args")) {
+                      docdfrd.reject('Interaction has arguments', doc);
+                    } else if ((d.getTime() - doc.fetchTime) < (doc.deviceCacheTime * 1000)) {
+                      docdfrd.resolve(doc);
+                    } else {
+                      docdfrd.reject('Interaction too old', doc);
+                    }
+                  }
+                });
+              }
+            }
+          });
+          return docdfrd.promise();
+        };
+
+        if (dbType !== false) {
+          retrieveDocument().then(function (doc) {
+            options.dfrd.resolve(doc);
+            options.success(model, doc, options);
+          }, function (err, doc) {
+            fetch();
+
+            var revision;
+            if (doc) {
+              revision = doc._rev;
+            }
+            createDocument(jqXHR, revision);
+          });
+        } else {
+          fetch();
+        }
+      }
+    };
+
+    Backbone.sync = function (method, model, options) {
+      options.dfrd = $.Deferred();
+      data.getModel(model, options);
+      return options.dfrd.promise();
+    };
+    return Backbone;
+  }
 );

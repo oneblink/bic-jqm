@@ -2,9 +2,9 @@ define(
   ['data/data'],
   function (Backbone) {
     "use strict";
-    var DataSuitcase = Backbone.Model.extend({
+    var Form = Backbone.Model.extend({
       idAttribute: "_id"
     });
-    return DataSuitcase;
+    return Form;
   }
 );
