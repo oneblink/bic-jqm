@@ -173,7 +173,7 @@ foreach ($interactions as $interaction){
     }
 }
 
-if (!$config['_id']){
+if (!array_key_exists('_id', $config)){
     $config['_id'] = $_REQUEST['asn'];
 }
 

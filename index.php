@@ -26,7 +26,7 @@ $getConfigs = new GetConfigs();
 
 $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 
-if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
+if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){ 
     $attrs = 'data-theme="' . $content['themeSwatch'] . '"';
 } else {
     $attrs = '';
@@ -53,7 +53,7 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
        
         <script>
           <?php
-          if (strpos($_SERVER[HTTP_USER_AGENT], 'BlinkGap') === FALSE){
+          if (strpos($_SERVER['HTTP_USER_AGENT'], 'BlinkGap') === FALSE){
             echo 'window.NativeApp = false;';
           } else {
             echo 'window.NativeApp = true;';

@@ -189,7 +189,7 @@ $handler = new RequestHandler();
 $getConfigs = new GetConfigs();
 
 //$content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
-$content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array(), $cdnp, $cdna, $getConfigs);
+$content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array('siteName' => $_REQUEST['asn']), $cdnp, $cdna, $getConfigs);
 
 //$configs = $getConfigs->getConfigsByNames($_REQUEST['iact']);
 //$args = $_REQUEST['args'] ? $_REQUEST['args'] : NULL;
@@ -215,8 +215,8 @@ if (array_key_exists('inputPrompt', $content)){
     $content['inputPrompt'] = getInputs($content['inputPrompt']);
 }
 
-if (!$content['_id']){
-    $content['_id'] = $content['name'];
+if (!array_key_exists('_id', $content)){
+    $content['_id'] = $interaction;
 }
 
 header('Content-Type: application/json');
