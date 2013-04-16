@@ -1,3 +1,4 @@
+/*global cordova: true*/
 requirejs.config({
   baseUrl: '/_BICv3_/source',
   paths: {

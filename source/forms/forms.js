@@ -37,28 +37,26 @@ define(
           }
 
           if (!action) {
-            console.log(JSON.stringify(collapsed.default))
             dfrd.resolve(collapsed.default);
           }
 
           if (definition[action] && definition[action]._elements) {
-            console.log("action!")
-          //   //elements = definition.default._elements;
-          //   //delete collapsed.default._elements;
-          //   //elNames = definition[action]._elements;
-          //   //delete collapsed[action]._elements;
-          //   _.extend(collapsed.default, definition[action]);
+            //elements = definition.default._elements;
+            //delete collapsed.default._elements;
+            //elNames = definition[action]._elements;
+            //delete collapsed[action]._elements;
+            _.extend(collapsed.default, definition[action]);
 
-          //   // remove all elements not needed for this action
-          //   elements = _.filter(elements, function(el) {
-          //     return elNames.indexOf(el.default.name) !== -1;
-          //   });
-          //   // sort elements as per the action-specific order
-          //   elements = _.sortBy(elements, function(el) {
-          //     return elNames.indexOf(el.default.name);
-          //   });
+            // remove all elements not needed for this action
+            elements = _.filter(elements, function (el) {
+              return elNames.indexOf(el.default.name) !== -1;
+            });
+            // sort elements as per the action-specific order
+            elements = _.sortBy(elements, function (el) {
+              return elNames.indexOf(el.default.name);
+            });
 
-          //   def.default._elements = elements;
+            //def.default._elements = elements;
 
           }
 
