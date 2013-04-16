@@ -54,29 +54,23 @@ define(
 
         createDocument = function (jqXHR, revision) {
           jqXHR.done(function (data, textStatus, jqXHR) {
-            Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
-              if (err) {
-                console.log(err);
-              } else {
+            var db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+              if (!err) {
                 var d = new Date();
 
                 if (revision) {
                   data._rev = revision;
                 }
 
-                db.put(data, function (err, response) {
-                  if (err) {
-                    console.log(err);
-                  }
-                });
+                db.put(data, function (err, response) {});
               }
             });
           });
         };
 
         retrieveDocument = function () {
-          var docdfrd = $.Deferred();
-          Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+          var docdfrd = $.Deferred(), db;
+          db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
             var d = new Date();
             if (err) {
               docdfrd.reject(err);
