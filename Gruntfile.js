@@ -5,11 +5,8 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     watch: {
-      files: ['**/source*'],
-      tasks: ['jslint'],
-      options: {
-        nospawn: true
-      }
+      files: ['*'],
+      tasks: ['build'],
     },
 
     jslint: {
@@ -41,15 +38,12 @@ module.exports = function (grunt) {
       compile: {
         options: {
           baseUrl: 'source',
-          modules: [{
-            name: 'main',
-            exclude: ['text']
-          }],
+          modules: [{ name: 'main' }],
           mainConfigFile: 'source/main.js',
           dir: 'build',
-          // generateSourceMaps: false,
+          generateSourceMaps: false,
           paths: {
-            text: 'empty:',
+            text: '../assets/js/text',
             jquery: 'empty:',
             jquerymobile: 'empty:',
             underscore: 'empty:',
@@ -60,9 +54,7 @@ module.exports = function (grunt) {
             q: 'empty:',
             pouchdb: 'empty:'
           },
-          wrap: true,
-          optimize: 'none',
-          normalizeDirDefines: true
+          wrap: true
         }
       }
     }
