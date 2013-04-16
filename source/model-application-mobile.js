@@ -1,5 +1,5 @@
 define(
-  ['data/data', 'collections/v3/interactions', 'collections/v3/datasuitcases', 'models/v3/datasuitcase', 'collections/v3/forms', 'models/v3/form', 'underscore'],
+  ['data-pouch', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore'],
   function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _) {
     "use strict";
     var Application = Backbone.Model.extend({

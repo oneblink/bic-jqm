@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'api/API', 'pouchdb', 'jquery'],
+  ['backbone', 'api-xhr', 'pouchdb', 'jquery'],
   function (Backbone, API, Pouch, $) {
     "use strict";
     var data = {

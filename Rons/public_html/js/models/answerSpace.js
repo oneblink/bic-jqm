@@ -11,7 +11,7 @@ define([
   'backbone',
   'jQueryMobile',
   'models/context',
-  'models/Interaction',
+  'model-interaction-mobile',
   'collections/Interactions',
   'views/Interactions/list'
 ], function(logger, $, _, Backbone, jqm, context, Interaction) {

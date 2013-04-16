@@ -9,7 +9,7 @@ define([
   'jQuery',
   'underscore',
   'backbone',
-  'models/Interaction'
+  'model-interaction-mobile'
 ], function(logger, $, _, Backbone, Interaction) {
   'use strict';
   var bmp = window.BlinkApp,

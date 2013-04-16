@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'models/v3/datasuitcase'],
+  ['backbone', 'model-datasuitcase-mobile'],
   function (Backbone, DataSuitcase) {
     "use strict";
     var DataSuitcaseCollection = Backbone.Collection.extend({

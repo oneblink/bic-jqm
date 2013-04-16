@@ -1,5 +1,5 @@
 define(
-  ['jquery', 'backbone', 'mustache', 'text!templates/v3/interaction.html', 'text!templates/v3/inputPrompt.html', 'models/v3/application', 'underscore', 'forms/forms', 'jquerymobile'],
+  ['jquery', 'backbone', 'mustache', 'text!templates/interaction.html', 'text!templates/inputPrompt.html', 'model-application-mobile', 'underscore', 'model-form-mobile', 'jquerymobile'],
   function ($, Backbone, Mustache, Template, FormTemplate, app, _, forms) {
     "use strict";
     var InteractionView = Backbone.View.extend({

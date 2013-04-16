@@ -34,7 +34,7 @@ requirejs.config({
 });
 
 define(
-  ['backbone', 'routers/v3/router', 'models/v3/interaction', 'views/v3/interaction', 'models/v3/application', 'jquery', 'jquerymobile'],
+  ['backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'model-application-mobile', 'jquery', 'jquerymobile'],
   function (Backbone, router, InteractionModel, InteractionView, app, $) {
     "use strict";
     var start = function () {

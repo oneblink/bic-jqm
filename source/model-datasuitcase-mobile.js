@@ -1,5 +1,5 @@
 define(
-  ['data/data'],
+  ['data-pouch'],
   function (Backbone) {
     "use strict";
     var DataSuitcase = Backbone.Model.extend({

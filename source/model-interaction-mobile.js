@@ -1,5 +1,5 @@
 define(
-  ['data/data', 'jquery', 'underscore', 'jquerymobile'],
+  ['data-pouch', 'jquery', 'underscore', 'jquerymobile'],
   function (Backbone, $, _) {
     "use strict";
     var Interaction = Backbone.Model.extend({
@@ -15,7 +15,7 @@ define(
 
       inherit: function (config) {
         if (this.has("parent")) {
-          var app = require('models/v3/application'),
+          var app = require('model-application-mobile'),
             parent;
 
           _.each(this.attributes, function (value, key, list) {
@@ -69,7 +69,7 @@ define(
         } else {
           xsl = this.get("xsl");
         }
-        app = require('models/v3/application');
+        app = require('model-application-mobile');
         xmlString = app.datasuitcases.where({name: this.get("xml")})[0].get("data");
         xslString = xsl;
         if (typeof xmlString !== 'string' || typeof xslString !== 'string') {

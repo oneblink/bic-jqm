@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'models/v3/form'],
+  ['backbone', 'model-form-mobile'],
   function (Backbone, Form) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
