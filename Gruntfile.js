@@ -32,7 +32,13 @@ module.exports = function (grunt) {
       }
     },
 
-    clean: ['build'],
+    clean: {
+      build: ['build/*'],
+      release: [
+        'build/*',
+        '!build/main.js'
+      ]
+    },
 
     requirejs: {
       compile: {
@@ -68,6 +74,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['clean', 'requirejs']);
+  grunt.registerTask('build', ['clean:build', 'requirejs', 'clean:release']);
 
 };
