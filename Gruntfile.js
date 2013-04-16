@@ -2,18 +2,16 @@
 module.exports = function (grunt) {
   "use strict";
 
-  // Project configuration.
   grunt.initConfig({
 
-    // Metadata.
-    pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    watch: {
+      files: ['**/source*'],
+      tasks: ['jslint'],
+      options: {
+        nospawn: true
+      }
+    },
 
-    // Task configuration.
     jslint: {
       files: ['./source/**/*.js'],
       directives: {
@@ -28,13 +26,56 @@ module.exports = function (grunt) {
           "requirejs"
         ]
       }
+    },
+
+    mocha: {
+      all: ['tests/*'],
+      options: {
+        reporter: 'Nyan'
+      }
+    },
+
+    clean: ['build'],
+
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: 'source',
+          modules: [{
+            name: 'main',
+            exclude: ['text']
+          }],
+          mainConfigFile: 'source/main.js',
+          dir: 'build',
+          // generateSourceMaps: false,
+          paths: {
+            text: 'empty:',
+            jquery: 'empty:',
+            jquerymobile: 'empty:',
+            underscore: 'empty:',
+            backbone: 'empty:',
+            mustache: 'empty:',
+            BlinkForms: 'empty:',
+            rivets: 'empty:',
+            q: 'empty:',
+            pouchdb: 'empty:'
+          },
+          wrap: true,
+          optimize: 'none',
+          normalizeDirDefines: true
+        }
+      }
     }
+
   });
 
-  // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
-  // Default task.
   grunt.registerTask('default', ['jslint']);
+  grunt.registerTask('build', ['clean', 'requirejs']);
 
 };
