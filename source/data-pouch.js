@@ -7,7 +7,7 @@ define(
         var done, fail, jqXHR, fetch, dbType, createDocument, retrieveDocument, doc;
 
         done = function (data, status, xhr) {
-          options.success(model, data, options);
+          options.success(data);
         };
 
         fail = function (xhr, status, error) {
