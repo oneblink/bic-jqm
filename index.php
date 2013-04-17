@@ -36,7 +36,8 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
 <html>
     <head>
         <title>BICv3</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <?php
         if (array_key_exists('themePack', $content) && strlen($content['themePack']) > 0) {
             echo '<link rel="stylesheet" href="' . $cdna->getURI($asConfig['themePack']) . '" />';
