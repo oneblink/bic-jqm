@@ -1,0 +1,1130 @@
+(function () {
+define('api-xhr',
+  ['jquery'],
+  function ($) {
+    
+    var API = {
+      getInteraction: function (answerspace, interaction, args) {
+        var argstring = '';
+        if (args) {
+          $.each(args, function (key, value) {
+            argstring += "&" + key + "=" + value;
+          });
+        }
+        return $.ajax('/_BICv3_/xhr/GetInteraction.php?asn=' + answerspace + '&iact=' + interaction + argstring);
+      },
+
+      getAnswerSpace: function (answerspace) {
+        return $.ajax('/_BICv3_/xhr/GetApp.php?asn=' + answerspace);
+      },
+
+      getDataSuitcase: function (answerspace, datasuitcase) {
+        return $.ajax('/_BICv3_/xhr/GetDataSuitcase.php?asn=' + answerspace + '&ds=' + datasuitcase);
+      },
+
+      getForm: function (answerspace, form) {
+        return $.ajax('/_BICv3_/xhr/GetForm.php?asn=' + answerspace + '&form=' + form);
+      }
+    };
+
+    return API;
+  }
+);
+
+define('data-pouch',
+  ['backbone', 'api-xhr', 'pouchdb', 'jquery'],
+  function (Backbone, API, Pouch, $) {
+    
+    var data = {
+      getModel: function (model, options) {
+        var done, fail, jqXHR, fetch, dbType, createDocument, retrieveDocument, doc;
+
+        done = function (data, status, xhr) {
+          options.success(data);
+        };
+
+        fail = function (xhr, status, error) {
+          if (options.error) {
+            options.error(model, xhr, options);
+          }
+        };
+
+        fetch = function () {
+          switch (model.get("BICtype")) {
+          case "Interaction":
+            jqXHR = API.getInteraction(model.get('siteName'), model.get('_id'), model.get('args')).done(done).fail(fail);
+            break;
+          case "AnswerSpace":
+            jqXHR = API.getAnswerSpace(model.get('siteName')).done(done).fail(fail);
+            break;
+          case "DataSuitcase":
+            jqXHR = API.getDataSuitcase(model.get('siteName'), model.get("_id")).done(done).fail(fail);
+            break;
+          case "Form":
+            jqXHR = API.getForm(model.get('siteName'), model.get("_id")).done(done).fail(fail);
+            break;
+          default:
+            options.error(model, null, options);
+            jqXHR = null;
+            break;
+          }
+          jqXHR.then(function (data, textStatus, jqXHR) {
+            options.dfrd.resolve(data, textStatus, jqXHR);
+          }, function (jqXHR, textStatus, errorThrown) {
+            options.dfrd.reject(jqXHR, textStatus, errorThrown);
+          });
+        };
+
+        if (window.NativeApp === true && Pouch.adapters.websql) {
+          dbType = 'websql://';
+        } else {
+          if (Pouch.adapters.idb) {
+            dbType = 'idb://';
+          } else {
+            dbType = false;
+          }
+        }
+
+        createDocument = function (jqXHR, revision) {
+          jqXHR.done(function (data, textStatus, jqXHR) {
+            var db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+              if (!err) {
+                var d = new Date();
+
+                if (revision) {
+                  data._rev = revision;
+                }
+
+                db.put(data, function (err, response) {});
+              }
+            });
+          });
+        };
+
+        retrieveDocument = function () {
+          var docdfrd = $.Deferred(), db;
+          db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
+            var d = new Date();
+            if (err) {
+              docdfrd.reject(err);
+            } else {
+              if (!model.has("_id")) {
+                docdfrd.reject();
+              } else {
+                db.get(model.get('_id'), function (err, doc) {
+                  if (err) {
+                    docdfrd.reject();
+                  } else {
+                    if (doc.deviceCacheTime === 0) {
+                      docdfrd.resolve(doc);
+                    } else if (model.has("args")) {
+                      docdfrd.reject('Interaction has arguments', doc);
+                    } else if ((d.getTime() - doc.fetchTime) < (doc.deviceCacheTime * 1000)) {
+                      docdfrd.resolve(doc);
+                    } else {
+                      docdfrd.reject('Interaction too old', doc);
+                    }
+                  }
+                });
+              }
+            }
+          });
+          return docdfrd.promise();
+        };
+
+        if (dbType !== false) {
+          retrieveDocument().then(function (doc) {
+            options.dfrd.resolve(doc);
+            options.success(model, doc, options);
+          }, function (err, doc) {
+            fetch();
+
+            var revision;
+            if (doc) {
+              revision = doc._rev;
+            }
+            createDocument(jqXHR, revision);
+          });
+        } else {
+          fetch();
+        }
+      }
+    };
+
+    Backbone.sync = function (method, model, options) {
+      options.dfrd = $.Deferred();
+      data.getModel(model, options);
+      return options.dfrd.promise();
+    };
+    return Backbone;
+  }
+);
+
+define('model-interaction-mobile',
+  ['data-pouch', 'jquery', 'underscore', 'jquerymobile'],
+  function (Backbone, $, _) {
+    
+    var Interaction = Backbone.Model.extend({
+
+      idAttribute: "_id",
+
+      defaults: {
+        header: null,
+        content: null,
+        footer: null,
+        name: null
+      },
+
+      inherit: function (config) {
+        if (this.has("parent")) {
+          var app = require('model-application-mobile'),
+            parent;
+
+          _.each(this.attributes, function (value, key, list) {
+            if (!_.has(config, key) || !config[key]) {
+              config[key] = value;
+            }
+          }, this);
+
+          if (this.get("parent") !== "app") {
+            // Not the answerSpace config, so go deeper
+            parent = app.interactions.get(this.get("parent"));
+            parent.inherit(config);
+          } else {
+            _.each(app.attributes, function (value, key, list) {
+              if (!_.has(config, key) || !config[key]) {
+                config[key] = value;
+              }
+            }, app);
+          }
+        }
+        return config;
+      },
+
+      performXSLT: function () {
+        var xsl,
+          xmlString,
+          xslString,
+          html,
+          xml,
+          processor,
+          transformer,
+          args,
+          placeholders,
+          pLength,
+          p,
+          value,
+          app;
+        if (this.has("args")) {
+          args = this.get("args");
+          placeholders = xsl.match(/\$args\[[\w\:][\w\:\-\.]*\]/g);
+          pLength = placeholders ? placeholders.length : 0;
+          xsl = this.get("xsl");
+          for (p = 0; p < pLength; p = p + 1) {
+            value = typeof args[placeholders[p].substring(1)] === 'string' ? args[placeholders[p].substring(1)] : '';
+            // TODO: find a better solution upstream for having to decode this here
+            value = value.replace('"', '');
+            value = value.replace("'", '');
+            value = decodeURIComponent(value);
+            xsl = xsl.replace(placeholders[p], value);
+          }
+        } else {
+          xsl = this.get("xsl");
+        }
+        app = require('model-application-mobile');
+        xmlString = app.datasuitcases.where({name: this.get("xml")})[0].get("data");
+        xslString = xsl;
+        if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
+          this.set("content", 'XSLT failed due to poorly formed XML or XSL.');
+          return;
+        }
+        xml = $.parseXML(xmlString);
+        xsl = $.parseXML(xslString);
+        if (window.XSLTProcessor) {
+          //console.log("XSLTProcessor (W3C)");
+          processor = new window.XSLTProcessor();
+          processor.importStylesheet(xsl);
+          html = processor.transformToFragment(xml, document);
+        } else if (xml.transformNode !== undefined) {
+          //console.log("transformNode (IE)");
+          html = xml.transformNode(xsl);
+        } else if (window.xsltProcess) {
+          //console.log("AJAXSLT");
+          html = window.xsltProcess(xml, xsl);
+        } else {
+          //console.log("XSLT: Not supported");
+          html = '<p>Your browser does not support Data Suitcase keywords.</p>';
+        }
+        if (html) {
+          this.set("content", html);
+        }
+      }
+    });
+
+    return Interaction;
+  }
+);
+
+define('collection-interactions-mobile',
+  ['backbone', 'model-interaction-mobile'],
+  function (Backbone, Interaction) {
+    
+    var InteractionCollection = Backbone.Collection.extend({
+
+      model: Interaction,
+
+      url: function () {
+        return "/_BICv3_/xhr/GetInteraction.php?asn=" + this.app.get("answerspace");
+      }
+
+    });
+
+    return InteractionCollection;
+  }
+);
+define('model-datasuitcase-mobile',
+  ['data-pouch'],
+  function (Backbone) {
+    
+    var DataSuitcase = Backbone.Model.extend({
+      idAttribute: "_id"
+    });
+    return DataSuitcase;
+  }
+);
+
+define('collection-datasuitcases-mobile',
+  ['backbone', 'model-datasuitcase-mobile'],
+  function (Backbone, DataSuitcase) {
+    
+    var DataSuitcaseCollection = Backbone.Collection.extend({
+      model: DataSuitcase
+    });
+    return DataSuitcaseCollection;
+  }
+);
+
+define('model-form-mobile',
+  ['data-pouch', 'BlinkForms', 'underscore', 'jquery', 'model-application-mobile'],
+  function (Backbone, BlinkForms, _, $, app) {
+    
+    var Forms = Backbone.Model.extend({
+      idAttribute: "_id",
+
+      initialize: function () {
+        BlinkForms.getDefinition = function (name, action) {
+          var definition = app.forms.where({name: name})[0].get('definition'),
+            collapseAction,
+            collapsed,
+            elements,
+            elNames,
+            dfrd = $.Deferred();
+
+          collapseAction = function (d) {
+            var attrs = d.default || {};
+            if (action && d[action]) {
+              _.extend(attrs, d[action]);
+            }
+            return attrs;
+          };
+
+          collapsed = {
+            default: {
+              name: name
+            }
+          };
+
+          if (_.isArray(definition.default._elements)) {
+            collapsed.default._elements = _.map(definition.default._elements, collapseAction);
+          }
+          if (_.isArray(definition.default._sections)) {
+            collapsed.default._sections = _.map(definition.default._sections, collapseAction);
+          }
+          if (_.isArray(definition.default._pages)) {
+            collapsed.default._pages = _.map(definition.default._pages, collapseAction);
+          }
+
+          if (!action) {
+            dfrd.resolve(collapsed.default);
+          }
+
+          if (definition[action] && definition[action]._elements) {
+            //elements = definition.default._elements;
+            //delete collapsed.default._elements;
+            //elNames = definition[action]._elements;
+            //delete collapsed[action]._elements;
+            _.extend(collapsed.default, definition[action]);
+
+            // remove all elements not needed for this action
+            elements = _.filter(elements, function (el) {
+              return elNames.indexOf(el.default.name) !== -1;
+            });
+            // sort elements as per the action-specific order
+            elements = _.sortBy(elements, function (el) {
+              return elNames.indexOf(el.default.name);
+            });
+
+            //def.default._elements = elements;
+
+          }
+
+          dfrd.resolve(collapsed.default);
+          return dfrd.promise();
+        };
+      },
+
+      getForm: function (name, action) {
+        BlinkForms.getDefinition(name, action).then(function (definition) {
+          BlinkForms.initialize(definition);
+        });
+
+        return BlinkForms.currentFormObject;
+      }
+    }),
+      forms;
+
+    forms = new Forms();
+
+    return forms;
+  }
+);
+
+define('collection-forms-mobile',
+  ['backbone', 'model-form-mobile'],
+  function (Backbone, Form) {
+    
+    var FormCollection = Backbone.Collection.extend({
+      model: Form
+    });
+    return FormCollection;
+  }
+);
+
+define('model-application-mobile',
+  ['data-pouch', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _) {
+    
+    var Application = Backbone.Model.extend({
+
+      initialize: function () {
+        // Nested Collections
+        this.interactions = new InteractionCollection();
+        this.datasuitcases = new DataSuitcaseCollection();
+        this.forms = new FormCollection();
+
+        // Sample Forms
+        //this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
+
+        this.on('change', this.update);
+      },
+
+      idAttribute: "_id",
+
+      update: function () {
+        var modelArray,
+          count,
+          model,
+          children = {
+            DataSuitcases: this.datasuitcases,
+            Forms: this.forms
+          };
+
+        _.each(children, function (element, index, list) {
+          if (this.has(index)) {
+            modelArray = this.get(index);
+            for (count = 0; count < modelArray.length; count = count + 1) {
+              if (element.where({name: modelArray[count]}).length === 0) {
+                switch (index) {
+                case "DataSuitcases":
+                  model = new DataSuitcase({
+                    _id: modelArray[count],
+                    siteName: this.get("siteName"),
+                    BICtype: "DataSuitcase"
+                  });
+                  break;
+                case "Forms":
+                  model = new Form({
+                    _id: modelArray[count],
+                    siteName: this.get("siteName"),
+                    BICtype: "Form"
+                  });
+                  break;
+                }
+                element.add(model);
+                model.fetch();
+              }
+            }
+          }
+        }, this);
+      }
+    }),
+      app;
+
+    app = new Application();
+
+    return app;
+  }
+);
+
+/**
+ * @license RequireJS text 2.0.3 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/requirejs/text for details
+ */
+/*jslint regexp: true */
+/*global require: false, XMLHttpRequest: false, ActiveXObject: false,
+  define: false, window: false, process: false, Packages: false,
+  java: false, location: false */
+
+define('text',['module'], function (module) {
+    
+
+    var text, fs,
+        progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
+        xmlRegExp = /^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im,
+        bodyRegExp = /<body[^>]*>\s*([\s\S]+)\s*<\/body>/im,
+        hasLocation = typeof location !== 'undefined' && location.href,
+        defaultProtocol = hasLocation && location.protocol && location.protocol.replace(/\:/, ''),
+        defaultHostName = hasLocation && location.hostname,
+        defaultPort = hasLocation && (location.port || undefined),
+        buildMap = [],
+        masterConfig = (module.config && module.config()) || {};
+
+    text = {
+        version: '2.0.3',
+
+        strip: function (content) {
+            //Strips <?xml ...?> declarations so that external SVG and XML
+            //documents can be added to a document without worry. Also, if the string
+            //is an HTML document, only the part inside the body tag is returned.
+            if (content) {
+                content = content.replace(xmlRegExp, "");
+                var matches = content.match(bodyRegExp);
+                if (matches) {
+                    content = matches[1];
+                }
+            } else {
+                content = "";
+            }
+            return content;
+        },
+
+        jsEscape: function (content) {
+            return content.replace(/(['\\])/g, '\\$1')
+                .replace(/[\f]/g, "\\f")
+                .replace(/[\b]/g, "\\b")
+                .replace(/[\n]/g, "\\n")
+                .replace(/[\t]/g, "\\t")
+                .replace(/[\r]/g, "\\r")
+                .replace(/[\u2028]/g, "\\u2028")
+                .replace(/[\u2029]/g, "\\u2029");
+        },
+
+        createXhr: masterConfig.createXhr || function () {
+            //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
+            var xhr, i, progId;
+            if (typeof XMLHttpRequest !== "undefined") {
+                return new XMLHttpRequest();
+            } else if (typeof ActiveXObject !== "undefined") {
+                for (i = 0; i < 3; i += 1) {
+                    progId = progIds[i];
+                    try {
+                        xhr = new ActiveXObject(progId);
+                    } catch (e) {}
+
+                    if (xhr) {
+                        progIds = [progId];  // so faster next time
+                        break;
+                    }
+                }
+            }
+
+            return xhr;
+        },
+
+        /**
+         * Parses a resource name into its component parts. Resource names
+         * look like: module/name.ext!strip, where the !strip part is
+         * optional.
+         * @param {String} name the resource name
+         * @returns {Object} with properties "moduleName", "ext" and "strip"
+         * where strip is a boolean.
+         */
+        parseName: function (name) {
+            var strip = false, index = name.indexOf("."),
+                modName = name.substring(0, index),
+                ext = name.substring(index + 1, name.length);
+
+            index = ext.indexOf("!");
+            if (index !== -1) {
+                //Pull off the strip arg.
+                strip = ext.substring(index + 1, ext.length);
+                strip = strip === "strip";
+                ext = ext.substring(0, index);
+            }
+
+            return {
+                moduleName: modName,
+                ext: ext,
+                strip: strip
+            };
+        },
+
+        xdRegExp: /^((\w+)\:)?\/\/([^\/\\]+)/,
+
+        /**
+         * Is an URL on another domain. Only works for browser use, returns
+         * false in non-browser environments. Only used to know if an
+         * optimized .js version of a text resource should be loaded
+         * instead.
+         * @param {String} url
+         * @returns Boolean
+         */
+        useXhr: function (url, protocol, hostname, port) {
+            var uProtocol, uHostName, uPort,
+                match = text.xdRegExp.exec(url);
+            if (!match) {
+                return true;
+            }
+            uProtocol = match[2];
+            uHostName = match[3];
+
+            uHostName = uHostName.split(':');
+            uPort = uHostName[1];
+            uHostName = uHostName[0];
+
+            return (!uProtocol || uProtocol === protocol) &&
+                   (!uHostName || uHostName.toLowerCase() === hostname.toLowerCase()) &&
+                   ((!uPort && !uHostName) || uPort === port);
+        },
+
+        finishLoad: function (name, strip, content, onLoad) {
+            content = strip ? text.strip(content) : content;
+            if (masterConfig.isBuild) {
+                buildMap[name] = content;
+            }
+            onLoad(content);
+        },
+
+        load: function (name, req, onLoad, config) {
+            //Name has format: some.module.filext!strip
+            //The strip part is optional.
+            //if strip is present, then that means only get the string contents
+            //inside a body tag in an HTML string. For XML/SVG content it means
+            //removing the <?xml ...?> declarations so the content can be inserted
+            //into the current doc without problems.
+
+            // Do not bother with the work if a build and text will
+            // not be inlined.
+            if (config.isBuild && !config.inlineText) {
+                onLoad();
+                return;
+            }
+
+            masterConfig.isBuild = config.isBuild;
+
+            var parsed = text.parseName(name),
+                nonStripName = parsed.moduleName + '.' + parsed.ext,
+                url = req.toUrl(nonStripName),
+                useXhr = (masterConfig.useXhr) ||
+                         text.useXhr;
+
+            //Load the text. Use XHR if possible and in a browser.
+            if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort)) {
+                text.get(url, function (content) {
+                    text.finishLoad(name, parsed.strip, content, onLoad);
+                }, function (err) {
+                    if (onLoad.error) {
+                        onLoad.error(err);
+                    }
+                });
+            } else {
+                //Need to fetch the resource across domains. Assume
+                //the resource has been optimized into a JS module. Fetch
+                //by the module name + extension, but do not include the
+                //!strip part to avoid file system issues.
+                req([nonStripName], function (content) {
+                    text.finishLoad(parsed.moduleName + '.' + parsed.ext,
+                                    parsed.strip, content, onLoad);
+                });
+            }
+        },
+
+        write: function (pluginName, moduleName, write, config) {
+            if (buildMap.hasOwnProperty(moduleName)) {
+                var content = text.jsEscape(buildMap[moduleName]);
+                write.asModule(pluginName + "!" + moduleName,
+                               "define(function () { return '" +
+                                   content +
+                               "';});\n");
+            }
+        },
+
+        writeFile: function (pluginName, moduleName, req, write, config) {
+            var parsed = text.parseName(moduleName),
+                nonStripName = parsed.moduleName + '.' + parsed.ext,
+                //Use a '.js' file name so that it indicates it is a
+                //script that can be loaded across domains.
+                fileName = req.toUrl(parsed.moduleName + '.' +
+                                     parsed.ext) + '.js';
+
+            //Leverage own load() method to load plugin value, but only
+            //write out values that do not have the strip argument,
+            //to avoid any potential issues with ! in file names.
+            text.load(nonStripName, req, function (value) {
+                //Use own write() method to construct full module value.
+                //But need to create shell that translates writeFile's
+                //write() to the right interface.
+                var textWrite = function (contents) {
+                    return write(fileName, contents);
+                };
+                textWrite.asModule = function (moduleName, contents) {
+                    return write.asModule(moduleName, fileName, contents);
+                };
+
+                text.write(pluginName, nonStripName, textWrite, config);
+            }, config);
+        }
+    };
+
+    if (masterConfig.env === 'node' || (!masterConfig.env &&
+            typeof process !== "undefined" &&
+            process.versions &&
+            !!process.versions.node)) {
+        //Using special require.nodeRequire, something added by r.js.
+        fs = require.nodeRequire('fs');
+
+        text.get = function (url, callback) {
+            var file = fs.readFileSync(url, 'utf8');
+            //Remove BOM (Byte Mark Order) from utf8 files if it is there.
+            if (file.indexOf('\uFEFF') === 0) {
+                file = file.substring(1);
+            }
+            callback(file);
+        };
+    } else if (masterConfig.env === 'xhr' || (!masterConfig.env &&
+            text.createXhr())) {
+        text.get = function (url, callback, errback) {
+            var xhr = text.createXhr();
+            xhr.open('GET', url, true);
+
+            //Allow overrides specified in config
+            if (masterConfig.onXhr) {
+                masterConfig.onXhr(xhr, url);
+            }
+
+            xhr.onreadystatechange = function (evt) {
+                var status, err;
+                //Do not explicitly handle errors, those should be
+                //visible via console output in the browser.
+                if (xhr.readyState === 4) {
+                    status = xhr.status;
+                    if (status > 399 && status < 600) {
+                        //An http 4xx or 5xx error. Signal an error.
+                        err = new Error(url + ' HTTP status: ' + status);
+                        err.xhr = xhr;
+                        errback(err);
+                    } else {
+                        callback(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(null);
+        };
+    } else if (masterConfig.env === 'rhino' || (!masterConfig.env &&
+            typeof Packages !== 'undefined' && typeof java !== 'undefined')) {
+        //Why Java, why is this so awkward?
+        text.get = function (url, callback) {
+            var stringBuffer, line,
+                encoding = "utf-8",
+                file = new java.io.File(url),
+                lineSeparator = java.lang.System.getProperty("line.separator"),
+                input = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file), encoding)),
+                content = '';
+            try {
+                stringBuffer = new java.lang.StringBuffer();
+                line = input.readLine();
+
+                // Byte Order Mark (BOM) - The Unicode Standard, version 3.0, page 324
+                // http://www.unicode.org/faq/utf_bom.html
+
+                // Note that when we use utf-8, the BOM should appear as "EF BB BF", but it doesn't due to this bug in the JDK:
+                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4508058
+                if (line && line.length() && line.charAt(0) === 0xfeff) {
+                    // Eat the BOM, since we've already found the encoding on this file,
+                    // and we plan to concatenating this buffer with others; the BOM should
+                    // only appear at the top of a file.
+                    line = line.substring(1);
+                }
+
+                stringBuffer.append(line);
+
+                while ((line = input.readLine()) !== null) {
+                    stringBuffer.append(lineSeparator);
+                    stringBuffer.append(line);
+                }
+                //Make sure we return a JavaScript string and not a Java string.
+                content = String(stringBuffer.toString()); //String
+            } finally {
+                input.close();
+            }
+            callback(content);
+        };
+    }
+
+    return text;
+});
+
+define('text!templates/interaction.html',[],function () { return '{{{header}}}\n<div data-role="content">\n    {{{content}}}\n</div>\n{{{footer}}}';});
+
+define('text!templates/inputPrompt.html',[],function () { return '<form method="get">\n    {{{inputs}}}\n    <button type="submit" data-theme="a">Go</button>\n</form>\n';});
+
+define('view-interaction-mobile',
+  ['jquery', 'backbone', 'mustache', 'text!templates/interaction.html', 'text!templates/inputPrompt.html', 'model-application-mobile', 'underscore', 'model-form-mobile', 'jquerymobile'],
+  function ($, Backbone, Mustache, Template, FormTemplate, app, _, forms) {
+    
+    var InteractionView = Backbone.View.extend({
+
+      initialize: function () {
+        $('body').append(this.$el);
+      },
+
+      events: {
+        "click [keyword]" : "blinklink",
+        "click [interaction]" : "blinklink",
+        "click [category]" : "blinklink",
+        "click [masterCategory]" : "blinklink",
+        "click [back]" : "back",
+        "click [home]" : "blinklink",
+        "click [login]" : "blinklink"
+      },
+
+      attributes: {
+        "data-role": "page"
+      },
+
+      blinklink: function (e) {
+        e.preventDefault();
+
+        var $element,
+          location,
+          attributes = "",
+          first = true,
+          count,
+          path;
+
+        if (e.target.tagName !== 'A') {
+          $element = $(e.target).parents('a');
+        } else {
+          $element = $(e.target);
+        }
+
+        location = "";
+        if ($element.attr("keyword")) {
+          location = $element.attr("keyword");
+        } else if ($element.attr("interaction")) {
+          location = $element.attr("interaction");
+        } else if ($element.attr("category")) {
+          location = $element.attr("category");
+        } else if ($element.attr("masterCategory")) {
+          location = $element.attr("masterCategory");
+        } else if ($element.attr("home")) {
+          location = this.get("siteName");
+        } else if ($element.attr("login")) {
+          location = this.get("siteName");
+        }
+
+        for (count = 0; count < $element[0].attributes.length; count = count + 1) {
+          if ($element[0].attributes[count].name.substr(0, 1) === "_") {
+            if (!first) {
+              attributes += "&args[" + $element[0].attributes[count].name + "]=" + $element[0].attributes[count].value;
+            } else {
+              first = false;
+              attributes = "/?args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
+            }
+          }
+        }
+
+        path = $.mobile.path.parseLocation().pathname;
+        if ($.mobile.path.parseLocation().search) {
+          path = $.mobile.path.parseLocation().pathname.substr(0, $.mobile.path.parseLocation().pathname.length - 1);
+        }
+
+        if (path.slice(-1) === "/") {
+          path = path.slice(0, path.length - 1);
+        }
+
+        $.mobile.changePage(path + '/' + location + attributes);
+      },
+
+      back: function (e) {
+        e.preventDefault();
+        history.back();
+      },
+
+      render: function () {
+        var form,
+          rawform,
+          inheritedAttributes = this.model.inherit({}),
+          formobject;
+
+        // Input Prompt
+        if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
+          rawform = this.model.get("inputPrompt");
+          if (rawform.substr(0, 6) === "<form>") {
+            form = rawform;
+          } else {
+            form = Mustache.render(FormTemplate, {inputs: rawform});
+          }
+          this.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: form
+          }));
+        } else if (this.model.has("type") && this.model.get("type") === "xslt") {
+          // XSLT
+          this.model.performXSLT();
+          if (typeof (this.model.get("content")) === 'object') {
+            this.$el.html(Mustache.render(Template, {
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: ''
+            }));
+            this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
+          }
+        } else if (this.model.has("type") && this.model.get("type") === "form") {
+          // Form
+          formobject = forms.getForm(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction"));
+          this.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: '<div id="BlinkForm"></div>'
+          }));
+          $('#BlinkForm').append(formobject.$form);
+        } else {
+          if (_.has(inheritedAttributes, "themeSwatch")) {
+            this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
+          }
+          this.$el.html(Mustache.render(Template, inheritedAttributes));
+          this.maps();
+        }
+        return this;
+      },
+
+      maps: function () {
+        var mapdiv = this.$el.find("[class=googlemap]");
+        if (mapdiv.length !== 0) {
+          this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
+          this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+        }
+      }
+
+    });
+
+    return InteractionView;
+  }
+);
+
+define('router-mobile',
+  ['backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'jquerymobile'],
+  function (Backbone, app, InteractionModel, InteractionView, $) {
+    
+    var Router = Backbone.Router.extend({
+      initialize: function () {
+        app.router = this;
+        $(document).on('pagebeforeload', function (e, data) {
+          e.preventDefault();
+          $.mobile.loading('show');
+
+          app.router.processPath(data);
+        });
+      },
+
+      processPath: function (data) {
+        var path = data.dataUrl.substr(1).split('/'),
+          answerspace,
+          interaction,
+          args,
+          end,
+          finalparam,
+          parent = "app",
+          index,
+          promises = [];
+
+        if (path[path.length - 1] === "") {
+          path.pop();
+        }
+
+        if (path.length === 1) {
+          // Home page of app
+          if (app.has("homeScreen") && app.get("homeScreen") === true) {
+            answerspace = app.get("siteName");
+            interaction = app.get("homeInteraction");
+            args = "";
+          } else {
+            answerspace = app.get("siteName");
+            interaction = app.get("siteName");
+            args = "";
+          }
+          path = [];
+        } else {
+          // Need to parse interaction + dependancies
+          answerspace = path.shift();
+          end = path.pop();
+          if (end && end.indexOf('?') !== -1 && end.indexOf('?') !== 0) {
+            finalparam = end.split('?');
+            args = this.assembleArgs(finalparam.pop());
+            interaction = finalparam.pop();
+          } else if (end && end.indexOf('?') !== -1 && end.indexOf('?') === 0) {
+            interaction = path.pop();
+            args = this.assembleArgs(end.slice(1));
+          } else {
+            args = null;
+            interaction = end;
+          }
+        }
+
+        // Load any dependancies
+        if (path.length > 0) {
+          for (index = 0; index < path.length; index = index + 1) {
+            promises.push(app.router.loadInteraction(path[index], null, parent));
+            parent = path[index];
+          }
+        }
+
+        // Load final interaction
+        $.when.apply($, promises).then(function () {
+          app.router.loadInteraction(interaction, args, parent, app.router.displayInteraction(data));
+        });
+      },
+
+      assembleArgs: function (argstring) {
+        var argarray = argstring.split('&'),
+          args = {};
+        $.each(argarray, function (index, string) {
+          var equalIndex, name, value;
+          if (string.length !== 0 && (equalIndex = string.indexOf('=')) !== -1) {
+            name = string.substring(0, equalIndex);
+            value = string.substring(equalIndex + 1);
+            if (value) {
+              args[decodeURIComponent(name)] = decodeURIComponent(value);
+            }
+          }
+        });
+        return args;
+      },
+
+      loadInteraction: function (interaction, args, parent, options) {
+        var dfrd, promise;
+        // Find if in collection
+        if (app.interactions.get(interaction)) {
+          if (app.interactions.get(interaction).get("type") === "madl code" && options) {
+            promise = app.interactions.get(interaction).fetch(options);
+          } else {
+            dfrd = $.Deferred();
+            promise = dfrd.promise();
+            if (options) {
+              options.success(app.interactions.get(interaction), 'Collection', options);
+            }
+            dfrd.resolve();
+          }
+          app.interactions.get(interaction).set("parent", parent);
+        } else {
+          app.interactions.add({
+            _id: interaction,
+            name: interaction,
+            parent: parent,
+            siteName: app.get("siteName"),
+            BICtype: "Interaction",
+            args: args
+          });
+          promise = app.interactions.get(interaction).fetch(options);
+        }
+          // Fetch if MADL
+        // Fetch and add to collection
+        return promise;
+      },
+
+      displayInteraction: function (data) {
+        return {
+          success: function (model, response, options) {
+            //model.inherit();
+            var view = new InteractionView({
+              tagName: 'div',
+              model: model
+            }).render();
+            view.$el.attr("data-url", options.data.dataUrl);
+            view.$el.attr("data-external-page", true);
+            view.$el.one('pagecreate', $.mobile._bindPageRemove);
+            options.data.deferred.resolve(options.data.absUrl, options.data.options, view.$el);
+          },
+          error: function (model, xhr, options) {
+            options.data.deferred.reject(options.data.absUrl, options.data.options);
+            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+            setTimeout($.mobile.hidePageLoadingMsg, 1500);
+          },
+          data: data,
+          app: app
+        };
+      }
+    });
+
+    return new Router();
+  }
+);
+
+
+/*global cordova: true*/
+requirejs.config({
+  baseUrl: '/_BICv3_/scripts',
+  paths: {
+    BlinkForms: ['/_BICv3_/js/BlinkForms.min'],
+    pouchdb: ['/_BICv3_/js/pouchdb-nightly']
+  },
+  shim: {
+    'BlinkForms': {
+      exports: 'BlinkForms'
+    },
+    'pouchdb': {
+      exports: 'Pouch'
+    }
+  }
+});
+
+define('main',
+  ['backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'model-application-mobile', 'jquery', 'jquerymobile'],
+  function (Backbone, router, InteractionModel, InteractionView, app, $) {
+    
+    var start = function () {
+        var location = $.mobile.path.parseLocation();
+        app.set({
+          _id: location.pathname.substr(1).split('/')[0],
+          siteName: location.pathname.substr(1).split('/')[0],
+          BICtype: "AnswerSpace"
+        }).fetch({success: function (model, response, options) {
+          $.mobile.defaultPageTransition = model.get("defaultTransition");
+          $.mobile.changePage(location.pathname, {
+            changeHash: false,
+            reloadPage: true,
+            transition: 'fade'
+          });
+          $(document).on('pageshow', function () {
+            $('#temp').remove();
+          });
+        }});
+      },
+      init = function () {
+        if (window.NativeApp === true) {
+          if (cordova.available === true) {
+            start();
+          } else {
+            // Poll
+            window.setTimeout(init(), 1000);
+          }
+        } else {
+          start();
+        }
+      };
+    init();
+  }
+);}());

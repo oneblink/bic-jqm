@@ -5,12 +5,12 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     watch: {
-      files: ['*'],
+      files: ['*', 'scripts/*', 'tests/*'],
       tasks: ['build'],
     },
 
     jslint: {
-      files: ['./source/**/*.js'],
+      files: ['./scripts/**/*.js'],
       directives: {
         "browser": true,
         "es5": true,
@@ -43,9 +43,9 @@ module.exports = function (grunt) {
     requirejs: {
       compile: {
         options: {
-          baseUrl: 'source',
+          baseUrl: 'scripts',
           modules: [{ name: 'main' }],
-          mainConfigFile: 'source/main.js',
+          mainConfigFile: 'scripts/main.js',
           dir: 'build',
           generateSourceMaps: false,
           paths: {

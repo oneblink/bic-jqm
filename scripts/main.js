@@ -1,9 +1,9 @@
 /*global cordova: true*/
 requirejs.config({
-  baseUrl: '/_BICv3_/source',
+  baseUrl: '/_BICv3_/scripts',
   paths: {
-    BlinkForms: ['/_BICv3_/assets/js/BlinkForms.min'],
-    pouchdb: ['/_BICv3_/assets/js/pouchdb-nightly']
+    BlinkForms: ['/_BICv3_/js/BlinkForms.min'],
+    pouchdb: ['/_BICv3_/js/pouchdb-nightly']
   },
   shim: {
     'BlinkForms': {

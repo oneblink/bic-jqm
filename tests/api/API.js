@@ -1,5 +1,5 @@
 define(
-    [ 'chai', '/_BICv3_/source/api/API.js'],
+    [ 'chai', '/_BICv3_/api-xhr.js'],
     function (chai, api) {
         var expect = chai.expect;
 
