@@ -32,13 +32,7 @@ module.exports = function (grunt) {
       }
     },
 
-    clean: {
-      build: ['build/*'],
-      release: [
-        'build/*',
-        '!build/main.js'
-      ]
-    },
+    clean: ['build'],
 
     requirejs: {
       compile: {
@@ -47,9 +41,11 @@ module.exports = function (grunt) {
           modules: [{ name: 'main' }],
           mainConfigFile: 'scripts/main.js',
           dir: 'build',
-          generateSourceMaps: false,
+          optimize: "uglify2",
+          generateSourceMaps: true,
+          preserveLicenseComments: false,
           paths: {
-            text: '../assets/js/text',
+            text: '../js/text',
             jquery: 'empty:',
             jquerymobile: 'empty:',
             underscore: 'empty:',
@@ -63,6 +59,25 @@ module.exports = function (grunt) {
           wrap: true
         }
       }
+    },
+
+    copy: {
+      main: {
+        files: [
+          {
+            src: 'build/main.js',
+            dest: 'js/main.js'
+          },
+          {
+            src: 'build/main.js.map',
+            dest: 'js/main.js.map'
+          },
+          {
+            src: 'build/main.js.src',
+            dest: 'js/main.js.src'
+          }
+        ]
+      }
     }
 
   });
@@ -72,8 +87,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['clean:build', 'requirejs', 'clean:release']);
+  grunt.registerTask('build', ['mocha', 'clean', 'requirejs', 'copy', 'clean']);
 
 };

@@ -61,7 +61,7 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
           }
           ?>
         </script>
-        <script data-main="/_BICv3_/source/main" src="https://d1c6dfkb81l78v.cloudfront.net/blink/require/1/require.min.js"></script>
+        <script data-main="/_BICv3_/js/main" src="https://d1c6dfkb81l78v.cloudfront.net/blink/require/1/require.min.js"></script>
         <?php
         if(array_key_exists('externalJavaScript', $content) && strlen($content['externalJavaScript']) > 0){
            $js = explode("\n", $content['externalJavaScript']);
