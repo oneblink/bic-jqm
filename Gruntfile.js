@@ -5,8 +5,14 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     watch: {
-      files: ['*', 'scripts/*', 'tests/*'],
-      tasks: ['build'],
+      source: {
+        files: ['*', 'scripts/**'],
+        tasks: ['build'],
+      },
+      tests: {
+        files: ['test/**'],
+        tasks: ['mocha'],
+      }
     },
 
     jslint: {
@@ -26,10 +32,10 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      all: ['tests/*'],
+      index: ['tests/index.html'],
       options: {
         reporter: 'Nyan'
-      }
+      },
     },
 
     clean: ['build'],
