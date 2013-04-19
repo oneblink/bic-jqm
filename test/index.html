@@ -15,7 +15,7 @@
     <script src="assets/sinon.js"></script>
     <script>
         mocha.setup('bdd');
-        mocha.globals(['$', 'jQuery'])
+        mocha.globals(['$', 'jQuery', 'LiveReload'])
         var should = chai.should();
         var expect = chai.expect;
     </script>
@@ -25,11 +25,11 @@
     <script>
       requirejs.config({
         baseUrl: './tests',
-        paths: {BlinkForms: ['../js/BlinkForms.min'], pouchdb: ['../js/pouchdb-nightly']},
+        paths: {BlinkForms: ['../../js/BlinkForms.min'], pouchdb: ['../../js/pouchdb-nightly']},
         shim: {'BlinkForms': {exports: 'BlinkForms'}, 'pouchdb': {exports: 'Pouch'}}
       });
 
-      require(['api-xhr'], function () {
+      require(['api-php-test', 'data-pouch-test'], function () {
         mocha.run()
       });
     </script>

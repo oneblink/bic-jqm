@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      index: ['tests/index.html'],
+      index: ['test/index.html'],
       options: {
         reporter: 'Nyan'
       },
