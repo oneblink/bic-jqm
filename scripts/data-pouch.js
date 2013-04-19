@@ -35,11 +35,17 @@ define(
             jqXHR = null;
             break;
           }
-          jqXHR.then(function (data, textStatus, jqXHR) {
-            options.dfrd.resolve(data, textStatus, jqXHR);
-          }, function (jqXHR, textStatus, errorThrown) {
-            options.dfrd.reject(jqXHR, textStatus, errorThrown);
-          });
+          if (jqXHR) {
+            jqXHR.then(function (data, textStatus, jqXHR) {
+              options.dfrd.resolve(data, textStatus, jqXHR);
+            }, function (jqXHR, textStatus, errorThrown) {
+              options.dfrd.reject(jqXHR, textStatus, errorThrown);
+            });  
+          } else {
+            options.dfrd.reject(null, '404', 'Invalid Model Type');
+            jqXHR = $.Deferred().reject('Invalid Model Type');
+          }
+          
         };
 
         if (window.NativeApp === true && Pouch.adapters.websql) {
