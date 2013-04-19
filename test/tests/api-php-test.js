@@ -1,9 +1,9 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 
-define([ '../scripts/api-xhr.js'],
+define([ '../scripts/api-php.js'],
   function (api) {
     "use strict";
-    describe('API-XHR Facade', function () {
+    describe('API Facade Layer - PHP Implementation', function () {
       var server;
 
       before(function () {
