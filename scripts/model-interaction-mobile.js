@@ -1,5 +1,5 @@
 define(
-  ['data-pouch', 'jquery', 'underscore', 'jquerymobile'],
+  ['backbone', 'jquery', 'underscore', 'jquerymobile'],
   function (Backbone, $, _) {
     "use strict";
     var Interaction = Backbone.Model.extend({

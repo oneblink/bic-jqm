@@ -1,6 +1,6 @@
 define(
-  ['backbone', 'api-xhr', 'pouchdb', 'jquery'],
-  function (Backbone, API, Pouch, $) {
+  ['api-php', 'pouchdb', 'jquery'],
+  function (API, Pouch, $) {
     "use strict";
     var data = {
       getModel: function (model, options) {
@@ -123,12 +123,6 @@ define(
         }
       }
     };
-
-    Backbone.sync = function (method, model, options) {
-      options.dfrd = $.Deferred();
-      data.getModel(model, options);
-      return options.dfrd.promise();
-    };
-    return Backbone;
+    return data;
   }
 );
