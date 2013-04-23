@@ -40,23 +40,12 @@ define(
               options.dfrd.resolve(data, textStatus, jqXHR);
             }, function (jqXHR, textStatus, errorThrown) {
               options.dfrd.reject(jqXHR, textStatus, errorThrown);
-            });  
+            });
           } else {
             options.dfrd.reject(null, '404', 'Invalid Model Type');
             jqXHR = $.Deferred().reject('Invalid Model Type');
           }
-          
         };
-
-        if (window.NativeApp === true && Pouch.adapters.websql) {
-          dbType = 'websql://';
-        } else {
-          if (Pouch.adapters.idb) {
-            dbType = 'idb://';
-          } else {
-            dbType = false;
-          }
-        }
 
         createDocument = function (jqXHR, revision) {
           jqXHR.done(function (data, textStatus, jqXHR) {
@@ -104,6 +93,16 @@ define(
           });
           return docdfrd.promise();
         };
+
+        if (window.NativeApp === true && Pouch.adapters.websql) {
+          dbType = 'websql://';
+        } else {
+          if (Pouch.adapters.idb) {
+            dbType = 'idb://';
+          } else {
+            dbType = false;
+          }
+        }
 
         if (dbType !== false) {
           retrieveDocument().then(function (doc) {
