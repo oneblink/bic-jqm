@@ -1,8 +1,17 @@
 /*global module:false*/
 module.exports = function (grunt) {
   "use strict";
-
   grunt.initConfig({
+
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          base: '.',
+          keepalive: true
+        }
+      }
+    },
 
     watch: {
       source: {
@@ -88,6 +97,7 @@ module.exports = function (grunt) {
 
   });
 
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-mocha');
