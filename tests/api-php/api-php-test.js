@@ -1,6 +1,6 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 
-define([ '../scripts/api-php.js'],
+define(['../../scripts/api-php.js'],
   function (api) {
     "use strict";
     describe('API Facade Layer - PHP Implementation', function () {
@@ -13,7 +13,6 @@ define([ '../scripts/api-php.js'],
         server.respondWith('/_BICv3_/xhr/GetInteraction.php?asn=Exists&iact=Exists&args[0]=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('/_BICv3_/xhr/GetDataSuitcase.php?asn=Exists&ds=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('/_BICv3_/xhr/GetForm.php?asn=Exists&form=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        
       });
 
       after(function () {

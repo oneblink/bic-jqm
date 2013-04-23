@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         tasks: ['build'],
       },
       tests: {
-        files: ['test/**'],
+        files: ['tests/**'],
         tasks: ['mocha'],
       }
     },
@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      index: ['test/index.html'],
+      all: ['tests/*!(assets)/index.html'],
       options: {
         reporter: 'Nyan'
       },
