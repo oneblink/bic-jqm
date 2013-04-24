@@ -47,10 +47,14 @@ define(
           location = $element.attr("category");
         } else if ($element.attr("masterCategory")) {
           location = $element.attr("masterCategory");
-        } else if ($element.attr("home")) {
-          location = this.get("siteName");
-        } else if ($element.attr("login")) {
-          location = this.get("siteName");
+        } else if ($element.attr("home") === "") {
+          location = app.get("siteName");
+        } else if ($element.attr("login") === "") {
+          if (app.has("loginAccess") && app.has("loginUseInteractions") && app.has("loginUseInteractions") && app.has("loginPromptInteraction")) {
+            location = app.get("loginPromptInteraction");
+          } else {
+            location = app.get("siteName");
+          }
         }
 
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
