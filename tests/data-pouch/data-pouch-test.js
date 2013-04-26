@@ -86,6 +86,8 @@ define(['../../scripts/data-pouch.js', 'backbone', 'jquery'],
             });
           });
 
+          it('should handle an Interaction fetch request that uses POST data');
+
           it('should handle a DataSuitcase fetch request', function (done) {
             data.getModel(dataSuitcase, options);
             options.dfrd.then(function (doc) {

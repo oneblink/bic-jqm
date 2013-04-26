@@ -67,6 +67,7 @@ define(['../../scripts/api-php.js'],
             });
           server.respond();
         });
+        it('should handle POST data passed in via options param');
       });
 
       describe('getDataSuitcase', function () {
