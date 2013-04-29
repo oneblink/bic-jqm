@@ -8,21 +8,8 @@
 //  * TODO: allow passing last-fetch-time so caching can be honored
 //  */
 
-// // $microtime = array();
-// // $microtime['start'] = microtime(true);
-
-// // *** BASIC ERROR CHECKING WITH RESPONSE CODES ***
-
-// // session_cache_limiter('nocache');
-
-// // if (empty($_REQUEST['asn']) || empty($_REQUEST['iact'])) {
-// // 	header('HTTP/1.1 400 Bad Request', true, 400);
-// // 	exit('answerSpace (asn) and interaction (iact) must be specified');
-// // }
 
 set_include_path('../../../includes/');
-// // require_once 'tools.php';
-// // dispelAllMagic();
 
 require_once 'adodb5/adodb.inc.php';
 require_once 'adodb5/adodb-exceptions.inc.php';
@@ -36,40 +23,11 @@ if (!$db) {
 	exit('unable to open main database connection');
 }
 
-// // $microtime['db_connection'] = microtime(true) - $microtime['start'];
-
-// // require_once 'tools.php';
-// // $headers = getRequestHeaders();
-// // $configHeader = json_decode($headers['X-Blink-Config'], true);
-
-// // $message = array();
-
-// // if (!is_array($_SESSION['mydot_device'])) {
-// // 	$_SESSION['mydot_device'] = array();
-// // }
-// // if (is_array($configHeader['conditions'])) {
-// // 	$_SESSION['mydot_device']['features'] = $configHeader['conditions'];
-// // } else {
-// // 	if (empty($_SESSION['mydot_device']['features'])) {
-// // 		require_once 'Tera-WURFL/TeraWurfl.php';
-// // 		require_once 'deviceConfig/DeviceIdentifier.php';
-// // 		$di = new DeviceIdentifier($_SERVER['HTTP_USER_AGENT']);
-// // 		$_SESSION['mydot_device']['features'] = $di->features;
-// // 	}
-// // }
-
-// // $microtime['device_detection'] = microtime(true) - $microtime['start'];
-
 require_once 'deviceConfig/SettingsParser.php';
 $sp = SettingsParser::resurrect($db, get_include_path() . 'deviceConfig/answerSpace.xml');
 require_once 'deviceConfig/FeatureProcessor.php';
 require_once 'deviceConfig/config.php';
 
-// // $microtime['settings_parser'] = microtime(true) - $microtime['start'];
-
-// // // *** FETCH ANSWER SPACE ***
-
-// // if (!empty($_REQUEST['asn'])) {
 	$db->SetFetchMode(ADODB_FETCH_ASSOC);
 	$rs = $db->Execute('SELECT * FROM answer_space WHERE uid = ?', array($_REQUEST['asn']));
 	if ($rs === false || empty($rs->fields)) {
@@ -93,76 +51,6 @@ require_once 'deviceConfig/config.php';
     } else {
         $interaction = $_REQUEST['iact'];
     }
-
-
-
-
-
-
-
-// // 	$microtime['answerSpace_fetched'] = microtime(true) - $microtime['start'];
-// // }
-
-// // // *** FETCH INTERACTION ***
-
-// $db->SetFetchMode(ADODB_FETCH_ASSOC);
-// $rs = $db->Execute('SELECT * FROM keyword WHERE keyword = ? AND answer_space_id = ?', array($_REQUEST['iact'], $answer_space_id));
-// if ($rs === false || empty($rs->fields)) {
-// 	header('HTTP/1.1 404 Not Found', true, 404);
-// 	exit('interaction could not be located');
-// } else {
-// 	$answer_space_id = $rs->fields['answer_space_id'];
-// 	$config = new Config($rs->fields, $_SESSION['mydot_device']['features'], $sp);
-// 	$config = $config->config['pertinent'];
-// }
-
-// // $_SESSION['mydot_user']['answer_space_id'] = $answer_space_id;
-// // $microtime['interaction_fetched'] = microtime(true) - $microtime['start'];
-
-// // if ($config['registeredOnly'] === 'deny anonymous' && empty($_SESSION['mobile_number'])) {
-// // 	header('HTTP/1.1 403 Forbidden', true, 403);
-// // 	exit('anonymous access to interaction ' . $_REQUEST['_i'] . ' denied');
-// // }
-// // require_once 'iphone_tools.php';
-// // /* TODO: get restricted access interactions working again
-// //  if ($result->restricted == "yes") {
-// //  if (!haspermission($db, $answer_space_id, $answerSpace, $result->id)) {
-// //  echo "No Data";
-// //  die();
-// //  }
-// //  }
-// //  */
-
-// // require_once 'blink/bic/Interaction.php';
-// // \Blink\BIC\Interaction::$db = $db;
-// // $interaction = new \Blink\BIC\Interaction($config, $answer_space_id);
-
-// // $returnValue = $interaction->toHTML();
-
-// // $microtime['access_verified'] = microtime(true) - $microtime['start'];
-
-// // // *** FETCH ANSWER SPACE (IF NOT DONE EARLIER) ***
-
-// // if (empty($answerSpace)) {
-// // 	$db->SetFetchMode(ADODB_FETCH_ASSOC);
-// // 	$rs = $db->Execute('SELECT * FROM answer_space WHERE id = ?', array($answer_space_id));
-// // 	if ($rs === false || empty($rs->fields)) {
-// // 		header('HTTP/1.1 404 Not Found', true, 404);
-// // 		exit('answerSpace with ID ' . $answer_space_id . ' (associated with interaction with ID ' . $_REQUEST['_i'] . ') could not be located');
-// // 	}
-// // 	$answerSpace = new Config($rs->fields, $_SESSION['mydot_device']['features'], $sp);
-// // 	$answerSpace = $answerSpace->config['pertinent'];
-// // 	$microtime['answerSpace_fetched'] = microtime(true) - $microtime['start'];
-// // } 
-
-// // *** BUILD RESULT ***
-
-// header('Content-Type: application/json');
-
-// //$microtime['end'] = microtime(true) - $microtime['start'];
-// //print_r($microtime);
-
-// echo json_encode($config);
 
 // Ron's BIC thang
 require_once('blink/bic/getConfigs.php');
@@ -191,22 +79,6 @@ $getConfigs = new GetConfigs();
 //$content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 $content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array('siteName' => $_REQUEST['asn']), $cdnp, $cdna, $getConfigs);
 
-//$configs = $getConfigs->getConfigsByNames($_REQUEST['iact']);
-//$args = $_REQUEST['args'] ? $_REQUEST['args'] : NULL;
-//$content = $handler->contentify(array($_REQUEST['iact']), $args, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
-
-//echo $content;
-
-// echo $content['header'];
-// echo '<div data-role="content">';
-// echo $content['content'];
-// echo '</div>';
-// echo $content['footer'];
-
-// if (!$content['name']){
-// 	$content['name'] = $_REQUEST['asn'];
-// }
-
 if (array_key_exists('type', $content) && $content['type'] === 'xslt'){
     $content['content'] = '';
 }
@@ -219,5 +91,55 @@ if (!array_key_exists('_id', $content)){
     $content['_id'] = $interaction;
 }
 
+
+// Need to do a little inheriting here
+if (!isset($content['userGroups']) && isset($asConfig['userGroups'])){
+    $content['userGroups'] = $asConfig['userGroups'];
+}
+
+// Lets add an escape option for the login status and prompt
+if (isset ($asConfig['loginStatusInteraction'], $asConfig['loginPromptInteraction']) && (strtolower(convertIDtoName($asConfig['loginStatusInteraction'])) === strtolower($content['_id']) || strtolower(convertIDtoName($asConfig['loginPromptInteraction'])) === strtolower($content['_id']))){
+    unset($content['userGroups']);
+}
+
+// Also need a dirty hack for the homepage. Sigh.
+if (strtolower($content['_id']) === strtolower($content['siteName'])){
+    $content = array_merge($asConfig, $content);
+}
+
+// Only give the user what they want if they are allowed to have it, you little tease you
 header('Content-Type: application/json');
-echo json_encode($content);
+if (isset($asConfig['loginAccess'], $asConfig['loginUseInteractions'], $asConfig['loginStatusInteraction'], $content['userGroups']) && $asConfig['loginAccess'] && $asConfig['loginUseInteractions']) {
+    require_once 'deviceConfig/answerSpaceMap.php';
+    $siteMap = new answerSpaceMap($answer_space_id);
+    $loginAccount = $siteMap->checkLoginStatusInteraction();
+    if (isset($loginAccount, $loginAccount['groups'])) {
+        // Check the group is within the list
+        $passedChecks = TRUE;
+        foreach ($content['userGroups'] as $group) {
+            if ($passedChecks && array_search($group, $loginAccount['groups']) === FALSE) {
+                $passedChecks = FALSE;
+            }
+        }
+        if ($passedChecks) {
+            echo json_encode($content);
+        }
+    } else {
+        $content['content'] = $content['accessDeniedMessage'];
+        echo json_encode($content);
+    }    
+} else {
+    echo json_encode($content);
+}
+
+
+function convertIDtoName($id) {
+    $db = BlinkPlatformConfig::openMainDatabaseConnection();
+    $db->SetFetchMode(ADODB_FETCH_ASSOC);
+    $rs = $db->Execute('SELECT keyword FROM keyword WHERE id = ?', array($id));
+    if ($rs === false || empty($rs->fields)) {
+        header('HTTP/1.1 404 Not Found', true, 404);
+        exit('interaction id ' . $_REQUEST['iact'] . ' could not be located, despite database magic');
+    }
+    return $rs->fields['keyword'];
+}
