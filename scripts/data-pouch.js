@@ -19,7 +19,7 @@ define(
         fetch = function () {
           switch (model.get("BICtype")) {
           case "Interaction":
-            jqXHR = API.getInteraction(model.get('siteName'), model.get('_id'), model.get('args'), options.data.options).done(done).fail(fail);
+            jqXHR = API.getInteraction(model.get('siteName'), model.get('_id'), model.get('args'),  options && options.data && options.data.options ? options.data.options : null).done(done).fail(fail);
             break;
           case "AnswerSpace":
             jqXHR = API.getAnswerSpace(model.get('siteName')).done(done).fail(fail);
