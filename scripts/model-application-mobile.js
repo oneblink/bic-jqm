@@ -1,6 +1,6 @@
 define(
-  ['backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore'],
-  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _) {
+  ['backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore', 'collection-pending'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _, PendingCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -9,9 +9,7 @@ define(
         this.interactions = new InteractionCollection();
         this.datasuitcases = new DataSuitcaseCollection();
         this.forms = new FormCollection();
-
-        // Sample Forms
-        //this.set({Forms: ["Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "form2"]});
+        this.pending = new PendingCollection();
 
         this.on('change', this.update);
       },
