@@ -51,5 +51,14 @@ define(['../../scripts/view-interaction-mobile.js', 'backbone'],
       it("should be a Backbone.View object constructor", function () {
         view.should.be.an.instanceOf(Function);
       });
+
+      describe('BlinkLink Handling', function () {
+        it('should handle <a keyword=""> link format');
+        it('should handle <a interaction=""> link format');
+        it('should handle <a category=""> link format');
+        it('should handle <a masterCategory=""> link format');
+        it('should handle <a home> link format');
+        it('should handle <a login> link format');
+      });
     });
   });
