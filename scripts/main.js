@@ -2,7 +2,7 @@
 requirejs.config({
   baseUrl: '/_BICv3_/scripts',
   paths: {
-    BlinkForms: ['/_BICv3_/js/BlinkForms.min'],
+    BlinkForms: ['/_BICv3_/js/BlinkForms-jQueryMobile.min'],
     pouchdb: ['/_BICv3_/js/pouchdb-nightly']
   },
   shim: {
