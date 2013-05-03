@@ -1,6 +1,6 @@
 define(
-  ['api-php', 'pouchdb', 'jquery'],
-  function (API, Pouch, $) {
+  ['api-php', 'pouchdb', 'jquery', 'underscore'],
+  function (API, Pouch, $, _) {
     "use strict";
     var data = {
       getModel: function (model, options) {
@@ -120,6 +120,19 @@ define(
         } else {
           fetch();
         }
+      },
+
+      getModels: function (models, options) {
+        options.dfrd.reject(null, '404', 'Collection.fetch not yet implemented');
+      },
+
+      setModels: function (models, options) {
+        // Only for pending queue
+        _.each(models.models, function (model) {
+          API.setPendingItem(model.get("answerspaceid"), model.get("name"), model.get("action"), model.get("data")).then(function () {
+            model = null;
+          });
+        });
       }
     };
     return data;

@@ -9,13 +9,19 @@ define(
       },
 
       events: {
+        // Old Blink Link Shortcut Methods
         "click [keyword]" : "blinklink",
         "click [interaction]" : "blinklink",
         "click [category]" : "blinklink",
         "click [masterCategory]" : "blinklink",
         "click [back]" : "back",
         "click [home]" : "blinklink",
-        "click [login]" : "blinklink"
+        "click [login]" : "blinklink",
+
+        // Form Actions
+        "click #FormControls #submit" : "formSubmit",
+        "click #FormControls #cancel" : "formCancel",
+        "click #FormControls #save" : "formSave"
       },
 
       attributes: {
@@ -89,7 +95,8 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          formobject;
+          formobject,
+          formmodel;
 
         // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
@@ -144,6 +151,38 @@ define(
           this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
           this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
         }
+      },
+
+      formSubmit: function () {
+        // Put in pending queue for processing
+        var view = this;
+        BlinkForms.currentFormObject.data().then(function (data) {
+          app.pending.add({
+            type: "Form",
+            status: "Pending",
+            name: view.model.get("blinkFormObjectName"),
+            action: view.model.get("blinkFormAction"),
+            answerspaceid: app.get("dbid"),
+            data: data//JSON.stringify(data)
+          }).sync("create", app.pending, {});
+        });
+      },
+
+      formCancel: function () {
+        // If in pending queue, remove
+        // Close the form
+        $('#cancelPopup').popup('open');
+      },
+
+      formSave: function () {
+        // Save to pending queue as a draft
+        BlinkForms.currentFormObject.data().then(function (data) {
+          app.pending.add({
+            type: "Form",
+            status: "Draft",
+            data: JSON.stringify(data)
+          }).sync("create", app.pending, {}).fetch({reset: true});
+        });
       }
 
     });

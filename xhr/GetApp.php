@@ -172,4 +172,8 @@ if (!array_key_exists('_id', $config)){
     $config['_id'] = $_REQUEST['asn'];
 }
 
+if (!array_key_exists('dbid', $config)){
+    $config['dbid'] = $answer_space_id;
+}
+
 echo json_encode($config);

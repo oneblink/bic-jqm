@@ -23,6 +23,10 @@ define(
 
       getForm: function (answerspace, form) {
         return $.ajax('/_BICv3_/xhr/GetForm.php?asn=' + answerspace + '&form=' + form);
+      },
+
+      setPendingItem: function (answerspaceid, formname, formaction, formdata) {
+        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + answerspaceid + '&_fn=' + formname + '&_action=' + formaction, formdata);
       }
     };
 
