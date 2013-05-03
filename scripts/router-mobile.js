@@ -92,9 +92,9 @@ define(
         // Find if in collection
         if (app.interactions.get(interaction)) {
           if (app.interactions.get(interaction).get("type") === "madl code" && options) {
-            promise = app.interactions.get(interaction).fetch(options);
+            promise = app.interactions.get(interaction).set({args: args}).fetch(options);
           } else {
-            dfrd = $.Deferred();
+            dfrd = new $.Deferred();
             promise = dfrd.promise();
             if (options) {
               options.success(app.interactions.get(interaction), 'Collection', options);

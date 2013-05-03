@@ -43,7 +43,7 @@ define(
             });
           } else {
             options.dfrd.reject(null, '404', 'Invalid Model Type');
-            jqXHR = $.Deferred().reject('Invalid Model Type');
+            jqXHR = new $.Deferred().reject('Invalid Model Type');
           }
         };
 
@@ -64,7 +64,7 @@ define(
         };
 
         retrieveDocument = function () {
-          var docdfrd = $.Deferred(), db;
+          var docdfrd = new $.Deferred(), db;
           db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
             var d = new Date();
             if (err) {
