@@ -128,9 +128,13 @@ define(
 
       setModels: function (models, options) {
         // Only for pending queue
+        // TODO: Switch to aggregating the dfrd responses as per main.js
         _.each(models.models, function (model) {
           API.setPendingItem(model.get("answerspaceid"), model.get("name"), model.get("action"), model.get("data")).then(function () {
             model = null;
+            options.dfrd.resolve(model);
+          }, function () {
+            options.dfrd.reject(null, '9000', 'Something went wrong');
           });
         });
       }

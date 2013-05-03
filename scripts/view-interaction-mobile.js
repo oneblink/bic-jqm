@@ -164,7 +164,7 @@ define(
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
             data: data//JSON.stringify(data)
-          }).sync("create", app.pending, {});
+          });
         });
       },
 
