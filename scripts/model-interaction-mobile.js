@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'jquery', 'underscore', 'jquerymobile'],
+  ['wrapper-backbone', 'jquery', 'underscore', 'jquerymobile'],
   function (Backbone, $, _) {
     "use strict";
     var Interaction = Backbone.Model.extend({

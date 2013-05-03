@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore', 'collection-pending'],
+  ['wrapper-backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore', 'collection-pending'],
   function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _, PendingCollection) {
     "use strict";
     var Application = Backbone.Model.extend({

@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'model-interaction-mobile'],
+  ['wrapper-backbone', 'model-interaction-mobile'],
   function (Backbone, Interaction) {
     "use strict";
     var InteractionCollection = Backbone.Collection.extend({

@@ -16,47 +16,42 @@ requirejs.config({
 });
 
 define(
-  ['backbone', 'data-pouch', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'model-application-mobile', 'jquery', 'jquerymobile'],
-  function (Backbone, data, router, InteractionModel, InteractionView, app, $) {
+  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'model-application-mobile', 'jquery', 'jquerymobile'],
+  function (Backbone, router, InteractionModel, InteractionView, app, $) {
     "use strict";
-    var start = function () {
-        // Hook Backbone.sync up to the data layer
-        Backbone.sync = function (method, model, options) {
-          options.dfrd = $.Deferred();
-          data.getModel(model, options);
-          return options.dfrd.promise();
-        };
+    function start() {
+      // Now process the app start
+      var location = $.mobile.path.parseLocation();
+      app.set({
+        _id: location.pathname.substr(1).split('/')[0],
+        siteName: location.pathname.substr(1).split('/')[0],
+        BICtype: "AnswerSpace"
+      }).fetch({success: function (model, response, options) {
+        $.mobile.defaultPageTransition = model.get("defaultTransition");
+        $.mobile.changePage(location.pathname, {
+          changeHash: false,
+          reloadPage: true,
+          transition: 'fade'
+        });
+        $(document).on('pageshow', function () {
+          $('#temp').remove();
+        });
+      }});
+    }
 
-        // Now process the app start
-        var location = $.mobile.path.parseLocation();
-        app.set({
-          _id: location.pathname.substr(1).split('/')[0],
-          siteName: location.pathname.substr(1).split('/')[0],
-          BICtype: "AnswerSpace"
-        }).fetch({success: function (model, response, options) {
-          $.mobile.defaultPageTransition = model.get("defaultTransition");
-          $.mobile.changePage(location.pathname, {
-            changeHash: false,
-            reloadPage: true,
-            transition: 'fade'
-          });
-          $(document).on('pageshow', function () {
-            $('#temp').remove();
-          });
-        }});
-      },
-      init = function () {
-        if (window.NativeApp === true) {
-          if (cordova.available === true) {
-            start();
-          } else {
-            // Poll
-            window.setTimeout(init(), 1000);
-          }
-        } else {
+    // Delay the app for Cordova
+    function init() {
+      if (window.NativeApp === true) {
+        if (cordova.available === true) {
           start();
+        } else {
+          // Poll
+          window.setTimeout(init(), 1000);
         }
-      };
+      } else {
+        start();
+      }
+    }
     init();
   }
 );

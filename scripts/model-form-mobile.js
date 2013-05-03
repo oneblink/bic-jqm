@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'BlinkForms', 'underscore', 'jquery', 'model-application-mobile'],
+  ['wrapper-backbone', 'BlinkForms', 'underscore', 'jquery', 'model-application-mobile'],
   function (Backbone, BlinkForms, _, $, app) {
     "use strict";
     var Forms = Backbone.Model.extend({

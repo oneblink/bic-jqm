@@ -1,6 +1,6 @@
 define(
-  ['jquery', 'backbone', 'mustache', 'text!interaction.mustache', 'text!inputPrompt.mustache', 'model-application-mobile', 'underscore', 'model-form-mobile', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, FormTemplate, app, _, forms) {
+  ['jquery', 'wrapper-backbone', 'mustache', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'underscore', 'BlinkForms', 'jquerymobile'],
+  function ($, Backbone, Mustache, Template, inputPromptTemplate, formTemplate, app, _, BlinkForms) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
