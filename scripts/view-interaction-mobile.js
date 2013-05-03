@@ -104,7 +104,7 @@ define(
           if (rawform.substr(0, 6) === "<form>") {
             form = rawform;
           } else {
-            form = Mustache.render(FormTemplate, {inputs: rawform});
+            form = Mustache.render(inputPromptTemplate, {inputs: rawform});
           }
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
