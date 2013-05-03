@@ -1,0 +1,30 @@
+<div id="FormContainer"></div>
+<div id="FormControls" class="ui-grid-b">
+  <div class="ui-block-a">
+    <a id="save" data-role="button" data-icon="edit" data-iconpos="top">Save</a>
+  </div>
+  <div class="ui-block-b">
+    <a id="cancel" data-role="button" data-icon="delete" data-iconpos="top">Cancel</a>
+  </div>
+  <div class="ui-block-c">
+    <a id="submit" data-role="button" data-icon="check" data-iconpos="top">Submit</a>
+  </div>
+</div>
+
+<div id="cancelPopup" data-role="popup" data-dismissible="false" data-overlay-theme="a" data-theme="c">
+  <div data-role="header">
+    <h1>Cancel Form</h1>
+  </div>
+  <div data-role="content">
+    <h3>Are you sure you want to cancel this form?</h3>
+    <p>This will delete anything you have entered into this form and cannot be undone.</p>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <a href="#" data-role="button" data-rel="back">Keep Form</a>
+      </div>
+      <div class="ui-block-b">
+        <a href="#" data-role="button">Delete Form</a>
+      </div>
+    </div>
+  </div>
+</div>

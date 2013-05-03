@@ -117,13 +117,17 @@ define(
           }
         } else if (this.model.has("type") && this.model.get("type") === "form") {
           // Form
-          formobject = forms.getForm(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction"));
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
-            content: '<div id="BlinkForm"></div>'
+            content: formTemplate
           }));
-          $('#BlinkForm').append(formobject.$form);
+
+          BlinkForms.getDefinition(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction")).then(function (definition) {
+            BlinkForms.initialize(definition);
+            $('#FormContainer').append(BlinkForms.currentFormObject.$form);
+            $('#FormContainer').trigger('create');
+          });
         } else {
           if (_.has(inheritedAttributes, "themeSwatch")) {
             this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
