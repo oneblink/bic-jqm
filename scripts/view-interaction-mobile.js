@@ -174,6 +174,7 @@ define(
             name: view.model.get("blinkFormObjectName"),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
+            _id: Date.now().toString(),
             data: data//JSON.stringify(data)
           });
         });

@@ -144,10 +144,12 @@ define(
         // Only for pending queue
         // TODO: Offline persistance
 
+        var promises = [],
+          data = this,
+          pouch;
+
         //Online, submit those forms up
         if (navigator.onLine) {
-          var promises = [],
-            data = this;
           _.each(models.where({status: 'Pending'}), function (model) {
             promises.push(API.setPendingItem(model.get("answerspaceid"), model.get("name"), model.get("action"), model.get("data")));
           });
@@ -188,7 +190,21 @@ define(
           });
         } else {
           //Offline, persist and desist
-          console.log('todo');
+          pouch = new Pouch(data.dbType() + models.siteName +  '-Pending', function (err, db) {
+            if (err) {
+              options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+            } else {
+              _.each(models.models, function (model) {
+                db.put(model.attributes, function (err, response) {
+                  if (err) {
+                    options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+                  } else {
+                    data.getModels(models, options);
+                  }
+                });
+              });
+            }
+          });
         }
       }
     };
