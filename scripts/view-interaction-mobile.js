@@ -99,6 +99,11 @@ define(
           formmodel,
           view = this;
 
+        // Non-type specific
+        if (_.has(inheritedAttributes, "themeSwatch")) {
+          this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
+        }
+
         // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
           rawform = this.model.get("inputPrompt");
@@ -143,9 +148,6 @@ define(
 
           this.trigger("render");
         } else {
-          if (_.has(inheritedAttributes, "themeSwatch")) {
-            this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
-          }
           this.$el.html(Mustache.render(Template, inheritedAttributes));
           this.maps();
           this.trigger("render");
