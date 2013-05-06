@@ -21,7 +21,8 @@ define(
         // Form Actions
         "click #FormControls #submit" : "formSubmit",
         "click #FormControls #cancel" : "formCancel",
-        "click #FormControls #save" : "formSave"
+        "click #FormControls #save" : "formSave",
+        "click #queue" : "pendingQueue"
       },
 
       attributes: {
@@ -186,12 +187,28 @@ define(
 
       formSave: function () {
         // Save to pending queue as a draft
+        var view = this;
         BlinkForms.currentFormObject.data().then(function (data) {
           app.pending.add({
             type: "Form",
             status: "Draft",
+            name: view.model.get("blinkFormObjectName"),
+            action: view.model.get("blinkFormAction"),
+            answerspaceid: app.get("dbid"),
+            _id: Date.now().toString(),
             data: JSON.stringify(data)
-          }).sync("create", app.pending, {}).fetch({reset: true});
+          });
+        });
+      },
+
+      pendingQueue: function () {
+        require(['text!template-pending-mobile.mustache'], function (Template) {
+          var el = $('#pendingContent');
+          el.html(Mustache.render(Template, {
+            pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
+            draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
+          }));
+          $('#pendingPopup').popup('open');
         });
       }
 

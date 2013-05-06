@@ -6,23 +6,29 @@ define(
       model: PendingItem,
 
       initialize: function () {
+        // Event Bindings
         var collection = this;
+
         collection.on('add', function () {
-          collection.sync("create", collection, {}).then(function () {
-            collection.fetch({reset: true}).fail(function () {
-              // Kinda dodgy implementation detail here
-              // Ideally, the data layer would not throw an instant error
-              // But instead return the actual state of the pending queue
-              collection.remove(collection.where({status: 'Pending'}));
-            });
+          collection.sync("create", collection, {}).always(function (result) {
+            collection.reset(result);
           });
         }, this);
 
         this.on('change', function () {
-          this.sync("update", this, {}).then(function () {
-            this.fetch({reset: true});
+          collection.sync("create", collection, {}).always(function (result) {
+            collection.reset(result);
           });
         }, this);
+
+        // Pull anything out of storage
+        require(['model-application-mobile'], function (app) {
+          collection.siteName = app.get('siteName');
+          collection.siteName = app.get('siteName');
+          collection.sync("read", collection, {}).always(function (result) {
+            collection.reset(result);
+          });
+        });
       }
     });
 
