@@ -15,8 +15,8 @@ require_once('Blink/cdn/PlatformCDN.php');
 $cdnp = new \Blink\CDN\PlatformCDN();
 
 require_once('Blink/cdn/cdn_factory.php');
-$defaultLoc = \Blink\CDN_Factory::getDefaultLocation($answer_space_id);
-$cdna = \Blink\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
+$defaultLoc = \Blink\cdn\CDN_Factory::getDefaultLocation($answer_space_id);
+$cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
 
 $renderer = new Renderer();
 $handler = new RequestHandler();
