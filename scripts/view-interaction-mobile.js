@@ -96,7 +96,8 @@ define(
           rawform,
           inheritedAttributes = this.model.inherit({}),
           formobject,
-          formmodel;
+          formmodel,
+          view = this;
 
         // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
@@ -111,17 +112,21 @@ define(
             footer: inheritedAttributes.footer,
             content: form
           }));
+          this.trigger("render");
         } else if (this.model.has("type") && this.model.get("type") === "xslt") {
           // XSLT
+          this.model.once("change:content", function () {
+            if (typeof (view.model.get("content")) === 'object') {
+              view.$el.html(Mustache.render(Template, {
+                header: inheritedAttributes.header,
+                footer: inheritedAttributes.footer,
+                content: ''
+              }));
+              view.$el.children('[data-role=content]')[0].appendChild(view.model.get("content"));
+              view.trigger("render");
+            }
+          });
           this.model.performXSLT();
-          if (typeof (this.model.get("content")) === 'object') {
-            this.$el.html(Mustache.render(Template, {
-              header: inheritedAttributes.header,
-              footer: inheritedAttributes.footer,
-              content: ''
-            }));
-            this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
-          }
         } else if (this.model.has("type") && this.model.get("type") === "form") {
           // Form
           this.$el.html(Mustache.render(Template, {
@@ -135,12 +140,15 @@ define(
             $('#FormContainer').append(BlinkForms.currentFormObject.$form);
             $('#FormContainer').trigger('create');
           });
+
+          this.trigger("render");
         } else {
           if (_.has(inheritedAttributes, "themeSwatch")) {
             this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
           }
           this.$el.html(Mustache.render(Template, inheritedAttributes));
           this.maps();
+          this.trigger("render");
         }
         return this;
       },

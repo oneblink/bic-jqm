@@ -52,7 +52,7 @@ define(
           pLength,
           p,
           value,
-          app;
+          model;
         if (this.has("args")) {
           args = this.get("args");
           placeholders = xsl.match(/\$args\[[\w\:][\w\:\-\.]*\]/g);
@@ -69,33 +69,36 @@ define(
         } else {
           xsl = this.get("xsl");
         }
-        app = require('model-application-mobile');
-        xmlString = app.datasuitcases.where({name: this.get("xml")})[0].get("data");
-        xslString = xsl;
-        if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
-          this.set("content", 'XSLT failed due to poorly formed XML or XSL.');
-          return;
-        }
-        xml = $.parseXML(xmlString);
-        xsl = $.parseXML(xslString);
-        if (window.XSLTProcessor) {
-          //console.log("XSLTProcessor (W3C)");
-          processor = new window.XSLTProcessor();
-          processor.importStylesheet(xsl);
-          html = processor.transformToFragment(xml, document);
-        } else if (xml.transformNode !== undefined) {
-          //console.log("transformNode (IE)");
-          html = xml.transformNode(xsl);
-        } else if (window.xsltProcess) {
-          //console.log("AJAXSLT");
-          html = window.xsltProcess(xml, xsl);
-        } else {
-          //console.log("XSLT: Not supported");
-          html = '<p>Your browser does not support Data Suitcase keywords.</p>';
-        }
-        if (html) {
-          this.set("content", html);
-        }
+
+        model = this;
+        require(['model-application-mobile'], function (app) {
+          xmlString = app.datasuitcases.get(model.get("xml")).get("data");
+          xslString = xsl;
+          if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
+            model.set("content", 'XSLT failed due to poorly formed XML or XSL.');
+            return;
+          }
+          xml = $.parseXML(xmlString);
+          xsl = $.parseXML(xslString);
+          if (window.XSLTProcessor) {
+            //console.log("XSLTProcessor (W3C)");
+            processor = new window.XSLTProcessor();
+            processor.importStylesheet(xsl);
+            html = processor.transformToFragment(xml, document);
+          } else if (xml.transformNode !== undefined) {
+            //console.log("transformNode (IE)");
+            html = xml.transformNode(xsl);
+          } else if (window.xsltProcess) {
+            //console.log("AJAXSLT");
+            html = window.xsltProcess(xml, xsl);
+          } else {
+            //console.log("XSLT: Not supported");
+            html = '<p>Your browser does not support Data Suitcase keywords.</p>';
+          }
+          if (html) {
+            model.set("content", html);
+          }
+        });
       }
     });
 

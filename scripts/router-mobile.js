@@ -125,11 +125,12 @@ define(
             var view = new InteractionView({
               tagName: 'div',
               model: model
+            }).once("render", function () {
+              this.$el.attr("data-url", options.data.dataUrl);
+              this.$el.attr("data-external-page", true);
+              this.$el.one('pagecreate', $.mobile._bindPageRemove);
+              options.data.deferred.resolve(options.data.absUrl, options.data.options, this.$el);
             }).render();
-            view.$el.attr("data-url", options.data.dataUrl);
-            view.$el.attr("data-external-page", true);
-            view.$el.one('pagecreate', $.mobile._bindPageRemove);
-            options.data.deferred.resolve(options.data.absUrl, options.data.options, view.$el);
           },
           error: function (model, xhr, options) {
             options.data.deferred.reject(options.data.absUrl, options.data.options);
