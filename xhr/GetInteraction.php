@@ -52,22 +52,14 @@ require_once 'deviceConfig/config.php';
         $interaction = $_REQUEST['iact'];
     }
 
-// Ron's BIC thang
-require_once('Blink/bic/getConfigs.php');
+// Ron's BIC thang && BB's BIC Components
+require_once('vendor/autoload.php');
 require_once('tools.php');
 
-// BB's BIC Components
-require_once('Blink/bic/router.php');
-require_once('Blink/bic/requestHandlers.php');
-require_once('Blink/bic/views.php');
-require_once('Blink/bic/renderer.php');
-
 // Pull in the CDN's
-require_once('Blink/cdn/PlatformCDN.php');
-\Blink\CDN\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
-$cdnp = new \Blink\CDN\PlatformCDN();
+\Blink\cdn\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
+$cdnp = new \Blink\cdn\PlatformCDN();
 
-require_once('Blink/cdn/cdn_factory.php');
 $defaultLoc = \Blink\cdn\CDN_Factory::getDefaultLocation($answer_space_id);
 $cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
 
