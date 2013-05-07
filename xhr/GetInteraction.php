@@ -14,6 +14,7 @@ set_include_path('../../../includes/');
 require_once 'adodb5/adodb.inc.php';
 require_once 'adodb5/adodb-exceptions.inc.php';
 require_once 'answers_config.inc.php';
+require_once 'vendor/autoload.php';
 
 session_start();
 
@@ -23,10 +24,7 @@ if (!$db) {
 	exit('unable to open main database connection');
 }
 
-require_once 'deviceConfig/SettingsParser.php';
 $sp = SettingsParser::resurrect($db, get_include_path() . 'deviceConfig/answerSpace.xml');
-require_once 'deviceConfig/FeatureProcessor.php';
-require_once 'deviceConfig/config.php';
 
 	$db->SetFetchMode(ADODB_FETCH_ASSOC);
 	$rs = $db->Execute('SELECT * FROM answer_space WHERE uid = ?', array($_REQUEST['asn']));
@@ -53,7 +51,6 @@ require_once 'deviceConfig/config.php';
     }
 
 // Ron's BIC thang && BB's BIC Components
-require_once('vendor/autoload.php');
 require_once('tools.php');
 
 // Pull in the CDN's
@@ -102,7 +99,6 @@ if (strtolower($content['_id']) === strtolower($content['siteName'])){
 // Only give the user what they want if they are allowed to have it, you little tease you
 header('Content-Type: application/json');
 if (isset($asConfig['loginAccess'], $asConfig['loginUseInteractions'], $asConfig['loginStatusInteraction'], $content['userGroups']) && $asConfig['loginAccess'] && $asConfig['loginUseInteractions']) {
-    require_once 'deviceConfig/answerSpaceMap.php';
     $siteMap = new answerSpaceMap($answer_space_id);
     $loginAccount = $siteMap->checkLoginStatusInteraction();
     if (isset($loginAccount, $loginAccount['groups'])) {
