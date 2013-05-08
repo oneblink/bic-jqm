@@ -150,6 +150,7 @@ define(
           this.trigger("render");
         } else {
           this.$el.html(Mustache.render(Template, inheritedAttributes));
+          this.blinkAnswerMessages();
           this.maps();
           this.trigger("render");
         }
@@ -161,6 +162,46 @@ define(
         if (mapdiv.length !== 0) {
           this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
           this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+        }
+      },
+
+      blinkAnswerMessages: function (message) {
+        if (!message) {
+          // First Pass - Extract content
+          var blinkAnswerMessage = this.model.get('content').match(/<!-- blinkAnswerMessage:\{.*\} -->/g);
+
+          if ($.type(blinkAnswerMessage) === 'array') {
+            _.each(blinkAnswerMessage, function (element, index, list) {
+              this.blinkAnswerMessages(element.substring(24, element.length - 4));
+            }, this);
+          }
+        } else {
+          // Process a given message
+          message = JSON.parse(message);
+          if (typeof message.mojotarget === 'string') {
+            if (typeof message.mojoxml === 'string') {
+              // Add a DS
+              console.log("Adding Data Suitcase: " + message.mojotarget);
+            } else if (message.mojodelete !== undefined) {
+              // Remove a DS
+              console.log("Removing Data Suitcase: " + message.mojotarget);
+            }
+          }
+
+          if (message.startype) {
+            if (message.clearstars) {
+              // Clear all stars?
+              console.log(message);
+            }
+            if ($.type(message.staroff) === 'array') {
+              // Remove specific stars
+              console.log(message);
+            }
+            if ($.type(message.staron) === 'array') {
+              // Add stars
+              console.log(message);
+            }
+          }
         }
       },
 
