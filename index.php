@@ -10,11 +10,11 @@ $cdnp = new \Blink\cdn\PlatformCDN();
 $defaultLoc = \Blink\cdn\CDN_Factory::getDefaultLocation($answer_space_id);
 $cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
 
-$renderer = new Renderer();
-$handler = new RequestHandler();
-$router = new Router();
+$renderer = new \Blink\bic\Renderer();
+$handler = new \Blink\bic\RequestHandler();
+$router = new \Blink\bic\Router();
 
-$getConfigs = new GetConfigs();
+$getConfigs = new \Blink\bic\GetConfigs();
 
 $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 
