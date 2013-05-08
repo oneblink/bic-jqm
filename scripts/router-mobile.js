@@ -1,5 +1,5 @@
 define(
-  ['backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'jquerymobile'],
+  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'jquerymobile'],
   function (Backbone, app, InteractionModel, InteractionView, $) {
     "use strict";
     var Router = Backbone.Router.extend({
@@ -92,9 +92,9 @@ define(
         // Find if in collection
         if (app.interactions.get(interaction)) {
           if (app.interactions.get(interaction).get("type") === "madl code" && options) {
-            promise = app.interactions.get(interaction).fetch(options);
+            promise = app.interactions.get(interaction).set({args: args}).fetch(options);
           } else {
-            dfrd = $.Deferred();
+            dfrd = new $.Deferred();
             promise = dfrd.promise();
             if (options) {
               options.success(app.interactions.get(interaction), 'Collection', options);
@@ -125,11 +125,12 @@ define(
             var view = new InteractionView({
               tagName: 'div',
               model: model
+            }).once("render", function () {
+              this.$el.attr("data-url", options.data.dataUrl);
+              this.$el.attr("data-external-page", true);
+              this.$el.one('pagecreate', $.mobile._bindPageRemove);
+              options.data.deferred.resolve(options.data.absUrl, options.data.options, this.$el);
             }).render();
-            view.$el.attr("data-url", options.data.dataUrl);
-            view.$el.attr("data-external-page", true);
-            view.$el.one('pagecreate', $.mobile._bindPageRemove);
-            options.data.deferred.resolve(options.data.absUrl, options.data.options, view.$el);
           },
           error: function (model, xhr, options) {
             options.data.deferred.reject(options.data.absUrl, options.data.options);

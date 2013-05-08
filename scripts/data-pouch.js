@@ -1,10 +1,20 @@
 define(
-  ['api-php', 'pouchdb', 'jquery'],
-  function (API, Pouch, $) {
+  ['api-php', 'pouchdb', 'jquery', 'underscore'],
+  function (API, Pouch, $, _) {
     "use strict";
     var data = {
+      dbType: function () {
+        var type = false;
+        if (window.NativeApp === true && Pouch.adapters.websql) {
+          type = 'websql://';
+        } else if (Pouch.adapters.idb) {
+          type = 'idb://';
+        }
+        return type;
+      },
+
       getModel: function (model, options) {
-        var done, fail, jqXHR, fetch, dbType, createDocument, retrieveDocument, doc;
+        var done, fail, jqXHR, fetch, createDocument, retrieveDocument, doc, dbType = this.dbType();
 
         done = function (data, status, xhr) {
           options.success(data);
@@ -43,7 +53,7 @@ define(
             });
           } else {
             options.dfrd.reject(null, '404', 'Invalid Model Type');
-            jqXHR = $.Deferred().reject('Invalid Model Type');
+            jqXHR = new $.Deferred().reject('Invalid Model Type');
           }
         };
 
@@ -64,7 +74,7 @@ define(
         };
 
         retrieveDocument = function () {
-          var docdfrd = $.Deferred(), db;
+          var docdfrd = new $.Deferred(), db;
           db = new Pouch(dbType + model.get('siteName') +  '-' + model.get('BICtype'), function (err, db) {
             var d = new Date();
             if (err) {
@@ -94,16 +104,6 @@ define(
           return docdfrd.promise();
         };
 
-        if (window.NativeApp === true && Pouch.adapters.websql) {
-          dbType = 'websql://';
-        } else {
-          if (Pouch.adapters.idb) {
-            dbType = 'idb://';
-          } else {
-            dbType = false;
-          }
-        }
-
         if (dbType !== false) {
           retrieveDocument().then(function (doc) {
             options.dfrd.resolve(doc);
@@ -119,6 +119,92 @@ define(
           });
         } else {
           fetch();
+        }
+      },
+
+      getModels: function (models, options) {
+        var pouch = new Pouch(this.dbType() + models.siteName +  '-Pending', function (err, db) {
+          if (err) {
+            options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+          } else {
+            db.allDocs({include_docs: true}, function (err, response) {
+              if (err) {
+                options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+              } else {
+                options.dfrd.resolve(_.map(response.rows, function (value, key, list) {
+                  return value.doc;
+                }));
+              }
+            });
+          }
+        });
+      },
+
+      setModels: function (models, options) {
+        // Only for pending queue
+        // TODO: Offline persistance
+
+        var promises = [],
+          data = this,
+          pouch;
+
+        //Online, submit those forms up
+        if (navigator.onLine) {
+          _.each(models.where({status: 'Pending'}), function (model) {
+            promises.push(API.setPendingItem(model.get("answerspaceid"), model.get("name"), model.get("action"), model.get("data")));
+          });
+
+          $.when.apply($, promises).then(function () {
+            var keptModels = models.where({status: 'Draft'}),
+              pouch = new Pouch(data.dbType() + models.siteName +  '-Pending', function (err, db) {
+                _.each(keptModels, function (model) {
+                  db.put(model.attributes, function (err, response) {
+                    if (err) {
+                      options.dfrd.reject();
+                    } else {
+                      data.getModels(models, options);
+                    }
+                  });
+                });
+              });
+            //options.dfrd.resolve(keptModels);
+          }, function () {
+            var keptModels = [],
+              pouch;
+            _.each(models.where({status: 'Draft'}), function (draft) {
+              models.push(draft);
+            });
+            _.each(promises, function (promise) {
+              promise.fail(function (unsubmitted) {
+                keptModels.push(unsubmitted);
+              });
+            });
+            pouch = new Pouch(data.dbType() + models.siteName +  '-Pending', function (err, db) {
+              _.each(keptModels, function (model) {
+                db.put(model.attributes, function (err, response) {
+                  data.getModels(models, options);
+                });
+              });
+            });
+            //options.dfrd.reject(keptModels, '9000', 'One or more forms could not be uploaded to the server');
+          });
+        } else {
+          //Offline, persist and desist
+          pouch = new Pouch(data.dbType() + models.siteName +  '-Pending', function (err, db) {
+            if (err) {
+              options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+            } else {
+              _.each(models.models, function (model) {
+                db.put(model.attributes, function (err, response) {
+                  if (err) {
+                    options.dfrd.reject(null, '9001', 'Something in the DB was borked');
+                  } else {
+                    data.getModels(models, options);
+                  }
+                });
+              });
+            }
+          });
         }
       }
     };

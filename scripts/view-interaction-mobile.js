@@ -1,6 +1,6 @@
 define(
-  ['jquery', 'backbone', 'mustache', 'text!interaction.mustache', 'text!inputPrompt.mustache', 'model-application-mobile', 'underscore', 'model-form-mobile', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, FormTemplate, app, _, forms) {
+  ['jquery', 'wrapper-backbone', 'mustache', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'underscore', 'BlinkForms', 'jquerymobile'],
+  function ($, Backbone, Mustache, Template, inputPromptTemplate, formTemplate, app, _, BlinkForms) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -9,13 +9,20 @@ define(
       },
 
       events: {
+        // Old Blink Link Shortcut Methods
         "click [keyword]" : "blinklink",
         "click [interaction]" : "blinklink",
         "click [category]" : "blinklink",
         "click [masterCategory]" : "blinklink",
         "click [back]" : "back",
         "click [home]" : "blinklink",
-        "click [login]" : "blinklink"
+        "click [login]" : "blinklink",
+
+        // Form Actions
+        "click #FormControls #submit" : "formSubmit",
+        "click #FormControls #cancel" : "formCancel",
+        "click #FormControls #save" : "formSave",
+        "click #queue" : "pendingQueue"
       },
 
       attributes: {
@@ -89,7 +96,14 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          formobject;
+          formobject,
+          formmodel,
+          view = this;
+
+        // Non-type specific
+        if (_.has(inheritedAttributes, "themeSwatch")) {
+          this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
+        }
 
         // Input Prompt
         if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
@@ -97,39 +111,47 @@ define(
           if (rawform.substr(0, 6) === "<form>") {
             form = rawform;
           } else {
-            form = Mustache.render(FormTemplate, {inputs: rawform});
+            form = Mustache.render(inputPromptTemplate, {inputs: rawform});
           }
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: form
           }));
+          this.trigger("render");
         } else if (this.model.has("type") && this.model.get("type") === "xslt") {
           // XSLT
+          this.model.once("change:content", function () {
+            if (typeof (view.model.get("content")) === 'object') {
+              view.$el.html(Mustache.render(Template, {
+                header: inheritedAttributes.header,
+                footer: inheritedAttributes.footer,
+                content: ''
+              }));
+              view.$el.children('[data-role=content]')[0].appendChild(view.model.get("content"));
+              view.trigger("render");
+            }
+          });
           this.model.performXSLT();
-          if (typeof (this.model.get("content")) === 'object') {
-            this.$el.html(Mustache.render(Template, {
-              header: inheritedAttributes.header,
-              footer: inheritedAttributes.footer,
-              content: ''
-            }));
-            this.$el.children('[data-role=content]')[0].appendChild(this.model.get("content"));
-          }
         } else if (this.model.has("type") && this.model.get("type") === "form") {
           // Form
-          formobject = forms.getForm(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction"));
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
-            content: '<div id="BlinkForm"></div>'
+            content: formTemplate
           }));
-          $('#BlinkForm').append(formobject.$form);
+
+          BlinkForms.getDefinition(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction")).then(function (definition) {
+            BlinkForms.initialize(definition);
+            $('#FormContainer').append(BlinkForms.currentFormObject.$form);
+            $('#FormContainer').trigger('create');
+          });
+
+          this.trigger("render");
         } else {
-          if (_.has(inheritedAttributes, "themeSwatch")) {
-            this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
-          }
           this.$el.html(Mustache.render(Template, inheritedAttributes));
           this.maps();
+          this.trigger("render");
         }
         return this;
       },
@@ -140,6 +162,55 @@ define(
           this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
           this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
         }
+      },
+
+      formSubmit: function () {
+        // Put in pending queue for processing
+        var view = this;
+        BlinkForms.currentFormObject.data().then(function (data) {
+          app.pending.add({
+            type: "Form",
+            status: "Pending",
+            name: view.model.get("blinkFormObjectName"),
+            action: view.model.get("blinkFormAction"),
+            answerspaceid: app.get("dbid"),
+            _id: Date.now().toString(),
+            data: data//JSON.stringify(data)
+          });
+        });
+      },
+
+      formCancel: function () {
+        // If in pending queue, remove
+        // Close the form
+        $('#cancelPopup').popup('open');
+      },
+
+      formSave: function () {
+        // Save to pending queue as a draft
+        var view = this;
+        BlinkForms.currentFormObject.data().then(function (data) {
+          app.pending.add({
+            type: "Form",
+            status: "Draft",
+            name: view.model.get("blinkFormObjectName"),
+            action: view.model.get("blinkFormAction"),
+            answerspaceid: app.get("dbid"),
+            _id: Date.now().toString(),
+            data: JSON.stringify(data)
+          });
+        });
+      },
+
+      pendingQueue: function () {
+        require(['text!template-pending-mobile.mustache'], function (Template) {
+          var el = $('#pendingContent');
+          el.html(Mustache.render(Template, {
+            pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
+            draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
+          }));
+          $('#pendingPopup').popup('open');
+        });
       }
 
     });

@@ -1,5 +1,5 @@
 define(
-  ['backbone'],
+  ['wrapper-backbone'],
   function (Backbone) {
     "use strict";
     var DataSuitcase = Backbone.Model.extend({

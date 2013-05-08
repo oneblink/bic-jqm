@@ -147,28 +147,28 @@ $config = array_merge($config["all"], $config["default"]);
 //}
 
 $config['DataSuitcases'] = array();
+$config['Forms'] = array();
 
-$siteMap = new answerSpaceMap($answer_space_id);
-$siteMap = $siteMap->retrieve();
-$interactions = $siteMap['interactions'];
+// Load DataSuitcases into array
+$rs = $db->Execute('SELECT `key` FROM object WHERE `answer_space_id` = ?', array($answer_space_id));
+while (!$rs->EOF) {
+    $config['DataSuitcases'][] = $rs->fields['key'];
+    $rs->MoveNext();
+}
 
-foreach ($interactions as $interaction){
-    $db->SetFetchMode(ADODB_FETCH_ASSOC);
-    $rs = $db->Execute('SELECT `config` FROM keyword WHERE `id` = ?', array($interaction));
-    $json = json_decode($rs->fields['config']);
-    foreach ($json as $override){
-        foreach ($override as $field => $value){
-            if ($field === "xml"){
-                if (array_search($value, $config['DataSuitcases']) === FALSE){
-                    $config['DataSuitcases'][] = $value;
-                }
-            }
-        }
-    }
+// Load Forms into array
+$rs = $db->Execute('SELECT `name` FROM blink_form_definitions WHERE `answer_space_id` = ? AND `status` = "active"', array($answer_space_id));
+while (!$rs->EOF) {
+    $config['Forms'][] = $rs->fields['name'];
+    $rs->MoveNext();
 }
 
 if (!array_key_exists('_id', $config)){
     $config['_id'] = $_REQUEST['asn'];
+}
+
+if (!array_key_exists('dbid', $config)){
+    $config['dbid'] = $answer_space_id;
 }
 
 echo json_encode($config);
