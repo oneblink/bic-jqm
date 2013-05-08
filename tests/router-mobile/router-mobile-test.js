@@ -1,4 +1,9 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+define('wrapper-backbone', ['backbone'], function (Backbone) {
+  "use strict";
+  return Backbone;
+});
+
 define('model-application-mobile', ['backbone'], function (Backbone) {
   "use strict";
   return Backbone.Model.extend();
