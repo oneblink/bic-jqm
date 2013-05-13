@@ -11,9 +11,7 @@
 
 set_include_path('../../../includes/');
 
-require_once 'adodb5/adodb.inc.php';
-require_once 'adodb5/adodb-exceptions.inc.php';
-require_once 'answers_config.inc.php';
+require_once("autoload_withSession.php");
 
 session_start();
 
@@ -23,10 +21,7 @@ if (!$db) {
 	exit('unable to open main database connection');
 }
 
-require_once 'deviceConfig/SettingsParser.php';
 $sp = SettingsParser::resurrect($db, get_include_path() . 'deviceConfig/answerSpace.xml');
-require_once 'deviceConfig/FeatureProcessor.php';
-require_once 'deviceConfig/config.php';
 
 	$db->SetFetchMode(ADODB_FETCH_ASSOC);
 	$rs = $db->Execute('SELECT * FROM answer_space WHERE uid = ?', array($_REQUEST['asn']));
@@ -52,29 +47,20 @@ require_once 'deviceConfig/config.php';
         $interaction = $_REQUEST['iact'];
     }
 
-// Ron's BIC thang
-require_once('blink/bic/getConfigs.php');
+// Ron's BIC thang && BB's BIC Components
 require_once('tools.php');
 
-// BB's BIC Components
-require_once('blink/bic/router.php');
-require_once('blink/bic/requestHandlers.php');
-require_once('blink/bic/views.php');
-require_once('blink/bic/renderer.php');
-
 // Pull in the CDN's
-require_once('blink/cdn/PlatformCDN.php');
-\Blink\CDN\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
-$cdnp = new \Blink\CDN\PlatformCDN();
+\Blink\cdn\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
+$cdnp = new \Blink\cdn\PlatformCDN();
 
-require_once('blink/cdn/cdn_factory.php');
-$defaultLoc = \Blink\CDN_Factory::getDefaultLocation($answer_space_id);
-$cdna = \Blink\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
+$defaultLoc = \Blink\cdn\CDN_Factory::getDefaultLocation($answer_space_id);
+$cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
 
-$renderer = new Renderer();
-$handler = new RequestHandler();
+$renderer = new \Blink\bic\Renderer();
+$handler = new \Blink\bic\RequestHandler();
 
-$getConfigs = new GetConfigs();
+$getConfigs = new \Blink\bic\GetConfigs();
 
 //$content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 $content = $handler->objects(array($_REQUEST['asn'], $interaction), array_key_exists('args', $_REQUEST) ? $_REQUEST['args'] : NULL, $renderer, $answer_space_id, array('siteName' => $_REQUEST['asn']), $cdnp, $cdna, $getConfigs);
@@ -110,7 +96,6 @@ if (strtolower($content['_id']) === strtolower($content['siteName'])){
 // Only give the user what they want if they are allowed to have it, you little tease you
 header('Content-Type: application/json');
 if (isset($asConfig['loginAccess'], $asConfig['loginUseInteractions'], $asConfig['loginStatusInteraction'], $content['userGroups']) && $asConfig['loginAccess'] && $asConfig['loginUseInteractions']) {
-    require_once 'deviceConfig/answerSpaceMap.php';
     $siteMap = new answerSpaceMap($answer_space_id);
     $loginAccount = $siteMap->checkLoginStatusInteraction();
     if (isset($loginAccount, $loginAccount['groups'])) {

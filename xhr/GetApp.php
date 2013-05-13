@@ -27,8 +27,7 @@ set_include_path('../../../includes/');
 
 // require_once 'adodb5/adodb.inc.php';
 // require_once 'adodb5/adodb-exceptions.inc.php';
-require_once 'answers_config.inc.php';
-
+require_once("autoload_withSession.php");
 session_start();
 
 $db = BlinkPlatformConfig::openMainDatabaseConnection();
@@ -53,7 +52,6 @@ $db = BlinkPlatformConfig::openMainDatabaseConnection();
 // } else {
 // 	if (empty($_SESSION['mydot_device']['features'])) {
 // 		require_once 'Tera-WURFL/TeraWurfl.php';
-// 		require_once 'deviceConfig/DeviceIdentifier.php';
 // 		$di = new DeviceIdentifier($_SERVER['HTTP_USER_AGENT']);
 // 		$_SESSION['mydot_device']['features'] = $di->features;
 // 	}
@@ -61,10 +59,7 @@ $db = BlinkPlatformConfig::openMainDatabaseConnection();
 
 // $microtime['device_detection'] = microtime(true) - $microtime['start'];
 
-require_once 'deviceConfig/SettingsParser.php';
 $sp = SettingsParser::resurrect($db, get_include_path() . 'deviceConfig/answerSpace.xml');
-require_once 'deviceConfig/FeatureProcessor.php';
-require_once 'deviceConfig/config.php';
 
 // $microtime['settings_parser'] = microtime(true) - $microtime['start'];
 

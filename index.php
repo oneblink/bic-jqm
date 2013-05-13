@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <?php
-// Ron's BIC Thang
-require_once('blink/bic/getConfigs.php');
-
-// BB's BIC Components
-require_once('blink/bic/router.php');
-require_once('blink/bic/requestHandlers.php');
-require_once('blink/bic/views.php');
-require_once('blink/bic/renderer.php');
+// Ron's BIC Thang && BB's BIC Components
+require_once('vendor/autoload.php');
 
 // Pull in the CDN's
-require_once('blink/cdn/PlatformCDN.php');
-\Blink\CDN\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
-$cdnp = new \Blink\CDN\PlatformCDN();
+\Blink\cdn\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
+$cdnp = new \Blink\cdn\PlatformCDN();
 
-require_once('blink/cdn/cdn_factory.php');
-$defaultLoc = \Blink\CDN_Factory::getDefaultLocation($answer_space_id);
-$cdna = \Blink\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
+$defaultLoc = \Blink\cdn\CDN_Factory::getDefaultLocation($answer_space_id);
+$cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
 
-$renderer = new Renderer();
-$handler = new RequestHandler();
-$router = new Router();
+$renderer = new \Blink\bic\Renderer();
+$handler = new \Blink\bic\RequestHandler();
+$router = new \Blink\bic\Router();
 
-$getConfigs = new GetConfigs();
+$getConfigs = new \Blink\bic\GetConfigs();
 
 $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
 
