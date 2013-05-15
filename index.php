@@ -45,13 +45,13 @@ if (array_key_exists('themeSwatch', $content) && $content['themeSwatch']){
         ?>
        
         <script>
-          <?php
-          if (strpos($_SERVER['HTTP_USER_AGENT'], 'BlinkGap') === FALSE){
-            echo 'window.NativeApp = false;';
-          } else {
-            echo 'window.NativeApp = true;';
-          }
-          ?>
+          window.BMP = {
+            siteVars: {
+              answerSpaceId:  <?= $answer_space_id ?>,
+              answerSpace: '<?php echo $asFields['uid']; ?>',
+            },
+            isBlinkGap: <?=$isBlinkGap ? 'true' : 'false'?>
+          };
         </script>
         <script data-main="/_BICv3_/scripts/main" src="https://d1c6dfkb81l78v.cloudfront.net/blink/require/1/require.min.js"></script>
         <?php
