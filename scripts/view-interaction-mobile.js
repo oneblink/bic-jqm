@@ -309,7 +309,7 @@ define(
       },
 
       destroy: function () {
-        console.log("Backbone view cleanup");
+        this.remove();
       }
 
     });
