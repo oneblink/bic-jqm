@@ -9,7 +9,7 @@ set_include_path('../../../includes/');
 
 require_once 'adodb5/adodb.inc.php';
 require_once 'adodb5/adodb-exceptions.inc.php';
-require_once 'answers_config.inc.php';
+require_once 'BlinkPlatformConfig.php';
 
 session_start();
 
