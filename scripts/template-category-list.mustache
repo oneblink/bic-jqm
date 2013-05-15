@@ -1,0 +1,14 @@
+<ul data-role="listview">
+  {{#models}}
+  <li>
+    <a href="{{path}}/{{_id}}">
+      {{#displayName}}
+        {{displayName}}
+      {{/displayName}}
+      {{^displayName}}
+        {{_id}}
+      {{/displayName}}
+    </a>
+  </li>
+  {{/models}}
+</ul>

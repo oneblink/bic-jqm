@@ -1,13 +1,28 @@
 define(
-  ['wrapper-backbone', 'model-interaction-mobile'],
-  function (Backbone, Interaction) {
+  ['wrapper-backbone', 'model-interaction-mobile', 'data-pouch', 'underscore'],
+  function (Backbone, Interaction, Data, _) {
     "use strict";
     var InteractionCollection = Backbone.Collection.extend({
 
       model: Interaction,
 
-      url: function () {
-        return "/_BICv3_/xhr/GetInteraction.php?asn=" + this.app.get("answerspace");
+      initialize: function () {
+        var collection = this;
+        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Interaction', 'read', 'getInteractionResult', ['name']);
+        collection.fetch({
+          success: function () {
+            collection.trigger("initialize");
+          },
+          error: function () {
+            collection.trigger("initialize");
+          }
+        });
+      },
+
+      save: function () {
+        _.each(this.models, function (model, key, list) {
+          model.save();
+        });
       }
 
     });

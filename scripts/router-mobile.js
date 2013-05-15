@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'jquerymobile'],
-  function (Backbone, app, InteractionModel, InteractionView, $) {
+  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'underscore', 'jquerymobile'],
+  function (Backbone, app, InteractionModel, InteractionView, $, _) {
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
@@ -9,137 +9,38 @@ define(
           e.preventDefault();
           $.mobile.loading('show');
 
-          app.router.processPath(data);
+          app.router.inheritanceChain(data).prepareView(data).then(function (model, response, options) {
+            var view = new InteractionView({
+              tagName: 'div',
+              model: model
+            }).once("render", function () {
+              this.$el.attr("data-url", data.dataUrl);
+              this.$el.attr("data-external-page", true);
+              this.$el.one('pagecreate', $.mobile._bindPageRemove);
+              data.deferred.resolve(data.absUrl, data.options, this.$el);
+            }).render(data);
+          }, function (model, xhr, options) {
+            data.deferred.reject(data.absUrl, data.options);
+            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+            setTimeout($.mobile.hidePageLoadingMsg, 1500);
+          });
         });
       },
 
-      processPath: function (data) {
-        var path = data.dataUrl.substr(1).split('/'),
-          answerspace,
-          interaction,
-          args,
-          end,
-          finalparam,
-          parent = "app",
-          index,
-          promises = [];
+      inheritanceChain: function (data) {
+        var path, parent;
+        path = data.dataUrl.substr(1).split('/');
+        parent = "app";
 
         if (path[path.length - 1] === "") {
           path.pop();
         }
 
-        if (path.length === 1) {
-          // Home page of app
-          if (app.has("homeScreen") && app.get("homeScreen") === true) {
-            answerspace = app.get("siteName");
-            interaction = app.get("homeInteraction");
-            args = "";
-          } else {
-            answerspace = app.get("siteName");
-            interaction = app.get("siteName");
-            args = "";
-          }
-          path = [];
-        } else {
-          // Need to parse interaction + dependancies
-          answerspace = path.shift();
-          end = path.pop();
-          if (end && end.indexOf('?') !== -1 && end.indexOf('?') !== 0) {
-            finalparam = end.split('?');
-            args = this.assembleArgs(finalparam.pop());
-            interaction = finalparam.pop();
-          } else if (end && end.indexOf('?') !== -1 && end.indexOf('?') === 0) {
-            interaction = path.pop();
-            args = this.assembleArgs(end.slice(1));
-          } else {
-            args = null;
-            interaction = end;
-          }
-        }
+        _.each(path, function (element, index, list) {
+          parent = app.interactions.get(element).set({parent: parent}).id;
+        }, this);
 
-        // Load any dependancies
-        if (path.length > 0) {
-          for (index = 0; index < path.length; index = index + 1) {
-            promises.push(app.router.loadInteraction(path[index], null, parent));
-            parent = path[index];
-          }
-        }
-
-        // Load final interaction
-        $.when.apply($, promises).then(function () {
-          app.router.loadInteraction(interaction, args, parent, app.router.displayInteraction(data));
-        });
-      },
-
-      assembleArgs: function (argstring) {
-        var argarray = argstring.split('&'),
-          args = {};
-        $.each(argarray, function (index, string) {
-          var equalIndex, name, value;
-          if (string.length !== 0 && (equalIndex = string.indexOf('=')) !== -1) {
-            name = string.substring(0, equalIndex);
-            value = string.substring(equalIndex + 1);
-            if (value) {
-              args[decodeURIComponent(name)] = decodeURIComponent(value);
-            }
-          }
-        });
-        return args;
-      },
-
-      loadInteraction: function (interaction, args, parent, options) {
-        var dfrd, promise;
-        // Find if in collection
-        if (app.interactions.get(interaction)) {
-          if (app.interactions.get(interaction).get("type") === "madl code" && options) {
-            promise = app.interactions.get(interaction).set({args: args}).fetch(options);
-          } else {
-            dfrd = new $.Deferred();
-            promise = dfrd.promise();
-            if (options) {
-              options.success(app.interactions.get(interaction), 'Collection', options);
-            }
-            dfrd.resolve();
-          }
-          app.interactions.get(interaction).set("parent", parent);
-        } else {
-          app.interactions.add({
-            _id: interaction,
-            name: interaction,
-            parent: parent,
-            siteName: app.get("siteName"),
-            BICtype: "Interaction",
-            args: args
-          });
-          promise = app.interactions.get(interaction).fetch(options);
-        }
-          // Fetch if MADL
-        // Fetch and add to collection
-        return promise;
-      },
-
-      displayInteraction: function (data) {
-        return {
-          success: function (model, response, options) {
-            //model.inherit();
-            var view = new InteractionView({
-              tagName: 'div',
-              model: model
-            }).once("render", function () {
-              this.$el.attr("data-url", options.data.dataUrl);
-              this.$el.attr("data-external-page", true);
-              this.$el.one('pagecreate', $.mobile._bindPageRemove);
-              options.data.deferred.resolve(options.data.absUrl, options.data.options, this.$el);
-            }).render();
-          },
-          error: function (model, xhr, options) {
-            options.data.deferred.reject(options.data.absUrl, options.data.options);
-            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
-            setTimeout($.mobile.hidePageLoadingMsg, 1500);
-          },
-          data: data,
-          app: app
-        };
+        return app.interactions.get(parent);
       }
     });
 

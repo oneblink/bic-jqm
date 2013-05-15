@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'jquery', 'underscore', 'jquerymobile'],
-  function (Backbone, $, _) {
+  ['wrapper-backbone', 'jquery', 'underscore', 'api-php', 'jquerymobile'],
+  function (Backbone, $, _, API) {
     "use strict";
     var Interaction = Backbone.Model.extend({
 
@@ -9,6 +9,7 @@ define(
       defaults: {
         header: null,
         content: null,
+        contentTime: null,
         footer: null,
         name: null
       },
@@ -99,6 +100,64 @@ define(
             model.set("content", html);
           }
         });
+      },
+
+      prepareView: function (data) {
+        // Handle MADL updates here
+        // Check for other updates needed here?
+        var dfrd = new $.Deferred(),
+          model = this,
+          homeInteraction,
+          childInteraction;
+
+        if (model.id === window.BMP.siteVars.answerSpace) {
+          require(['model-application-mobile'], function (app) {
+            if (app.has("homeScreen") && app.get("homeScreen") !== false && app.has("homeInteraction")) {
+              homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
+              if (homeInteraction) {
+                homeInteraction.set({parent: model.get("parent")});
+              }
+
+              childInteraction = app.interactions.findWhere({dbid: "a" + window.BMP.siteVars.answerSpace});
+              if (childInteraction) {
+                childInteraction.set({parent: model.id});
+              }
+
+              homeInteraction.prepareView().done(function () {
+                dfrd.resolve(homeInteraction);
+              });
+            } else {
+              dfrd.resolve(model);
+            }
+          });
+        }
+
+        if (model.get("type") === "madl code") {
+          API.getInteractionResult(model.id, data.options).then(
+            function (data, textStatus, jqXHR) {
+              model.save({
+                content: data,
+                contentTime: Date.now()
+              }, {
+                success: function () {
+                  dfrd.resolve(model);
+                },
+                error: function (error) {
+                  dfrd.reject(error);
+                }
+              });
+            },
+            function (jqXHR, textStatus, errorThrown) {
+              dfrd.reject(errorThrown);
+            }
+          );
+        }
+
+        if (model.get("type") !== "madl code" && model.id !== window.BMP.siteVars.answerSpace) {
+          dfrd.resolve(model);
+        }
+
+        return dfrd.promise();
       }
     });
 

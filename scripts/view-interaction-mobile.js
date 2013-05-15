@@ -6,6 +6,11 @@ define(
 
       initialize: function () {
         $('body').append(this.$el);
+
+        // this.$el.once("pageremove", function () {
+        //   console.log("Backbone view cleanup");
+
+        // })
       },
 
       events: {
@@ -22,7 +27,10 @@ define(
         "click #FormControls #submit" : "formSubmit",
         "click #FormControls #cancel" : "formCancel",
         "click #FormControls #save" : "formSave",
-        "click #queue" : "pendingQueue"
+        "click #queue" : "pendingQueue",
+
+        // Destroy
+        "pageremove" : "destroy"
       },
 
       attributes: {
@@ -92,7 +100,7 @@ define(
         history.back();
       },
 
-      render: function () {
+      render: function (data) {
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
@@ -148,10 +156,56 @@ define(
           });
 
           this.trigger("render");
+        } else if (this.model.id.toLowerCase() === window.BMP.siteVars.answerSpace.toLowerCase()) {
+          require(['text!template-category-list.mustache'], function (categoryTemplate) {
+            view.$el.html(Mustache.render(Template, {
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: Mustache.render(categoryTemplate, {
+                models: _.map(_.filter(app.interactions.models, function (value, key, list) {
+                  return value.id !== window.BMP.siteVars.answerSpace && (value.has("tags") && value.get("tags").length === 0 && value.get("display") !== "hide" || _.filter(value.get("tags"), function (element, index, list) {
+                    return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
+                  }, this).length > 0);
+                }, this), function (value, key, list) {
+                  return value.attributes;
+                }),
+                path: data.dataUrl
+              })
+            }));
+            view.trigger("render");
+          });
+        } else if (!this.model.has("type")) {
+          // Category
+          require(['text!template-category-list.mustache'], function (categoryTemplate) {
+            view.$el.html(Mustache.render(Template, {
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: Mustache.render(categoryTemplate, {
+                models: _.map(_.filter(app.interactions.models, function (value, key, list) {
+                  return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element, index, list) {
+                    return element === 'nav-' + this.model.id.toLowerCase();
+                  }, this).length > 0;
+                }, view), function (value, key, list) {
+                  return value.attributes;
+                }),
+                path: data.dataUrl
+              })
+            }));
+            view.trigger("render");
+          });
+        } else if (this.model.get("type") === "message") {
+          this.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: inheritedAttributes.message
+          }));
+          this.trigger("render");
         } else {
           this.$el.html(Mustache.render(Template, inheritedAttributes));
-          this.blinkAnswerMessages();
-          this.maps();
+          if (this.model.has("content")) {
+            this.blinkAnswerMessages();
+            this.maps();
+          }
           this.trigger("render");
         }
         return this;
@@ -209,15 +263,15 @@ define(
         // Put in pending queue for processing
         var view = this;
         BlinkForms.currentFormObject.data().then(function (data) {
-          app.pending.add({
+          app.pending.create({
             type: "Form",
             status: "Pending",
             name: view.model.get("blinkFormObjectName"),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
-            _id: Date.now().toString(),
             data: data//JSON.stringify(data)
           });
+          app.pending.processQueue();
         });
       },
 
@@ -231,15 +285,15 @@ define(
         // Save to pending queue as a draft
         var view = this;
         BlinkForms.currentFormObject.data().then(function (data) {
-          app.pending.add({
+          app.pending.create({
             type: "Form",
             status: "Draft",
             name: view.model.get("blinkFormObjectName"),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
-            _id: Date.now().toString(),
             data: JSON.stringify(data)
           });
+          app.pending.processQueue();
         });
       },
 
@@ -252,6 +306,10 @@ define(
           }));
           $('#pendingPopup').popup('open');
         });
+      },
+
+      destroy: function () {
+        console.log("Backbone view cleanup");
       }
 
     });

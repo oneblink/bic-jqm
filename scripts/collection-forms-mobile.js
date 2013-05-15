@@ -1,12 +1,21 @@
 define(
-  ['wrapper-backbone', 'model-form-mobile', 'BlinkForms', 'jquery', 'underscore'],
-  function (Backbone, Form, BlinkForms, $, _) {
+  ['wrapper-backbone', 'model-form-mobile', 'BlinkForms', 'jquery', 'underscore', 'data-pouch'],
+  function (Backbone, Form, BlinkForms, $, _, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Form,
 
       initialize: function () {
         var collection = this;
+        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Form', "update", "getForm", ["siteName", "_id"]);
+        collection.fetch({
+          success: function () {
+            collection.trigger("initialize");
+          },
+          error: function () {
+            collection.trigger("initialize");
+          }
+        });
 
         BlinkForms.getDefinition = function (name, action) {
           var dfrd = new $.Deferred();
