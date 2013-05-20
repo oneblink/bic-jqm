@@ -21,15 +21,17 @@ define(
     "use strict";
 
     function initialRender() {
-      require(['model-application-mobile'], function (app) {
+      require(['domReady', 'model-application-mobile'], function (domReady, app) {
         $.mobile.defaultPageTransition = app.get("defaultTransition");
-        $.mobile.changePage($.mobile.path.parseLocation().pathname, {
-          changeHash: false,
-          reloadPage: true,
-          transition: 'fade'
-        });
-        $(document).on('pageshow', function () {
-          $('#temp').remove();
+        domReady(function () {
+          $.mobile.changePage($.mobile.path.parseLocation().pathname, {
+            changeHash: false,
+            reloadPage: true,
+            transition: 'fade'
+          });
+          $(document).on('pageshow', function () {
+            $('#temp').remove();
+          });
         });
       });
     }
