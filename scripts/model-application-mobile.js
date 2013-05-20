@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore', 'collection-pending', 'data-pouch', 'api-php', 'jquery'],
-  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _, PendingCollection, Data, API, $) {
+  ['wrapper-backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'underscore', 'collection-pending', 'data-pouch', 'api-php', 'jquery', 'collection-stars-mobile'],
+  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, _, PendingCollection, Data, API, $, StarsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -10,18 +10,19 @@ define(
           interactions = new $.Deferred(),
           datasuitcases = new $.Deferred(),
           forms = new $.Deferred(),
-          pending = new $.Deferred();
+          pending = new $.Deferred(),
+          stars = new $.Deferred();
 
-        promises.push(interactions.promise(), datasuitcases.promise(), forms.promise(), pending.promise());
+        promises.push(interactions.promise(), datasuitcases.promise(), forms.promise(), pending.promise(), stars.promise());
 
         this.on('change', this.update);
 
         this.data = new Data(window.BMP.siteVars.answerSpace + '-AnswerSpace');
-        
+
         this.interactions = new InteractionCollection().once('initialize', function () {
           interactions.resolve();
         });
-        
+
         this.datasuitcases = new DataSuitcaseCollection().once('initialize', function () {
           datasuitcases.resolve();
         });
@@ -32,6 +33,10 @@ define(
 
         this.pending = new PendingCollection().once('initialize', function () {
           pending.resolve();
+        });
+
+        this.stars = new StarsCollection().once('initialize', function () {
+          stars.resolve();
         });
 
         $.when.apply($, promises).then(function () {
