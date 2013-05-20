@@ -8,7 +8,7 @@ define(
 
       initialize: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Interaction', 'read', 'getInteractionResult', ['name']);
+        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Interaction');
         collection.fetch({
           success: function () {
             collection.trigger("initialize");

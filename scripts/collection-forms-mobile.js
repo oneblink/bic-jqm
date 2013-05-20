@@ -7,7 +7,7 @@ define(
 
       initialize: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Form', "update", "getForm", ["siteName", "_id"]);
+        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Form');
         collection.fetch({
           success: function () {
             collection.trigger("initialize");

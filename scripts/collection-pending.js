@@ -7,7 +7,7 @@ define(
 
       initialize: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Pending', "create", "setPendingItem", ["answerspaceid", "name", "action", "data"]);
+        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Pending');
         collection.fetch({
           success: function () {
             collection.trigger("initialize");
