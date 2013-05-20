@@ -235,10 +235,13 @@ define(
           if (typeof message.mojotarget === 'string') {
             if (typeof message.mojoxml === 'string') {
               // Add a DS
-              console.log("Adding Data Suitcase: " + message.mojotarget);
+              app.datasuitcases.create({
+                _id: message.mojotarget,
+                data: message.mojoxml
+              });
             } else if (message.mojodelete !== undefined) {
               // Remove a DS
-              console.log("Removing Data Suitcase: " + message.mojotarget);
+              app.datasuitcases.remove(message.mojotarget);
             }
           }
 
