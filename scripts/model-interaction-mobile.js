@@ -101,7 +101,7 @@ define(
 
         model = this;
         require(['model-application-mobile'], function (app) {
-          xmlString = app.datasuitcases.get(model.get("xml")).get("data");
+          xmlString = model.get("starXml") ? model.get("starXml") : app.datasuitcases.get(model.get("xml")).get("data");
           xslString = xsl;
           if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
             model.set("content", 'XSLT failed due to poorly formed XML or XSL.');
@@ -136,7 +136,9 @@ define(
         var dfrd = new $.Deferred(),
           model = this,
           homeInteraction,
-          childInteraction;
+          childInteraction,
+          xml = '',
+          attrs;
 
         if (model.id === window.BMP.siteVars.answerSpace) {
           require(['model-application-mobile'], function (app) {
@@ -179,6 +181,38 @@ define(
               dfrd.reject(errorThrown);
             }
           );
+        }
+
+        if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {
+          model.set({
+            mojoType: "stars",
+            xml: model.get("xml").replace(/^stars:/, '')
+          });
+        }
+
+        if (model.get("type") === "xslt" && model.get("mojoType") === "stars") {
+          require(['model-application-mobile'], function (app) {
+            _.each(app.stars.where({type: model.get("xml")}), function (value, key, list) {
+              xml += '<' + value.get("type") + ' id="' + value.get("_id") + '">';
+
+              attrs = _.clone(value.attributes);
+              delete attrs._id;
+              delete attrs._rev;
+              delete attrs.type;
+              delete attrs.state;
+
+              _.each(attrs, function (value, key, list) {
+                xml += '<' + key + '>' + value + '</' + key + '>';
+              });
+
+              xml += '</' + value.get("type") + '>';
+            });
+            xml = '<stars>' + xml + '</stars>';
+            model.set({
+              starXml: xml
+            });
+            dfrd.resolve(model);
+          });
         }
 
         if (model.get("type") !== "madl code" && model.id !== window.BMP.siteVars.answerSpace) {
