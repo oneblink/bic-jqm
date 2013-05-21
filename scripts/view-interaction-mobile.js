@@ -327,7 +327,7 @@ define(
                 model = app.stars.get($(element).data('id'));
               if (!model) {
                 attrs = $(element).data();
-                attrs._id = attrs.id;
+                attrs._id = attrs.id.toString();
                 delete attrs.id;
                 attrs.state = false;
                 model = new StarModel(attrs);
