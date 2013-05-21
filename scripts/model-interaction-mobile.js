@@ -53,7 +53,11 @@ define(
           pLength,
           p,
           value,
-          model;
+          model,
+          starType,
+          condition,
+          variable;
+
         if (this.has("args")) {
           args = this.get("args");
           placeholders = xsl.match(/\$args\[[\w\:][\w\:\-\.]*\]/g);
@@ -69,6 +73,30 @@ define(
           }
         } else {
           xsl = this.get("xsl");
+        }
+
+        starType = xsl.match(/blink-stars\(([@\w.]+),\W*(\w+)\W*\)/);
+        if (starType) {
+          require(['model-application-mobile'], function (app) {
+            while (starType) {
+              condition = '';
+              variable = starType[1];
+              starType = starType[2];
+
+              _.each(app.stars.where({type: starType}), function (value, key, list) {
+                condition += ' or ' + variable + '=\'' + value.get("_id") + '\'';
+              });
+              condition = condition.substr(4);
+
+              if (condition.length > 0) {
+                xsl = xsl.replace(/\(?blink-stars\(([@\w.]+),\W*(\w+)\W*\)\)?/, '(' + condition + ')');
+              } else {
+                xsl = xsl.replace(/\(?blink-stars\(([@\w.]+),\W*(\w+)\W*\)\)?/, '(false())');
+              }
+
+              starType = xsl.match(/blink-stars\(([@\w.]+),\W*(\w+)\W*\)/);
+            }
+          });
         }
 
         model = this;
