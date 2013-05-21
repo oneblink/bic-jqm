@@ -46,44 +46,6 @@ define(
 
       idAttribute: "_id",
 
-      update: function () {
-        // var modelArray,
-        //   count,
-        //   model,
-        //   children = {
-        //     DataSuitcases: this.datasuitcases,
-        //     Forms: this.forms
-        //   };
-
-        // _.each(children, function (element, index, list) {
-        //   if (this.has(index)) {
-        //     modelArray = this.get(index);
-        //     for (count = 0; count < modelArray.length; count = count + 1) {
-        //       if (element.where({name: modelArray[count]}).length === 0) {
-        //         switch (index) {
-        //         case "DataSuitcases":
-        //           element.create({
-        //             _id: modelArray[count],
-        //             siteName: this.get("siteName"),
-        //             BICtype: "DataSuitcase"
-        //           });
-        //           break;
-        //         case "Forms":
-        //           element.create({
-        //             _id: modelArray[count],
-        //             siteName: this.get("siteName"),
-        //             BICtype: "Form"
-        //           });
-        //           break;
-        //         }
-        //         //element.create(model);
-        //         //model.fetch();
-        //       }
-        //     }
-        //   }
-        // }, this);
-      },
-
       populate: function () {
         var app = this,
           dfrd = new $.Deferred(),
