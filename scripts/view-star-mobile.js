@@ -1,9 +1,31 @@
 define(
-  ['jquery', 'wrapper-backbone', 'mustache', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'underscore', 'BlinkForms', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, inputPromptTemplate, formTemplate, app, _, BlinkForms) {
+  ['wrapper-backbone', 'model-application-mobile'],
+  function (Backbone, app) {
     "use strict";
     var StarView = Backbone.View.extend({
-      events: {}
+      events: {
+        "click": "toggle"
+      },
+
+      initialize: function () {
+        this.render();
+        this.listenTo(this.model, "change:state", this.render);
+      },
+
+      toggle: function (e) {
+        e.preventDefault();
+        this.model.toggle();
+      },
+
+      render: function () {
+        if (this.model.get('state')) {
+          this.$el.addClass('blink-star-on');
+          this.$el.removeClass('blink-star-off');
+        } else {
+          this.$el.addClass('blink-star-off');
+          this.$el.removeClass('blink-star-on');
+        }
+      }
     });
 
     return StarView;
