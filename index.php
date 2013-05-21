@@ -34,7 +34,13 @@ $config = json_decode($asFields['config']);
            echo '<style type="text/css">' . $config->default->styleSheet . '</style>';
         }
         ?>
-       
+
+        <style type="text/css">
+          .blink-star-on, .blink-star-off { display: inline-block; margin: .1em; width: 32px; height: 32px; background-color: transparent; }
+          .blink-star-on { background-image: url(/gfx/star-on32.png); }
+          .blink-star-off { background-image: url(/gfx/star-off32.png); }
+        </style>
+
         <script>
           window.BMP = {
             siteVars: {
