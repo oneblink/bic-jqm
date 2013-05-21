@@ -137,6 +137,7 @@ define(
                 content: ''
               }));
               view.$el.children('[data-role=content]')[0].appendChild(view.model.get("content"));
+              view.processStars();
               view.trigger("render");
             }
           });
@@ -205,6 +206,7 @@ define(
           if (this.model.has("content")) {
             this.blinkAnswerMessages();
             this.maps();
+            this.processStars();
           }
           this.trigger("render");
         }
@@ -313,6 +315,30 @@ define(
 
       destroy: function () {
         this.remove();
+      },
+
+      processStars: function () {
+        var elements = this.$el.find('.blink-starrable');
+        if (elements) {
+          require(['view-star-mobile', 'model-star-mobile'], function (StarView, StarModel) {
+            elements.each(function (index, element) {
+              var view,
+                attrs,
+                model = app.stars.get($(element).data('id'));
+              if (!model) {
+                attrs = $(element).data();
+                attrs._id = attrs.id;
+                delete attrs.id;
+                attrs.state = false;
+                model = new StarModel(attrs);
+              }
+              view = new StarView({
+                model: model,
+                el: element
+              });
+            });
+          });
+        }
       }
 
     });
