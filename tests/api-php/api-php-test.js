@@ -7,12 +7,22 @@ define(['../../scripts/api-php.js'],
       var server;
 
       before(function () {
+        window.BMP = {
+          siteVars: {
+            answerSpace: 'Exists',
+            answerSpaceId: 1
+          }
+        };
+
         server = sinon.fakeServer.create();
-        server.respondWith('/_BICv3_/xhr/GetApp.php?asn=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_BICv3_/xhr/GetInteraction.php?asn=Exists&iact=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_BICv3_/xhr/GetInteraction.php?asn=Exists&iact=Exists&args[0]=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_BICv3_/xhr/GetDataSuitcase.php?asn=Exists&ds=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_BICv3_/xhr/GetForm.php?asn=Exists&form=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetConfig.php', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_BICv3_/xhr/GetForm.php?asn=' + window.BMP.siteVars.answerSpace + '&form=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+          jqXHR.setRequestHeader('X-Blink-Config', JSON.stringify(window.BMP.siteVars));
+        });
       });
 
       after(function () {
@@ -23,9 +33,9 @@ define(['../../scripts/api-php.js'],
         expect(api).to.be.an('object');
       });
 
-      describe('getAnswerSpace', function () {
+      describe('getAnswerSpaceMap', function () {
         it('should GET a JSON definition from the server', function (done) {
-          api.getAnswerSpace('Exists')
+          api.getAnswerSpaceMap()
             .done(function (data, status, xhr) {
               expect(data).to.be.an('object');
               expect(xhr).to.be.an('object');
@@ -34,21 +44,12 @@ define(['../../scripts/api-php.js'],
             });
           server.respond();
         });
-        it('should crash and burn if the params are wrong', function (done) {
-          api.getAnswerSpace('NotExists')
-            .fail(function (xhr, status, error) {
-              expect(xhr).to.be.an('object');
-              expect(status).to.be.string('error');
-              expect(error).to.be.string('Not Found');
-              done();
-            });
-          server.respond();
-        });
+        it('should crash and burn if the params are wrong');
       });
 
-      describe('getInteraction', function () {
+      describe('getInteractionResult', function () {
         it('should GET a JSON definition from the server', function (done) {
-          api.getInteraction('Exists', 'Exists')
+          api.getInteractionResult('Exists', 'Exists')
             .done(function (data, status, xhr) {
               expect(data).to.be.an('object');
               expect(xhr).to.be.an('object');
@@ -58,7 +59,7 @@ define(['../../scripts/api-php.js'],
           server.respond();
         });
         it('should crash and burn if the params are wrong', function (done) {
-          api.getInteraction('NotExists')
+          api.getInteractionResult('NotExists')
             .fail(function (xhr, status, error) {
               expect(xhr).to.be.an('object');
               expect(status).to.be.string('error');
@@ -72,9 +73,9 @@ define(['../../scripts/api-php.js'],
 
       describe('getDataSuitcase', function () {
         it('should GET a JSON definition from the server', function (done) {
-          api.getDataSuitcase('Exists', 'Exists')
+          api.getDataSuitcase('Exists', '1')
             .done(function (data, status, xhr) {
-              expect(data).to.be.an('object');
+              expect(data).to.be.an('string');
               expect(xhr).to.be.an('object');
               expect(status).to.be.string('success');
               done();
@@ -114,6 +115,11 @@ define(['../../scripts/api-php.js'],
             });
           server.respond();
         });
+      });
+
+      describe('setPendingItem', function () {
+        it('should POST a JSON definition to the server');
+        it('should crash and burn if the params are wrong');
       });
     });
   });
