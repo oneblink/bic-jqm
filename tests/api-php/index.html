@@ -30,6 +30,7 @@
       });
 
       require(['api-php-test'], function () {
+        mocha.globals(['BMP']);
         mocha.run()
       });
     </script>

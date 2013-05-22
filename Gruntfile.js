@@ -43,7 +43,8 @@ module.exports = function (grunt) {
     mocha: {
       all: ['tests/*!(assets)/index.html'],
       options: {
-        reporter: 'Nyan'
+        reporter: 'Nyan',
+        globals: 'BMP'
       },
     },
 
