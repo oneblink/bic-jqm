@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-application-mobile'],
-  function (Backbone, app) {
+  ['wrapper-backbone'],
+  function (Backbone) {
     "use strict";
     var StarView = Backbone.View.extend({
       events: {
