@@ -34,9 +34,33 @@ define('collection-pending', ['backbone'], function (Backbone) {
   return Backbone.Collection.extend();
 });
 
+define('collection-stars-mobile', ['backbone'], function (Backbone) {
+  "use strict";
+  return Backbone.Collection.extend();
+});
+
+define('data-pouch', [''], function () {
+  "use strict";
+  return function () {};
+});
+
+define('api-php', ['../../scripts/api-php'], function (API) {
+  "use strict";
+  var stub = sinon.stub(API);
+  return stub;
+});
+
+window.BMP = {
+  siteVars: {
+    answerSpace: 'Exists',
+    answerSpaceId: 1
+  }
+};
+
 define(['../../scripts/model-application-mobile.js', 'backbone'],
   function (Model, Backbone) {
     "use strict";
+
     describe('Model - Application', function () {
       it("should exist", function () {
         should.exist(Model);

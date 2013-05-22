@@ -14,6 +14,12 @@ define('model-form-mobile', ['backbone'], function (Backbone) {
   return Backbone.Model.extend();
 });
 
+define('data-pouch', [], function () {
+  "use strict";
+  return function () {};
+});
+
+
 define(['../../scripts/collection-forms-mobile.js'],
   function (Collection) {
     "use strict";

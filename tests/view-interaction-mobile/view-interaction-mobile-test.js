@@ -54,7 +54,6 @@ define('text!template-form.mustache', [], function () {
   return "string";
 });
 
-//Backbone, app, InteractionModel, InteractionView, $
 define(['../../scripts/view-interaction-mobile.js', 'backbone', 'jquery'],
   function (View, Backbone, $) {
     "use strict";

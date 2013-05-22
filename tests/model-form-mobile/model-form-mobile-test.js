@@ -19,6 +19,12 @@ define('BlinkForms', [], function () {
   return {};
 });
 
+define('api-php', ['../../scripts/api-php'], function (API) {
+  "use strict";
+  var stub = sinon.stub(API);
+  return stub;
+});
+
 define(['../../scripts/model-form-mobile.js'],
   function (Model) {
     "use strict";

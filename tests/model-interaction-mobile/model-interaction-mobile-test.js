@@ -9,6 +9,12 @@ define('jquerymobile', [], function () {
   console.log("Subtituting jQuery Mobile");
 });
 
+define('api-php', ['../../scripts/api-php'], function (API) {
+  "use strict";
+  var stub = sinon.stub(API);
+  return stub;
+});
+
 define(['../../scripts/model-interaction-mobile.js'],
   function (Model) {
     "use strict";

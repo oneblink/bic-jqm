@@ -1,4 +1,10 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+window.BMP = {
+  siteVars: {
+    answerSpace: 'Exists',
+    answerSpaceId: 1
+  }
+};
 
 define(['../../scripts/api-php.js'],
   function (api) {
@@ -7,13 +13,6 @@ define(['../../scripts/api-php.js'],
       var server;
 
       before(function () {
-        window.BMP = {
-          siteVars: {
-            answerSpace: 'Exists',
-            answerSpaceId: 1
-          }
-        };
-
         server = sinon.fakeServer.create();
         server.respondWith('/_R_/common/3/xhr/GetConfig.php', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
@@ -33,7 +32,7 @@ define(['../../scripts/api-php.js'],
         expect(api).to.be.an('object');
       });
 
-      describe('getAnswerSpaceMap', function () {
+      describe('getAnswerSpaceMap()', function () {
         it('should GET a JSON definition from the server', function (done) {
           api.getAnswerSpaceMap()
             .done(function (data, status, xhr) {
@@ -47,7 +46,7 @@ define(['../../scripts/api-php.js'],
         it('should crash and burn if the params are wrong');
       });
 
-      describe('getInteractionResult', function () {
+      describe('getInteractionResult(iact, options)', function () {
         it('should GET a JSON definition from the server', function (done) {
           api.getInteractionResult('Exists', 'Exists')
             .done(function (data, status, xhr) {
@@ -58,16 +57,7 @@ define(['../../scripts/api-php.js'],
             });
           server.respond();
         });
-        it('should crash and burn if the params are wrong', function (done) {
-          api.getInteractionResult('NotExists')
-            .fail(function (xhr, status, error) {
-              expect(xhr).to.be.an('object');
-              expect(status).to.be.string('error');
-              expect(error).to.be.string('Not Found');
-              done();
-            });
-          server.respond();
-        });
+        it('should handle GET data passed in via args');
         it('should handle POST data passed in via options param');
       });
 

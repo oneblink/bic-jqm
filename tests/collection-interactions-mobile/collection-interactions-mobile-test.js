@@ -9,6 +9,12 @@ define('model-interaction-mobile', ['backbone'], function (Backbone) {
   return Backbone.Model.extend();
 });
 
+define('data-pouch', [], function () {
+  "use strict";
+  return function () {};
+});
+
+
 define(['../../scripts/collection-interactions-mobile.js'],
   function (Collection) {
     "use strict";
