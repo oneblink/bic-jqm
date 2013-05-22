@@ -16,6 +16,12 @@ define(
             collection.trigger("initialize");
           }
         });
+      },
+
+      clear: function (type) {
+        _.each(this.where({type: type}), function (model) {
+          model.destroy();
+        });
       }
     });
     return FormCollection;

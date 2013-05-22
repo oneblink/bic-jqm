@@ -250,15 +250,27 @@ define(
           if (message.startype) {
             if (message.clearstars) {
               // Clear all stars?
-              console.log(message);
+              app.stars.clear(message.startype);
             }
             if ($.type(message.staroff) === 'array') {
               // Remove specific stars
-              console.log(message);
+              _.each(message.staroff, function (element, index, list) {
+                if (app.stars.get(element)) {
+                  app.stars.get(element.toString()).destroy();
+                }
+              }, this);
             }
             if ($.type(message.staron) === 'array') {
               // Add stars
-              console.log(message);
+              require(['model-star-mobile'], function (StarModel) {
+                _.each(message.staron, function (element, index, list) {
+                  app.stars.create({
+                    _id: element.toString(),
+                    type: message.startype,
+                    state: true
+                  });
+                });
+              });
             }
           }
         }
