@@ -33,8 +33,12 @@ define(['../../scripts/model-form-mobile.js'],
         should.exist(Model);
       });
 
-      // it("should be a constructor function", function () {
-      //   Model.should.be.an.instanceOf(Function);
-      // });
+      describe("populate()", function () {
+        it("should do nothing if offline");
+
+        it("should get a form definition from the api");
+
+        it("should save the form definition the the data store");
+      });
     });
   });

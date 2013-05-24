@@ -36,12 +36,32 @@ define(['../../scripts/router-mobile.js'],
         it("should contain the function initialize", function () {
           router.should.respondTo('initialize');
         });
+
+        it("should bind to pagebeforeload");
+
+        it("should prevent the default action");
+
+        it("should prepare the inheritance chain");
+
+        it("should prepare any GET attributes");
+
+        it("should tell the model to prepare for the view");
+
+        it("should create the view");
+
+        it("should bind view attribute creation to render event");
+
+        it("should resolve the deferred on render event");
+
+        it("should start the render process");
       });
 
-      describe('inheritanceChain', function () {
+      describe('inheritanceChain(data)', function () {
         it("should contain the function inheritanceChain", function () {
           router.should.respondTo('inheritanceChain');
         });
+
+        it("should set the inheritance chain on relevant interactions");
       });
     });
   });
