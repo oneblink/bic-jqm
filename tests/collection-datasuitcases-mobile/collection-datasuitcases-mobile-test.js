@@ -12,7 +12,7 @@ define('model-datasuitcase-mobile', ['backbone'], function (Backbone) {
 
 define('data-pouch', [], function () {
   "use strict";
-  return function () {};
+  return sinon.spy();
 });
 
 window.BMP = {
@@ -32,13 +32,22 @@ define(['../../scripts/collection-datasuitcases-mobile.js', 'jquery'],
         should.exist(Collection);
       });
 
-      it("should trigger an initialization event when initialized", function (done) {
-        collection = new Collection();
-        collection.once('initialize', done());
-      });
+      describe('initialize()', function () {
+        it("should trigger an initialization event when initialized", function (done) {
+          collection = new Collection();
+          collection.once('initialize', done());
+        });
 
-      it("should set up it's data object", function () {
-        collection.should.have.property('data');
+        it("should set up it's data object", function () {
+          collection.should.have.property('data');
+        });
+
+        it("should have populated itself from the data store", function (done) {
+          require(['data-pouch'], function (Data) {
+            should.equal(Data.called, true);
+            done();
+          });
+        });
       });
     });
   });
