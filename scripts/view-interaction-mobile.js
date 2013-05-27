@@ -75,7 +75,7 @@ define(
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === "_") {
             if (!first) {
-              attributes += "&args[" + $element[0].attributes[count].name + "]=" + $element[0].attributes[count].value;
+              attributes += "&args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
             } else {
               first = false;
               attributes = "/?args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
