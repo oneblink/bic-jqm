@@ -220,6 +220,28 @@ define(
         }
 
         return dfrd.promise();
+      },
+
+      parseArgs: function (argString) {
+        var args = argString.split('&'),
+          tempargs,
+          finalargs = {};
+
+        _.each(args, function (element, index, list) {
+          tempargs = element.split('=');
+          if (tempargs[0].substr(0, 4) !== "args") {
+            tempargs[0] = "args[" + tempargs[0] + "]";
+          }
+          finalargs[tempargs[0]] = tempargs[1];
+        });
+
+        if (finalargs) {
+          this.set({args: finalargs});
+        } else {
+          this.set({args: null});
+        }
+
+        return this;
       }
     });
 
