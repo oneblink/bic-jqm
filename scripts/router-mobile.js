@@ -8,8 +8,9 @@ define(
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
           $.mobile.loading('show');
+          var path = $.mobile.path.parseUrl(data.dataUrl);
 
-          app.router.inheritanceChain(data).prepareView(data).then(function (model, response, options) {
+          app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model, response, options) {
             var view = new InteractionView({
               tagName: 'div',
               model: model
