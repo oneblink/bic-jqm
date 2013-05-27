@@ -29,16 +29,20 @@ define(
       },
 
       inheritanceChain: function (data) {
-        var path, parent;
-        path = data.dataUrl.substr(1).split('/');
+        var path, parent, usedPathItems;
+        path = data.substr(1).split('/');
         parent = "app";
+        usedPathItems = [];
 
         if (path[path.length - 1] === "") {
           path.pop();
         }
 
         _.each(path, function (element, index, list) {
-          parent = app.interactions.get(element).set({parent: parent}).id;
+          if (!_.find(usedPathItems, function (id) {return id === element;})) {
+            parent = app.interactions.get(element).set({parent: parent}).id;
+            usedPathItems.push(element);
+          }
         }, this);
 
         return app.interactions.get(parent);
