@@ -163,7 +163,7 @@ define(
         }
 
         if (model.get("type") === "madl code") {
-          API.getInteractionResult(model.id, null, data.options).then(
+          API.getInteractionResult(model.id, this.get('args'), data.options).then(
             function (data, textStatus, jqXHR) {
               model.save({
                 content: data,
