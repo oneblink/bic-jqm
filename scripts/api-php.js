@@ -11,7 +11,7 @@ define(
         var getargs = '';
         if (args && typeof args === "object") {
           _.each(args, function (value, key, list) {
-            getargs += '&args[' + key + ']=value';
+            getargs += '&' + key + '=' + value;
           });
         }
         return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
