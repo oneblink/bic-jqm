@@ -14,12 +14,22 @@ define('model-form-mobile', ['backbone'], function (Backbone) {
   return Backbone.Model.extend();
 });
 
+define('model-star-mobile', ['backbone'], function (Backbone) {
+  "use strict";
+  return Backbone.Model.extend();
+});
+
 define('interaction.mustache', ['backbone'], function (Backbone) {
   "use strict";
   return "String";
 });
 
 define('view-interaction-mobile', ['backbone'], function (Backbone) {
+  "use strict";
+  return Backbone.View.extend();
+});
+
+define('view-star-mobile', ['backbone'], function (Backbone) {
   "use strict";
   return Backbone.View.extend();
 });
@@ -50,6 +60,16 @@ define('text!template-inputPrompt.mustache', [], function () {
 });
 
 define('text!template-form.mustache', [], function () {
+  "use strict";
+  return "string";
+});
+
+define('text!template-category-list.mustache', [], function () {
+  "use strict";
+  return "string";
+});
+
+define('text!template-pending-mobile.mustache', [], function () {
   "use strict";
   return "string";
 });
@@ -149,7 +169,7 @@ define(['../../scripts/view-interaction-mobile.js', 'backbone', 'jquery'],
 
       describe('pendingQueue()', function () {
         it('should display the current pending items to the user');
-      })
+      });
 
       describe('destroy()', function () {
         it('should remove all bindings to the view');
