@@ -1,11 +1,13 @@
 /*global cordova: true*/
 requirejs.config({
-  baseUrl: '/_BICv3_/scripts',
-  paths: {
-    BlinkForms: ['/_BICv3_/js/BlinkForms-jQueryMobile.min'],
-    pouchdb: ['/_BICv3_/js/pouchdb-nightly']
-  },
   shim: {
+    'underscore': {
+      exports: '_'
+    },
+    'backbone': {
+      deps: ['underscore', 'jquery'],
+      exports: 'Backbone'
+    },
     'BlinkForms': {
       exports: 'BlinkForms'
     },
@@ -16,12 +18,12 @@ requirejs.config({
 });
 
 define(
-  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'jquerymobile'],
-  function (Backbone, router, InteractionModel, InteractionView, $) {
+  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'domReady'],
+  function (Backbone, router, InteractionModel, InteractionView, domReady) {
     "use strict";
 
     function initialRender() {
-      require(['domReady', 'model-application-mobile'], function (domReady, app) {
+      require(['model-application-mobile'], function (app) {
         $.mobile.defaultPageTransition = app.get("defaultTransition");
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().pathname, {

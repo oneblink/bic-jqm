@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-interaction-mobile', 'data-pouch', 'underscore'],
-  function (Backbone, Interaction, Data, _) {
+  ['wrapper-backbone', 'model-interaction-mobile', 'data-pouch'],
+  function (Backbone, Interaction, Data) {
     "use strict";
     var InteractionCollection = Backbone.Collection.extend({
 

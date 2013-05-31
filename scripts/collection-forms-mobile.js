@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-form-mobile', 'BlinkForms', 'jquery', 'underscore', 'data-pouch'],
-  function (Backbone, Form, BlinkForms, $, _, Data) {
+  ['wrapper-backbone', 'model-form-mobile', 'data-pouch'],
+  function (Backbone, Form, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Form,

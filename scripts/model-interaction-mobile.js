@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'jquery', 'underscore', 'api-php', 'jquerymobile'],
-  function (Backbone, $, _, API) {
+  ['wrapper-backbone', 'api-php'],
+  function (Backbone, API) {
     "use strict";
     var Interaction = Backbone.Model.extend({
 

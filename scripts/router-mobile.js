@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'jquery', 'underscore', 'jquerymobile'],
-  function (Backbone, app, InteractionModel, InteractionView, $, _) {
+  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile'],
+  function (Backbone, app, InteractionModel, InteractionView) {
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {

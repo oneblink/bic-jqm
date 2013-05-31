@@ -1,6 +1,6 @@
 define(
-  ['backbone', 'jquery', 'data-pouch'],
-  function (Backbone, $, data) {
+  ['data-pouch'],
+  function (data) {
     "use strict";
 
     // Save traditional sync method as ajaxSync

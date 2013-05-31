@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'BlinkForms', 'underscore', 'jquery', 'model-application-mobile', 'api-php'],
-  function (Backbone, BlinkForms, _, $, app, API) {
+  ['wrapper-backbone', 'model-application-mobile', 'api-php'],
+  function (Backbone, app, API) {
     "use strict";
     var Form = Backbone.Model.extend({
       idAttribute: "_id",
