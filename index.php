@@ -1,51 +1,67 @@
 <!DOCTYPE html>
+<?php
+require_once('vendor/autoload.php');
+$cdna = \Blink\cdn\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
+$config = json_decode($asFields['config']);
+?>
+
 <html>
     <head>
         <title>BICv3</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/_BICv3_/assets/css/jquery.mobile.min.css" />
-        <script data-main="/_BICv3_/source/main" src="/_BICv3_/assets/js/require.js"></script>
+        <meta name="viewport" content="initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <?php
+        if (isset($config->default->themePack)) {
+            echo '<link rel="stylesheet" href="' . $cdna->getURI($config->default->themePack) . '" />';
+        } else {
+            if (isset($config->default->platformCSS) && $config->default->platformCSS === 'default') {
+                echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.theme.min.css" />';
+            }
+        }
+
+        if (isset($config->default->platformCSS) && $config->default->platformCSS !== 'none') {
+            echo '<link rel="stylesheet" href="https://d1c6dfkb81l78v.cloudfront.net/jquery.mobile/1.3.0/jqm.structure.min.css" />';
+        }
+
+        if(isset($config->default->externalCSS)){
+           $css = explode("\n", $config->default->externalCSS);
+           foreach ($css as $cssitem) {
+              echo '<link rel="stylesheet" href="' . $cssitem . '" />';
+           }
+        }
+        
+        if(isset($config->default->styleSheet)){
+           echo '<style type="text/css">' . $config->default->styleSheet . '</style>';
+        }
+        ?>
+
+        <style type="text/css">
+          .blink-star-on, .blink-star-off { display: inline-block; margin: .1em; width: 32px; height: 32px; background-color: transparent; }
+          .blink-star-on { background-image: url(/gfx/star-on32.png); }
+          .blink-star-off { background-image: url(/gfx/star-off32.png); }
+        </style>
+
+        <script>
+          window.BMP = {
+            siteVars: {
+              answerSpaceId:  <?= $answer_space_id ?>,
+              answerSpace: '<?php echo $asFields['uid']; ?>',
+            },
+            isBlinkGap: <?=$isBlinkGap ? 'true' : 'false'?>
+          };
+        </script>
     </head>
     <body>
+        <noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>
+        <div data-role="page" id="temp">Loading, please wait.</div>
+        <script data-main="/_BICv3_/scripts/main" src="https://d1c6dfkb81l78v.cloudfront.net/blink/require/1/require.min.js"></script>
         <?php
-            // Ron's BIC Thang
-            require_once('blink/bic/getConfigs.php');
-
-            // BB's BIC Components
-            require_once('blink/bic/router.php');
-            require_once('blink/bic/requestHandlers.php');
-            require_once('blink/bic/views.php');
-            require_once('blink/bic/renderer.php');
-
-            // Pull in the CDN's
-            require_once('blink/cdn/PlatformCDN.php');
-            \Blink\CDN\PlatformCDN::setConfig(BlinkPlatformConfig::$CDN_PLATFORM);
-            $cdnp = new \Blink\CDN\PlatformCDN();
-
-            require_once('blink/cdn/cdn_factory.php');
-            $defaultLoc = \Blink\CDN_Factory::getDefaultLocation($answer_space_id);
-            $cdna = \Blink\CDN_Factory::openCDN($asConfig['cdnLocation'], $answer_space_id);
-
-            $renderer = new Renderer();
-            $handler = new RequestHandler();
-            $router = new Router();
-
-            $getConfigs = new GetConfigs();
-
-            $path = explode('/', $_SERVER['REQUEST_URI']);
-            $name = array_slice($path, -1, 1);
-
-            $content = $router->route($_SERVER['REQUEST_URI'], $_REQUEST, $handler, $renderer, $answer_space_id, $asConfig, $cdnp, $cdna, $getConfigs);
-
-            //echo $content;
-
-            echo '<div data-role="page" id="' . $name[0] . '">';
-            echo $content['header'];
-            echo '<div data-role="content">';
-            echo $content['content'];
-            echo '</div>';
-            echo $content['footer'];
-            echo '</div>';
+        if(isset($config->default->externalJavaScript)){
+           $js = explode("\n", $config->default->externalJavaScript);
+           foreach ($js as $jsitem) {
+             echo '<script src="' . $jsitem . '"></script>';
+           }
+        }
         ?>
     </body>
 </html>
