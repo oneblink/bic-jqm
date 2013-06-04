@@ -1,0 +1,9 @@
+.DS_Store
+/node_modules
+
+# JetBrains files
+/*.iml
+/.idea
+
+# output files
+/js/main.*
