@@ -1,6 +1,6 @@
 define(
-  ['jquery', 'wrapper-backbone', 'mustache', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'underscore', 'BlinkForms', 'jquerymobile'],
-  function ($, Backbone, Mustache, Template, inputPromptTemplate, formTemplate, app, _, BlinkForms) {
+  ['wrapper-backbone', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'text!template-category-list.mustache', 'model-star-mobile', 'text!template-pending-mobile.mustache', 'view-star-mobile'],
+  function (Backbone, Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -158,42 +158,39 @@ define(
 
           this.trigger("render");
         } else if (this.model.id.toLowerCase() === window.BMP.siteVars.answerSpace.toLowerCase()) {
-          require(['text!template-category-list.mustache'], function (categoryTemplate) {
-            view.$el.html(Mustache.render(Template, {
-              header: inheritedAttributes.header,
-              footer: inheritedAttributes.footer,
-              content: Mustache.render(categoryTemplate, {
-                models: _.map(_.filter(app.interactions.models, function (value, key, list) {
-                  return value.id !== window.BMP.siteVars.answerSpace && (value.has("tags") && value.get("tags").length === 0 && value.get("display") !== "hide" || _.filter(value.get("tags"), function (element, index, list) {
-                    return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
-                  }, this).length > 0);
-                }, this), function (value, key, list) {
-                  return value.attributes;
-                }),
-                path: data.dataUrl
-              })
-            }));
-            view.trigger("render");
-          });
+          // Home Screen
+          view.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: Mustache.render(categoryTemplate, {
+              models: _.map(_.filter(app.interactions.models, function (value, key, list) {
+                return value.id !== window.BMP.siteVars.answerSpace && (value.has("tags") && value.get("tags").length === 0 && value.get("display") !== "hide" || _.filter(value.get("tags"), function (element, index, list) {
+                  return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
+                }, this).length > 0);
+              }, this), function (value, key, list) {
+                return value.attributes;
+              }),
+              path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
+            })
+          }));
+          view.trigger("render");
         } else if (!this.model.has("type")) {
           // Category
-          require(['text!template-category-list.mustache'], function (categoryTemplate) {
-            view.$el.html(Mustache.render(Template, {
-              header: inheritedAttributes.header,
-              footer: inheritedAttributes.footer,
-              content: Mustache.render(categoryTemplate, {
-                models: _.map(_.filter(app.interactions.models, function (value, key, list) {
-                  return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element, index, list) {
-                    return element === 'nav-' + this.model.id.toLowerCase();
-                  }, this).length > 0;
-                }, view), function (value, key, list) {
-                  return value.attributes;
-                }),
-                path: data.dataUrl
-              })
-            }));
-            view.trigger("render");
-          });
+          view.$el.html(Mustache.render(Template, {
+            header: inheritedAttributes.header,
+            footer: inheritedAttributes.footer,
+            content: Mustache.render(categoryTemplate, {
+              models: _.map(_.filter(app.interactions.models, function (value, key, list) {
+                return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element, index, list) {
+                  return element === 'nav-' + this.model.id.toLowerCase();
+                }, this).length > 0;
+              }, view), function (value, key, list) {
+                return value.attributes;
+              }),
+              path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
+            })
+          }));
+          view.trigger("render");
         } else if (this.model.get("type") === "message") {
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
@@ -262,13 +259,11 @@ define(
             }
             if ($.type(message.staron) === 'array') {
               // Add stars
-              require(['model-star-mobile'], function (StarModel) {
-                _.each(message.staron, function (element, index, list) {
-                  app.stars.create({
-                    _id: element.toString(),
-                    type: message.startype,
-                    state: true
-                  });
+              _.each(message.staron, function (element, index, list) {
+                app.stars.create({
+                  _id: element.toString(),
+                  type: message.startype,
+                  state: true
                 });
               });
             }
@@ -315,14 +310,12 @@ define(
       },
 
       pendingQueue: function () {
-        require(['text!template-pending-mobile.mustache'], function (Template) {
-          var el = $('#pendingContent');
-          el.html(Mustache.render(Template, {
-            pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
-            draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
-          }));
-          $('#pendingPopup').popup('open');
-        });
+        var el = $('#pendingContent');
+        el.html(Mustache.render(pendingTemplate, {
+          pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
+          draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
+        }));
+        $('#pendingPopup').popup('open');
       },
 
       destroy: function () {
@@ -332,22 +325,20 @@ define(
       processStars: function () {
         var elements = this.$el.find('.blink-starrable');
         if (elements) {
-          require(['view-star-mobile', 'model-star-mobile'], function (StarView, StarModel) {
-            elements.each(function (index, element) {
-              var view,
-                attrs,
-                model = app.stars.get($(element).data('id'));
-              if (!model) {
-                attrs = $(element).data();
-                attrs._id = attrs.id.toString();
-                delete attrs.id;
-                attrs.state = false;
-                model = new StarModel(attrs);
-              }
-              view = new StarView({
-                model: model,
-                el: element
-              });
+          elements.each(function (index, element) {
+            var view,
+              attrs,
+              model = app.stars.get($(element).data('id'));
+            if (!model) {
+              attrs = $(element).data();
+              attrs._id = attrs.id.toString();
+              delete attrs.id;
+              attrs.state = false;
+              model = new StarModel(attrs);
+            }
+            view = new StarView({
+              model: model,
+              el: element
             });
           });
         }

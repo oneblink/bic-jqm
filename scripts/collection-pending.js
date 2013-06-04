@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-pending-mobile', 'data-pouch', 'underscore', 'api-php'],
-  function (Backbone, PendingItem, Data, _, API) {
+  ['wrapper-backbone', 'model-pending-mobile', 'data-pouch', 'api-php'],
+  function (Backbone, PendingItem, Data, API) {
     "use strict";
     var PendingCollection = Backbone.Collection.extend({
       model: PendingItem,

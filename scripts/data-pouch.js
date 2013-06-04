@@ -1,6 +1,6 @@
 define(
-  ['api-php', 'pouchdb', 'jquery', 'underscore'],
-  function (API, Pouch, $, _) {
+  [],
+  function () {
     "use strict";
 
     var Data = function (name) {//, apiTrigger, apiCall, apiParameters) {
@@ -143,20 +143,6 @@ define(
         });
         return dfrd.promise();
       },
-
-      apiRequest: function (model) {
-        var dfrd;
-        dfrd = new $.Deferred();
-        if (this.apiCall) {
-          dfrd = API[this.apiCall].apply(this, _.map(this.apiParameters, function (value, key, list) {
-            return model.get(value);
-          }));
-        } else {
-          dfrd.reject('No API call set');
-        }
-        return dfrd.promise();
-      }
-
     });
 
     return Data;

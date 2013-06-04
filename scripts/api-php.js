@@ -1,6 +1,6 @@
 define(
-  ['jquery', 'underscore'],
-  function ($, _) {
+  [],
+  function () {
     "use strict";
     var API = {
       getAnswerSpaceMap: function () {

@@ -53,14 +53,13 @@ module.exports = function (grunt) {
       compile: {
         options: {
           baseUrl: 'scripts',
-          modules: [{ name: 'main' }],
-          mainConfigFile: 'scripts/main.js',
-          dir: 'build',
-          optimize: "uglify2",
-          generateSourceMaps: true,
-          preserveLicenseComments: false,
+          name: 'vendor/almond',
+          include: ['main'],
+          out: 'build/bic.js',
+          optimize: "none",
           paths: {
-            text: '../js/text',
+            text: 'vendor/text',
+            domReady: 'vendor/domReady',
             jquery: 'empty:',
             jquerymobile: 'empty:',
             underscore: 'empty:',
@@ -71,7 +70,12 @@ module.exports = function (grunt) {
             q: 'empty:',
             pouchdb: 'empty:'
           },
-          wrap: true
+          wrap: {
+            startFile: 'scripts/frag/start.frag',
+            endFile: 'scripts/frag/end.frag'
+          },
+          // wrap: true,
+          //insertRequire: ["main"]
         }
       }
     },
@@ -80,18 +84,22 @@ module.exports = function (grunt) {
       main: {
         files: [
           {
-            src: 'build/main.js',
-            dest: 'js/main.js'
-          },
-          {
-            src: 'build/main.js.map',
-            dest: 'js/main.js.map'
-          },
-          {
-            src: 'build/main.js.src',
-            dest: 'js/main.js.src'
+            src: 'build/bic.js',
+            dest: 'js/bic.js'
           }
         ]
+      }
+    },
+
+    uglify: {
+      main: {
+        files: {
+          'js/bic.min.js': ['js/bic.js']
+        },
+        options: {
+          sourceMap: 'js/bic.js.map',
+          sourceMappingURL: 'bic.js'
+        }
       }
     }
 
@@ -104,8 +112,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['mocha', 'clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
 
 };

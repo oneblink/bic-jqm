@@ -6,4 +6,6 @@
 /.idea
 
 # output files
-/js/main.*
+js/bic.js
+js/bic.js.map
+js/bic.min.js

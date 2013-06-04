@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-star-mobile', 'jquery', 'underscore', 'data-pouch'],
-  function (Backbone, Star, $, _, Data) {
+  ['wrapper-backbone', 'model-star-mobile', 'data-pouch'],
+  function (Backbone, Star, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Star,
