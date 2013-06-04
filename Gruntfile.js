@@ -16,11 +16,11 @@ module.exports = function (grunt) {
     watch: {
       source: {
         files: ['*', 'scripts/**'],
-        tasks: ['build'],
+        tasks: ['build']
       },
       tests: {
         files: ['tests/**'],
-        tasks: ['mocha'],
+        tasks: ['mocha']
       }
     },
 
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
       all: ['tests/*!(assets)/index.html'],
       options: {
         reporter: 'Nyan'
-      },
+      }
     },
 
     clean: ['build'],
@@ -60,6 +60,7 @@ module.exports = function (grunt) {
           paths: {
             text: 'vendor/text',
             domReady: 'vendor/domReady',
+            'BMP.Blobs': '../js/bmp-blobs',
             jquery: 'empty:',
             jquerymobile: 'empty:',
             underscore: 'empty:',
@@ -73,7 +74,7 @@ module.exports = function (grunt) {
           wrap: {
             startFile: 'scripts/frag/start.frag',
             endFile: 'scripts/frag/end.frag'
-          },
+          }//,
           // wrap: true,
           //insertRequire: ["main"]
         }
@@ -114,7 +115,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
+  grunt.registerTask('default', ['jslint', 'build']);
+  grunt.registerTask('build', [
+    'clean',
+    'requirejs',
+    'copy',
+    'clean',
+    'uglify'
+  ]);
 
 };
