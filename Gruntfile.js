@@ -92,17 +92,17 @@ module.exports = function (grunt) {
       }
     },
 
-    uglify: {
-      main: {
-        files: {
-          'js/bic.min.js': ['js/bic.js']
-        },
-        options: {
-          sourceMap: 'js/bic.js.map',
-          sourceMappingURL: 'bic.js'
-        }
-      }
-    }
+    // uglify: {
+    //   main: {
+    //     files: {
+    //       'js/bic.min.js': ['js/bic.js']
+    //     },
+    //     options: {
+    //       sourceMap: 'js/bic.js.map',
+    //       sourceMappingURL: 'bic.js'
+    //     }
+    //   }
+    // }
 
   });
 
@@ -120,8 +120,7 @@ module.exports = function (grunt) {
     'clean',
     'requirejs',
     'copy',
-    'clean',
-    'uglify'
+    'clean'
   ]);
 
 };
