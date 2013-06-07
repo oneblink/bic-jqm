@@ -13,4 +13,3 @@
         root.bic = factory();
     }
 }(this, function ($, _, Backbone, Mustache, Pouch, BlinkForms, jquerymobile) {
-console.log(arguments);
