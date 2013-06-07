@@ -1,4 +1,6 @@
-/*global cordova: true*/
+/*jslint browser:true, es5:true, indent:2, nomen:true*/
+/*global requirejs, require, define, module*/
+/*global $, cordova*/
 requirejs.config({
   shim: {
     'underscore': {
@@ -7,6 +9,10 @@ requirejs.config({
     'backbone': {
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'
+    },
+    'BMP.Blobs': {
+      deps: ['underscore', 'jquery'],
+      exports: 'BMP'
     },
     'BlinkForms': {
       exports: 'BlinkForms'
@@ -18,7 +24,8 @@ requirejs.config({
 });
 
 define(
-  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile', 'view-interaction-mobile', 'domReady'],
+  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile',
+    'view-interaction-mobile', 'domReady'],
   function (Backbone, router, InteractionModel, InteractionView, domReady) {
     "use strict";
 
@@ -41,7 +48,8 @@ define(
     function start() {
       // AJAX Default Options
       $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-        jqXHR.setRequestHeader('X-Blink-Config', JSON.stringify(window.BMP.siteVars));
+        jqXHR.setRequestHeader('X-Blink-Config',
+          JSON.stringify(window.BMP.siteVars));
       });
 
       require(['model-application-mobile'], function (app) {
@@ -86,3 +94,8 @@ define(
     init();
   }
 );
+
+require(['BMP.Blobs', 'domReady'], function (BMP, doc) {
+  'use strict';
+  BMP.FileInput.initialize();
+});
