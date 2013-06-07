@@ -1,5 +1,5 @@
 define(
-  ['data-pouch'],
+  ['feature!data'],
   function (data) {
     "use strict";
 

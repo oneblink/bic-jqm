@@ -69,7 +69,9 @@ module.exports = function (grunt) {
             BlinkForms: 'empty:',
             rivets: 'empty:',
             q: 'empty:',
-            pouchdb: 'empty:'
+            pouchdb: 'empty:',
+            feature: 'vendor/feature',
+            implementations: 'implementation-dynamic'
           },
           wrap: {
             startFile: 'scripts/frag/start.frag',
