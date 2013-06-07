@@ -91,17 +91,17 @@ module.exports = function (grunt) {
       }
     },
 
-    uglify: {
-      main: {
-        files: {
-          'js/bic.min.js': ['js/bic.js']
-        },
-        options: {
-          sourceMap: 'js/bic.js.map',
-          sourceMappingURL: 'bic.js'
-        }
-      }
-    }
+    // uglify: {
+    //   main: {
+    //     files: {
+    //       'js/bic.min.js': ['js/bic.js']
+    //     },
+    //     options: {
+    //       sourceMap: 'js/bic.js.map',
+    //       sourceMappingURL: 'bic.js'
+    //     }
+    //   }
+    // }
 
   });
 
@@ -115,6 +115,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
 
 };
