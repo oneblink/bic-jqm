@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-datasuitcase-mobile', 'data-pouch'],
+  ['wrapper-backbone', 'model-datasuitcase-mobile', 'feature!data'],
   function (Backbone, DataSuitcase, Data) {
     "use strict";
     var DataSuitcaseCollection = Backbone.Collection.extend({

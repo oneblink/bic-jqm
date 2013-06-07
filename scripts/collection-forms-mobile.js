@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-form-mobile', 'data-pouch'],
+  ['wrapper-backbone', 'model-form-mobile', 'feature!data'],
   function (Backbone, Form, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
