@@ -49,7 +49,8 @@ define(
       });
 
       require(['model-application-mobile'], function (app) {
-        app.once('initialize', function () {
+        app.get("initialize").done(function () {
+          BMP.FileInput.initialize();
           if (navigator.onLine) {
             app.populate().done(function () {
               initialRender();

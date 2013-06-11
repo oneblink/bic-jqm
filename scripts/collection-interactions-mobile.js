@@ -8,13 +8,14 @@ define(
 
       initialize: function () {
         var collection = this;
+        collection.initalize = new $.Deferred();
         collection.data = new Data(window.BMP.siteVars.answerSpace + '-Interaction');
         collection.fetch({
           success: function () {
-            collection.trigger("initialize");
+            collection.initalize.resolve();
           },
           error: function () {
-            collection.trigger("initialize");
+            collection.initalize.reject();
           }
         });
       },

@@ -5,42 +5,28 @@ define(
     var Application = Backbone.Model.extend({
 
       initialize: function () {
-        var app = this,
-          promises = [],
-          interactions = new $.Deferred(),
-          datasuitcases = new $.Deferred(),
-          forms = new $.Deferred(),
-          pending = new $.Deferred(),
-          stars = new $.Deferred();
+        var app = this;
 
-        promises.push(interactions.promise(), datasuitcases.promise(), forms.promise(), pending.promise(), stars.promise());
-
+        this.set({initialize: new $.Deferred()});
+        
         this.on('change', this.update);
 
         this.data = new Data(window.BMP.siteVars.answerSpace + '-AnswerSpace');
 
-        this.interactions = new InteractionCollection().once('initialize', function () {
-          interactions.resolve();
-        });
+        this.interactions = new InteractionCollection();
+        this.datasuitcases = new DataSuitcaseCollection();
+        this.forms = new FormCollection();
+        this.pending = new PendingCollection();
+        this.stars = new StarsCollection();
 
-        this.datasuitcases = new DataSuitcaseCollection().once('initialize', function () {
-          datasuitcases.resolve();
-        });
-
-        this.forms = new FormCollection().once('initialize', function () {
-          forms.resolve();
-        });
-
-        this.pending = new PendingCollection().once('initialize', function () {
-          pending.resolve();
-        });
-
-        this.stars = new StarsCollection().once('initialize', function () {
-          stars.resolve();
-        });
-
-        $.when.apply($, promises).then(function () {
-          app.trigger("initialize");
+        $.when(
+          this.interactions.initialize,
+          this.datasuitcases.initialize,
+          this.forms.initialize,
+          this.pending.initialize,
+          this.stars.initialize
+        ).then(function () {
+          app.get("initialize").resolve();
         });
       },
 
