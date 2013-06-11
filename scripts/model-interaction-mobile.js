@@ -173,7 +173,7 @@ define(
                   dfrd.resolve(model);
                 },
                 error: function (error) {
-                  dfrd.reject(error);
+                  dfrd.resolve(model);
                 }
               });
             },
