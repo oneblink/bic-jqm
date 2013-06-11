@@ -10,10 +10,6 @@ requirejs.config({
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'
     },
-    'BMP.Blobs': {
-      deps: ['underscore', 'jquery'],
-      exports: 'BMP'
-    },
     'BlinkForms': {
       exports: 'BlinkForms'
     },
@@ -94,8 +90,3 @@ define(
     init();
   }
 );
-
-require(['BMP.Blobs', 'domReady'], function (BMP, doc) {
-  'use strict';
-  BMP.FileInput.initialize();
-});
