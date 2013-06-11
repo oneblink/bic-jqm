@@ -1,6 +1,6 @@
 define(
-  ['feature!data'],
-  function (data) {
+  [],
+  function () {
     "use strict";
 
     // Save traditional sync method as ajaxSync

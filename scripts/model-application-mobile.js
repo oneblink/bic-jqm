@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'collection-pending', 'data-pouch', 'api-php', 'collection-stars-mobile'],
+  ['wrapper-backbone', 'collection-interactions-mobile', 'collection-datasuitcases-mobile', 'model-datasuitcase-mobile', 'collection-forms-mobile', 'model-form-mobile', 'collection-pending', 'feature!data', 'api-php', 'collection-stars-mobile'],
   function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, PendingCollection, Data, API, StarsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
