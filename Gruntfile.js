@@ -60,7 +60,6 @@ module.exports = function (grunt) {
           paths: {
             text: 'vendor/text',
             domReady: 'vendor/domReady',
-            'BMP.Blobs': '../js/bmp-blobs',
             feature: 'vendor/feature',
             implementations: 'implementation-dynamic'
           },

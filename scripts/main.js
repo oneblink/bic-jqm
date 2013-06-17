@@ -1,24 +1,6 @@
 /*jslint browser:true, es5:true, indent:2, nomen:true*/
 /*global requirejs, require, define, module*/
 /*global $, cordova*/
-requirejs.config({
-  shim: {
-    'underscore': {
-      exports: '_'
-    },
-    'backbone': {
-      deps: ['underscore', 'jquery'],
-      exports: 'Backbone'
-    },
-    'BlinkForms': {
-      exports: 'BlinkForms'
-    },
-    'pouchdb': {
-      exports: 'Pouch'
-    }
-  }
-});
-
 define(
   ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile',
     'view-interaction-mobile', 'domReady'],
