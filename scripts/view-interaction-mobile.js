@@ -143,20 +143,34 @@ define(
           });
           this.model.performXSLT();
         } else if (this.model.has("type") && this.model.get("type") === "form") {
+          if ($('#ActiveFormContainer').length > 0) {
+            $('#ActiveFormContainer').attr('id', 'FormContainer');
+          }
+
           // Form
-          this.$el.html(Mustache.render(Template, {
+          view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: formTemplate
           }));
 
-          BlinkForms.getDefinition(this.model.get("blinkFormObjectName"), this.model.get("blinkFormAction")).then(function (definition) {
-            BlinkForms.initialize(definition);
-            $('#FormContainer').append(BlinkForms.currentFormObject.$form);
-            $('#FormContainer').trigger('create');
-          });
+          var form = $('#ActiveFormContainer');
+          if (view.model.get("blinkFormAction") === "add" ||
+              view.model.get("blinkFormAction") === "edit" ||
+              view.model.get("blinkFormAction") === "view" ||
+              view.model.get("blinkFormAction") === "delete") {
+            BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction")).then(function (definition) {
+              BlinkForms.initialize(definition);
+              form.append(BlinkForms.currentFormObject.$form);
+              form.trigger('create');
 
-          this.trigger("render");
+              if (view.model.get("blinkFormAction") === "edit") {
+                BlinkForms.currentFormObject.setRecord(JSON.parse(app.pending.get(view.model.get("args")['args[id]']).get("data")));
+              }
+
+              view.trigger("render");
+            });
+          }
         } else if (this.model.id.toLowerCase() === window.BMP.siteVars.answerSpace.toLowerCase()) {
           // Home Screen
           view.$el.html(Mustache.render(Template, {
