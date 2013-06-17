@@ -1,19 +1,22 @@
-define({
-  'data': [
-    {
-      isAvailable: function () {
-        return true;
+define(function () {
+  "use strict";
+  return {
+    'data': [
+      {
+        isAvailable: function () {
+          return Modernizr.indexeddb || window.BMP.isBlinkGap;
+        },
+
+        implementation: 'data-pouch'
       },
 
-      implementation: 'data-pouch'
-    },
+      {
+        isAvailable: function () {
+          return true;
+        },
 
-    {
-      isAvailable: function () {
-        return true;
-      },
-
-      implementation: 'data-inMemory'
-    }
-  ]
-})
+        implementation: 'data-inMemory'
+      }
+    ]
+  };
+});
