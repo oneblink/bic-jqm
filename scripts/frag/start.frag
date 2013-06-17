@@ -4,10 +4,12 @@ requirejs.config({
   paths: {
     BlinkForms: ['/_BICv3_/js/BlinkForms-jQueryMobile.min'],
     pouchdb: ['/_BICv3_/js/pouchdb-nightly'],
-    'BMP.Blobs': ['/_BICv3_/js/bmp-blobs.min']
+    'BMP.Blobs': ['/_BICv3_/js/bmp-blobs.min'],
+    signaturepad: ['/_c_/signaturepad/2.3.0/jq.sig.min']
   },
   shim: {
     'BlinkForms': {
+      deps: ['signaturepad', 'BMP.Blobs'],
       exports: 'BlinkForms'
     },
     'pouchdb': {
@@ -17,6 +19,10 @@ requirejs.config({
       deps: ['underscore', 'jquery'],
       exports: 'BMP'
     },
+    'signaturepad': {
+      deps: ['jquery'],
+      exports: '$'
+    } 
   }
 });
 
@@ -31,9 +37,10 @@ requirejs.config({
             'pouchdb',
             'BlinkForms',
             'jquerymobile',
-            'BMP.Blobs'
+            'BMP.Blobs',
+            'modernizr'
         ], factory);
     } else {
         root.bic = factory();
     }
-}(this, function ($, _, Backbone, Mustache, Pouch, BlinkForms, jquerymobile, BMP) {
+}(this, function ($, _, Backbone, Mustache, Pouch, BlinkForms, jquerymobile, BMP, Modernizr) {
