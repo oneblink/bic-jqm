@@ -31,14 +31,14 @@ define(
       });
 
       require(['model-application-mobile'], function (app) {
-        app.get("initialize").done(function () {
+        app.initialize.done(function () {
           BMP.FileInput.initialize();
           if (navigator.onLine) {
             app.populate().done(function () {
               initialRender();
             });
           } else {
-            app.set({_id: window.BMP.siteVars.answerSpace}).fetch({
+            app.fetch({
               success: function (model, response, options) {
                 initialRender();
               },

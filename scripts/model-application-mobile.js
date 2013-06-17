@@ -7,7 +7,11 @@ define(
       initialize: function () {
         var app = this;
 
-        this.set({initialize: new $.Deferred()});
+        app.initialize = new $.Deferred();
+
+        this.set({
+          _id: window.BMP.siteVars.answerSpace
+        });
         
         this.on('change', this.update);
 
@@ -26,7 +30,7 @@ define(
           this.pending.initialize,
           this.stars.initialize
         ).then(function () {
-          app.get("initialize").resolve();
+          app.initialize.resolve();
         });
       },
 
