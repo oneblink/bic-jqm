@@ -315,6 +315,7 @@ define(
           pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
           draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
         }));
+        this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');
       },
 
