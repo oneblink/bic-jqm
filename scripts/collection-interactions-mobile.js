@@ -24,7 +24,9 @@ define(
         _.each(this.models, function (model, key, list) {
           model.save();
         });
-      }
+      },
+
+      comparator: "order"
 
     });
 
