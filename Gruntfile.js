@@ -63,7 +63,7 @@ module.exports = function (grunt) {
         options: {
           baseUrl: 'scripts',
           name: 'vendor/almond',
-          include: ['main'],
+          include: ['main', 'router'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {

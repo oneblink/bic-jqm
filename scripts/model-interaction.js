@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'api'],
-  function (Backbone, API) {
+  ['api'],
+  function (API) {
     "use strict";
     var Interaction = Backbone.Model.extend({
 

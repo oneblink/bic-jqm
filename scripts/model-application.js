@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'collection-interactions', 'collection-datasuitcases', 'model-datasuitcase', 'collection-forms', 'model-form', 'collection-pending', 'feature!data', 'api', 'collection-stars'],
-  function (Backbone, InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, PendingCollection, Data, API, StarsCollection) {
+  ['collection-interactions', 'collection-datasuitcases', 'model-datasuitcase', 'collection-forms', 'model-form', 'collection-pending', 'feature!data', 'api', 'collection-stars'],
+  function (InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, PendingCollection, Data, API, StarsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 

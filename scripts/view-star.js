@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone'],
-  function (Backbone) {
+  [],
+  function () {
     "use strict";
     var StarView = Backbone.View.extend({
       events: {

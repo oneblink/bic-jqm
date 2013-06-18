@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-datasuitcase', 'feature!data'],
-  function (Backbone, DataSuitcase, Data) {
+  ['model-datasuitcase', 'feature!data'],
+  function (DataSuitcase, Data) {
     "use strict";
     var DataSuitcaseCollection = Backbone.Collection.extend({
       model: DataSuitcase,

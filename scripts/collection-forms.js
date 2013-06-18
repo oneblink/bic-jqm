@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-form', 'feature!data'],
-  function (Backbone, Form, Data) {
+  ['model-form', 'feature!data'],
+  function (Form, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Form,

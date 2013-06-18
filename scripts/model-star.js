@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone'],
-  function (Backbone) {
+  [],
+  function () {
     "use strict";
     var Star = Backbone.Model.extend({
       idAttribute: "_id",

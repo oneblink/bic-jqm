@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-pending', 'feature!data', 'api'],
-  function (Backbone, PendingItem, Data, API) {
+  ['model-pending', 'feature!data', 'api'],
+  function (PendingItem, Data, API) {
     "use strict";
     var PendingCollection = Backbone.Collection.extend({
       model: PendingItem,

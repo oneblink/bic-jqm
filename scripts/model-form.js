@@ -1,6 +1,6 @@
 define(
-  ['wrapper-backbone', 'model-application', 'api'],
-  function (Backbone, app, API) {
+  ['model-application', 'api'],
+  function (app, API) {
     "use strict";
     var Form = Backbone.Model.extend({
       idAttribute: "_id",
