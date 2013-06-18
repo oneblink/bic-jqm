@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-application-mobile', 'api-php'],
+  ['wrapper-backbone', 'model-application', 'api'],
   function (Backbone, app, API) {
     "use strict";
     var Form = Backbone.Model.extend({

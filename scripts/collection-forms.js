@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-form-mobile', 'feature!data'],
+  ['wrapper-backbone', 'model-form', 'feature!data'],
   function (Backbone, Form, Data) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
@@ -20,7 +20,7 @@ define(
 
         BlinkForms.getDefinition = function (name, action) {
           var dfrd = new $.Deferred();
-          require(['model-application-mobile'], function (app) {
+          require(['model-application'], function (app) {
             var def = app.forms.get(name).get('definition'),
               collapsed,
               elements,

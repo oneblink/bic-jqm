@@ -14,7 +14,7 @@ define(
       toggle: function () {
         var model = this;
         model.get("state") ? this.set("state", false) : this.set("state", true);
-        require(['model-application-mobile'], function (app) {
+        require(['model-application'], function (app) {
           if (model.get("state")) {
             app.stars.add(model);
           } else {

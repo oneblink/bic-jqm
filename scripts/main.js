@@ -2,13 +2,13 @@
 /*global requirejs, require, define, module*/
 /*global $, cordova*/
 define(
-  ['wrapper-backbone', 'router-mobile', 'model-interaction-mobile',
-    'view-interaction-mobile', 'domReady'],
+  ['wrapper-backbone', 'router', 'model-interaction',
+    'view-interaction', 'domReady'],
   function (Backbone, router, InteractionModel, InteractionView, domReady) {
     "use strict";
 
     function initialRender() {
-      require(['model-application-mobile'], function (app) {
+      require(['model-application'], function (app) {
         $.mobile.defaultPageTransition = app.get("defaultTransition");
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().pathname, {
@@ -30,7 +30,7 @@ define(
           JSON.stringify(window.BMP.siteVars));
       });
 
-      require(['model-application-mobile'], function (app) {
+      require(['model-application'], function (app) {
         app.initialize.done(function () {
           BMP.FileInput.initialize();
           if (navigator.onLine) {

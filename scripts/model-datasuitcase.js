@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'api-php'],
+  ['wrapper-backbone', 'api'],
   function (Backbone, API) {
     "use strict";
     var DataSuitcase = Backbone.Model.extend({

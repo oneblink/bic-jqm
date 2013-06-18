@@ -19,8 +19,8 @@ module.exports = function (grunt) {
         tasks: ['build']
       },
       tests: {
-        files: ['tests/**'],
-        tasks: ['mocha']
+        files: ['scripts/**', 'tests/**'],
+        tasks: ['jslint', 'mocha']
       }
     },
 
@@ -35,7 +35,16 @@ module.exports = function (grunt) {
         "predef" : [
           "define",
           "require",
-          "requirejs"
+          "requirejs",
+          "$",
+          "_",
+          "Backbone",
+          "Mustache",
+          "Pouch",
+          "BlinkForms",
+          "jquerymobile",
+          "BMP",
+          "Modernizr"
         ]
       }
     },
@@ -61,7 +70,7 @@ module.exports = function (grunt) {
             text: 'vendor/text',
             domReady: 'vendor/domReady',
             feature: 'vendor/feature',
-            implementations: 'implementation-dynamic'
+            implementations: 'implementation-data'
           },
           wrap: {
             startFile: 'scripts/frag/start.frag',

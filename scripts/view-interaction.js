@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application-mobile', 'text!template-category-list.mustache', 'model-star-mobile', 'text!template-pending-mobile.mustache', 'view-star-mobile'],
+  ['wrapper-backbone', 'text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star'],
   function (Backbone, Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView) {
     "use strict";
     var InteractionView = Backbone.View.extend({

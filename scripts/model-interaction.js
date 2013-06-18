@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'api-php'],
+  ['wrapper-backbone', 'api'],
   function (Backbone, API) {
     "use strict";
     var Interaction = Backbone.Model.extend({
@@ -16,7 +16,7 @@ define(
 
       inherit: function (config) {
         if (this.has("parent")) {
-          var app = require('model-application-mobile'),
+          var app = require('model-application'),
             parent;
 
           _.each(this.attributes, function (value, key, list) {
@@ -77,7 +77,7 @@ define(
 
         starType = xsl.match(/blink-stars\(([@\w.]+),\W*(\w+)\W*\)/);
         if (starType) {
-          require(['model-application-mobile'], function (app) {
+          require(['model-application'], function (app) {
             while (starType) {
               condition = '';
               variable = starType[1];
@@ -100,7 +100,7 @@ define(
         }
 
         model = this;
-        require(['model-application-mobile'], function (app) {
+        require(['model-application'], function (app) {
           xmlString = model.get("starXml") ? model.get("starXml") : app.datasuitcases.get(model.get("xml")).get("data");
           xslString = xsl;
           if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
@@ -141,7 +141,7 @@ define(
           attrs;
 
         if (model.id === window.BMP.siteVars.answerSpace) {
-          require(['model-application-mobile'], function (app) {
+          require(['model-application'], function (app) {
             if (app.has("homeScreen") && app.get("homeScreen") !== false && app.has("homeInteraction")) {
               homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
               if (homeInteraction) {
@@ -191,7 +191,7 @@ define(
         }
 
         if (model.get("type") === "xslt" && model.get("mojoType") === "stars") {
-          require(['model-application-mobile'], function (app) {
+          require(['model-application'], function (app) {
             _.each(app.stars.where({type: model.get("xml")}), function (value, key, list) {
               xml += '<' + value.get("type") + ' id="' + value.get("_id") + '">';
 

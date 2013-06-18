@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-pending-mobile', 'feature!data', 'api-php'],
+  ['wrapper-backbone', 'model-pending', 'feature!data', 'api'],
   function (Backbone, PendingItem, Data, API) {
     "use strict";
     var PendingCollection = Backbone.Collection.extend({

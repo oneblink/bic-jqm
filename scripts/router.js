@@ -1,5 +1,5 @@
 define(
-  ['wrapper-backbone', 'model-application-mobile', 'model-interaction-mobile', 'view-interaction-mobile'],
+  ['wrapper-backbone', 'model-application', 'model-interaction', 'view-interaction'],
   function (Backbone, app, InteractionModel, InteractionView) {
     "use strict";
     var Router = Backbone.Router.extend({
