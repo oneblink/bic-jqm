@@ -25,13 +25,13 @@ module.exports = function (grunt) {
     },
 
     jslint: {
-      files: ['./scripts/**/*.js'],
+      files: ['./scripts/*.js'],
       directives: {
         "browser": true,
         "es5": true,
         "nomen": true,
-        "todo": true,
         "indent": 2,
+        "stupid": true,
         "predef" : [
           "define",
           "require",
