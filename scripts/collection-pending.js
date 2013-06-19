@@ -20,9 +20,9 @@ define(
       },
 
       processQueue: function () {
-        _.each(this.where({status: "Pending"}), function (element, index, list) {
+        _.each(this.where({status: "Pending"}), function (element) {
           API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).done(
-            function (data, textStatus, jqXHR) {
+            function () {
               element.destroy({wait: true});
             }
           );

@@ -104,8 +104,6 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          formobject,
-          formmodel,
           view = this;
 
         // Non-type specific
@@ -154,7 +152,7 @@ define(
             content: formTemplate
           }));
 
-          var form = $('#ActiveFormContainer');
+          form = $('#ActiveFormContainer');
           if (view.model.get("blinkFormAction") === "add" ||
               view.model.get("blinkFormAction") === "edit" ||
               view.model.get("blinkFormAction") === "view" ||
@@ -177,11 +175,11 @@ define(
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: Mustache.render(categoryTemplate, {
-              models: _.map(_.filter(app.interactions.models, function (value, key, list) {
-                return value.id !== window.BMP.siteVars.answerSpace && (value.has("tags") && value.get("tags").length === 0 && value.get("display") !== "hide" || _.filter(value.get("tags"), function (element, index, list) {
+              models: _.map(_.filter(app.interactions.models, function (value) {
+                return value.id !== window.BMP.siteVars.answerSpace && value.get("display") !== "hide" && (value.has("tags") && (value.get("tags").length === 0 || _.filter(value.get("tags"), function (element) {
                   return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
-                }, this).length > 0);
-              }, this), function (value, key, list) {
+                }, this).length > 0));
+              }, this), function (value) {
                 return value.attributes;
               }),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
@@ -194,11 +192,11 @@ define(
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: Mustache.render(categoryTemplate, {
-              models: _.map(_.filter(app.interactions.models, function (value, key, list) {
-                return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element, index, list) {
+              models: _.map(_.filter(app.interactions.models, function (value) {
+                return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element) {
                   return element === 'nav-' + this.model.id.toLowerCase();
                 }, this).length > 0;
-              }, view), function (value, key, list) {
+              }, view), function (value) {
                 return value.attributes;
               }),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
@@ -235,10 +233,13 @@ define(
       blinkAnswerMessages: function (message) {
         if (!message) {
           // First Pass - Extract content
+
+          /*jslint regexp: true */
           var blinkAnswerMessage = this.model.get('content').match(/<!-- blinkAnswerMessage:\{.*\} -->/g);
+          /*jslint regexp: false */
 
           if ($.type(blinkAnswerMessage) === 'array') {
-            _.each(blinkAnswerMessage, function (element, index, list) {
+            _.each(blinkAnswerMessage, function (element) {
               this.blinkAnswerMessages(element.substring(24, element.length - 4));
             }, this);
           }
@@ -265,7 +266,7 @@ define(
             }
             if ($.type(message.staroff) === 'array') {
               // Remove specific stars
-              _.each(message.staroff, function (element, index, list) {
+              _.each(message.staroff, function (element) {
                 if (app.stars.get(element)) {
                   app.stars.get(element.toString()).destroy();
                 }
@@ -273,7 +274,7 @@ define(
             }
             if ($.type(message.staron) === 'array') {
               // Add stars
-              _.each(message.staron, function (element, index, list) {
+              _.each(message.staron, function (element) {
                 app.stars.create({
                   _id: element.toString(),
                   type: message.startype,
@@ -340,10 +341,11 @@ define(
       processStars: function () {
         var elements = this.$el.find('.blink-starrable');
         if (elements) {
+          /*jslint unparam: true*/
           elements.each(function (index, element) {
-            var view,
-              attrs,
-              model = app.stars.get($(element).data('id'));
+            var attrs,
+              model = app.stars.get($(element).data('id')),
+              star;
             if (!model) {
               attrs = $(element).data();
               attrs._id = attrs.id.toString();
@@ -351,11 +353,13 @@ define(
               attrs.state = false;
               model = new StarModel(attrs);
             }
-            view = new StarView({
+            star = new StarView({
               model: model,
               el: element
             });
+            star.render();
           });
+          /*jslint unparam: false*/
         }
       }
 

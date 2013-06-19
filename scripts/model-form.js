@@ -1,6 +1,6 @@
 define(
-  ['model-application', 'api'],
-  function (app, API) {
+  ['api'],
+  function (API) {
     "use strict";
     var Form = Backbone.Model.extend({
       idAttribute: "_id",
@@ -8,14 +8,11 @@ define(
       populate: function () {
         var model = this;
         API.getForm(this.id).then(
-          function (data, textStatus, jqXHR) {
+          function (data) {
             model.save({
               definition: data.definition,
               contentTime: Date.now()
             });
-          },
-          function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
           }
         );
       }

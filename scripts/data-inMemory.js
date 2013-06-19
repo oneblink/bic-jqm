@@ -3,20 +3,20 @@ define(
   function () {
     "use strict";
 
-    var Data = function () {};
+    var Data = function () {
+      this.data = {};
+    };
 
     _.extend(Data.prototype, {
-      data: {},
-
-      create: function (model) {
+      create: function () {
         return new $.Deferred().reject().promise();
       },
 
-      update: function (model) {
+      update: function () {
         return new $.Deferred().reject().promise();
       },
 
-      read: function (model) {
+      read: function () {
         return new $.Deferred().reject().promise();
       },
 

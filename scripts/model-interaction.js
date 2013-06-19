@@ -19,7 +19,7 @@ define(
           var app = require('model-application'),
             parent;
 
-          _.each(this.attributes, function (value, key, list) {
+          _.each(this.attributes, function (value, key) {
             if (!_.has(config, key) || !config[key]) {
               config[key] = value;
             }
@@ -30,7 +30,7 @@ define(
             parent = app.interactions.get(this.get("parent"));
             parent.inherit(config);
           } else {
-            _.each(app.attributes, function (value, key, list) {
+            _.each(app.attributes, function (value, key) {
               if (!_.has(config, key) || !config[key]) {
                 config[key] = value;
               }
@@ -47,7 +47,6 @@ define(
           html,
           xml,
           processor,
-          transformer,
           args,
           placeholders,
           pLength,
@@ -65,7 +64,6 @@ define(
           pLength = placeholders ? placeholders.length : 0;
           for (p = 0; p < pLength; p = p + 1) {
             value = typeof args[placeholders[p].substring(1)] === 'string' ? args[placeholders[p].substring(1)] : '';
-            // TODO: find a better solution upstream for having to decode this here
             value = value.replace('"', '');
             value = value.replace("'", '');
             value = decodeURIComponent(value);
@@ -78,15 +76,21 @@ define(
         starType = xsl.match(/blink-stars\(([@\w.]+),\W*(\w+)\W*\)/);
         if (starType) {
           require(['model-application'], function (app) {
-            while (starType) {
+            var constructCondition;
+
+            constructCondition = function (starType) {
               condition = '';
               variable = starType[1];
               starType = starType[2];
-
-              _.each(app.stars.where({type: starType}), function (value, key, list) {
+              _.each(app.stars.where({type: starType}), function (value) {
                 condition += ' or ' + variable + '=\'' + value.get("_id") + '\'';
               });
               condition = condition.substr(4);
+              return condition;
+            };
+
+            while (starType) {
+              condition = constructCondition(starType);
 
               if (condition.length > 0) {
                 xsl = xsl.replace(/\(?blink-stars\(([@\w.]+),\W*(\w+)\W*\)\)?/, '(' + condition + ')');
@@ -101,7 +105,7 @@ define(
 
         model = this;
         require(['model-application'], function (app) {
-          xmlString = model.get("starXml") ? model.get("starXml") : app.datasuitcases.get(model.get("xml")).get("data");
+          xmlString = model.get("starXml") || app.datasuitcases.get(model.get("xml")).get("data");
           xslString = xsl;
           if (typeof xmlString !== 'string' || typeof xslString !== 'string') {
             model.set("content", 'XSLT failed due to poorly formed XML or XSL.');
@@ -163,8 +167,9 @@ define(
         }
 
         if (model.get("type") === "madl code") {
+          /*jslint unparam: true*/
           API.getInteractionResult(model.id, this.get('args'), data.options).then(
-            function (data, textStatus, jqXHR) {
+            function (data) {
               model.save({
                 content: data,
                 contentTime: Date.now()
@@ -172,7 +177,7 @@ define(
                 success: function () {
                   dfrd.resolve(model);
                 },
-                error: function (error) {
+                error: function () {
                   dfrd.resolve(model);
                 }
               });
@@ -181,6 +186,7 @@ define(
               dfrd.reject(errorThrown);
             }
           );
+          /*jslint unparam: false*/
         }
 
         if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {
@@ -192,7 +198,7 @@ define(
 
         if (model.get("type") === "xslt" && model.get("mojoType") === "stars") {
           require(['model-application'], function (app) {
-            _.each(app.stars.where({type: model.get("xml")}), function (value, key, list) {
+            _.each(app.stars.where({type: model.get("xml")}), function (value) {
               xml += '<' + value.get("type") + ' id="' + value.get("_id") + '">';
 
               attrs = _.clone(value.attributes);
@@ -201,7 +207,7 @@ define(
               delete attrs.type;
               delete attrs.state;
 
-              _.each(attrs, function (value, key, list) {
+              _.each(attrs, function (value, key) {
                 xml += '<' + key + '>' + value + '</' + key + '>';
               });
 
@@ -227,7 +233,7 @@ define(
           tempargs,
           finalargs = {};
 
-        _.each(args, function (element, index, list) {
+        _.each(args, function (element) {
           tempargs = element.split('=');
           if (tempargs[0].substr(0, 4) !== "args") {
             tempargs[0] = "args[" + tempargs[0] + "]";

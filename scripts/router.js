@@ -10,8 +10,8 @@ define(
           $.mobile.loading('show');
           var path = $.mobile.path.parseUrl(data.dataUrl);
 
-          app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model, response, options) {
-            var view = new InteractionView({
+          app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model) {
+            new InteractionView({
               tagName: 'div',
               model: model
             }).once("render", function () {
@@ -20,7 +20,7 @@ define(
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
               data.deferred.resolve(data.absUrl, data.options, this.$el);
             }).render(data);
-          }, function (model, xhr, options) {
+          }, function () {
             data.deferred.reject(data.absUrl, data.options);
             $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
             setTimeout($.mobile.hidePageLoadingMsg, 1500);
@@ -38,8 +38,8 @@ define(
           path.pop();
         }
 
-        _.each(path, function (element, index, list) {
-          if (!_.find(usedPathItems, function (id) {return id === element;})) {
+        _.each(path, function (element) {
+          if (!_.find(usedPathItems, function (id) {return id === element; })) {
             parent = app.interactions.get(element).set({parent: parent}).id;
             usedPathItems.push(element);
           }

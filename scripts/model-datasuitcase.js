@@ -14,14 +14,11 @@ define(
         }
 
         API.getDataSuitcase(this.id, time).then(
-          function (data, textStatus, jqXHR) {
+          function (data) {
             model.save({
               data: data,
               contentTime: Date.now()
             });
-          },
-          function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
           }
         );
       }

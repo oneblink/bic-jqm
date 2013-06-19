@@ -22,7 +22,6 @@ define(
           var dfrd = new $.Deferred();
           require(['model-application'], function (app) {
             var def = app.forms.get(name).get('definition'),
-              collapsed,
               elements,
               elNames,
               collapseAction = function (d) {

@@ -21,7 +21,7 @@ define(
       },
 
       save: function () {
-        _.each(this.models, function (model, key, list) {
+        _.each(this.models, function (model) {
           model.save();
         });
       },

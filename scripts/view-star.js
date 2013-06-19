@@ -8,7 +8,6 @@ define(
       },
 
       initialize: function () {
-        this.render();
         this.listenTo(this.model, "change:state", this.render);
       },
 

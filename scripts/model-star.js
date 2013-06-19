@@ -13,7 +13,11 @@ define(
 
       toggle: function () {
         var model = this;
-        model.get("state") ? this.set("state", false) : this.set("state", true);
+        if (model.get("state")) {
+          this.set("state", false);
+        } else {
+          this.set("state", true);
+        }
         require(['model-application'], function (app) {
           if (model.get("state")) {
             app.stars.add(model);

@@ -7,6 +7,7 @@ define(
     "use strict";
 
     function initialRender() {
+      /*jslint unparam: true*/
       require(['model-application', 'router'], function (app, router) {
         $.mobile.defaultPageTransition = app.get("defaultTransition");
         domReady(function () {
@@ -20,14 +21,17 @@ define(
           });
         });
       });
+      /*jslint unparam: false*/
     }
 
     function start() {
       // AJAX Default Options
+      /*jslint unparam: true*/
       $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
         jqXHR.setRequestHeader('X-Blink-Config',
           JSON.stringify(window.BMP.siteVars));
       });
+      /*jslint unparam: false*/
 
       require(['model-application'], function (app) {
         app.initialize.done(function () {
@@ -38,10 +42,10 @@ define(
             });
           } else {
             app.fetch({
-              success: function (model, response, options) {
+              success: function () {
                 initialRender();
               },
-              error: function (model, response, options) {
+              error: function () {
                 app.populate().done(function () {
                   initialRender();
                 });
@@ -69,23 +73,13 @@ define(
     // Save traditional sync method as ajaxSync
     Backbone.ajaxSync = Backbone.sync;
 
-    // Fallback to traditional sync when not specified
-    Backbone.getSyncMethod = function (model) {
-      if (model.data || (model.collection && model.collection.data)) {
-        return Backbone.dataSync;
-      } else {
-        return Backbone.ajaxSync;
-      }
-    };
-
     // New sync method
     Backbone.dataSync = function (method, model, options) {
-      var data, dfrd, promise, persist;
+      var data, dfrd, promise;
       data = model.data || model.collection.data;
       dfrd = new $.Deferred();
       promise = dfrd.promise();
 
-      // persist = function () {
       switch (method) {
       case "read":
         //promise = model.id !== undefined ? data.read(model) : data.readAll();
@@ -118,6 +112,14 @@ define(
       model.trigger('request', model, promise, options);
 
       return promise;
+    };
+
+    // Fallback to traditional sync when not specified
+    Backbone.getSyncMethod = function (model) {
+      if (model.data || (model.collection && model.collection.data)) {
+        return Backbone.dataSync;
+      }
+      return Backbone.ajaxSync;
     };
 
     // Hook Backbone.sync up to the data layer

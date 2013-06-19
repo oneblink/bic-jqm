@@ -10,7 +10,7 @@ define(
       getInteractionResult: function (iact, args, options) {
         var getargs = '';
         if (args && typeof args === "object") {
-          _.each(args, function (value, key, list) {
+          _.each(args, function (value, key) {
             getargs += '&' + key + '=' + value;
           });
         }

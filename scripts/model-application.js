@@ -1,6 +1,6 @@
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'model-datasuitcase', 'collection-forms', 'model-form', 'collection-pending', 'feature!data', 'api', 'collection-stars'],
-  function (InteractionCollection, DataSuitcaseCollection, DataSuitcase, FormCollection, Form, PendingCollection, Data, API, StarsCollection) {
+  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars'],
+  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -12,7 +12,7 @@ define(
         this.set({
           _id: window.BMP.siteVars.answerSpace
         });
-        
+
         this.on('change', this.update);
 
         this.data = new Data(window.BMP.siteVars.answerSpace + '-AnswerSpace');
@@ -42,9 +42,9 @@ define(
           promise = dfrd.promise();
 
         API.getAnswerSpaceMap().then(
-          function (data, textStatus, jqXHR) {
+          function (data) {
             var models = [];
-            _.each(data, function (value, key, list) {
+            _.each(data, function (value, key) {
               var model;
               if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
                 model = value.pertinent;
@@ -64,17 +64,17 @@ define(
             }, app);
 
             app.interactions.set(models).save();
-            _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element, index, list) {
+            _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
               if (!app.datasuitcases.get(element)) {
-                app.datasuitcases.create({_id: element}, {success: function (model, resp, options) {
+                app.datasuitcases.create({_id: element}, {success: function (model) {
                   model.populate();
                 }});
               }
             });
 
-            _.each(_.compact(_.uniq(app.interactions.pluck('blinkFormObjectName'))), function (element, index, list) {
+            _.each(_.compact(_.uniq(app.interactions.pluck('blinkFormObjectName'))), function (element) {
               if (!app.forms.get(element)) {
-                app.forms.create({_id: element}, {success: function (model, resp, options) {
+                app.forms.create({_id: element}, {success: function (model) {
                   model.populate();
                 }});
               }
@@ -82,7 +82,7 @@ define(
             app.trigger("initialize");
             dfrd.resolve();
           },
-          function (jqXHR, textStatus, errorThrown) {
+          function () {
             dfrd.reject();
           }
         );
