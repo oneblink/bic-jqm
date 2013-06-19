@@ -129,20 +129,7 @@ define(
           }
         });
         return dfrd.promise();
-      },
-
-      deleteAll: function (model) {
-        var dfrd, db;
-        dfrd = new $.Deferred();
-        db = new Pouch.destroy(this.name, function (err, info) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
-            dfrd.resolve(info);
-          }
-        });
-        return dfrd.promise();
-      },
+      }
     });
 
     return Data;

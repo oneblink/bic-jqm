@@ -24,14 +24,9 @@ define(
         return new $.Deferred().reject().promise();
       },
 
-      delete: function (model) {
-        return new $.Deferred().reject().promise();
-      },
-
-      deleteAll: function (model) {
+      delete: function () {
         return new $.Deferred().reject().promise();
       }
-
     });
 
     return Data;
