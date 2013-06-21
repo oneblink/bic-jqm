@@ -1,11 +1,11 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   Backbone.sync = sinon.spy();
   return Backbone;
 });
 
-define('model-application-mobile', ['backbone'], function (Backbone) {
+define('model-application-mobile', [], function () {
   "use strict";
   var app = {
     stars: new Backbone.Collection()
@@ -13,10 +13,18 @@ define('model-application-mobile', ['backbone'], function (Backbone) {
   return app;
 });
 
-define(['../../scripts/model-star-mobile.js'],
-  function (Model) {
+define(function () {
     "use strict";
     describe('Model - Star', function () {
+      var Model;
+
+      before(function (done) {
+        require(['model-star'], function (rModel) {
+          Model = rModel;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Model);
       });

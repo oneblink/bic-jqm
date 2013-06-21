@@ -1,20 +1,20 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define('model-application-mobile', ['backbone'], function (Backbone) {
+define('model-application-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('model-interaction-mobile', ['backbone'], function (Backbone) {
+define('model-interaction-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('view-interaction-mobile', ['backbone'], function (Backbone) {
+define('view-interaction-mobile', [], function () {
   "use strict";
   return Backbone.View.extend();
 });
@@ -24,10 +24,18 @@ define('jquerymobile', [], function () {
   console.log("Subtituting jQuery Mobile");
 });
 
-define(['../../scripts/router-mobile.js'],
-  function (router) {
+define(function () {
     "use strict";
     describe('Router - jQuery Mobile Implementation', function () {
+      var router;
+
+      before(function (done) {
+        require(['router'], function (rRouter) {
+          router = rRouter;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(router);
       });
@@ -40,6 +48,8 @@ define(['../../scripts/router-mobile.js'],
         it("should bind to pagebeforeload");
 
         it("should prevent the default action");
+
+        it("should detect if the interaction is specified by ID (instead of name)");
 
         it("should prepare the inheritance chain");
 

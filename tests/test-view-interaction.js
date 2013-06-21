@@ -1,40 +1,40 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define('model-application-mobile', ['backbone'], function (Backbone) {
+define('model-application-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('model-form-mobile', ['backbone'], function (Backbone) {
+define('model-form-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('model-star-mobile', ['backbone'], function (Backbone) {
+define('model-star-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('interaction.mustache', ['backbone'], function (Backbone) {
+define('interaction.mustache', [], function () {
   "use strict";
   return "String";
 });
 
-define('view-interaction-mobile', ['backbone'], function (Backbone) {
+define('view-interaction-mobile', [], function () {
   "use strict";
   return Backbone.View.extend();
 });
 
-define('view-star-mobile', ['backbone'], function (Backbone) {
+define('view-star-mobile', [], function () {
   "use strict";
   return Backbone.View.extend();
 });
 
-define('collection-interactions-mobile', ['backbone'], function (Backbone) {
+define('collection-interactions-mobile', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
@@ -74,10 +74,18 @@ define('text!template-pending-mobile.mustache', [], function () {
   return "string";
 });
 
-define(['../../scripts/view-interaction-mobile.js', 'backbone', 'jquery'],
-  function (View, Backbone, $) {
+define(function () {
     "use strict";
     describe('View - Interaction - jQuery Mobile Implementation', function () {
+      var View;
+
+      before(function (done) {
+        require(['view-interaction'], function (rView) {
+          view = rView;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(View);
       });

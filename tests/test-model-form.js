@@ -1,10 +1,10 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define('model-application-mobile', ['backbone'], function (Backbone) {
+define('model-application-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
@@ -25,10 +25,18 @@ define('api-php', ['../../scripts/api-php'], function (API) {
   return stub;
 });
 
-define(['../../scripts/model-form-mobile.js'],
-  function (Model) {
+define(function () {
     "use strict";
     describe('Model - Form', function () {
+      var Model;
+
+      before(function (done) {
+        require(['model-form'], function (rModel) {
+          Model = rModel;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Model);
       });

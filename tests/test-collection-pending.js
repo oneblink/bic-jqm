@@ -1,11 +1,11 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   Backbone.sync = function () {};
   return Backbone;
 });
 
-define('model-pending-mobile', ['backbone'], function (Backbone) {
+define('model-pending-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
@@ -28,12 +28,19 @@ window.BMP = {
   }
 };
 
-define(['../../scripts/collection-pending.js'],
-  function (Collection) {
+define(function () {
     "use strict";
-    var collection;
+    var Collection, collection;
 
     describe('Collection - Pending', function () {
+
+      before(function (done) {
+        require(['collection-pending'], function (rCol) {
+          Collection = rCol;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Collection);
       });

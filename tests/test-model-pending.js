@@ -1,19 +1,21 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define('api-php', ['../../scripts/api-php'], function (API) {
-  "use strict";
-  var stub = sinon.stub(API);
-  return stub;
-});
-
-define(['../../scripts/model-datasuitcase-mobile.js'],
-  function (Model) {
+define(function () {
     "use strict";
-    describe('Model - DataSuitcase', function () {
+    describe('Model - Pending', function () {
+      var Model;
+
+      before(function (done) {
+        require(['model-pending'], function (rModel) {
+          Model = rModel;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Model);
       });
@@ -32,20 +34,6 @@ define(['../../scripts/model-datasuitcase-mobile.js'],
           var model = new Model({_id: "TestID"});
           model.id.should.be.string("TestID");
         });
-      });
-
-      describe("populate()", function () {
-        it("should do nothing if offline");
-
-        it("should request a Data Suitcase from the api");
-
-        it("should use a default contentTime of 0");
-
-        it("should pass through the contentTime of last update if available");
-
-        it("should stop on a blank response");
-
-        it("should persist the fetched Data Suitcase");
       });
     });
   });

@@ -1,5 +1,5 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
@@ -15,10 +15,18 @@ define('api-php', ['../../scripts/api-php'], function (API) {
   return stub;
 });
 
-define(['../../scripts/model-interaction-mobile.js'],
-  function (Model) {
+define(function () {
     "use strict";
     describe('Model - Interaction', function () {
+      var Model;
+
+      before(function (done) {
+        require(['model-interaction'], function (rModel) {
+          Model = rModel;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Model);
       });

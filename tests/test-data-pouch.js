@@ -10,10 +10,18 @@ define('api-php', ['../../scripts/api-php.js', 'jquery'], function (API, $) {
   // return stub;
 });
 
-define(['../../scripts/data-pouch.js', 'backbone', 'jquery'],
-  function (data, Backbone, $) {
+define(function () {
     "use strict";
     describe('Data Abstraction Layer - PouchDB Implementation', function () {
+      var data;
+
+      before(function (done) {
+        require(['data-pouch'], function (rData) {
+          data = rData;
+          done();
+        });
+      });
+
       describe('new Data(name)', function () {
         it("should create a new instance of the Data layer");
 

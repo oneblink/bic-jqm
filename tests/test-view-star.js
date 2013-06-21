@@ -1,13 +1,21 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define(['../../scripts/view-star-mobile.js', 'backbone', 'jquery'],
-  function (View, Backbone, $) {
+define(function () {
     "use strict";
     describe('View - Star - jQuery Mobile Implementation', function () {
+      var View;
+
+      before(function (done) {
+        require(['view-star'], function (rView) {
+          view = rView;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(View);
       });

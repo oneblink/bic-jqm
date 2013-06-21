@@ -1,11 +1,11 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   Backbone.sync = sinon.spy();
   return Backbone;
 });
 
-define('model-interaction-mobile', ['backbone'], function (Backbone) {
+define('model-star-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
@@ -22,12 +22,20 @@ window.BMP = {
   }
 };
 
-define(['../../scripts/collection-interactions-mobile.js'],
-  function (Collection) {
-    "use strict";
-    var collection;
 
-    describe('Collection - Interactions', function () {
+define(function () {
+    "use strict";
+    var Collection, collection;
+
+    describe('Collection - Stars', function () {
+
+      before(function (done) {
+        require(['collection-stars'], function (rCol) {
+          Collection = rCol;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Collection);
       });
@@ -50,12 +58,21 @@ define(['../../scripts/collection-interactions-mobile.js'],
         });
       });
 
-      describe('save()', function () {
-        it("should persist any models to the data store", function (done) {
+      describe('clear(type)', function () {
+        it("should trigger model.destroy() on all models of given type", function (done) {
           require(['wrapper-backbone'], function (Backbone) {
             Backbone.sync.reset();
-            collection.add({test: true}).save();
-            should.equal(Backbone.sync.called, true);
+            collection.add({type: "test"}).clear("test");
+            collection.length.should.equal(0);
+            done();
+          });
+        });
+
+        it("should ignore model not of given type", function (done) {
+          require(['wrapper-backbone'], function (Backbone) {
+            Backbone.sync.reset();
+            collection.add({type: "nottest"}).clear("test");
+            collection.length.should.equal(1);
             done();
           });
         });

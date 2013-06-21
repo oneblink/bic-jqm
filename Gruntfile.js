@@ -10,6 +10,12 @@ module.exports = function (grunt) {
           base: '.',
           keepalive: true
         }
+      },
+      testing: {
+        options: {
+          port: 9002,
+          base: '.'
+        }
       }
     },
 
@@ -50,8 +56,10 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      all: ['tests/*!(assets)/index.html'],
+      all: ['tests/index.html'],
       options: {
+        bail: true,
+        log: true,
         reporter: 'Nyan'
       }
     },
@@ -123,5 +131,6 @@ module.exports = function (grunt) {
     'copy',
     'clean'
   ]);
+  grunt.registerTask('test', ['mocha']);
 
 };

@@ -1,45 +1,45 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   return Backbone;
 });
 
-define('model-datasuitcase-mobile', ['backbone'], function (Backbone) {
+define('model-datasuitcase-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('model-form-mobile', ['backbone'], function (Backbone) {
+define('model-form-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
 
-define('collection-datasuitcases-mobile', ['backbone'], function (Backbone) {
+define('collection-datasuitcases-mobile', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
 
-define('collection-forms-mobile', ['backbone'], function (Backbone) {
+define('collection-forms-mobile', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
 
-define('collection-interactions-mobile', ['backbone'], function (Backbone) {
+define('collection-interactions-mobile', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
 
-define('collection-pending', ['backbone'], function (Backbone) {
+define('collection-pending', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
 
-define('collection-stars-mobile', ['backbone'], function (Backbone) {
+define('collection-stars-mobile', [], function () {
   "use strict";
   return Backbone.Collection.extend();
 });
 
-define('data-pouch', [''], function () {
+define('data-pouch', [], function () {
   "use strict";
   return function () {};
 });
@@ -57,11 +57,19 @@ window.BMP = {
   }
 };
 
-define(['../../scripts/model-application-mobile.js', 'backbone'],
-  function (Model, Backbone) {
+define(function () {
     "use strict";
 
     describe('Model - Application', function () {
+      var Model;
+
+      before(function (done) {
+        require(['model-application'], function (rModel) {
+          Model = rModel;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Model);
       });

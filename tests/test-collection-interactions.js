@@ -1,11 +1,11 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', ['backbone'], function (Backbone) {
+define('wrapper-backbone', [], function () {
   "use strict";
   Backbone.sync = sinon.spy();
   return Backbone;
 });
 
-define('model-star-mobile', ['backbone'], function (Backbone) {
+define('model-interaction-mobile', [], function () {
   "use strict";
   return Backbone.Model.extend();
 });
@@ -22,13 +22,19 @@ window.BMP = {
   }
 };
 
-
-define(['../../scripts/collection-stars-mobile.js'],
-  function (Collection) {
+define(function () {
     "use strict";
-    var collection;
+    var Collection, collection;
 
-    describe('Collection - Stars', function () {
+    describe('Collection - Interactions', function () {
+
+      before(function (done) {
+        require(['collection-interactions'], function (rCol) {
+          Collection = rCol;
+          done();
+        });
+      });
+
       it("should exist", function () {
         should.exist(Collection);
       });
@@ -51,21 +57,12 @@ define(['../../scripts/collection-stars-mobile.js'],
         });
       });
 
-      describe('clear(type)', function () {
-        it("should trigger model.destroy() on all models of given type", function (done) {
+      describe('save()', function () {
+        it("should persist any models to the data store", function (done) {
           require(['wrapper-backbone'], function (Backbone) {
             Backbone.sync.reset();
-            collection.add({type: "test"}).clear("test");
-            collection.length.should.equal(0);
-            done();
-          });
-        });
-
-        it("should ignore model not of given type", function (done) {
-          require(['wrapper-backbone'], function (Backbone) {
-            Backbone.sync.reset();
-            collection.add({type: "nottest"}).clear("test");
-            collection.length.should.equal(1);
+            collection.add({test: true}).save();
+            should.equal(Backbone.sync.called, true);
             done();
           });
         });
