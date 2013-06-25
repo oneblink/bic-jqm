@@ -20,6 +20,13 @@
     <script src="http://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min.js"></script>
     <script src="http://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/require.js"></script>
 
+    <!-- code coverage -->
+    <script src="assets/blanket.min.js"
+        data-cover-adapter="assets/mocha-blanket.js"
+        data-cover-only="//^...scripts.*\w/"
+        data-cover-never="//vendor/"
+    ></script>
+
     <!-- mocha setup -->
     <script>
         mocha.setup('bdd');
