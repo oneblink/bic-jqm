@@ -4,18 +4,17 @@ define(function () {
     var Collection, collection, originalModel, originalData;
 
     before(function (done) {
-      require(['model-datasuitcase', 'feature!data'], function (DataSuitcase, Data) {
-
-        originalModel = DataSuitcase;
+      require(['model-datasuitcase', 'data-inMemory'], function (Model, Data) {
+        originalModel = Model;
         originalData = Data;
         requirejs.undef('model-datasuitcase');
-        requirejs.undef('feature!data');
+        requirejs.undef('data-inMemory');
 
         define('model-datasuitcase', [], function () {
           return Backbone.Model;
         });
 
-        define('feature!data', [], function () {
+        define('data-inMemory', [], function () {
           return function (param) {console.log(param)};
         });
 
@@ -28,12 +27,10 @@ define(function () {
     });
 
     after(function () {
-      console.log(originalData);
       requirejs.undef('model-datasuitcase');
-      requirejs.undef('feature!data');
-      define('model-datasuitcase', ['api'], originalModel);
-      define('feature!data', [], originalData);
-      require(['feature!data'], function(data){console.log(data);});
+      requirejs.undef('data-inMemory');
+      define('model-datasuitcase', ['api'], function (API) {return originalModel; });
+      define('data-inMemory', [], function () {return originalData; });
     });
 
     it("should exist", function () {

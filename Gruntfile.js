@@ -21,12 +21,8 @@ module.exports = function (grunt) {
 
     watch: {
       source: {
-        files: ['*', 'scripts/**'],
-        tasks: ['build']
-      },
-      tests: {
-        files: ['scripts/**', 'tests/**'],
-        tasks: ['jslint', 'mocha']
+        files: ['index.php', 'scripts/**', 'tests/**'],
+        tasks: ['build'],
       }
     },
 
@@ -59,7 +55,6 @@ module.exports = function (grunt) {
       all: ['tests/index.html'],
       options: {
         bail: true,
-        log: true,
         reporter: 'Nyan'
       }
     },
@@ -99,19 +94,7 @@ module.exports = function (grunt) {
           }
         ]
       }
-    },
-
-    // uglify: {
-    //   main: {
-    //     files: {
-    //       'js/bic.min.js': ['js/bic.js']
-    //     },
-    //     options: {
-    //       sourceMap: 'js/bic.js.map',
-    //       sourceMappingURL: 'bic.js'
-    //     }
-    //   }
-    // }
+    }
 
   });
 
@@ -124,9 +107,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['jslint', 'build']);
+  grunt.registerTask('default', ['build', 'watch']);
   grunt.registerTask('build', [
     'clean',
+    'jslint',
+    'blanket',
+    'mocha',
     'requirejs',
     'copy',
     'clean'

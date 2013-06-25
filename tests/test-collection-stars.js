@@ -1,81 +1,103 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define('wrapper-backbone', [], function () {
-  "use strict";
-  Backbone.sync = sinon.spy();
-  return Backbone;
-});
+// define('wrapper-backbone', [], function () {
+//   "use strict";
+//   Backbone.sync = sinon.spy();
+//   return Backbone;
+// });
 
-define('model-star-mobile', [], function () {
-  "use strict";
-  return Backbone.Model.extend();
-});
+// define('model-star-mobile', [], function () {
+//   "use strict";
+//   return Backbone.Model.extend();
+// });
 
-define('data-pouch', [], function () {
-  "use strict";
-  return sinon.spy();
-});
+// define('data-pouch', [], function () {
+//   "use strict";
+//   return sinon.spy();
+// });
 
-window.BMP = {
-  siteVars: {
-    answerSpace: 'Exists',
-    answerSpaceId: 1
-  }
-};
+// window.BMP = {
+//   siteVars: {
+//     answerSpace: 'Exists',
+//     answerSpaceId: 1
+//   }
+// };
 
 
 define(function () {
-    "use strict";
-    var Collection, collection;
+  "use strict";
+  describe('Collection - Stars', function () {
+    var Collection, collection, originalModel, originalData;
 
-    describe('Collection - Stars', function () {
+    before(function (done) {
+      require(['model-star', 'data-inMemory'], function (Model, Data) {
 
-      before(function (done) {
+        originalModel = Model;
+        originalData = Data;
+        requirejs.undef('model-star');
+        requirejs.undef('data-inMemory');
+
+        define('model-star', [], function () {
+          return Backbone.Model;
+        });
+
+        define('data-inMemory', [], function () {
+          return function (param) {console.log(param); };
+        });
+
         require(['collection-stars'], function (rCol) {
           Collection = rCol;
           done();
         });
       });
+    });
 
-      it("should exist", function () {
-        should.exist(Collection);
+    after(function () {
+      requirejs.undef('model-star');
+      requirejs.undef('data-inMemory');
+      define('model-star', [], function () {return originalModel; });
+      define('data-inMemory', [], function () {return originalData; });
+    });
+
+    it("should exist", function () {
+      should.exist(Collection);
+    });
+
+    describe('initialize()', function () {
+      it("should trigger an initialization event when initialized", function (done) {
+        collection = new Collection();
+        collection.once('initialize', done());
       });
 
-      describe('initialize()', function () {
-        it("should trigger an initialization event when initialized", function (done) {
-          collection = new Collection();
-          collection.once('initialize', done());
-        });
-
-        it("should set up it's data object", function () {
-          collection.should.have.property('data');
-        });
-
-        it("should have populated itself from the data store", function (done) {
-          require(['data-pouch'], function (Data) {
-            should.equal(Data.called, true);
-            done();
-          });
-        });
+      it("should set up it's data object", function () {
+        collection.should.have.property('data');
       });
 
-      describe('clear(type)', function () {
-        it("should trigger model.destroy() on all models of given type", function (done) {
-          require(['wrapper-backbone'], function (Backbone) {
-            Backbone.sync.reset();
-            collection.add({type: "test"}).clear("test");
-            collection.length.should.equal(0);
-            done();
-          });
-        });
+      // it("should have populated itself from the data store", function (done) {
+      //   require(['data-pouch'], function (Data) {
+      //     should.equal(Data.called, true);
+      //     done();
+      //   });
+      // });
+    });
 
-        it("should ignore model not of given type", function (done) {
-          require(['wrapper-backbone'], function (Backbone) {
-            Backbone.sync.reset();
-            collection.add({type: "nottest"}).clear("test");
-            collection.length.should.equal(1);
-            done();
-          });
-        });
-      });
+    describe('clear(type)', function () {
+      // it("should trigger model.destroy() on all models of given type", function (done) {
+      //   require(['wrapper-backbone'], function (Backbone) {
+      //     Backbone.sync.reset();
+      //     collection.add({type: "test"}).clear("test");
+      //     collection.length.should.equal(0);
+      //     done();
+      //   });
+      // });
+
+      // it("should ignore model not of given type", function (done) {
+      //   require(['wrapper-backbone'], function (Backbone) {
+      //     Backbone.sync.reset();
+      //     collection.add({type: "nottest"}).clear("test");
+      //     collection.length.should.equal(1);
+      //     done();
+      //   });
+      // });
     });
   });
+});
