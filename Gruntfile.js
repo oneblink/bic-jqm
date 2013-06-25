@@ -23,6 +23,9 @@ module.exports = function (grunt) {
       source: {
         files: ['index.php', 'scripts/**', 'tests/**'],
         tasks: ['build'],
+        options: {
+          livereload: true
+        }
       }
     },
 
