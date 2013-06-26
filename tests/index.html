@@ -21,22 +21,20 @@
     <script src="http://d1c6dfkb81l78v.cloudfront.net/requirejs/2.1.2/require.js"></script>
 
     <!-- code coverage -->
-    <script src="assets/blanket.min.js"
-        data-cover-adapter="assets/mocha-blanket.js"
-        data-cover-only="//^...scripts.*\w/"
-        data-cover-never="//vendor/"
-    ></script>
-
-    <!-- mocha setup -->
     <script>
-        mocha.setup('bdd');
-        //mocha.globals(['$', 'jQuery', 'LiveReload'])
-        var should = chai.should();
-        var expect = chai.expect;
+        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+            console.log('Not in PhantomJS, loading code coverage tool');
+            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
+        }
     </script>
 
-    <!-- application variables (normally in php) -->
+    <!-- environment variables (normally in php) -->
     <script>
+        mocha.setup('bdd');
+        mocha.globals(['_$blanket']);
+        var should = chai.should();
+        var expect = chai.expect;
+
         window.BMP = {
           siteVars: {
             answerSpace: 'Exists',
@@ -61,34 +59,31 @@
             implementations: 'implementation-data'
           }
         });
+
+        require([
+        'test-api.js',
+        'test-collection-datasuitcases.js',
+        'test-collection-forms.js',
+        'test-collection-interactions.js',
+        'test-collection-pending.js',
+        'test-collection-stars.js',
+        'test-data-inMemory.js',
+        'test-data-pouch.js',
+        'test-model-application.js',
+        'test-model-datasuitcase.js',
+        'test-model-form.js',
+        'test-model-interaction.js',
+        'test-model-pending.js',
+        'test-model-star.js',
+        'test-router.js',
+        'test-view-interaction.js',
+        'test-view-star.js'
+        ], function () {
+            mocha.run()
+        });
     </script>
 </head>
 <body>
     <div id="mocha"></div>
-
-    <script>
-        require([
-            'test-api.js',
-            'test-collection-datasuitcases.js',
-            'test-collection-forms.js',
-            'test-collection-interactions.js',
-            'test-collection-pending.js',
-            'test-collection-stars.js',
-            'test-data-inMemory.js',
-            'test-data-pouch.js',
-            'test-model-application.js',
-            'test-model-datasuitcase.js',
-            'test-model-form.js',
-            'test-model-interaction.js',
-            'test-model-pending.js',
-            'test-model-star.js',
-            'test-router.js',
-            'test-view-interaction.js',
-            'test-view-star.js'
-            ], function () {
-                mocha.run()
-        });
-    </script>
-
 </body>
 </html>
