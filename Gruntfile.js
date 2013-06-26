@@ -3,6 +3,13 @@ module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
 
+    concurrent: {
+      background: ['connect', 'watch'],
+      options: {
+        logConcurrentOutput: true
+      }
+    },
+
     connect: {
       server: {
         options: {
@@ -10,19 +17,13 @@ module.exports = function (grunt) {
           base: '.',
           keepalive: true
         }
-      },
-      testing: {
-        options: {
-          port: 9002,
-          base: '.'
-        }
       }
     },
 
     watch: {
       source: {
         files: ['index.php', 'scripts/**', 'tests/**'],
-        tasks: ['build'],
+        tasks: ['test'],
         options: {
           livereload: true
         }
@@ -108,18 +109,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-concurrent');
 
-  grunt.registerTask('default', ['build', 'watch']);
-  grunt.registerTask('build', [
-    'clean',
-    'jslint',
-    'blanket',
-    'mocha',
-    'requirejs',
-    'copy',
-    'clean'
-  ]);
-  grunt.registerTask('test', ['mocha']);
+  grunt.registerTask('default', ['test', 'build']);
+  grunt.registerTask('test', ['jslint', 'mocha']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('develop', ['concurrent']);
 
 };
