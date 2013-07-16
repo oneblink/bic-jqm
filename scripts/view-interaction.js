@@ -159,11 +159,11 @@ define(
               view.model.get("blinkFormAction") === "delete") {
             BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction")).then(function (definition) {
               BlinkForms.initialize(definition);
-              form.append(BlinkForms.currentFormObject.$form);
+              form.append(BlinkForms.current.$form);
               form.trigger('create');
 
               if (view.model.get("blinkFormAction") === "edit") {
-                BlinkForms.currentFormObject.setRecord(JSON.parse(app.pending.get(view.model.get("args")['args[id]']).get("data")));
+                BlinkForms.current.setRecord(JSON.parse(app.pending.get(view.model.get("args")['args[id]']).get("data")));
               }
 
               view.trigger("render");
@@ -289,7 +289,7 @@ define(
       formSubmit: function () {
         // Put in pending queue for processing
         var view = this;
-        BlinkForms.currentFormObject.data().then(function (data) {
+        BlinkForms.current.data().then(function (data) {
           app.pending.create({
             type: "Form",
             status: "Pending",
@@ -311,7 +311,7 @@ define(
       formSave: function () {
         // Save to pending queue as a draft
         var view = this;
-        BlinkForms.currentFormObject.data().then(function (data) {
+        BlinkForms.current.data().then(function (data) {
           app.pending.create({
             type: "Form",
             status: "Draft",

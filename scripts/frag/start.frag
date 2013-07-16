@@ -2,7 +2,7 @@
 // These will end up in Global Require (I hope...)
 requirejs.config({
   paths: {
-    BlinkForms: ['/_BICv3_/js/BlinkForms-jQueryMobile.min'],
+    BlinkForms: ['/_BICv3_/js/forms3jqm.min'],
     pouchdb: ['/_BICv3_/js/pouchdb-nightly'],
     'BMP.Blobs': ['/_BICv3_/js/bmp-blobs.min'],
     signaturepad: ['/_c_/signaturepad/2.3.0/jq.sig.min']
