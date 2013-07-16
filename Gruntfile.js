@@ -3,6 +3,13 @@ module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
 
+    concurrent: {
+      background: ['connect', 'watch'],
+      options: {
+        logConcurrentOutput: true
+      }
+    },
+
     connect: {
       server: {
         options: {
@@ -15,12 +22,11 @@ module.exports = function (grunt) {
 
     watch: {
       source: {
-        files: ['*', 'scripts/**'],
-        tasks: ['build']
-      },
-      tests: {
-        files: ['scripts/**', 'tests/**'],
-        tasks: ['jslint', 'mocha']
+        files: ['index.php', 'scripts/**', 'tests/**'],
+        tasks: ['test'],
+        options: {
+          livereload: true
+        }
       }
     },
 
@@ -50,8 +56,9 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      all: ['tests/*!(assets)/index.html'],
+      all: ['tests/index.html'],
       options: {
+        bail: true,
         reporter: 'Nyan'
       }
     },
@@ -91,19 +98,7 @@ module.exports = function (grunt) {
           }
         ]
       }
-    },
-
-    // uglify: {
-    //   main: {
-    //     files: {
-    //       'js/bic.min.js': ['js/bic.js']
-    //     },
-    //     options: {
-    //       sourceMap: 'js/bic.js.map',
-    //       sourceMappingURL: 'bic.js'
-    //     }
-    //   }
-    // }
+    }
 
   });
 
@@ -114,14 +109,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-concurrent');
 
-  grunt.registerTask('default', ['jslint', 'build']);
-  grunt.registerTask('build', [
-    'clean',
-    'requirejs',
-    'copy',
-    'clean'
-  ]);
+  grunt.registerTask('default', ['test', 'build']);
+  grunt.registerTask('test', ['jslint', 'mocha']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('develop', ['concurrent']);
 
 };
