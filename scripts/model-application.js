@@ -69,6 +69,10 @@ define(
                 app.datasuitcases.create({_id: element}, {success: function (model) {
                   model.populate();
                 }});
+              } else {
+                if (navigator.onLine) {
+                  app.datasuitcases.get(element).populate();
+                }
               }
             });
 
@@ -77,6 +81,10 @@ define(
                 app.forms.create({_id: element}, {success: function (model) {
                   model.populate();
                 }});
+              } else {
+                if (navigator.onLine) {
+                  app.forms.get(element).populate();
+                }
               }
             });
             app.trigger("initialize");
