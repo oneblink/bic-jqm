@@ -27,6 +27,8 @@ define(
         "click #FormControls #submit" : "formSubmit",
         "click #FormControls #cancel" : "formCancel",
         "click #FormControls #save" : "formSave",
+        "click #nextFormPage" : "nextFormPage",
+        "click #previousFormPage" : "previousFormPage",
         "click #queue" : "pendingQueue",
 
         // Destroy
@@ -158,12 +160,22 @@ define(
               view.model.get("blinkFormAction") === "view" ||
               view.model.get("blinkFormAction") === "delete") {
             BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction")).then(function (definition) {
+              var formPageCount;
+
               BlinkForms.initialize(definition);
               form.append(BlinkForms.current.$form);
-              form.trigger('create');
 
               if (view.model.get("blinkFormAction") === "edit") {
                 BlinkForms.current.setRecord(JSON.parse(app.pending.get(view.model.get("args")['args[id]']).get("data")));
+              }
+
+              if (BlinkForms.current.get('pages').length > 1) {
+                // Multi page form. Prepare counters and stuff
+                formPageCount = view.$el.find('#FormPageCount');
+                formPageCount.find('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
+                formPageCount.find('#totalPages').html(BlinkForms.current.get('pages').length);
+                view.formPagingButtons();
+                formPageCount.removeAttr('style');
               }
 
               view.trigger("render");
@@ -360,6 +372,45 @@ define(
             star.render();
           });
           /*jslint unparam: false*/
+        }
+      },
+
+      nextFormPage: function () {
+        var index = BlinkForms.current.get('pages').current.index();
+
+        if (index < BlinkForms.current.get('pages').length - 1) {
+          BlinkForms.current.get('pages').goto(index + 1);
+          $('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
+        }
+
+        this.formPagingButtons();
+      },
+
+      previousFormPage: function () {
+        var index = BlinkForms.current.get('pages').current.index();
+
+        if (index > 0) {
+          BlinkForms.current.get('pages').goto(index - 1);
+          $('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
+        }
+
+        this.formPagingButtons();
+      },
+
+      formPagingButtons: function () {
+        var previous = $('#previousFormPage'),
+          next = $('#nextFormPage');
+
+        if (BlinkForms.current.get('pages').current.index() === 0) {
+          previous.addClass('ui-disabled');
+        } else {
+          previous.removeClass('ui-disabled');
+        }
+
+        if (BlinkForms.current.get('pages').current.index() === BlinkForms.current.get('pages').length - 1) {
+          next.addClass('ui-disabled', '');
+        } else {
+          next.removeClass('ui-disabled');
         }
       }
 

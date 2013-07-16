@@ -1,5 +1,12 @@
 <div id="ActiveFormContainer"></div>
-<div id="FormControls" class="ui-grid-b">
+
+<div id="FormPageCount" data-role="controlgroup" data-type="horizontal" style="display: none;">
+  <a id="previousFormPage" data-role="button" data-icon="back">Previous</a>
+  <a data-role="button"><span id="currentPage">1</span> of <span id="totalPages">1</span> pages</a>
+  <a id="nextFormPage" data-role="button" data-icon="forward">Next</a>
+</div>
+
+<fieldset class="ui-grid-b">
   <div class="ui-block-a">
     <a id="save" data-role="button" data-icon="edit" data-iconpos="top">Save</a>
   </div>
@@ -9,7 +16,8 @@
   <div class="ui-block-c">
     <a id="submit" data-role="button" data-icon="check" data-iconpos="top">Submit</a>
   </div>
-</div>
+</fieldset>
+
 <div id="FormQueue" class="ui-grid-solo">
   <div class="ui-block-a">
     <a id="queue" data-role="button">Pending Queue</a>
