@@ -1,29 +1,4 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('model-application-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('model-interaction-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('view-interaction-mobile', [], function () {
-//   "use strict";
-//   return Backbone.View.extend();
-// });
-
-// define('jquerymobile', [], function () {
-//   "use strict";
-//   console.log("Subtituting jQuery Mobile");
-// });
-
 define(function () {
   "use strict";
   describe('Router - jQuery Mobile Implementation', function () {
