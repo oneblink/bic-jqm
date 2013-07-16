@@ -48,7 +48,12 @@ define(function () {
         router.should.respondTo('initialize');
       });
 
-      it("should bind to pagebeforeload");
+      it("should bind to pagebeforeload", function () {
+        sinon.stub(router, "routeRequest");
+        $(document).trigger('pagebeforeload');
+        router.routeRequest.called.should.be.true;
+        router.routeRequest.restore();
+      });
 
       it("should prevent the default action");
 

@@ -8,23 +8,27 @@ define(
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
           $.mobile.loading('show');
-          var path = $.mobile.path.parseUrl(data.dataUrl);
+          app.router.routeRequest(data);
+        });
+      },
 
-          app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model) {
-            new InteractionView({
-              tagName: 'div',
-              model: model
-            }).once("render", function () {
-              this.$el.attr("data-url", data.dataUrl);
-              this.$el.attr("data-external-page", true);
-              this.$el.one('pagecreate', $.mobile._bindPageRemove);
-              data.deferred.resolve(data.absUrl, data.options, this.$el);
-            }).render(data);
-          }, function () {
-            data.deferred.reject(data.absUrl, data.options);
-            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
-            setTimeout($.mobile.hidePageLoadingMsg, 1500);
-          });
+      routeRequest: function (data) {
+        var path = $.mobile.path.parseUrl(data.dataUrl);
+
+        app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model) {
+          new InteractionView({
+            tagName: 'div',
+            model: model
+          }).once("render", function () {
+            this.$el.attr("data-url", data.dataUrl);
+            this.$el.attr("data-external-page", true);
+            this.$el.one('pagecreate', $.mobile._bindPageRemove);
+            data.deferred.resolve(data.absUrl, data.options, this.$el);
+          }).render(data);
+        }, function () {
+          data.deferred.reject(data.absUrl, data.options);
+          $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+          setTimeout($.mobile.hidePageLoadingMsg, 1500);
         });
       },
 

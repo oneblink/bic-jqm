@@ -49,7 +49,9 @@
         window.Modernizr = {indexeddb: false};
         window.BlinkForms = {};
         Backbone.sync = function () {return arguments;}
-        $.mobile = {};
+        $.mobile = {
+          loading: function () {}
+        };
 
         requirejs.config({
           baseUrl: '../scripts/',
