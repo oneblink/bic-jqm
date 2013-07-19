@@ -96,11 +96,10 @@ define(
         );
         return promise;
       }
-    }),
-      app;
+    });
 
-    app = new Application();
+    window.BMP.bic3 = new Application();
 
-    return app;
+    return window.BMP.bic3;
   }
 );
