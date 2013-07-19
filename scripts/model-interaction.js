@@ -150,16 +150,12 @@ define(
               homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
               if (homeInteraction) {
                 homeInteraction.set({parent: model.get("parent")});
+                homeInteraction.prepareForView().done(function () {
+                  dfrd.resolve(homeInteraction);
+                });
+              } else {
+                dfrd.reject();
               }
-
-              childInteraction = app.interactions.findWhere({dbid: "a" + window.BMP.siteVars.answerSpace});
-              if (childInteraction) {
-                childInteraction.set({parent: model.id});
-              }
-
-              homeInteraction.prepareView().done(function () {
-                dfrd.resolve(homeInteraction);
-              });
             } else {
               dfrd.resolve(model);
             }
