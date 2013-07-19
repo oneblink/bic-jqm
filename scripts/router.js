@@ -55,6 +55,28 @@ define(
         }, this);
 
         return app.interactions.get(parent);
+      },
+
+      parseArgs: function (argString, model) {
+        var args = argString.split('&'),
+          tempargs,
+          finalargs = {};
+
+        _.each(args, function (element) {
+          tempargs = element.split('=');
+          if (tempargs[0].substr(0, 4) !== "args") {
+            tempargs[0] = "args[" + tempargs[0] + "]";
+          }
+          finalargs[tempargs[0]] = tempargs[1];
+        });
+
+        if (finalargs) {
+          model.set({args: finalargs});
+        } else {
+          model.set({args: null});
+        }
+
+        return this;
       }
     });
 
