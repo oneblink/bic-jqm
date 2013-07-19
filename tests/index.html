@@ -50,7 +50,18 @@
         window.BlinkForms = {};
         Backbone.sync = function () {return arguments;}
         $.mobile = {
-          loading: function () {}
+          loading: function () {},
+          path: {
+            parseUrl: function () {
+              return {
+                hrefNoSearch: "/test",
+                search: ""
+              }
+            }
+          },
+          showPageLoadingMsg: function () {},
+          pageLoadErrorMessageTheme: {},
+          pageLoadErrorMessage: {}
         };
 
         requirejs.config({
