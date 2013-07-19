@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     watch: {
       source: {
         files: ['index.php', 'scripts/**', 'tests/**'],
-        tasks: ['test'],
+        tasks: ['default'],
         options: {
           livereload: true
         }
