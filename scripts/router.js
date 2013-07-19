@@ -13,9 +13,14 @@ define(
       },
 
       routeRequest: function (data) {
-        var path = $.mobile.path.parseUrl(data.dataUrl);
+        var path = $.mobile.path.parseUrl(data.dataUrl),
+          model;
 
-        app.router.inheritanceChain(path.hrefNoSearch).parseArgs(path.search.substr(1)).prepareView(data).then(function (model) {
+        model = this.inheritanceChain(path.hrefNoSearch);
+
+        this.parseArgs(path.search.substr(1), model);
+
+        model.prepareForView(data).then(function (model) {
           new InteractionView({
             tagName: 'div',
             model: model

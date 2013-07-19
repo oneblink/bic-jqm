@@ -134,7 +134,7 @@ define(
         });
       },
 
-      prepareView: function (data) {
+      prepareForView: function (data) {
         // Handle MADL updates here
         // Check for other updates needed here?
         var dfrd = new $.Deferred(),
