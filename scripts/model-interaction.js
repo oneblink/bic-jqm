@@ -140,7 +140,6 @@ define(
         var dfrd = new $.Deferred(),
           model = this,
           homeInteraction,
-          childInteraction,
           xml = '',
           attrs;
 
