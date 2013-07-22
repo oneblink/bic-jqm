@@ -38,7 +38,7 @@ define(
       },
 
       inheritanceChain: function (data) {
-        var path, parent, usedPathItems;
+        var path, parentModel, parent, usedPathItems;
         path = data.substr(1).split('/');
         parent = "app";
         usedPathItems = [];
@@ -49,7 +49,13 @@ define(
 
         _.each(path, function (element) {
           if (!_.find(usedPathItems, function (id) {return id === element; })) {
-            parent = app.interactions.get(element).set({parent: parent}).id;
+            parentModel = app.interactions.get(element) || app.interactions.where({dbid: "i" + element})[0] || null;
+            if (parent) {
+              parentModel.set({parent: parent});
+              parent = parentModel.id;
+            } else {
+              throw "Invalid Model Name";
+            }
             usedPathItems.push(element);
           }
         }, this);
