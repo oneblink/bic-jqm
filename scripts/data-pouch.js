@@ -130,6 +130,17 @@ define(
           }
         });
         return dfrd.promise();
+      },
+
+      deleteAll: function () {
+        var dfrd;
+        dfrd = new $.Deferred();
+
+        Pouch.destroy(this.dbAdapter() + this.name, function (err, info) {
+          dfrd.resolve();
+        });
+
+        return dfrd.promise();
       }
     });
 

@@ -36,6 +36,10 @@ define(
 
       idAttribute: "_id",
 
+      defaults: {
+        loginStatus: false
+      },
+
       populate: function () {
         var app = this,
           dfrd = new $.Deferred(),
@@ -95,6 +99,29 @@ define(
           }
         );
         return promise;
+      },
+
+      checkLoginStatus: function () {
+        //false
+        var app = this,
+          dfrd = $.Deferred();
+
+        API.getLoginStatus().then(function (data) {
+          var status = data.status || data;
+          if (app.get('loginStatus') !== status) {
+            app.interactions.reset();
+            app.datasuitcases.reset();
+            app.forms.reset();
+            app.populate().then(function () {
+              app.set({loginStatus: status});
+              dfrd.resolve();
+            });
+          } else {
+            dfrd.resolve();
+          }
+        });
+
+        return dfrd.promise();
       }
     });
 

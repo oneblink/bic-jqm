@@ -8,7 +8,13 @@ define(
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
           $.mobile.loading('show');
-          app.router.routeRequest(data);
+          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
+            app.checkLoginStatus().then(function () {
+              app.router.routeRequest(data);
+            });
+          } else {
+            app.router.routeRequest(data);
+          }
         });
       },
 
@@ -17,6 +23,8 @@ define(
           model;
 
         model = this.inheritanceChain(path.hrefNoSearch);
+
+        app.set({currentInteraction: model});
 
         this.parseArgs(path.search.substr(1), model);
 

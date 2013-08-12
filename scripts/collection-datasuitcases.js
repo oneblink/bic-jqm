@@ -17,6 +17,10 @@ define(
             collection.initialize.reject();
           }
         });
+
+        collection.on("reset", function () {
+          collection.data.deleteAll();
+        });
       }
     });
     return DataSuitcaseCollection;

@@ -18,6 +18,10 @@ define(
           }
         });
 
+        collection.on("reset", function () {
+          collection.data.deleteAll();
+        });
+
         BlinkForms.getDefinition = function (name, action) {
           var dfrd = new $.Deferred();
           require(['model-application'], function (app) {

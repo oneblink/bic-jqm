@@ -27,6 +27,10 @@ define(
 
       setPendingItem: function (formname, formaction, formdata) {
         return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
+      },
+
+      getLoginStatus: function () {
+        return $.ajax('/_R_/common/3/xhr/GetLogin.php');
       }
 
     };
