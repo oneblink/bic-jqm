@@ -25,8 +25,9 @@ define(
       },
 
       create: function (model) {
-        var dfrd, db;
+        var dfrd, db, data;
         dfrd = new $.Deferred();
+        data = this;
         db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
@@ -35,12 +36,13 @@ define(
               if (err) {
                 dfrd.reject(err);
               } else {
-                dfrd.resolve(response);
+                data.read(response).done(function (doc) {
+                  dfrd.resolve(doc);
+                });
               }
             });
           }
         });
-        db = null;
         return dfrd.promise();
       },
 
