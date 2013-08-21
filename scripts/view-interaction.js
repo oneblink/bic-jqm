@@ -20,8 +20,9 @@ define(
         "click [category]" : "blinklink",
         "click [masterCategory]" : "blinklink",
         "click [back]" : "back",
-        "click [home]" : "blinklink",
+        "click [home]" : "home",
         "click [login]" : "blinklink",
+        "click [pending]" : "pendingQueue",
 
         // Form Actions
         "click #FormControls #submit" : "formSubmit",
@@ -102,6 +103,10 @@ define(
         history.back();
       },
 
+      home: function () {
+        $.mobile.changePage('/' + app.get("siteName"));
+      },
+
       render: function (data) {
         var form,
           rawform,
@@ -166,7 +171,7 @@ define(
               form.append(BlinkForms.current.$form);
 
               if (view.model.get("blinkFormAction") === "edit") {
-                BlinkForms.current.setRecord(JSON.parse(app.pending.get(view.model.get("args")['args[id]']).get("data")));
+                BlinkForms.current.setRecord(app.pending.get(view.model.get("args")['args[id]']).get("data"));
               }
 
               if (BlinkForms.current.get('pages').length > 1) {
@@ -299,48 +304,55 @@ define(
       },
 
       formSubmit: function () {
-        // Put in pending queue for processing
-        var view = this;
-        BlinkForms.current.data().then(function (data) {
-          app.pending.create({
-            type: "Form",
-            status: "Pending",
-            name: view.model.get("blinkFormObjectName"),
-            action: view.model.get("blinkFormAction"),
-            answerspaceid: app.get("dbid"),
-            data: data//JSON.stringify(data)
-          });
-          app.pending.processQueue();
-        });
+        this.addToQueue("Pending");
       },
 
       formCancel: function () {
-        // If in pending queue, remove
-        // Close the form
         $('#cancelPopup').popup('open');
       },
 
       formSave: function () {
-        // Save to pending queue as a draft
+        this.addToQueue("Draft");
+      },
+
+      addToQueue: function (status) {
         var view = this;
         BlinkForms.current.data().then(function (data) {
-          app.pending.create({
+          data._action = view.model.get("blinkFormAction");
+          var modelAttrs = {
             type: "Form",
-            status: "Draft",
+            status: status,
             name: view.model.get("blinkFormObjectName"),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
-            data: JSON.stringify(data)
-          });
+            data: data
+          };
+          if (view.model.get("blinkFormAction") === "edit") {
+            app.pending.get(view.model.get("args")['args[id]']).set(modelAttrs);
+          } else {
+            app.pending.create(modelAttrs);
+          }
           app.pending.processQueue();
+          view.home();
         });
       },
 
       pendingQueue: function () {
-        var el = $('#pendingContent');
-        el.html(Mustache.render(pendingTemplate, {
-          pending: _.map(app.pending.where({status: 'Pending'}), function (model) {return _.clone(model.attributes); }),
-          draft: _.map(app.pending.where({status: 'Draft'}), function (model) {return _.clone(model.attributes); })
+        //var el = $('#pendingContent');
+        var pendingExtractor = function (status) {
+          return _.map(app.pending.where({status: status}), function (pendingItem) {
+            var pendingAttrs = _.clone(pendingItem.attributes);
+            pendingAttrs.editInteraction = app.interactions.where({
+              blinkFormObjectName: pendingItem.get("name"),
+              blinkFormAction: 'edit'
+            })[0].id;
+            return pendingAttrs;
+          });
+        };
+
+        this.$el.append(Mustache.render(pendingTemplate, {
+          pending: pendingExtractor("Pending"),
+          draft: pendingExtractor("Draft")
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');
