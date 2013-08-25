@@ -192,13 +192,7 @@ define(
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: Mustache.render(categoryTemplate, {
-              models: _.map(_.filter(app.interactions.models, function (value) {
-                return value.id !== window.BMP.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
-                  return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
-                }, this).length > 0);
-              }, this), function (value) {
-                return value.attributes;
-              }),
+              models: view.model.get("interactionList"),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
             })
           }));

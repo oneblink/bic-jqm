@@ -140,6 +140,7 @@ define(
         var dfrd = new $.Deferred(),
           model = this,
           homeInteraction,
+          loginInteraction,
           xml = '',
           attrs;
 
@@ -149,14 +150,32 @@ define(
               homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
               if (homeInteraction) {
                 homeInteraction.set({parent: model.get("parent")});
-                homeInteraction.prepareForView().done(function () {
+                homeInteraction.prepareForView(data).done(function () {
                   dfrd.resolve(homeInteraction);
                 });
               } else {
                 dfrd.reject();
               }
             } else {
-              dfrd.resolve(model);
+              model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
+                return value.id !== window.BMP.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
+                  return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
+                }, this).length > 0);
+              }, this), function (value) {
+                return value.attributes;
+              })});
+
+              if (model.get("interactionList").length === 0 && app.has("loginAccess") && app.get("loginAccess") === true && app.has("loginPromptInteraction")) {
+                loginInteraction = app.interactions.findWhere({dbid: "i" + app.get("loginPromptInteraction")});
+                if (loginInteraction) {
+                  loginInteraction.set({parent: model.get("parent")});
+                  loginInteraction.prepareForView(data).done(function () {
+                    dfrd.resolve(loginInteraction);
+                  });
+                }
+              } else {
+                dfrd.resolve(model);
+              }
             }
           });
         }
@@ -164,9 +183,9 @@ define(
         if (model.get("type") === "madl code") {
           /*jslint unparam: true*/
           API.getInteractionResult(model.id, this.get('args'), data.options).then(
-            function (data) {
+            function (result) {
               model.save({
-                content: data,
+                content: result,
                 contentTime: Date.now()
               }, {
                 success: function () {
