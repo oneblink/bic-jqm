@@ -13,7 +13,7 @@ define(function () {
         server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=Exists&ajax=false&args[0]=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 3}']);
         server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 2}']);
         server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_BICv3_/xhr/GetForm.php?asn=' + window.BMP.siteVars.answerSpace + '&form=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
 
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
@@ -104,9 +104,9 @@ define(function () {
       });
     });
 
-    describe('getForm(form)', function () {
-      it('should GET a JSON definition from the server', function (done) {
-        api.getForm('Exists', 'Exists')
+    describe('getForm()', function () {
+      it('should GET all form JSON definitions from the server', function (done) {
+        api.getForm()
           .done(handler)
           .done(function () {
             done();

@@ -19,8 +19,8 @@ define(
         return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
       },
 
-      getForm: function (form) {
-        return $.ajax('/_BICv3_/xhr/GetForm.php?asn=' + window.BMP.siteVars.answerSpace + '&form=' + form);
+      getForm: function () {
+        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3');
       },
 
       getDataSuitcase: function (suitcase, time) {
