@@ -1,11 +1,16 @@
 // Temporary Fixes
 // These will end up in Global Require (I hope...)
+
+var cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
+var filesystem = '/_c_/';
+
+
 requirejs.config({
   paths: {
-    BlinkForms: ['/_BICv3_/js/forms3jqm.min'],
-    pouchdb: ['/_BICv3_/js/pouchdb-nightly'],
-    'BMP.Blobs': ['/_BICv3_/js/bmp-blobs.min'],
-    signaturepad: ['/_c_/signaturepad/2.3.0/jq.sig.min']
+    BlinkForms: [cloudfront + 'blink/forms/3/1377493706402/forms3jqm.min', filesystem + 'blink/forms/3/1377493706402/forms3jqm.min'],
+    pouchdb: [cloudfront + 'pouchdb/1377451788000/pouchdb-nightly', filesystem + 'pouchdb/1377451788000/pouchdb-nightly'],
+    'BMP.Blobs': [cloudfront + 'blink/blobs/1377493706402/bmp-blobs.min', filesystem + 'blink/blobs/1377493706402/bmp-blobs.min'],
+    signaturepad: [cloudfront + 'signaturepad/2.3.0/jq.sig.min', filesystem + 'signaturepad/2.3.0/jq.sig.min']
   },
   shim: {
     'BlinkForms': {
