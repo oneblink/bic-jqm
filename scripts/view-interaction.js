@@ -1,3 +1,4 @@
+/*global google: true */
 define(
   ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star'],
   function (Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView) {
@@ -250,10 +251,33 @@ define(
       },
 
       maps: function () {
-        var mapdiv = this.$el.find("[class=googlemap]");
-        if (mapdiv.length !== 0) {
-          this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
-          this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+        var mapDiv = this.$el.find("[class=googlemap]"), script;
+
+        if (mapDiv.length !== 0) {
+          //this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
+          //this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+          if (mapDiv.attr('data-marker-title') !== undefined) {
+          // Address Map
+            window.BMP.BIC3.MapCallback = this.addressMap;
+          } else if (mapDiv.attr('data-kml') !== undefined) {
+          // KML Map
+            window.BMP.BIC3.MapCallback = this.kmlMap;
+          } else if (mapDiv.attr('data-map-action') !== undefined) {
+          // Directions Map
+            window.BMP.BIC3.MapCallback = this.directionsMap;
+          } else {
+          // Basic Map
+            window.BMP.BIC3.MapCallback = this.basicMap;
+          }
+
+          if (window.google === undefined) {
+            script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://maps.googleapis.com/maps/api/js?v=3&sensor=true&callback=window.BMP.BIC3.MapCallback";
+            $('body').append(script);
+          } else {
+            window.BMP.BIC3.MapCallback();
+          }
         }
       },
 
@@ -434,8 +458,161 @@ define(
         } else {
           next.removeClass('ui-disabled');
         }
-      }
+      },
 
+      basicMap: function () {
+        var options, map, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+
+        options = {
+          center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
+          zoom: parseInt(mapDiv.attr('data-zoom'), 10),
+          mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
+        };
+
+        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+
+        $(document).bind("pageshow", function() {
+          google.maps.event.trigger(map, "resize");
+          map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
+        });
+      },
+
+      addressMap: function () {
+        var geocoder, options, map, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+
+        geocoder = new google.maps.Geocoder();
+
+        options = {
+          address: mapDiv.attr('data-marker-title')
+        };
+
+        geocoder.geocode(options, function(results) {
+          options = {
+            center: results[0].geometry.location,
+            zoom: parseInt(mapDiv.attr('data-zoom'), 10),
+            mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
+          };
+          map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+          $(document).bind("pageshow", function() {
+            google.maps.event.trigger(map, "resize");
+            map.setCenter(results[0].geometry.location);
+          });
+        });
+      },
+
+      kmlMap: function () {
+        var options, map, kml, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+
+        options = {
+          center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
+          zoom: parseInt(mapDiv.attr('data-zoom'), 10),
+          mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
+        };
+
+        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+        kml = new google.maps.KmlLayer(mapDiv.attr('data-kml'), {preserveViewport: true});
+        kml.setMap(map);
+
+        $(document).bind("pageshow", function() {
+          google.maps.event.trigger(map, "resize");
+          map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
+        });
+      },
+
+      directionsMap: function () {
+        var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, getGeoLocation, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+
+        getGeoLocation = function(options) {
+          var dfrd = new $.Deferred(),
+            defaultOptions = {
+              enableHighAccuracy: true,
+              maximumAge: 5 * 60 * 1000, // 5 minutes
+              timeout: 5 * 1000 // 5 seconds
+            };
+          options = $.extend({}, defaultOptions, $.isPlainObject(options) ? options : {});
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var coords = position.coords;
+            if ($.type(coords) === 'object') {
+              dfrd.resolve(coords);
+            } else {
+              dfrd.reject('GeoLocation error: blank location from browser / device');
+            }
+          }, function(error) {
+            var string;
+            switch (error.code) {
+            case error.PERMISSION_DENIED:
+              string = 'user has not granted permission';
+              break;
+            case error.PERMISSION_DENIED_TIMEOUT:
+              string = 'user did not grant permission in time';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              string = 'unable to determine position';
+              break;
+            default:
+              string = 'unknown error';
+            }
+            dfrd.reject('GeoLocation error: ' + string);
+          }, options);
+          return dfrd.promise();
+        };
+
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsService = new google.maps.DirectionsService();
+
+        options = {
+          center: new google.maps.LatLng(-33.873658, 151.206915),
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
+        };
+
+        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+
+        directionsDisplay.setPanel($("[class='googledirections']")[0]);
+
+        $(document).bind("pageshow", function() {
+          google.maps.event.trigger(map, "resize");
+          directionsDisplay.setMap(map);
+        });
+
+        if (mapDiv.attr('data-destination-address') === undefined || mapDiv.attr('data-origin-address') === undefined) {
+          // Set the origin from attributes or GPS
+          locationPromise = getGeoLocation();
+          locationPromise.done(function(location) {
+            if (mapDiv.attr('data-origin-address') === undefined) {
+              origin = new google.maps.LatLng(location.latitude, location.longitude);
+              destination = mapDiv.attr('data-destination-address');
+            } else if (mapDiv.attr('data-destination-address') === undefined) {
+              origin = mapDiv.attr('data-origin-address');
+              destination = new google.maps.LatLng(location.latitude, location.longitude);
+            }
+            var request = {
+              origin: origin,
+              destination: destination,
+              travelMode: google.maps.TravelMode[mapDiv.attr('data-travelmode').toUpperCase()]
+            };
+
+            directionsService.route(request, function(result, status) {
+              if (status === google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(result);
+              }
+            });
+          });
+        } else {
+          request = {
+            origin: mapDiv.attr('data-origin-address'),
+            destination: mapDiv.attr('data-destination-address'),
+            travelMode: google.maps.TravelMode[mapDiv.attr('data-travelmode').toUpperCase()]
+          };
+
+          directionsService.route(request, function(result, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(result);
+            }
+          });
+        }
+
+      },
     });
 
     return InteractionView;
