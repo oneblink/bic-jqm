@@ -80,17 +80,6 @@ define(
               }
             });
 
-            _.each(_.compact(_.uniq(app.interactions.pluck('blinkFormObjectName'))), function (element) {
-              if (!app.forms.get(element)) {
-                app.forms.create({_id: element}, {success: function (model) {
-                  model.populate();
-                }});
-              } else {
-                if (navigator.onLine) {
-                  app.forms.get(element).populate();
-                }
-              }
-            });
             app.trigger("initialize");
             dfrd.resolve();
           },

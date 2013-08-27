@@ -18,6 +18,21 @@ define(
           }
         });
 
+        require(['api'], function (API) {
+          API.getForm().done(function (data) {
+            _.each(data, function (record) {
+              var data = JSON.parse(record),
+                preExisting = collection.findWhere({_id: data.default.name});
+              if (preExisting) {
+                preExisting.set(data).save();
+              } else {
+                data._id = data.default.name;
+                collection.create(data);
+              }
+            });
+          });
+        });
+
         collection.on("reset", function () {
           collection.data.deleteAll();
         });
@@ -25,7 +40,7 @@ define(
         BlinkForms.getDefinition = function (name, action) {
           var dfrd = new $.Deferred();
           require(['model-application'], function (app) {
-            var def = app.forms.get(name).get('definition'),
+            var def = app.forms.get(name),
               elements,
               elNames,
               collapseAction = function (d) {
@@ -36,9 +51,8 @@ define(
                 return attrs;
               };
 
-            // This is a safety feature, like goggles on a paintball range
-            // If you take your mask off, your going to have a bad time
-            def = JSON.parse(JSON.stringify(def));
+            //def = _.clone(def.attributes);
+            def = JSON.parse(JSON.stringify(def.attributes));
 
             if (_.isArray(def.default._elements)) {
               def.default._elements = _.map(def.default._elements, collapseAction);
