@@ -35,14 +35,16 @@
         var should = chai.should();
         var expect = chai.expect;
 
-        window.BMP = {
-          siteVars: {
-            answerSpace: 'Exists',
-            answerSpaceId: 1
-          },
-          FileInput: {
-            initialize: function () {
-                return "hello!";
+        window.BMP= {
+          BIC: {
+            siteVars: {
+              answerSpace: 'Exists',
+              answerSpaceId: 1
+            },
+            FileInput: {
+              initialize: function () {
+                  return "hello!";
+              }
             }
           }
         };

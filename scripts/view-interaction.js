@@ -6,6 +6,7 @@ define(
 
       initialize: function () {
         $('body').append(this.$el);
+        window.BMP.BIC3.view = this;
 
         // this.$el.once("pageremove", function () {
         //   console.log("Backbone view cleanup");
@@ -186,7 +187,7 @@ define(
               view.trigger("render");
             });
           }
-        } else if (this.model.id.toLowerCase() === window.BMP.siteVars.answerSpace.toLowerCase()) {
+        } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen
           view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,

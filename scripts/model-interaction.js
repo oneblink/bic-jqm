@@ -144,7 +144,7 @@ define(
           xml = '',
           attrs;
 
-        if (model.id === window.BMP.siteVars.answerSpace) {
+        if (model.id === window.BMP.BIC.siteVars.answerSpace) {
           require(['model-application'], function (app) {
             if (app.has("homeScreen") && app.get("homeScreen") !== false && app.has("homeInteraction")) {
               homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
@@ -158,8 +158,8 @@ define(
               }
             } else {
               model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
-                return value.id !== window.BMP.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
-                  return element === 'nav-' + window.BMP.siteVars.answerSpace.toLowerCase();
+                return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
+                  return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
                 }, this).length > 0);
               }, this), function (value) {
                 return value.attributes;
@@ -235,7 +235,7 @@ define(
           });
         }
 
-        if (model.get("type") !== "madl code" && model.id !== window.BMP.siteVars.answerSpace) {
+        if (model.get("type") !== "madl code" && model.id !== window.BMP.BIC.siteVars.answerSpace) {
           dfrd.resolve(model);
         }
 

@@ -8,7 +8,7 @@ define(
       initialize: function () {
         var collection = this;
         collection.initialize = new $.Deferred();
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-DataSuitcase');
+        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-DataSuitcase');
         collection.fetch({
           success: function () {
             collection.initialize.resolve();

@@ -29,7 +29,7 @@ define(
       /*jslint unparam: true*/
       $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
         jqXHR.setRequestHeader('X-Blink-Config',
-          JSON.stringify(window.BMP.siteVars));
+          JSON.stringify(window.BMP.BIC.siteVars));
       });
       /*jslint unparam: false*/
 

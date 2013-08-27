@@ -16,7 +16,7 @@ define(
             }
           });
         }
-        return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
+        return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
       },
 
       getForm: function () {
@@ -24,11 +24,11 @@ define(
       },
 
       getDataSuitcase: function (suitcase, time) {
-        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: "text"});
+        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: "text"});
       },
 
       setPendingItem: function (formname, formaction, formdata) {
-        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
+        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
       },
 
       getLoginStatus: function () {

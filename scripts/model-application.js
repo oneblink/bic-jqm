@@ -10,12 +10,12 @@ define(
         app.initialize = new $.Deferred();
 
         this.set({
-          _id: window.BMP.siteVars.answerSpace
+          _id: window.BMP.BIC.siteVars.answerSpace
         });
 
         this.on('change', this.update);
 
-        this.data = new Data(window.BMP.siteVars.answerSpace + '-AnswerSpace');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
 
         this.interactions = new InteractionCollection();
         this.datasuitcases = new DataSuitcaseCollection();
@@ -58,7 +58,7 @@ define(
               }
               if (key.substr(0, 1) === 'a') {
                 model = {
-                  _id: window.BMP.siteVars.answerSpace,
+                  _id: window.BMP.BIC.siteVars.answerSpace,
                   dbid: key
                 };
                 models.push(model);
@@ -125,8 +125,8 @@ define(
       }
     });
 
-    window.BMP.bic3 = new Application();
+    window.BMP.BIC3 = new Application();
 
-    return window.BMP.bic3;
+    return window.BMP.BIC3;
   }
 );

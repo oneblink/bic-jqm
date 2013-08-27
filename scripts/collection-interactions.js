@@ -9,7 +9,7 @@ define(
       initialize: function () {
         var collection = this;
         collection.initialize = new $.Deferred();
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Interaction');
+        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Interaction');
         collection.fetch({
           success: function () {
             collection.initialize.resolve();
