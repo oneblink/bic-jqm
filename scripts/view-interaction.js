@@ -133,10 +133,10 @@ define(
             content: form
           }));
           this.trigger("render");
-        } else if (this.model.has("type") && this.model.get("type") === "xslt") {
+        } else if (view.model.has("type") && view.model.get("type") === "xslt") {
           // XSLT
-          this.model.once("change:content", function () {
-            if (typeof (view.model.get("content")) === 'object') {
+          view.model.once("change:content", function () {
+            if (typeof view.model.get("content") === 'object') {
               view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
@@ -144,6 +144,20 @@ define(
               }));
               view.$el.children('[data-role=content]')[0].appendChild(view.model.get("content"));
               view.processStars();
+              view.trigger("render");
+            } else if (typeof view.model.get("content") === 'string') {
+              view.$el.html(Mustache.render(Template, {
+                header: inheritedAttributes.header,
+                footer: inheritedAttributes.footer,
+                content: view.model.get("content")
+              }));
+              view.trigger("render");
+            } else {
+              view.$el.html(Mustache.render(Template, {
+                header: inheritedAttributes.header,
+                footer: inheritedAttributes.footer,
+                content: "Unknown error rendering XSLT interaction."
+              }));
               view.trigger("render");
             }
           });
@@ -223,6 +237,7 @@ define(
           }));
           this.trigger("render");
         } else {
+          // MADL, others
           this.$el.html(Mustache.render(Template, inheritedAttributes));
           if (this.model.has("content")) {
             this.blinkAnswerMessages();
