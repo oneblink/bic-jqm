@@ -142,7 +142,8 @@ define(
           homeInteraction,
           loginInteraction,
           xml = '',
-          attrs;
+          attrs,
+          path;
 
         if (model.id === window.BMP.BIC.siteVars.answerSpace) {
           require(['model-application'], function (app) {
@@ -167,12 +168,20 @@ define(
 
               if (model.get("interactionList").length === 0 && app.has("loginAccess") && app.get("loginAccess") === true && app.has("loginPromptInteraction")) {
                 loginInteraction = app.interactions.findWhere({dbid: "i" + app.get("loginPromptInteraction")});
-                if (loginInteraction) {
-                  loginInteraction.set({parent: model.get("parent")});
-                  loginInteraction.prepareForView(data).done(function () {
-                    dfrd.resolve(loginInteraction);
-                  });
+
+                path = $.mobile.path.parseLocation().pathname;
+                if (path.slice(-1) === "/") {
+                  path = path.slice(0, path.length - 1);
                 }
+
+                dfrd.resolve(model);
+                $.mobile.changePage(path + '/' + loginInteraction.id);
+                //if (loginInteraction) {
+                  //loginInteraction.set({parent: model.get("parent")});
+                  //loginInteraction.prepareForView(data).done(function () {
+                    //dfrd.resolve(loginInteraction);
+                  //});
+                //}
               } else {
                 dfrd.resolve(model);
               }
