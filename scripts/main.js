@@ -6,24 +6,6 @@ define(
   function (domReady) {
     "use strict";
 
-    function initialRender() {
-      /*jslint unparam: true*/
-      require(['model-application', 'router'], function (app, router) {
-        $.mobile.defaultPageTransition = app.get("defaultTransition");
-        domReady(function () {
-          $.mobile.changePage($.mobile.path.parseLocation().pathname, {
-            changeHash: false,
-            reloadPage: true,
-            transition: 'fade'
-          });
-          $(document).on('pageshow', function () {
-            $('#temp').remove();
-          });
-        });
-      });
-      /*jslint unparam: false*/
-    }
-
     function start() {
       // AJAX Default Options
       /*jslint unparam: true*/
@@ -33,27 +15,7 @@ define(
       });
       /*jslint unparam: false*/
 
-      require(['model-application'], function (app) {
-        app.initialize.done(function () {
-          BMP.FileInput.initialize();
-          if (navigator.onLine) {
-            app.populate().done(function () {
-              initialRender();
-            });
-          } else {
-            app.fetch({
-              success: function () {
-                initialRender();
-              },
-              error: function () {
-                app.populate().done(function () {
-                  initialRender();
-                });
-              }
-            });
-          }
-        });
-      });
+      require(['model-application']);
     }
 
     // Delay the app for Cordova

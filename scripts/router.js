@@ -3,21 +3,6 @@ define(
   function (app, InteractionView) {
     "use strict";
     var Router = Backbone.Router.extend({
-      initialize: function () {
-        app.router = this;
-        $(document).on('pagebeforeload', function (e, data) {
-          e.preventDefault();
-          $.mobile.loading('show');
-          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
-            app.checkLoginStatus().then(function () {
-              app.router.routeRequest(data);
-            });
-          } else {
-            app.router.routeRequest(data);
-          }
-        });
-      },
-
       routeRequest: function (data) {
         var path = $.mobile.path.parseUrl(data.dataUrl),
           model;

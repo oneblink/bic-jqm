@@ -1,36 +1,65 @@
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars'],
-  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection) {
+  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady'],
+  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady) {
     "use strict";
     var Application = Backbone.Model.extend({
 
       initialize: function () {
         var app = this;
+        BMP.FileInput.initialize();
+        require(['router'], function (router) {
+          app.set({
+            _id: window.BMP.BIC.siteVars.answerSpace
+          });
 
-        app.initialize = new $.Deferred();
+          app.on('change', app.update);
 
-        this.set({
-          _id: window.BMP.BIC.siteVars.answerSpace
-        });
+          app.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
 
-        this.on('change', this.update);
+          app.interactions = new InteractionCollection();
+          app.datasuitcases = new DataSuitcaseCollection();
+          app.forms = new FormCollection();
+          app.pending = new PendingCollection();
+          app.stars = new StarsCollection();
 
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
+          app.router = router;
+          $(document).on('pagebeforeload', function (e, data) {
+            e.preventDefault();
+            $.mobile.loading('show');
+            if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
+              app.checkLoginStatus().then(function () {
+                app.router.routeRequest(data);
+              });
+            } else {
+              app.router.routeRequest(data);
+            }
+          });
 
-        this.interactions = new InteractionCollection();
-        this.datasuitcases = new DataSuitcaseCollection();
-        this.forms = new FormCollection();
-        this.pending = new PendingCollection();
-        this.stars = new StarsCollection();
 
-        $.when(
-          this.interactions.initialize,
-          this.datasuitcases.initialize,
-          this.forms.initialize,
-          this.pending.initialize,
-          this.stars.initialize
-        ).then(function () {
-          app.initialize.resolve();
+          $.when(
+            app.interactions.initialize,
+            app.datasuitcases.initialize,
+            app.forms.initialize,
+            app.pending.initialize,
+            app.stars.initialize
+          ).always(function () {
+            if (navigator.onLine) {
+              app.populate().done(function () {
+                app.initialRender();
+              });
+            } else {
+              app.fetch({
+                success: function () {
+                  app.initialRender();
+                },
+                error: function () {
+                  app.populate().done(function () {
+                    app.initialRender();
+                  });
+                }
+              });
+            }
+          });
         });
       },
 
@@ -111,6 +140,21 @@ define(
         });
 
         return dfrd.promise();
+      },
+
+      initialRender: function () {
+        var app = this;
+        $.mobile.defaultPageTransition = app.get("defaultTransition");
+        domReady(function () {
+          $.mobile.changePage($.mobile.path.parseLocation().pathname, {
+            changeHash: false,
+            reloadPage: true,
+            transition: 'fade'
+          });
+          $(document).on('pageshow', function () {
+            $('#temp').remove();
+          });
+        });
       }
     });
 
