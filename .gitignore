@@ -1,4 +1,11 @@
-node_modules
+.DS_Store
+/node_modules
+
+# JetBrains files
+/*.iml
+/.idea
+
+# output files
 js/bic.js
 js/bic.js.map
 js/bic.min.js

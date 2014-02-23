@@ -1,5 +1,12 @@
-<div id="FormContainer"></div>
-<div id="FormControls" class="ui-grid-b">
+<div id="ActiveFormContainer"></div>
+
+<div id="FormPageCount" data-role="controlgroup" data-type="horizontal" style="display: none;">
+  <a id="previousFormPage" data-role="button" data-icon="back">Previous</a>
+  <a data-role="button"><span id="currentPage">1</span> of <span id="totalPages">1</span> pages</a>
+  <a id="nextFormPage" data-role="button" data-icon="forward">Next</a>
+</div>
+
+<fieldset id="FormControls" class="ui-grid-b">
   <div class="ui-block-a">
     <a id="save" data-role="button" data-icon="edit" data-iconpos="top">Save</a>
   </div>
@@ -9,12 +16,7 @@
   <div class="ui-block-c">
     <a id="submit" data-role="button" data-icon="check" data-iconpos="top">Submit</a>
   </div>
-</div>
-<div id="FormQueue" class="ui-grid-solo">
-  <div class="ui-block-a">
-    <a id="queue" data-role="button">Pending Queue</a>
-  </div>
-</div>
+</fieldset>
 
 <div id="cancelPopup" data-role="popup" data-dismissible="false" data-overlay-theme="a" data-theme="c">
   <div data-role="header">
@@ -28,17 +30,8 @@
         <a href="#" data-role="button" data-rel="back">Keep Form</a>
       </div>
       <div class="ui-block-b">
-        <a href="#" data-role="button">Delete Form</a>
+        <a home data-role="button">Delete Form</a>
       </div>
     </div>
-  </div>
-</div>
-
-
-<div id="pendingPopup" data-role="popup">
-  <div data-role="header">
-    <h1>Pending Queue</h1>
-  </div>
-  <div id="pendingContent" data-role="content">
   </div>
 </div>

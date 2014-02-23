@@ -3,6 +3,13 @@ module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
 
+    concurrent: {
+      background: ['connect', 'watch'],
+      options: {
+        logConcurrentOutput: true
+      }
+    },
+
     connect: {
       server: {
         options: {
@@ -15,36 +22,45 @@ module.exports = function (grunt) {
 
     watch: {
       source: {
-        files: ['*', 'scripts/**'],
-        tasks: ['build'],
-      },
-      tests: {
-        files: ['tests/**'],
-        tasks: ['mocha'],
+        files: ['index.php', 'scripts/**', 'tests/**'],
+        tasks: ['default'],
+        options: {
+          livereload: true
+        }
       }
     },
 
     jslint: {
-      files: ['./scripts/**/*.js'],
+      files: ['./scripts/*.js'],
       directives: {
         "browser": true,
         "es5": true,
         "nomen": true,
-        "todo": true,
         "indent": 2,
+        "stupid": true,
         "predef" : [
           "define",
           "require",
-          "requirejs"
+          "requirejs",
+          "$",
+          "_",
+          "Backbone",
+          "Mustache",
+          "Pouch",
+          "BlinkForms",
+          "jquerymobile",
+          "BMP",
+          "Modernizr"
         ]
       }
     },
 
     mocha: {
-      all: ['tests/*!(assets)/index.html'],
+      all: ['tests/index.html'],
       options: {
+        bail: true,
         reporter: 'Nyan'
-      },
+      }
     },
 
     clean: ['build'],
@@ -54,26 +70,19 @@ module.exports = function (grunt) {
         options: {
           baseUrl: 'scripts',
           name: 'vendor/almond',
-          include: ['main'],
+          include: ['main', 'router'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
             text: 'vendor/text',
             domReady: 'vendor/domReady',
-            jquery: 'empty:',
-            jquerymobile: 'empty:',
-            underscore: 'empty:',
-            backbone: 'empty:',
-            mustache: 'empty:',
-            BlinkForms: 'empty:',
-            rivets: 'empty:',
-            q: 'empty:',
-            pouchdb: 'empty:'
+            feature: 'vendor/feature',
+            implementations: 'implementation-data'
           },
           wrap: {
             startFile: 'scripts/frag/start.frag',
             endFile: 'scripts/frag/end.frag'
-          },
+          }//,
           // wrap: true,
           //insertRequire: ["main"]
         }
@@ -89,18 +98,6 @@ module.exports = function (grunt) {
           }
         ]
       }
-    },
-
-    uglify: {
-      main: {
-        files: {
-          'js/bic.min.js': ['js/bic.js']
-        },
-        options: {
-          sourceMap: 'js/bic.js.map',
-          sourceMappingURL: 'bic.js'
-        }
-      }
     }
 
   });
@@ -112,9 +109,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-concurrent');
 
-  grunt.registerTask('default', ['jslint']);
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
+  grunt.registerTask('default', ['test', 'build']);
+  grunt.registerTask('test', ['jslint', 'mocha']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('develop', ['concurrent']);
 
 };

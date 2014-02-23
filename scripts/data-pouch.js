@@ -1,3 +1,4 @@
+/*jslint unparam: true*/
 define(
   [],
   function () {
@@ -24,9 +25,10 @@ define(
       },
 
       create: function (model) {
-        var dfrd, db;
+        var dfrd, db, data;
         dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err, db) {
+        data = this;
+        db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
           } else {
@@ -34,7 +36,9 @@ define(
               if (err) {
                 dfrd.reject(err);
               } else {
-                dfrd.resolve(response);
+                data.read(response).done(function (doc) {
+                  dfrd.resolve(doc);
+                });
               }
             });
           }
@@ -47,15 +51,14 @@ define(
         var dfrd, db, data;
         dfrd = new $.Deferred();
         data = this;
-        db = new Pouch(this.dbAdapter() + this.name, function (err, db) {
+        db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
           } else {
-            db.put(model.toJSON(), function (err, response) {
+            db.put(model.toJSON(), function (err) {
               if (err) {
                 dfrd.reject(err);
               } else {
-                //dfrd.resolve(response);
                 data.read(model).done(function (doc) {
                   dfrd.resolve(doc);
                 });
@@ -67,9 +70,9 @@ define(
       },
 
       read: function (model) {
-        var dfrd, db, api;
+        var dfrd, db;
         dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err, db) {
+        db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
           } else {
@@ -88,7 +91,7 @@ define(
       readAll: function () {
         var dfrd, db;
         dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err, db) {
+        db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
           } else {
@@ -96,7 +99,7 @@ define(
               if (err) {
                 dfrd.reject(err);
               } else {
-                dfrd.resolve(_.map(response.rows, function (value, key, list) {
+                dfrd.resolve(_.map(response.rows, function (value) {
                   return value.doc;
                 }));
               }
@@ -109,7 +112,7 @@ define(
       delete: function (model) {
         var dfrd, db;
         dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err, db) {
+        db = new Pouch(this.dbAdapter() + this.name, function (err) {
           if (err) {
             dfrd.reject(err);
           } else {
@@ -131,18 +134,16 @@ define(
         return dfrd.promise();
       },
 
-      deleteAll: function (model) {
-        var dfrd, db;
+      deleteAll: function () {
+        var dfrd;
         dfrd = new $.Deferred();
-        db = new Pouch.destroy(this.name, function (err, info) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
-            dfrd.resolve(info);
-          }
+
+        Pouch.destroy(this.dbAdapter() + this.name, function (err, info) {
+          dfrd.resolve();
         });
+
         return dfrd.promise();
-      },
+      }
     });
 
     return Data;

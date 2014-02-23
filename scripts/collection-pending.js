@@ -1,27 +1,28 @@
 define(
-  ['wrapper-backbone', 'model-pending-mobile', 'data-pouch', 'api-php'],
-  function (Backbone, PendingItem, Data, API) {
+  ['model-pending', 'feature!data', 'api'],
+  function (PendingItem, Data, API) {
     "use strict";
     var PendingCollection = Backbone.Collection.extend({
       model: PendingItem,
 
       initialize: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.siteVars.answerSpace + '-Pending');
+        collection.initialize = new $.Deferred();
+        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Pending');
         collection.fetch({
           success: function () {
-            collection.trigger("initialize");
+            collection.initialize.resolve();
           },
           error: function () {
-            collection.trigger("initialize");
+            collection.initialize.reject();
           }
         });
       },
 
       processQueue: function () {
-        _.each(this.where({status: "Pending"}), function (element, index, list) {
+        _.each(this.where({status: "Pending"}), function (element) {
           API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).done(
-            function (data, textStatus, jqXHR) {
+            function () {
               element.destroy({wait: true});
             }
           );
