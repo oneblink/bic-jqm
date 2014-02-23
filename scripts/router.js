@@ -20,7 +20,7 @@ define(
           }).once("render", function () {
             this.$el.attr("data-url", data.dataUrl);
             this.$el.attr("data-external-page", true);
-            this.$el.one('pagecreate', $.mobile._bindPageRemove);
+            this.$el.one('pagecontainercreate', $.mobile._bindPageRemove);
             data.deferred.resolve(data.absUrl, data.options, this.$el);
           }).render(data);
         }, function () {

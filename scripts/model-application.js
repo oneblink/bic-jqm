@@ -23,7 +23,7 @@ define(
           app.stars = new StarsCollection();
 
           app.router = router;
-          $(document).on('pagebeforeload', function (e, data) {
+          $(document).on('pagecontainerbeforeload', function (e, data) {
             e.preventDefault();
             $.mobile.loading('show');
             if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
@@ -146,12 +146,12 @@ define(
         var app = this;
         $.mobile.defaultPageTransition = app.get("defaultTransition");
         domReady(function () {
-          $.mobile.changePage($.mobile.path.parseLocation().pathname, {
+          $('body').pagecontainer('change', $.mobile.path.parseLocation().pathname, {
             changeHash: false,
             reloadPage: true,
             transition: 'fade'
           });
-          $(document).on('pageshow', function () {
+          $(document).on('pagecontainershow', function () {
             $('#temp').remove();
           });
         });

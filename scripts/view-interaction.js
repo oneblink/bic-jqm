@@ -97,7 +97,7 @@ define(
           path = path.slice(0, path.length - 1);
         }
 
-        $.mobile.changePage(path + '/' + location + attributes);
+        $('body').pagecontainer('change', path + '/' + location + attributes);
       },
 
       back: function (e) {
@@ -106,7 +106,7 @@ define(
       },
 
       home: function () {
-        $.mobile.changePage('/' + app.get("siteName"));
+        $('body').pagecontainer('change', '/' + app.get("siteName"));
       },
 
       render: function (data) {
@@ -493,7 +493,7 @@ define(
             mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
           };
           map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
-          $(document).bind("pageshow", function() {
+          $(document).bind("pagecontainershow", function() {
             google.maps.event.trigger(map, "resize");
             map.setCenter(results[0].geometry.location);
           });
@@ -513,7 +513,7 @@ define(
         kml = new google.maps.KmlLayer(mapDiv.attr('data-kml'), {preserveViewport: true});
         kml.setMap(map);
 
-        $(document).bind("pageshow", function() {
+        $(document).bind("pagecontainershow", function() {
           google.maps.event.trigger(map, "resize");
           map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
         });
@@ -570,7 +570,7 @@ define(
 
         directionsDisplay.setPanel($("[class='googledirections']")[0]);
 
-        $(document).bind("pageshow", function() {
+        $(document).bind("pageconatinershow", function() {
           google.maps.event.trigger(map, "resize");
           directionsDisplay.setMap(map);
         });

@@ -175,7 +175,7 @@ define(
                 }
 
                 dfrd.resolve(model);
-                $.mobile.changePage(path + '/' + loginInteraction.id);
+                $('body').pagecontainer('change', path + '/' + loginInteraction.id);
                 //if (loginInteraction) {
                   //loginInteraction.set({parent: model.get("parent")});
                   //loginInteraction.prepareForView(data).done(function () {

@@ -11,7 +11,7 @@ requirejs.config({
     pouchdb: [cloudfront + 'pouchdb/1377451788000/pouchdb-nightly', filesystem + 'pouchdb/1377451788000/pouchdb-nightly'],
     'BMP.Blobs': [cloudfront + 'blink/blobs/1377493706402/bmp-blobs.min', filesystem + 'blink/blobs/1377493706402/bmp-blobs.min'],
     signaturepad: [cloudfront + 'signaturepad/2.3.0/jq.sig.min', filesystem + 'signaturepad/2.3.0/jq.sig.min'],
-    jquerymobile: [cloudfront + 'jquery.mobile/1.3.2/jquery.mobile-1.3.2.min', filesystem + 'jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'],
+    jquerymobile: [cloudfront + 'jquery.mobile/1.4.0/jquery.mobile-1.4.0.min', filesystem + 'jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'],
     jquery: [cloudfront + 'jquery/1.9.1/jquery.min', filesystem + 'jquery/1.9.1/jquery.min']
   },
   shim: {
