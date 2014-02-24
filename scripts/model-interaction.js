@@ -131,6 +131,7 @@ define(
           if (html) {
             model.set("content", html);
           }
+          return html;
         });
       },
 
