@@ -2,8 +2,8 @@
 /*global requirejs, require, define, module*/
 /*global $, cordova*/
 define(
-  ['domReady'],
-  function (domReady) {
+  [],
+  function () {
     "use strict";
 
     function start() {
