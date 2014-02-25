@@ -66,14 +66,36 @@
           pageLoadErrorMessage: {}
         };
 
-        requirejs.config({
-          baseUrl: '../scripts/',
-          paths: {
-            feature: 'vendor/feature',
-            text: 'vendor/text',
-            implementations: 'implementation-data'
-          }
-        });
+
+        // Function to allow different requirejs contexts per test suite
+
+        var cnt = 0;
+        window.createContext = function (stubs) {
+          cnt ++;
+          var map = {};
+          _.each(stubs, function(value, key) {
+            var stubName = 'stub' + key + cnt;
+            map[key] = stubName;
+            define(stubName, function() {
+              return value;
+            });
+          });
+          return requirejs.config({
+            context: name,
+            map: {
+              '*': map
+            },
+            baseUrl: '../scripts/',
+            paths: {
+              feature: 'vendor/feature',
+              text: 'vendor/text',
+              domReady: 'vendor/domReady',
+              implementations: 'implementation-data'
+           }
+          });
+        }
+
+        // Start the tests!
 
         require([
         'test-api.js',
