@@ -22,16 +22,16 @@
 
     <!-- code coverage -->
     <script>
-        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-            console.log('Not in PhantomJS, loading code coverage tool');
-            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
-        }
+//        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+//            console.log('Not in PhantomJS, loading code coverage tool');
+//            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
+//        }
     </script>
 
     <!-- environment variables (normally in php) -->
     <script>
         mocha.setup('bdd');
-        mocha.globals(['_$blanket']);
+        //mocha.globals(['_$blanket']);
         var should = chai.should();
         var expect = chai.expect;
 
