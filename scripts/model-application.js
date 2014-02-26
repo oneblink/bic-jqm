@@ -146,7 +146,7 @@ define(
         var app = this;
         $.mobile.defaultPageTransition = app.get("defaultTransition");
         domReady(function () {
-          $.mobile.changePage($.mobile.path.parseLocation().pathname, {
+          $.mobile.changePage($.mobile.path.parseLocation().href, {
             changeHash: false,
             reloadPage: true,
             transition: 'fade'
