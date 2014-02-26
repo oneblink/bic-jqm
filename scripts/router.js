@@ -32,20 +32,26 @@ define(
 
       inheritanceChain: function (data) {
         var path, parentModel, parent, usedPathItems;
-        path = data.substr(1).split('/');
-        parent = "app";
+        path = data.substr(1).split('/').reverse();
+        parent = path[path.length - 1];
         usedPathItems = [];
 
         if (path[path.length - 1] === "") {
           path.pop();
         }
 
-        _.each(path, function (element) {
+
+        _.each(path, function (element, index) {
           if (!_.find(usedPathItems, function (id) {return id === element; })) {
             parentModel = app.interactions.get(element) || app.interactions.where({dbid: "i" + element})[0] || null;
-            if (parent) {
-              parentModel.set({parent: parent});
-              parent = parentModel.id;
+            if (parent && parentModel) {
+              if (index !== path.length - 1) {
+                parentModel.set({parent: parent});
+                parent = parentModel.id;
+              } else {
+                parentModel.set({parent: "app"});
+                parent = "app";
+              }
             } else {
               throw "Invalid Model Name";
             }
@@ -53,7 +59,7 @@ define(
           }
         }, this);
 
-        return app.interactions.get(parent);
+        return app.interactions.get(path[0]);
       },
 
       parseArgs: function (argString, model) {
