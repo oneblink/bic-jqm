@@ -22,16 +22,16 @@
 
     <!-- code coverage -->
     <script>
-        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-            console.log('Not in PhantomJS, loading code coverage tool');
-            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
-        }
+//        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+//            console.log('Not in PhantomJS, loading code coverage tool');
+//            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
+//        }
     </script>
 
     <!-- environment variables (normally in php) -->
     <script>
         mocha.setup('bdd');
-        mocha.globals(['_$blanket']);
+        //mocha.globals(['_$blanket']);
         var should = chai.should();
         var expect = chai.expect;
 
@@ -40,11 +40,11 @@
             siteVars: {
               answerSpace: 'Exists',
               answerSpaceId: 1
-            },
-            FileInput: {
-              initialize: function () {
-                  return "hello!";
-              }
+            }
+          },
+          FileInput: {
+            initialize: function () {
+                return "hello!";
             }
           }
         };
@@ -66,33 +66,55 @@
           pageLoadErrorMessage: {}
         };
 
-        requirejs.config({
-          baseUrl: '../scripts/',
-          paths: {
-            feature: 'vendor/feature',
-            text: 'vendor/text',
-            implementations: 'implementation-data'
-          }
-        });
+
+        // Function to allow different requirejs contexts per test suite
+
+        var cnt = 0;
+        window.createContext = function (stubs) {
+          cnt ++;
+          var map = {};
+          _.each(stubs, function(value, key) {
+            var stubName = 'stub' + key + cnt;
+            map[key] = stubName;
+            define(stubName, function() {
+              return sinon.stub(value);
+            });
+          });
+          return requirejs.config({
+            context: name,
+            map: {
+              '*': map
+            },
+            baseUrl: '../scripts/',
+            paths: {
+              feature: 'vendor/feature',
+              text: 'vendor/text',
+              domReady: 'vendor/domReady',
+              implementations: 'implementation-data'
+           }
+          });
+        }
+
+        // Start the tests!
 
         require([
-        'test-api.js',
-        'test-collection-datasuitcases.js',
-        'test-collection-forms.js',
-        'test-collection-interactions.js',
-        'test-collection-pending.js',
-        'test-collection-stars.js',
-        'test-data-inMemory.js',
-        'test-data-pouch.js',
-        'test-model-application.js',
-        'test-model-datasuitcase.js',
-        'test-model-form.js',
-        'test-model-interaction.js',
-        'test-model-pending.js',
-        'test-model-star.js',
+//        'test-api.js',
+//        'test-collection-datasuitcases.js',
+//        'test-collection-forms.js',
+//        'test-collection-interactions.js',
+//        'test-collection-pending.js',
+//        'test-collection-stars.js',
+//        'test-data-inMemory.js',
+//        'test-data-pouch.js',
+//        'test-model-application.js',
+//        'test-model-datasuitcase.js',
+//        'test-model-form.js',
+//        'test-model-interaction.js',
+//        'test-model-pending.js',
+//        'test-model-star.js',
         'test-router.js',
-        'test-view-interaction.js',
-        'test-view-star.js'
+//        'test-view-interaction.js',
+//        'test-view-star.js'
         ], function () {
             mocha.run()
         });
