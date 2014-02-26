@@ -77,7 +77,7 @@
             var stubName = 'stub' + key + cnt;
             map[key] = stubName;
             define(stubName, function() {
-              return value;
+              return sinon.stub(value);
             });
           });
           return requirejs.config({
