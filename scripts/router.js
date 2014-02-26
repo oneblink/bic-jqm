@@ -36,10 +36,9 @@ define(
         parent = path[path.length - 1];
         usedPathItems = [];
 
-        if (path[path.length - 1] === "") {
-          path.pop();
+        if (path[0] === "") {
+          path.shift();
         }
-
 
         _.each(path, function (element, index) {
           if (!_.find(usedPathItems, function (id) {return id === element; })) {
