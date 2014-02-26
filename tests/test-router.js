@@ -148,6 +148,11 @@ define(function () {
         var data = "/councils/traffic/trafficcams/traffic";
         router.inheritanceChain(data).id.should.equal('traffic');
       });
+
+      it("should drop blank trailing values from the array", function () {
+        var data = "/councils/traffic/";
+        router.inheritanceChain(data).id.should.equal('traffic');
+      });
     });
 
     //describe('parseArgs(argsString, model)', function () {
