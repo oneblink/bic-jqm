@@ -143,6 +143,10 @@ define(function () {
       //it("should return the correct interaction to attach the view to", function () {
         //router.inheritanceChain("/test").should.be.instanceOf(Backbone.Model);
       //});
+
+      it("should handle the same interaction being listed twice (last winning out)", function () {
+        var data = "/councils/traffic/trafficcams/traffic";
+        router.inheritanceChain(data).id.should.equal('traffic');
       });
     });
 
