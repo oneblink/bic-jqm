@@ -1,3 +1,8 @@
+define(
+  [],
+  function () {
+    "use strict";
+    var MapView = Backbone.view.extend({
       maps: function () {
         var mapDiv = this.$el.find("[class=googlemap]"), script;
 
@@ -27,4 +32,9 @@
             window.BMP.BIC3.MapCallback();
           }
         }
-      },
+      }
+    });
+
+    return MapView;
+  }
+);

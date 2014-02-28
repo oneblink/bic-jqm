@@ -3,6 +3,14 @@ define(
   function (app, template) {
     "use strict";
     var FormView = Backbone.View.extend({
+      events: {
+        "click #FormControls #submit" : "formSubmit",
+        "click #FormControls #cancel" : "formCancel",
+        "click #FormControls #save" : "formSave",
+        "click #nextFormPage" : "nextFormPage",
+        "click #previousFormPage" : "previousFormPage",
+        "click #queue" : "pendingQueue"
+      },
       render: function (parentView) {
         Mustache.render(template);
         //if ($('#ActiveFormContainer').length > 0) {
@@ -35,13 +43,7 @@ define(
             parentView.trigger("render");
           });
         }
-      }
-    });
-
-    return FormView;
-  }
-);
-
+      },
       nextFormPage: function () {
         var index = BlinkForms.current.get('pages').current.index();
 
@@ -80,3 +82,22 @@ define(
           next.removeClass('ui-disabled');
         }
       },
+
+      formSubmit: function () {
+        this.addToQueue("Pending");
+      },
+
+      formCancel: function () {
+        $('#cancelPopup').popup('open');
+      },
+
+      formSave: function () {
+        this.addToQueue("Draft");
+      }
+    });
+
+    return FormView;
+  }
+);
+
+

@@ -1,3 +1,8 @@
+define(
+  ['text!template-pending.mustache', 'model-application'],
+    function (template, app) {
+    "use strict";
+    var PendingView = Backbone.view.extend({
       pendingQueue: function () {
         //var el = $('#pendingContent');
         var pendingExtractor = function (status) {
@@ -11,19 +16,13 @@
           });
         };
 
-        this.$el.append(Mustache.render(pendingTemplate, {
+        this.$el.append(Mustache.render(template, {
           pending: pendingExtractor("Pending"),
           draft: pendingExtractor("Draft")
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');
       },
-
-
-
-
-
-
 
       addToQueue: function (status) {
         var view = this;
@@ -45,4 +44,9 @@
           app.pending.processQueue();
           view.home();
         });
-      },
+      }
+    });
+
+    return PendingView;
+  }
+);
