@@ -31,7 +31,8 @@ module.exports = function (grunt) {
     },
 
     jslint: {
-      files: ['./scripts/*.js'],
+      all: {
+        src: ['./scripts/*.js'],
       directives: {
         "browser": true,
         "es5": true,
@@ -52,6 +53,7 @@ module.exports = function (grunt) {
           "BMP",
           "Modernizr"
         ]
+      }
       }
     },
 

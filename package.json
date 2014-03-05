@@ -7,13 +7,13 @@
   "repository": "bmp",
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-jslint": "~0.2",
-    "grunt-mocha": "~0.3",
-    "grunt-contrib-watch": "~0.4",
+    "grunt-jslint": "~1.1",
+    "grunt-mocha": "~0.4",
+    "grunt-contrib-watch": "~0.5",
     "grunt-contrib-requirejs": "~0.4",
-    "grunt-contrib-clean": "~0.4",
-    "grunt-contrib-copy": "~0.4",
-    "grunt-contrib-connect": "~0.3",
-    "grunt-concurrent": "~0.3.0"
+    "grunt-contrib-clean": "~0.5",
+    "grunt-contrib-copy": "~0.5",
+    "grunt-contrib-connect": "~0.7",
+    "grunt-concurrent": "~0.4"
   }
 }

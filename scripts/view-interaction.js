@@ -471,7 +471,7 @@ define(
 
         map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
 
-        $(document).bind("pageshow", function() {
+        $(document).bind("pageshow", function () {
           google.maps.event.trigger(map, "resize");
           map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
         });
@@ -486,14 +486,14 @@ define(
           address: mapDiv.attr('data-marker-title')
         };
 
-        geocoder.geocode(options, function(results) {
+        geocoder.geocode(options, function (results) {
           options = {
             center: results[0].geometry.location,
             zoom: parseInt(mapDiv.attr('data-zoom'), 10),
             mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
           };
           map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
-          $(document).bind("pageshow", function() {
+          $(document).bind("pageshow", function () {
             google.maps.event.trigger(map, "resize");
             map.setCenter(results[0].geometry.location);
           });
@@ -513,16 +513,18 @@ define(
         kml = new google.maps.KmlLayer(mapDiv.attr('data-kml'), {preserveViewport: true});
         kml.setMap(map);
 
-        $(document).bind("pageshow", function() {
+        $(document).bind("pageshow", function () {
           google.maps.event.trigger(map, "resize");
           map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
         });
       },
 
       directionsMap: function () {
-        var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, getGeoLocation, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+        var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, getGeoLocation, mapDiv;
 
-        getGeoLocation = function(options) {
+        mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+
+        getGeoLocation = function (options) {
           var dfrd = new $.Deferred(),
             defaultOptions = {
               enableHighAccuracy: true,
@@ -530,14 +532,14 @@ define(
               timeout: 5 * 1000 // 5 seconds
             };
           options = $.extend({}, defaultOptions, $.isPlainObject(options) ? options : {});
-          navigator.geolocation.getCurrentPosition(function(position) {
+          navigator.geolocation.getCurrentPosition(function (position) {
             var coords = position.coords;
             if ($.type(coords) === 'object') {
               dfrd.resolve(coords);
             } else {
               dfrd.reject('GeoLocation error: blank location from browser / device');
             }
-          }, function(error) {
+          }, function (error) {
             var string;
             switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -570,7 +572,7 @@ define(
 
         directionsDisplay.setPanel($("[class='googledirections']")[0]);
 
-        $(document).bind("pageshow", function() {
+        $(document).bind("pageshow", function () {
           google.maps.event.trigger(map, "resize");
           directionsDisplay.setMap(map);
         });
@@ -578,7 +580,7 @@ define(
         if (mapDiv.attr('data-destination-address') === undefined || mapDiv.attr('data-origin-address') === undefined) {
           // Set the origin from attributes or GPS
           locationPromise = getGeoLocation();
-          locationPromise.done(function(location) {
+          locationPromise.done(function (location) {
             if (mapDiv.attr('data-origin-address') === undefined) {
               origin = new google.maps.LatLng(location.latitude, location.longitude);
               destination = mapDiv.attr('data-destination-address');
@@ -586,13 +588,13 @@ define(
               origin = mapDiv.attr('data-origin-address');
               destination = new google.maps.LatLng(location.latitude, location.longitude);
             }
-            var request = {
+            request = {
               origin: origin,
               destination: destination,
               travelMode: google.maps.TravelMode[mapDiv.attr('data-travelmode').toUpperCase()]
             };
 
-            directionsService.route(request, function(result, status) {
+            directionsService.route(request, function (result, status) {
               if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(result);
               }
@@ -605,14 +607,14 @@ define(
             travelMode: google.maps.TravelMode[mapDiv.attr('data-travelmode').toUpperCase()]
           };
 
-          directionsService.route(request, function(result, status) {
+          directionsService.route(request, function (result, status) {
             if (status === google.maps.DirectionsStatus.OK) {
               directionsDisplay.setDirections(result);
             }
           });
         }
 
-      },
+      }
     });
 
     return InteractionView;
