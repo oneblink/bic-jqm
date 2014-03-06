@@ -70,8 +70,7 @@ module.exports = function (grunt) {
         }
       },
       options: {
-        bail: true,
-        reporter: 'Nyan'
+        bail: true
       }
     },
 
@@ -101,6 +100,10 @@ module.exports = function (grunt) {
       }
     },
 
+    'saucelabs-mocha': {
+      all: { options: require('./saucelabs') }
+    },
+
     copy: {
       main: {
         files: [
@@ -122,9 +125,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
+  grunt.loadNpmTasks('grunt-saucelabs');
 
   grunt.registerTask('test', ['jslint', 'connect:server', 'mocha']);
-  grunt.registerTask('travis', ['test']);
+  grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
   grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
