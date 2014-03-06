@@ -13,8 +13,12 @@ module.exports = function (grunt) {
     connect: {
       server: {
         options: {
-          port: 9001,
-          base: '.',
+          port: 9999
+        }
+      },
+      keepalive: {
+        options: {
+          port: 9999,
           keepalive: true
         }
       }
@@ -33,32 +37,38 @@ module.exports = function (grunt) {
     jslint: {
       all: {
         src: ['./scripts/*.js'],
-      directives: {
-        "browser": true,
-        "es5": true,
-        "nomen": true,
-        "indent": 2,
-        "stupid": true,
-        "predef" : [
-          "define",
-          "require",
-          "requirejs",
-          "$",
-          "_",
-          "Backbone",
-          "Mustache",
-          "Pouch",
-          "BlinkForms",
-          "jquerymobile",
-          "BMP",
-          "Modernizr"
-        ]
-      }
+        directives: {
+          "browser": true,
+          "es5": true,
+          "nomen": true,
+          "indent": 2,
+          "stupid": true,
+          "predef" : [
+            "define",
+            "require",
+            "requirejs",
+            "$",
+            "_",
+            "Backbone",
+            "Mustache",
+            "Pouch",
+            "BlinkForms",
+            "jquerymobile",
+            "BMP",
+            "Modernizr"
+          ]
+        }
       }
     },
 
     mocha: {
-      all: ['tests/index.html'],
+      all: {
+        options: {
+          urls: [
+            'http://localhost:9999/tests/index.html'
+          ]
+        }
+      },
       options: {
         bail: true,
         reporter: 'Nyan'
@@ -113,9 +123,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
 
-  grunt.registerTask('default', ['test', 'build']);
-  grunt.registerTask('test', ['jslint', 'mocha']);
+  grunt.registerTask('test', ['jslint', 'connect:server', 'mocha']);
+  grunt.registerTask('travis', ['test']);
+
   grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
+  grunt.registerTask('default', ['test', 'build']);
 
 };
