@@ -2,6 +2,8 @@ BICv3
 =====
 The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.
 
+[![Build Status](https://travis-ci.org/blinkmobile/bic-v3.png)](https://travis-ci.org/blinkmobile/bic-v3)
+
 Core Technologies
 -----------------
 * jQuery
