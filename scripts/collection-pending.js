@@ -21,11 +21,19 @@ define(
 
       processQueue: function () {
         _.each(this.where({status: "Pending"}), function (element) {
-          API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).done(
-            function () {
-              element.destroy({wait: true});
+          /*jslint unparam: true*/
+          API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).always(
+            function (data, status, xhr) {
+              // NEED TO CHECK STATUS === 200 && RESULT !== BLANK!!!!
+              //element.destroy({wait: true});
+              if (data && xhr.status === 200) {
+                element.set({status: 'Submitted'});
+                element.set({result: data});
+              }
+              element.trigger('processed');
             }
           );
+          /*jslint unparam: false*/
         }, this);
       }
     });

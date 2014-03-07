@@ -1,7 +1,7 @@
 /*global google: true */
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star'],
-  function (Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView) {
+  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache'],
+  function (Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -350,7 +350,8 @@ define(
       },
 
       addToQueue: function (status) {
-        var view = this;
+        var view = this,
+          model;
         BlinkForms.current.data().then(function (data) {
           data._action = view.model.get("blinkFormAction");
           var modelAttrs = {
@@ -362,12 +363,27 @@ define(
             data: data
           };
           if (view.model.get("blinkFormAction") === "edit") {
-            app.pending.get(view.model.get("args")['args[id]']).set(modelAttrs);
+            model = app.pending.get(view.model.get("args")['args[id]']);
+            model.set(modelAttrs);
           } else {
-            app.pending.create(modelAttrs);
+            model = app.pending.create(modelAttrs);
           }
-          app.pending.processQueue();
-          view.home();
+          $(window).on("pagechange", function() {
+            $(window).off("pagechange");
+            if (!navigator.onLine || model.get('status') === 'Draft') {
+              app.view.pendingQueue();
+            } else {
+              model.once('processed', function () {
+                if (model.get('status') === 'Submitted') {
+                  app.view.popup(model.get('result'));
+                } else {
+                  app.view.pendingQueue();
+                }
+              });
+              app.pending.processQueue();
+            }
+          });
+          history.back();
         });
       },
 
@@ -379,7 +395,12 @@ define(
             pendingAttrs.editInteraction = app.interactions.where({
               blinkFormObjectName: pendingItem.get("name"),
               blinkFormAction: 'edit'
-            })[0].id;
+            });
+            if (pendingAttrs.editInteraction && pendingAttrs.editInteraction.length > 0) {
+              pendingAttrs.editInteraction = pendingAttrs.editInteraction[0].id;
+            } else {
+              pendingAttrs.editInteraction = null;
+            }
             return pendingAttrs;
           });
         };
@@ -390,6 +411,14 @@ define(
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');
+      },
+
+      popup: function (data) {
+        this.$el.append(Mustache.render(popupTemplate, {
+          contents: data
+        }));
+        this.$el.trigger('pagecreate');
+        $('#popup').popup('open');
       },
 
       destroy: function () {
