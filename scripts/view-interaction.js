@@ -368,7 +368,7 @@ define(
           } else {
             model = app.pending.create(modelAttrs);
           }
-          $(window).on("pagechange", function() {
+          $(window).on("pagechange", function () {
             $(window).off("pagechange");
             if (!navigator.onLine || model.get('status') === 'Draft') {
               app.view.pendingQueue();
