@@ -10,18 +10,22 @@ Core Technologies
 * Backbone
 * RequireJS
 
-Getting Started
+Project Setup
 ---------------
 The project should run fine as is, though you may wish to improve, optimize, test and otherwise work on this.
 
 In that case, you should:
 
 1. Check out the source
-2. NPM install
-3. `grunt develop`
-3. Modify source files
-4. Perform releases, as neccasary
+2. Switch to develop branch
+3. Set up git-flow
+4. NPM install
 
+Developing
+----------------
+1. `grunt develop`
+2. Modify source files
+3. Perform releases, as neccasary
 
 
 Release Process
