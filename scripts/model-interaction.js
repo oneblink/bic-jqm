@@ -249,7 +249,7 @@ define(
         }
 
         return dfrd.promise();
-      },
+      }
     });
 
     return Interaction;

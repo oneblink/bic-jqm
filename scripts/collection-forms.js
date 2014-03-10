@@ -20,14 +20,14 @@ define(
 
         require(['api'], function (API) {
           API.getForm().done(function (data) {
-            _.each(data, function (record) {
-              var data = JSON.parse(record),
-                preExisting = collection.findWhere({_id: data.default.name});
+            _.each(data, function (recordData) {
+              var record = JSON.parse(recordData),
+                preExisting = collection.findWhere({_id: record.default.name});
               if (preExisting) {
-                preExisting.set(data).save();
+                preExisting.set(record).save();
               } else {
-                data._id = data.default.name;
-                collection.create(data);
+                record._id = record.default.name;
+                collection.create(record);
               }
             });
           });

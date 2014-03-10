@@ -1,4 +1,4 @@
-/*jslint browser:true, es5:true, indent:2, nomen:true*/
+/*jslint browser:true, indent:2, nomen:true*/
 /*global requirejs, require, define, module*/
 /*global $, cordova*/
 define(
