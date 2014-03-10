@@ -29,6 +29,7 @@ Release Process
 
 1. `cd {{BIC}}`
 2. Run `grunt`, if no errors GOTO 3, otherwise fix the errors.
+3. Do a git flow release
 3. `node -p -e "Date.now()"` - this is your build timestamp
 4. `mv js {{timestamp}}`
 5. Checkout 'cdn-platform-assets'
@@ -46,12 +47,16 @@ Release Process
 17. Set 'Content-Encoding' to 'gzip'
 18. Set 'Content-Type' to 'application/javascript'
 19. Try out the new BIC version in an answerSpace
+20. Open https://github.com/blinkmobile/bic-v3/releases
+21. Click draft a new release
+22. Select the tag from the git flow release
+23. Add change notes
+24. Release
 
 Rollback
 ---------------
 1. Delete the files from the S3 bucket
-2. Delete the files from the CDN repo
-3. Remove the entry for the build from the version.json file in the CDN repo
+3. Modify the entry for the build in the version.json file to mark as deprecated
 4. Commit the changes to the CDN repo
 
 General Notes on BIC structure
