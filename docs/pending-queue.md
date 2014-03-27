@@ -71,6 +71,8 @@ The `data` property is a mapping of Form Element names (i.e. field names) and
 their values. It is required that `data._action` match the same value as
 `action`.
 
+The `status` property has special meaning. See the `processQueue` method below.
+
 ## API
 
 As you may have guessed from the above, the pending queue object is globally
@@ -83,6 +85,9 @@ This is a JavaScript constructor (in this case you may think of it as a class).
 It is implemented by extending [Backbone.Model](http://backbonejs.org/#Model).
 This means that [Backbone.Events](http://backbonejs.org/#Events) methods and
 events are available.
+
+This constructor is private (not globally available), but documenting it is
+a necessary part of explaining how the other APIs are used.
 
 ### BMP.BIC3.pending.create = function (model)
 
@@ -98,3 +103,9 @@ pendingRecord.once('change', function () {
   // pendingRecord.id is now available, indicating that the record is saved
 });
 ```
+
+### BMP.BIC3.pending.processQueue = function ()
+
+Processes each PendingItem in the queue. If the `status` property is "Pending",
+then an attempt will be made to submit the entry to the server. All other values
+of `status` cause the PendingItem to be skipped.
