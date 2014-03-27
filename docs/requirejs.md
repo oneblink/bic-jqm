@@ -28,9 +28,9 @@ If your code requires access to the BIC v3 JavaScript APIs, then you need to
 declare that, too.
 
 ```javascript
-require(['bic'], function (bic) {
+require(['bic'], function () {
 
-  /* insert your code that uses the BIC */
+  /* insert your code that uses BMP.BIC3 */
 
 });
 ```
@@ -39,9 +39,9 @@ Rather than nest your calls to `require` for code that needs multiple libraries,
 you can declare them in one step.
 
 ```javascript
-require(['jquery', 'bic', 'jquerymobile'], function ($, bic) {
+require(['jquery', 'bic', 'jquerymobile'], function ($) {
 
-  /* insert your code that uses the BIC */
+  /* insert your code that uses BMP.BIC3 */
   /* insert your code that uses jQuery */
 
   /**
