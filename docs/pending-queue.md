@@ -89,6 +89,21 @@ events are available.
 This constructor is private (not globally available), but documenting it is
 a necessary part of explaining how the other APIs are used.
 
+### PendingCollection
+
+This is a JavaScript constructor (in this case you may think of it as a class).
+It is implemented by extending [Backbone.Collection](http://backbonejs.org/#Collection).
+This means that [Backbone.Events](http://backbonejs.org/#Events) methods and
+events are available.
+
+This constructor is private (not globally available), but documenting it is
+a necessary part of explaining how the other APIs are used.
+
+### BMP.BIC3.pending = new PendingCollection()
+
+This is globally-accessible object created via the `PendingCollection`
+constructor.
+
 ### BMP.BIC3.pending.create = function (model)
 
 - @param {Object} model see the Form Records Data Model (`model.id` is optional)
@@ -106,6 +121,6 @@ pendingRecord.once('change', function () {
 
 ### BMP.BIC3.pending.processQueue = function ()
 
-Processes each PendingItem in the queue. If the `status` property is "Pending",
+Processes each PendingItem in the queue. If the `status` property is `Pending`,
 then an attempt will be made to submit the entry to the server. All other values
 of `status` cause the PendingItem to be skipped.
