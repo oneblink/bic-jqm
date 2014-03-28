@@ -48,7 +48,7 @@ services.
 
 ```json
 {
-  "id": "UUID"
+  "id": "UUID",
   "type": "Form",
   "status": "STATUS",
   "name": "NAME",
