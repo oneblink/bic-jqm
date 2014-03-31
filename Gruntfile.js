@@ -97,6 +97,31 @@ module.exports = function (grunt) {
           // wrap: true,
           //insertRequire: ["main"]
         }
+      },
+      compile2: {
+        options: {
+          baseUrl: "bower_components",
+          include: ['picker.date', 'picker.time', 'moment'],
+          out: 'js/formsdeps.min.js',
+          paths: {
+            'jquery': 'empty:',
+            "picker": 'pickadate/lib/picker',
+            "picker.date": 'pickadate/lib/picker.date',
+            "picker.time": 'pickadate/lib/picker.time',
+            "moment" : 'momentjs/min/moment.min'
+          }
+        }
+      },
+      options: {
+        uglify: {
+          max_line_length: 80
+        },
+        uglify2: {
+          output: {
+            max_line_len: 80
+          },
+          warnings: false
+        }
       }
     },
 
