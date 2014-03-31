@@ -1,3 +1,4 @@
+/*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
   ['model-form', 'feature!data'],
   function (Form, Data) {
@@ -22,11 +23,11 @@ define(
           API.getForm().done(function (data) {
             _.each(data, function (recordData) {
               var record = JSON.parse(recordData),
-                preExisting = collection.findWhere({_id: record.default.name});
+                preExisting = collection.findWhere({_id: record['default'].name});
               if (preExisting) {
                 preExisting.set(record).save();
               } else {
-                record._id = record.default.name;
+                record._id = record['default'].name;
                 collection.create(record);
               }
             });
@@ -44,7 +45,7 @@ define(
               elements,
               elNames,
               collapseAction = function (d) {
-                var attrs = d.default || {};
+                var attrs = d['default'] || {};
                 if (action && d[action]) {
                   _.extend(attrs, d[action]);
                 }
@@ -54,26 +55,26 @@ define(
             //def = _.clone(def.attributes);
             def = JSON.parse(JSON.stringify(def.attributes));
 
-            if (_.isArray(def.default._elements)) {
-              def.default._elements = _.map(def.default._elements, collapseAction);
+            if (_.isArray(def['default']._elements)) {
+              def['default']._elements = _.map(def['default']._elements, collapseAction);
             }
-            if (_.isArray(def.default._sections)) {
-              def.default._sections = _.map(def.default._sections, collapseAction);
+            if (_.isArray(def['default']._sections)) {
+              def['default']._sections = _.map(def['default']._sections, collapseAction);
             }
-            if (_.isArray(def.default._pages)) {
-              def.default._pages = _.map(def.default._pages, collapseAction);
+            if (_.isArray(def['default']._pages)) {
+              def['default']._pages = _.map(def['default']._pages, collapseAction);
             }
 
             if (!action) {
-              dfrd.resolve(def.default);
+              dfrd.resolve(def['default']);
             }
 
             if (def[action] && def[action]._elements) {
-              elements = def.default._elements;
-              delete def.default._elements;
+              elements = def['default']._elements;
+              delete def['default']._elements;
               elNames = def[action]._elements;
               delete def[action]._elements;
-              _.extend(def.default, def[action]);
+              _.extend(def['default'], def[action]);
 
               // remove all elements not needed for this action
               elements = _.filter(elements, function (el) {
@@ -84,9 +85,9 @@ define(
                 return elNames.indexOf(el.name);
               });
 
-              def.default._elements = elements;
+              def['default']._elements = elements;
             }
-            dfrd.resolve(def.default);
+            dfrd.resolve(def['default']);
           });
           return dfrd.promise();
         };

@@ -1,6 +1,7 @@
 /*jslint browser:true, indent:2, nomen:true*/
 /*global requirejs, require, define, module*/
 /*global $, cordova*/
+/*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
   [],
   function () {
@@ -57,7 +58,7 @@ define(
         promise = data.update(model);
         break;
       case "delete":
-        promise = data.delete(model);
+        promise = data['delete'](model);
         break;
       }
 
