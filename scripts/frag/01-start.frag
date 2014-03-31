@@ -6,7 +6,6 @@
             'underscore',
             'backbone',
             'mustache',
-            'pouchdb',
             'BlinkForms',
             'jquerymobile',
             'BMP.Blobs',
@@ -15,4 +14,4 @@
     } else {
         root.bic = factory();
     }
-}(this, function ($, _, Backbone, Mustache, Pouch, BlinkForms, jquerymobile, BMP, Modernizr) {
+}(this, function ($, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr) {

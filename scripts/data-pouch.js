@@ -1,7 +1,7 @@
 /*jslint unparam: true*/
 define(
-  [],
-  function () {
+  ['pouchdb'],
+  function (Pouch) {
     "use strict";
 
     var Data = function (name) {//, apiTrigger, apiCall, apiParameters) {

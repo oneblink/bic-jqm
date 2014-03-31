@@ -42,7 +42,6 @@ var rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$
   // dynamically set paths and fall-back paths;
   paths = {
     BlinkForms: getPaths('blink/forms/3/1377493706402/forms3jqm.min'),
-    pouchdb: getPaths('pouchdb/1377451788000/pouchdb-nightly'),
     'BMP.Blobs': getPaths('blink/blobs/1377493706402/bmp-blobs.min'),
     signaturepad: getPaths('signaturepad/2.3.0/jq.sig.min'),
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),

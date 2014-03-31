@@ -4,6 +4,7 @@
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "dependencies": {
     "pickadate": "~3.4.0",
+    "pouchdb": "~1.1.0",
     "momentjs": "~2.5.1"
   }
 }

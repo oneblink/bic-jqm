@@ -91,6 +91,7 @@ module.exports = function (grunt) {
           out: 'build/bic.js',
           optimize: "none",
           paths: {
+            pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
             text: 'vendor/text',
             domReady: 'vendor/domReady',
             feature: 'vendor/feature',
