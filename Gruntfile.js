@@ -91,8 +91,11 @@ module.exports = function (grunt) {
             implementations: 'implementation-data'
           },
           wrap: {
-            startFile: 'scripts/frag/start.frag',
-            endFile: 'scripts/frag/end.frag'
+            startFile: [
+              'scripts/frag/00-config.js',
+              'scripts/frag/01-start.frag'
+            ],
+            endFile: 'scripts/frag/99-end.frag'
           }//,
           // wrap: true,
           //insertRequire: ["main"]
