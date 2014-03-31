@@ -1,4 +1,4 @@
-/*global module:false*/
+/*jslint indent:2, node:true*/
 module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
@@ -148,11 +148,38 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+
+    uglify: {
+      bic: {
+        files: {
+          'js/bic.min.js': [
+            'js/bic.js'
+          ]
+        }
+      },
+      options: {
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        preserveComments: 'some',
+        beautify: {
+          ascii_only: true,
+          max_line_len: 80
+        },
+        compress: {
+          screw_ie8: false,
+          properties: false
+        },
+        mangle: {
+          screw_ie8: false
+        }
+      }
     }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-mocha');
@@ -165,7 +192,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test', 'build']);
 

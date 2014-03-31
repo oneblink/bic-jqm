@@ -3,16 +3,20 @@
 // Temporary Fixes
 // These will end up in Global Require (I hope...)
 
-/*jslint regexp:true*/ // this regular expression has been double-checked
-var rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
-/*jslint regexp:false*/
-
 (function () {
   'use strict';
-  var cloudfront, filesystem, paths, getPaths, scripts, s, script;
+  var cloudfront, filesystem, rootPath, paths, getPaths, scripts, s, script;
 
   cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
   filesystem = '/_c_/';
+
+  if (!document.currentScript) {
+    scripts = document.getElementsByTagName('script');
+    document.currentScript = scripts[scripts.length - 1];
+  }
+  /*jslint regexp:true*/ // this regular expression has been double-checked
+  rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+  /*jslint regexp:false*/
 
   // determine our current CDN based on how we referenced Require.JS
   scripts = document.getElementsByTagName('script');

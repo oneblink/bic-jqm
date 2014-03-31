@@ -3,13 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>Tests against Build</title>
-    <link rel="stylesheet" href="assets/mocha.css" />
-
-    <!-- mocha + chai + sinon-->
-    <script src="assets/mocha.js"></script>
-    <script src="assets/chai.js"></script>
-    <script src="assets/sinon-chai.js"></script>
-    <script src="assets/sinon.js"></script>
 
     <!-- global stuff-->
     <script src="https://cdnp.blinkm.co/blink/require/6/require.min.js"></script>
@@ -24,12 +17,6 @@
 
     <!-- environment variables (normally in php) -->
     <script>
-        mocha.setup('bdd');
-        mocha.setup({ignoreLeaks: true});
-        mocha.globals(['script*', 'jQuery*']);
-        var should = chai.should();
-        var expect = chai.expect;
-
         window.BMP= {
           BIC: {
             siteVars: {
@@ -48,29 +35,9 @@
         require(['backbone'], function () {
           Backbone.sync = function () {return arguments;}
         });
-        require(['jquerymobile'], function () {
-          $.mobile = {
-            loading: function () {},
-            path: {
-              parseUrl: function () {
-                return {
-                  hrefNoSearch: "/test",
-                  search: ""
-                }
-              }
-            },
-            showPageLoadingMsg: function () {},
-            pageLoadErrorMessageTheme: {},
-            pageLoadErrorMessage: {}
-          };
-        });
-
-
         require(['bic']);
-
     </script>
 </head>
 <body>
-    <div id="mocha"></div>
 </body>
 </html>
