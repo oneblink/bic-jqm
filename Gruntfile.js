@@ -1,4 +1,4 @@
-/*global module:false*/
+/*jslint indent:2, node:true*/
 module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
@@ -36,7 +36,10 @@ module.exports = function (grunt) {
 
     jslint: {
       all: {
-        src: ['./scripts/*.js'],
+        src: [
+          'scripts/**/*.js',
+          '!**/vendor/**/*'
+        ],
         directives: {
           "browser": true,
           "es5": true,
@@ -57,6 +60,9 @@ module.exports = function (grunt) {
             "BMP",
             "Modernizr"
           ]
+        },
+        options: {
+          errorsOnly: true
         }
       }
     },
@@ -85,17 +91,46 @@ module.exports = function (grunt) {
           out: 'build/bic.js',
           optimize: "none",
           paths: {
+            pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
             text: 'vendor/text',
             domReady: 'vendor/domReady',
             feature: 'vendor/feature',
             implementations: 'implementation-data'
           },
           wrap: {
-            startFile: 'scripts/frag/start.frag',
-            endFile: 'scripts/frag/end.frag'
+            startFile: [
+              'scripts/frag/00-config.js',
+              'scripts/frag/01-start.frag'
+            ],
+            endFile: 'scripts/frag/99-end.frag'
           }//,
           // wrap: true,
           //insertRequire: ["main"]
+        }
+      },
+      compile2: {
+        options: {
+          baseUrl: "bower_components",
+          include: ['picker.date', 'picker.time', 'moment'],
+          out: 'js/formsdeps.min.js',
+          paths: {
+            'jquery': 'empty:',
+            "picker": 'pickadate/lib/picker',
+            "picker.date": 'pickadate/lib/picker.date',
+            "picker.time": 'pickadate/lib/picker.time',
+            "moment" : 'momentjs/min/moment.min'
+          }
+        }
+      },
+      options: {
+        uglify: {
+          max_line_length: 80
+        },
+        uglify2: {
+          output: {
+            max_line_len: 80
+          },
+          warnings: false
         }
       }
     },
@@ -113,11 +148,38 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+
+    uglify: {
+      bic: {
+        files: {
+          'js/bic.min.js': [
+            'js/bic.js'
+          ]
+        }
+      },
+      options: {
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        preserveComments: 'some',
+        beautify: {
+          ascii_only: true,
+          max_line_len: 80
+        },
+        compress: {
+          screw_ie8: false,
+          properties: false
+        },
+        mangle: {
+          screw_ie8: false
+        }
+      }
     }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-mocha');
@@ -130,7 +192,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test', 'build']);
 

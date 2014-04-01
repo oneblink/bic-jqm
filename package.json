@@ -1,7 +1,7 @@
 {
   "name": "BICv3",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.0.6",
+  "version": "3.0.8",
   "main": "Gruntfile.js",
   "dependencies": {},
   "repository": "bmp",
@@ -9,12 +9,13 @@
     "grunt": "~0.4",
     "grunt-jslint": "~1.1",
     "grunt-mocha": "~0.4",
-    "grunt-contrib-watch": "~0.5",
+    "grunt-contrib-watch": "~0.6",
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-clean": "~0.5",
     "grunt-contrib-copy": "~0.5",
     "grunt-contrib-connect": "~0.7",
-    "grunt-concurrent": "~0.4",
-    "grunt-saucelabs": "~5.0"
+    "grunt-contrib-uglify": "~0.3",
+    "grunt-concurrent": "~0.5",
+    "grunt-saucelabs": "~5.1"
   }
 }
