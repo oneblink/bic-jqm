@@ -51,7 +51,7 @@
     signaturepad: getPaths('signaturepad/2.3.0/jq.sig.min'),
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),
     jquery: getPaths('jquery/1.9.1/jquery.min'),
-    backbone: getPaths('backbonejs/1.1.0/backbone-min'),
+    backbone: getPaths('backbonejs/1.0.0/backbone-min'),
     lodash: getPaths('lodash/2.4.1/lodash.compat.min'),
     modernizr: getPaths('modernizr/2.7.1/modernizr.custom.26204.min'),
     mustache: getPaths('mustache/0.7.3/mustache.min'),
