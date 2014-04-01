@@ -23,31 +23,30 @@ module.exports = {
     },
     {
       browserName: "firefox",
-      version: "26",
+      version: "28",
       platform: "Windows 7"
     },
     {
       browserName: "googlechrome",
-      version: "31",
+      version: "33",
       platform: "OS X 10.9"
     },
     {
       browserName: "android",
-      version: "4.0",
+      version: "4.1",
       platform: "Linux",
       "device-orientation": "portrait"
     },
     {
       browserName: "iphone",
-      version: "7",
+      version: "7.1",
       platform: "OS X 10.9",
       "device-orientation": "portrait"
     },
     {
-      browserName: "iphone",
-      version: "6.1",
-      platform: "OS X 10.8",
-      "device-orientation": "portrait"
+      browserName: "safari",
+      version: "6",
+      platform: "OS X 10.8"
     }
   ],
   testname: 'bic-v3',
