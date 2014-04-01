@@ -5,7 +5,8 @@
 
 (function () {
   'use strict';
-  var cloudfront, filesystem, rootPath, paths, getPaths, scripts, s, script;
+  var cloudfront, filesystem, rootPath, paths, getPaths, scripts, s, script,
+    supportsBundles, versionMatches;
 
   cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
   filesystem = '/_c_/';
@@ -59,6 +60,25 @@
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
     formsdeps: rootPath + "/formsdeps.min"
   };
+
+  // check if we are using a pre-bundles Require.JS
+  supportsBundles = true;
+  if (require.version < "2.2") {
+    supportsBundles = false;
+    if (require.version >= "2.1") {
+      versionMatches = require.version.match(/(\d+)\.(\d+)\.(\d+)/);
+      if (versionMatches && versionMatches[3] >= 10) {
+        supportsBundles = true; // introduced in Require.JS 2.1.10
+      }
+    }
+  }
+  if (!supportsBundles) {
+    paths.moment = rootPath + '/formsdeps.min';
+    paths.picker = rootPath + '/formsdeps.min';
+    paths['picker.date'] = rootPath + '/formsdeps.min';
+    paths['picker.time'] = rootPath + '/formsdeps.min';
+  }
+
   require.config({ paths: paths });
 }());
 
