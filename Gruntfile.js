@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     watch: {
       source: {
-        files: ['index.php', 'scripts/**', 'tests/**'],
+        files: ['scripts/**', 'tests/**'],
         tasks: ['default'],
         options: {
           livereload: true
@@ -71,12 +71,14 @@ module.exports = function (grunt) {
       all: {
         options: {
           urls: [
-            'http://localhost:9999/tests/index.html'
+            'http://localhost:9999/tests/index.html',
+            'http://localhost:9999/tests/build.html'
           ]
         }
       },
       options: {
-        bail: true
+        bail: true,
+        log: true
       }
     },
 
@@ -108,17 +110,18 @@ module.exports = function (grunt) {
           //insertRequire: ["main"]
         }
       },
-      compile2: {
+      formsdeps: {
         options: {
           baseUrl: "bower_components",
-          include: ['picker.date', 'picker.time', 'moment'],
+          include: ['picker.date', 'picker.time', 'moment', 'rivets'],
           out: 'js/formsdeps.min.js',
           paths: {
             'jquery': 'empty:',
             "picker": 'pickadate/lib/picker',
             "picker.date": 'pickadate/lib/picker.date',
             "picker.time": 'pickadate/lib/picker.time',
-            "moment" : 'momentjs/min/moment.min'
+            "moment": 'momentjs/min/moment.min',
+            "rivets": "rivets/dist/rivets"
           }
         }
       },
@@ -189,11 +192,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-saucelabs');
 
-  grunt.registerTask('test', ['jslint', 'connect:server', 'mocha']);
+  grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
   grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
   grunt.registerTask('develop', ['concurrent']);
-  grunt.registerTask('default', ['test', 'build']);
+  grunt.registerTask('default', ['test']);
 
 };

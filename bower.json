@@ -5,6 +5,7 @@
   "dependencies": {
     "pickadate": "~3.4.0",
     "pouchdb": "~1.1.0",
-    "momentjs": "~2.5.1"
+    "momentjs": "~2.5.1",
+    "rivets": "~0.5.13"
   }
 }
