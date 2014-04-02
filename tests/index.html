@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <title>Mocha Tests</title>
-    <link rel="stylesheet" href="assets/mocha.css" />
-
-    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 
     <!-- mocha + chai + sinon-->
+    <link rel="stylesheet" href="assets/mocha.css" />
     <script src="assets/mocha.js"></script>
     <script src="assets/chai.js"></script>
     <script src="assets/sinon-chai.js"></script>
     <script src="assets/sinon.js"></script>
+
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 
     <!-- global stuff-->
     <script src="http://d1c6dfkb81l78v.cloudfront.net/jquery/1.9.1/jquery.min.js"></script>
@@ -19,6 +19,7 @@
     <script src="http://d1c6dfkb81l78v.cloudfront.net/backbonejs/1.0.0/backbone-min.js"></script>
     <script src="http://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min.js"></script>
     <script src="http://d1c6dfkb81l78v.cloudfront.net/blink/require/6/require.min.js"></script>
+    <script src="../scripts/frag/00-config.js"></script>
 
     <!-- code coverage -->
     <script>
@@ -35,7 +36,7 @@
         var should = chai.should();
         var expect = chai.expect;
 
-        window.BMP= {
+        window.BMP = {
           BIC: {
             siteVars: {
               answerSpace: 'Exists',

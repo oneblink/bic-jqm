@@ -1,10 +1,11 @@
 {
   "name": "bic-v3",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "dependencies": {
     "pickadate": "~3.4.0",
     "pouchdb": "~1.1.0",
-    "momentjs": "~2.5.1"
+    "momentjs": "~2.5.1",
+    "rivets": "~0.5.13"
   }
 }

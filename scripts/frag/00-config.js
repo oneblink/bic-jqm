@@ -56,7 +56,6 @@
     modernizr: getPaths('modernizr/2.7.1/modernizr.custom.26204.min'),
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     q: getPaths('q/0.9.7/q.min'),
-    rivets: getPaths('rivets/0.6.5/rivets.min'),
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
     formsdeps: rootPath + "/formsdeps.min"
   };
@@ -77,6 +76,7 @@
     paths.picker = rootPath + '/formsdeps.min';
     paths['picker.date'] = rootPath + '/formsdeps.min';
     paths['picker.time'] = rootPath + '/formsdeps.min';
+    paths.rivets = rootPath + '/formsdeps.min';
   }
 
   require.config({ paths: paths });
@@ -111,6 +111,6 @@ require.config({
     }
   },
   bundles: {
-    'formsdeps': ['picker', 'picker.date', 'picker.time', 'moment']
+    'formsdeps': ['picker', 'picker.date', 'picker.time', 'moment', 'rivets']
   }
 });
