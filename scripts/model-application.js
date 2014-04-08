@@ -81,13 +81,13 @@ define(
               var model;
               if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
                 model = value.pertinent;
-                model._id = model.name;
+                model._id = model.name.toLowerCase();
                 model.dbid = key;
                 models.push(model);
               }
               if (key.substr(0, 1) === 'a') {
                 model = {
-                  _id: window.BMP.BIC.siteVars.answerSpace,
+                  _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
                   dbid: key
                 };
                 models.push(model);

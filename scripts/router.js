@@ -32,7 +32,7 @@ define(
 
       inheritanceChain: function (data) {
         var path, parentModel, parent, usedPathItems;
-        path = data.substr(1).split('/').reverse();
+        path = data.substr(1).toLowerCase().split('/').reverse();
         parent = path[path.length - 1];
         usedPathItems = [];
 
