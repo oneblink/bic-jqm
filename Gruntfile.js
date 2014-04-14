@@ -97,12 +97,14 @@ module.exports = function (grunt) {
             text: 'vendor/text',
             domReady: 'vendor/domReady',
             feature: 'vendor/feature',
-            implementations: 'implementation-data'
+            'es5-shim': 'empty:'
           },
           wrap: {
             startFile: [
               'scripts/frag/00-config.js',
-              'scripts/frag/01-start.frag'
+              'scripts/vendor/feature.js',
+              'scripts/frag/05-implementations.js',
+              'scripts/frag/10-start.frag'
             ],
             endFile: 'scripts/frag/99-end.frag'
           }//,

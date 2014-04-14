@@ -9,7 +9,8 @@
             'BlinkForms',
             'jquerymobile',
             'BMP.Blobs',
-            'modernizr'
+            'modernizr',
+            'feature!es5'
         ], factory);
     } else {
         root.bic = factory();
