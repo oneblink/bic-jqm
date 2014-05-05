@@ -70,3 +70,11 @@ The entry point for the application is scripts/main.js
 Main bootstraps the application and sets up the application model (scripts/model-application.js).
 
 The application model then takes over and co-ordinates the rest of the application lifecycle. If you need to work out what is happening somewhere in the application, you can generally follow the flow of logic from the application model outwards.
+
+## Contribution
+
+Pull requests are welcome. But first, familiarise yourself with our guidelines (they are short):
+
+- https://github.com/blinkmobile/docs/wiki/Process:-Git-Flow
+
+- https://github.com/blinkmobile/docs/wiki/Code-Style:-JavaScript
