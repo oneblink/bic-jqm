@@ -10,6 +10,10 @@ Core Technologies
 * Backbone
 * RequireJS
 
+## Version Numbers
+
+This project is NOT versioned according to Semantic Versioning. Rather, it is versioned according to our [Shifted Semantic Versioning](https://github.com/blinkmobile/docs/wiki/Process:-Semantic-Versioning#shifted-semantic-versioning).
+
 Project Setup
 ---------------
 The project should run fine as is, though you may wish to improve, optimize, test and otherwise work on this.
