@@ -85,25 +85,36 @@ module.exports = function (grunt) {
     clean: ['build'],
 
     requirejs: {
+      feature: {
+        options: {
+          baseUrl: 'scripts',
+          name: 'feature',
+          out: 'build/feature.js',
+          optimize: "none",
+          paths: {
+            feature: '../bower_components/amd-feature/feature'
+          }
+        }
+      },
       compile: {
         options: {
           baseUrl: 'scripts',
-          name: 'vendor/almond',
+          name: '../bower_components/almond/almond',
           include: ['main', 'router'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
             pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
-            text: 'vendor/text',
-            domReady: 'vendor/domReady',
-            feature: 'vendor/feature',
+            text: '../bower_components/requirejs-text/text',
+            domReady: '../bower_components/requirejs-domready/domReady',
+            feature: '../bower_components/amd-feature/feature',
             'es5-shim': 'empty:'
           },
           wrap: {
             startFile: [
               'scripts/frag/00-config.js',
-              'scripts/vendor/feature.js',
               'scripts/frag/05-implementations.js',
+              'build/feature.js',
               'scripts/frag/10-start.frag'
             ],
             endFile: 'scripts/frag/99-end.frag'
