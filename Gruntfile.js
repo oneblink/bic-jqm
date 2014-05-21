@@ -38,6 +38,7 @@ module.exports = function (grunt) {
       all: {
         src: [
           'scripts/**/*.js',
+          '!scripts/frag/05-implementations.js',
           '!**/vendor/**/*'
         ],
         directives: {
@@ -126,15 +127,14 @@ module.exports = function (grunt) {
       formsdeps: {
         options: {
           baseUrl: "bower_components",
-          include: ['picker.date', 'picker.time', 'moment', 'rivets'],
+          include: ['picker.date', 'picker.time', 'moment'],
           out: 'js/formsdeps.min.js',
           paths: {
-            'jquery': 'empty:',
+            jquery: 'empty:',
             "picker": 'pickadate/lib/picker',
             "picker.date": 'pickadate/lib/picker.date',
             "picker.time": 'pickadate/lib/picker.time',
-            "moment": 'momentjs/min/moment.min',
-            "rivets": "rivets/dist/rivets"
+            "moment": 'momentjs/min/moment.min'
           }
         }
       },

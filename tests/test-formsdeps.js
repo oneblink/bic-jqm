@@ -23,16 +23,16 @@ define(function () {
       });
     });
 
-    describe('Rivets.js', function () {
+    describe('Promises', function () {
       before(function (done) {
-        require(['rivets'], function () {
+        require(['feature!promises'], function () {
           done();
         });
       });
 
-      it('should load successfully and export an Object', function () {
-        var rivets = require('rivets');
-        rivets.should.be.an.instanceOf(Object);
+      it('should load successfully and export a Function', function () {
+        var Promise = require('feature!promises');
+        Promise.should.be.an.instanceOf(Function);
       });
     });
 
@@ -46,6 +46,19 @@ define(function () {
       it('should load successfully and install a jQuery plugin', function () {
         var $ = require('jquery');
         $.fn.pickadate.should.be.an.instanceOf(Function);
+      });
+    });
+
+    describe('Forms v3 with jQuery Mobile', function () {
+      before(function (done) {
+        require(['BlinkForms'], function () {
+          done();
+        });
+      });
+
+      it('should load successfully and export an Object', function () {
+        var Forms = require('BlinkForms');
+        Forms.should.be.an.instanceOf(Object);
       });
     });
 
