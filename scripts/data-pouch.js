@@ -6,11 +6,28 @@ define(
     "use strict";
 
     var Data = function (name) {//, apiTrigger, apiCall, apiParameters) {
+      var db;
       if (this.dbAdapter && name) {
         this.name = name;
       } else {
         this.name = 'BlinkMobile';
       }
+      this.getDB = function () {
+        var me = this;
+        if (db) {
+          return Promise.resolve(db);
+        }
+        return new Promise(function (resolve, reject) {
+          var pouch = new Pouch(me.dbAdapter() + me.name, function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              db = pouch;
+              resolve(db);
+            }
+          });
+        });
+      };
     };
 
     _.extend(Data.prototype, {
@@ -26,113 +43,87 @@ define(
       },
 
       create: function (model) {
-        var db, data;
+        var data;
         data = this;
-        return new Promise(function (resolve, reject) {
-          db = new Pouch(data.dbAdapter() + data.name, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              db.post(model.toJSON(), function (err, response) {
-                if (err) {
-                  reject(err);
-                } else {
-                  data.read(response).then(function (doc) {
-                    resolve(doc);
-                  });
-                }
-              });
-            }
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            db.post(model.toJSON(), function (err, response) {
+              if (err) {
+                reject(err);
+              } else {
+                data.read(response).then(function (doc) {
+                  resolve(doc);
+                });
+              }
+            });
           });
         });
       },
 
       update: function (model) {
-        var db, data;
+        var data;
         data = this;
-        return new Promise(function (resolve, reject) {
-          db = new Pouch(data.dbAdapter() + data.name, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              db.put(model.toJSON(), function (err) {
-                if (err) {
-                  reject(err);
-                } else {
-                  data.read(model).then(function (doc) {
-                    resolve(doc);
-                  });
-                }
-              });
-            }
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            db.put(model.toJSON(), function (err) {
+              if (err) {
+                reject(err);
+              } else {
+                data.read(model).then(function (doc) {
+                  resolve(doc);
+                });
+              }
+            });
           });
         });
       },
 
       read: function (model) {
-        var db, data;
-        data = this;
-        return new Promise(function (resolve, reject) {
-          db = new Pouch(data.dbAdapter() + data.name, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              db.get(model.id, function (err, doc) {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(doc);
-                }
-              });
-            }
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            db.get(model.id, function (err, doc) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(doc);
+              }
+            });
           });
         });
       },
 
       readAll: function () {
-        var db, data;
-        data = this;
-        return new Promise(function (resolve, reject) {
-          db = new Pouch(data.dbAdapter() + data.name, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              db.allDocs({include_docs: true}, function (err, response) {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(_.map(response.rows, function (value) {
-                    return value.doc;
-                  }));
-                }
-              });
-            }
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            db.allDocs({include_docs: true}, function (err, response) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(_.map(response.rows, function (value) {
+                  return value.doc;
+                }));
+              }
+            });
           });
         });
       },
 
       'delete': function (model) {
-        var db, data;
-        data = this;
-        return new Promise(function (resolve, reject) {
-          db = new Pouch(data.dbAdapter() + data.name, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              db.get(model.id, function (err, doc) {
-                if (err) {
-                  reject(err);
-                } else {
-                  db.remove(doc, function (err, doc) {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      resolve(doc);
-                    }
-                  });
-                }
-              });
-            }
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            db.get(model.id, function (err, doc) {
+              if (err) {
+                reject(err);
+              } else {
+                db.remove(doc, function (err, doc) {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(doc);
+                  }
+                });
+              }
+            });
           });
         });
       },
@@ -141,9 +132,13 @@ define(
         var data;
         data = this;
 
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
           Pouch.destroy(data.dbAdapter() + data.name, function (err, info) {
-            resolve();
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
           });
         });
       }
