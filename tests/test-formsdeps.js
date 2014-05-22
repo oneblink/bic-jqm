@@ -62,5 +62,27 @@ define(function () {
       });
     });
 
+    describe('BIC v3 + Forms v3', function () {
+      before(function (done) {
+        require(['bic', 'BlinkForms'], function () {
+          setTimeout(function () {
+            done();
+          }, 197);
+        });
+      });
+
+      it('BMP.Forms.getDefinition function should be defined', function () {
+        var Forms = require('BlinkForms');
+        Forms.getDefinition.should.be.an.instanceOf(Function);
+      });
+
+      it('BMP.Forms.getDefinition should return a promise', function () {
+        var Promise, Forms;
+        Forms = require('BlinkForms');
+        Promise = require('feature!promises');
+        Forms.getDefinition().should.be.an.instanceOf(Promise);
+      });
+    });
+
   });
 });

@@ -137,118 +137,118 @@ define(
       prepareForView: function (data) {
         // Handle MADL updates here
         // Check for other updates needed here?
-        var dfrd = new $.Deferred(),
-          model = this,
+        var model = this,
           homeInteraction,
           loginInteraction,
           xml = '',
           attrs,
           path;
 
-        if (model.id === window.BMP.BIC.siteVars.answerSpace) {
-          require(['model-application'], function (app) {
-            if (app.has("homeScreen") && app.get("homeScreen") !== false && app.has("homeInteraction")) {
-              homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
-              if (homeInteraction) {
-                homeInteraction.set({parent: model.get("parent")});
-                homeInteraction.prepareForView(data).done(function () {
-                  dfrd.resolve(homeInteraction);
+        return new Promise(function (resolve, reject) {
+          if (model.id === window.BMP.BIC.siteVars.answerSpace) {
+            require(['model-application'], function (app) {
+              if (app.has("homeScreen") && app.get("homeScreen") !== false && app.has("homeInteraction")) {
+                homeInteraction = app.interactions.findWhere({dbid: "i" + app.get("homeInteraction")});
+                if (homeInteraction) {
+                  homeInteraction.set({parent: model.get("parent")});
+                  homeInteraction.prepareForView(data).then(function () {
+                    resolve(homeInteraction);
+                  });
+                } else {
+                  reject();
+                }
+              } else {
+                model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
+                  return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
+                    return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
+                  }, this).length > 0);
+                }, this), function (value) {
+                  return value.attributes;
+                })});
+
+                if (model.get("interactionList").length === 0 && app.has("loginAccess") && app.get("loginAccess") === true && app.has("loginPromptInteraction")) {
+                  loginInteraction = app.interactions.findWhere({dbid: "i" + app.get("loginPromptInteraction")});
+
+                  path = $.mobile.path.parseLocation().pathname;
+                  if (path.slice(-1) === "/") {
+                    path = path.slice(0, path.length - 1);
+                  }
+
+                  resolve(model);
+                  $.mobile.changePage(path + '/' + loginInteraction.id);
+                  //if (loginInteraction) {
+                    //loginInteraction.set({parent: model.get("parent")});
+                    //loginInteraction.prepareForView(data).then(function () {
+                      //resolve(loginInteraction);
+                    //});
+                  //}
+                } else {
+                  resolve(model);
+                }
+              }
+            });
+          }
+
+          if (model.get("type") === "madl code") {
+            /*jslint unparam: true*/
+            API.getInteractionResult(model.id, this.get('args'), data.options).then(
+              function (result) {
+                model.save({
+                  content: result,
+                  contentTime: Date.now()
+                }, {
+                  success: function () {
+                    resolve(model);
+                  },
+                  error: function () {
+                    resolve(model);
+                  }
                 });
-              } else {
-                dfrd.reject();
+              },
+              function (jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
               }
-            } else {
-              model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
-                return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get("display") !== "hide" && (!value.has("tags") || (value.has("tags") && value.get("tags").length === 0) || _.filter(value.get("tags"), function (element) {
-                  return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
-                }, this).length > 0);
-              }, this), function (value) {
-                return value.attributes;
-              })});
+            );
+            /*jslint unparam: false*/
+          }
 
-              if (model.get("interactionList").length === 0 && app.has("loginAccess") && app.get("loginAccess") === true && app.has("loginPromptInteraction")) {
-                loginInteraction = app.interactions.findWhere({dbid: "i" + app.get("loginPromptInteraction")});
-
-                path = $.mobile.path.parseLocation().pathname;
-                if (path.slice(-1) === "/") {
-                  path = path.slice(0, path.length - 1);
-                }
-
-                dfrd.resolve(model);
-                $.mobile.changePage(path + '/' + loginInteraction.id);
-                //if (loginInteraction) {
-                  //loginInteraction.set({parent: model.get("parent")});
-                  //loginInteraction.prepareForView(data).done(function () {
-                    //dfrd.resolve(loginInteraction);
-                  //});
-                //}
-              } else {
-                dfrd.resolve(model);
-              }
-            }
-          });
-        }
-
-        if (model.get("type") === "madl code") {
-          /*jslint unparam: true*/
-          API.getInteractionResult(model.id, this.get('args'), data.options).then(
-            function (result) {
-              model.save({
-                content: result,
-                contentTime: Date.now()
-              }, {
-                success: function () {
-                  dfrd.resolve(model);
-                },
-                error: function () {
-                  dfrd.resolve(model);
-                }
-              });
-            },
-            function (jqXHR, textStatus, errorThrown) {
-              dfrd.reject(errorThrown);
-            }
-          );
-          /*jslint unparam: false*/
-        }
-
-        if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {
-          model.set({
-            mojoType: "stars",
-            xml: model.get("xml").replace(/^stars:/, '')
-          });
-        }
-
-        if (model.get("type") === "xslt" && model.get("mojoType") === "stars") {
-          require(['model-application'], function (app) {
-            _.each(app.stars.where({type: model.get("xml")}), function (value) {
-              xml += '<' + value.get("type") + ' id="' + value.get("_id") + '">';
-
-              attrs = _.clone(value.attributes);
-              delete attrs._id;
-              delete attrs._rev;
-              delete attrs.type;
-              delete attrs.state;
-
-              _.each(attrs, function (value, key) {
-                xml += '<' + key + '>' + value + '</' + key + '>';
-              });
-
-              xml += '</' + value.get("type") + '>';
-            });
-            xml = '<stars>' + xml + '</stars>';
+          if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {
             model.set({
-              starXml: xml
+              mojoType: "stars",
+              xml: model.get("xml").replace(/^stars:/, '')
             });
-            dfrd.resolve(model);
-          });
-        }
+          }
 
-        if (model.get("type") !== "madl code" && model.id !== window.BMP.BIC.siteVars.answerSpace) {
-          dfrd.resolve(model);
-        }
+          if (model.get("type") === "xslt" && model.get("mojoType") === "stars") {
+            require(['model-application'], function (app) {
+              _.each(app.stars.where({type: model.get("xml")}), function (value) {
+                xml += '<' + value.get("type") + ' id="' + value.get("_id") + '">';
 
-        return dfrd.promise();
+                attrs = _.clone(value.attributes);
+                delete attrs._id;
+                delete attrs._rev;
+                delete attrs.type;
+                delete attrs.state;
+
+                _.each(attrs, function (value, key) {
+                  xml += '<' + key + '>' + value + '</' + key + '>';
+                });
+
+                xml += '</' + value.get("type") + '>';
+              });
+              xml = '<stars>' + xml + '</stars>';
+              model.set({
+                starXml: xml
+              });
+              resolve(model);
+            });
+          }
+
+          if (model.get("type") !== "madl code" && model.id !== window.BMP.BIC.siteVars.answerSpace) {
+            resolve(model);
+          }
+
+        });
       }
     });
 

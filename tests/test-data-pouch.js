@@ -2,7 +2,7 @@
 // define('api-php', ['../../scripts/api-php.js', 'jquery'], function (API, $) {
 //   "use strict";
 //   // var stub = sinon.stub(API),
-//   //   promise = $.Deferred().resolve().promise();
+//   //   promise = Promise.resolve();
 //   // stub.getAnswerSpace.returns(promise);
 //   // stub.getInteraction.returns(promise);
 //   // stub.getDataSuitcase.returns(promise);

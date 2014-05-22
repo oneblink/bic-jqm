@@ -554,38 +554,39 @@ define(
         mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
 
         getGeoLocation = function (options) {
-          var dfrd = new $.Deferred(),
-            defaultOptions = {
+          var defaultOptions = {
               enableHighAccuracy: true,
               maximumAge: 5 * 60 * 1000, // 5 minutes
               timeout: 5 * 1000 // 5 seconds
             };
           options = $.extend({}, defaultOptions, $.isPlainObject(options) ? options : {});
-          navigator.geolocation.getCurrentPosition(function (position) {
-            var coords = position.coords;
-            if ($.type(coords) === 'object') {
-              dfrd.resolve(coords);
-            } else {
-              dfrd.reject('GeoLocation error: blank location from browser / device');
-            }
-          }, function (error) {
-            var string;
-            switch (error.code) {
-            case error.PERMISSION_DENIED:
-              string = 'user has not granted permission';
-              break;
-            case error.PERMISSION_DENIED_TIMEOUT:
-              string = 'user did not grant permission in time';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              string = 'unable to determine position';
-              break;
-            default:
-              string = 'unknown error';
-            }
-            dfrd.reject('GeoLocation error: ' + string);
-          }, options);
-          return dfrd.promise();
+
+          return new Promise(function (resolve, reject) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+              var coords = position.coords;
+              if ($.type(coords) === 'object') {
+                resolve(coords);
+              } else {
+                reject('GeoLocation error: blank location from browser / device');
+              }
+            }, function (error) {
+              var string;
+              switch (error.code) {
+              case error.PERMISSION_DENIED:
+                string = 'user has not granted permission';
+                break;
+              case error.PERMISSION_DENIED_TIMEOUT:
+                string = 'user did not grant permission in time';
+                break;
+              case error.POSITION_UNAVAILABLE:
+                string = 'unable to determine position';
+                break;
+              default:
+                string = 'unknown error';
+              }
+              reject('GeoLocation error: ' + string);
+            }, options);
+          });
         };
 
         directionsDisplay = new google.maps.DirectionsRenderer();
@@ -609,7 +610,7 @@ define(
         if (mapDiv.attr('data-destination-address') === undefined || mapDiv.attr('data-origin-address') === undefined) {
           // Set the origin from attributes or GPS
           locationPromise = getGeoLocation();
-          locationPromise.done(function (location) {
+          locationPromise.then(function (location) {
             if (mapDiv.attr('data-origin-address') === undefined) {
               origin = new google.maps.LatLng(location.latitude, location.longitude);
               destination = mapDiv.attr('data-destination-address');
