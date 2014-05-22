@@ -90,6 +90,7 @@ module.exports = function (grunt) {
         options: {
           baseUrl: 'scripts',
           name: 'feature',
+          exclude: ['implementations'],
           out: 'build/feature.js',
           optimize: "none",
           paths: {
