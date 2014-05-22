@@ -1,6 +1,6 @@
 /*jslint indent:2*/
 /*global define, require*/ // Require.JS and AMD
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+/*global chai, describe, it, before, beforeEach, after, afterEach, expect, should, sinon*/
 // define('wrapper-backbone', [], function () {
 //   "use strict";
 //   return Backbone;

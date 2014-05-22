@@ -47,7 +47,6 @@ define(
         });
       },
 
-
       update: function (model) {
         var db, data;
         data = this;
