@@ -1,6 +1,6 @@
 /*jslint indent:2*/
 /*global define, require*/ // Require.JS and AMD
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+/*global chai, describe, it, before, beforeEach, after, afterEach, expect, should, sinon*/
 // define('wrapper-backbone', [], function () {
 //   "use strict";
 //   return Backbone;
@@ -23,16 +23,16 @@ define(function () {
       });
     });
 
-    describe('Rivets.js', function () {
+    describe('Promises', function () {
       before(function (done) {
-        require(['rivets'], function () {
+        require(['feature!promises'], function () {
           done();
         });
       });
 
-      it('should load successfully and export an Object', function () {
-        var rivets = require('rivets');
-        rivets.should.be.an.instanceOf(Object);
+      it('should load successfully and export a Function', function () {
+        var Promise = require('feature!promises');
+        Promise.should.be.an.instanceOf(Function);
       });
     });
 
@@ -46,6 +46,41 @@ define(function () {
       it('should load successfully and install a jQuery plugin', function () {
         var $ = require('jquery');
         $.fn.pickadate.should.be.an.instanceOf(Function);
+      });
+    });
+
+    describe('Forms v3 with jQuery Mobile', function () {
+      before(function (done) {
+        require(['BlinkForms'], function () {
+          done();
+        });
+      });
+
+      it('should load successfully and export an Object', function () {
+        var Forms = require('BlinkForms');
+        Forms.should.be.an.instanceOf(Object);
+      });
+    });
+
+    describe('BIC v3 + Forms v3', function () {
+      before(function (done) {
+        require(['bic', 'BlinkForms'], function () {
+          setTimeout(function () {
+            done();
+          }, 197);
+        });
+      });
+
+      it('BMP.Forms.getDefinition function should be defined', function () {
+        var Forms = require('BlinkForms');
+        Forms.getDefinition.should.be.an.instanceOf(Function);
+      });
+
+      it('BMP.Forms.getDefinition should return a promise', function () {
+        var Promise, Forms;
+        Forms = require('BlinkForms');
+        Promise = require('feature!promises');
+        Forms.getDefinition().should.be.an.instanceOf(Promise);
       });
     });
 

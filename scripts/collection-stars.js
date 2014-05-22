@@ -7,15 +7,16 @@ define(
 
       initialize: function () {
         var collection = this;
-        collection.initialize = new $.Deferred();
         collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Star');
-        collection.fetch({
-          success: function () {
-            collection.initialize.resolve();
-          },
-          error: function () {
-            collection.initialize.reject();
-          }
+        collection.initialize = new Promise(function (resolve, reject) {
+          collection.fetch({
+            success: function () {
+              resolve();
+            },
+            error: function () {
+              reject();
+            }
+          });
         });
       },
 

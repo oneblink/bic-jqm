@@ -1,10 +1,10 @@
 {
   "name": "BICv3",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.0.10",
+  "version": "3.1.0",
   "main": "Gruntfile.js",
   "dependencies": {},
-  "repository": "bmp",
+  "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-jslint": "~1.1",
@@ -14,7 +14,7 @@
     "grunt-contrib-clean": "~0.5",
     "grunt-contrib-copy": "~0.5",
     "grunt-contrib-connect": "~0.7",
-    "grunt-contrib-uglify": "~0.3",
+    "grunt-contrib-uglify": "~0.4",
     "grunt-concurrent": "~0.5",
     "grunt-saucelabs": "~5.1"
   }

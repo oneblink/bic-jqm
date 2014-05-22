@@ -38,10 +38,8 @@ define(
 
     // New sync method
     Backbone.dataSync = function (method, model, options) {
-      var data, dfrd, promise;
+      var data, promise;
       data = model.data || model.collection.data;
-      dfrd = new $.Deferred();
-      promise = dfrd.promise();
 
       switch (method) {
       case "read":
@@ -60,6 +58,8 @@ define(
       case "delete":
         promise = data['delete'](model);
         break;
+      default:
+        promise = Promise.reject(new Error('unknown method'));
       }
 
       promise.then(function (response) {

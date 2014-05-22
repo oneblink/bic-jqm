@@ -10,6 +10,10 @@ Core Technologies
 * Backbone
 * RequireJS
 
+## Version Numbers
+
+This project is NOT versioned according to Semantic Versioning. Rather, it is versioned according to our [Shifted Semantic Versioning](https://github.com/blinkmobile/docs/wiki/Process:-Semantic-Versioning#shifted-semantic-versioning).
+
 Project Setup
 ---------------
 The project should run fine as is, though you may wish to improve, optimize, test and otherwise work on this.
@@ -70,3 +74,11 @@ The entry point for the application is scripts/main.js
 Main bootstraps the application and sets up the application model (scripts/model-application.js).
 
 The application model then takes over and co-ordinates the rest of the application lifecycle. If you need to work out what is happening somewhere in the application, you can generally follow the flow of logic from the application model outwards.
+
+## Contribution
+
+Pull requests are welcome. But first, familiarise yourself with our guidelines (they are short):
+
+- https://github.com/blinkmobile/docs/wiki/Process:-Git-Flow
+
+- https://github.com/blinkmobile/docs/wiki/Code-Style:-JavaScript

@@ -2,6 +2,7 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define('bic', [
+            'feature!promises',
             'jquery',
             'underscore',
             'backbone',
@@ -15,4 +16,4 @@
     } else {
         root.bic = factory();
     }
-}(this, function ($, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr) {
+}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr) {

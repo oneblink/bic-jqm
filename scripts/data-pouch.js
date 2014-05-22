@@ -6,11 +6,28 @@ define(
     "use strict";
 
     var Data = function (name) {//, apiTrigger, apiCall, apiParameters) {
+      var db;
       if (this.dbAdapter && name) {
         this.name = name;
       } else {
         this.name = 'BlinkMobile';
       }
+      this.getDB = function () {
+        var me = this;
+        if (db) {
+          return Promise.resolve(db);
+        }
+        return new Promise(function (resolve, reject) {
+          var pouch = new Pouch(me.dbAdapter() + me.name, function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              db = pouch;
+              resolve(db);
+            }
+          });
+        });
+      };
     };
 
     _.extend(Data.prototype, {
@@ -26,124 +43,104 @@ define(
       },
 
       create: function (model) {
-        var dfrd, db, data;
-        dfrd = new $.Deferred();
+        var data;
         data = this;
-        db = new Pouch(this.dbAdapter() + this.name, function (err) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
             db.post(model.toJSON(), function (err, response) {
               if (err) {
-                dfrd.reject(err);
+                reject(err);
               } else {
-                data.read(response).done(function (doc) {
-                  dfrd.resolve(doc);
+                data.read(response).then(function (doc) {
+                  resolve(doc);
                 });
               }
             });
-          }
+          });
         });
-        return dfrd.promise();
       },
 
-
       update: function (model) {
-        var dfrd, db, data;
-        dfrd = new $.Deferred();
+        var data;
         data = this;
-        db = new Pouch(this.dbAdapter() + this.name, function (err) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
             db.put(model.toJSON(), function (err) {
               if (err) {
-                dfrd.reject(err);
+                reject(err);
               } else {
-                data.read(model).done(function (doc) {
-                  dfrd.resolve(doc);
+                data.read(model).then(function (doc) {
+                  resolve(doc);
                 });
               }
             });
-          }
+          });
         });
-        return dfrd.promise();
       },
 
       read: function (model) {
-        var dfrd, db;
-        dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
             db.get(model.id, function (err, doc) {
               if (err) {
-                dfrd.reject(err);
+                reject(err);
               } else {
-                dfrd.resolve(doc);
+                resolve(doc);
               }
             });
-          }
+          });
         });
-        return dfrd.promise();
       },
 
       readAll: function () {
-        var dfrd, db;
-        dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
             db.allDocs({include_docs: true}, function (err, response) {
               if (err) {
-                dfrd.reject(err);
+                reject(err);
               } else {
-                dfrd.resolve(_.map(response.rows, function (value) {
+                resolve(_.map(response.rows, function (value) {
                   return value.doc;
                 }));
               }
             });
-          }
+          });
         });
-        return dfrd.promise();
       },
 
       'delete': function (model) {
-        var dfrd, db;
-        dfrd = new $.Deferred();
-        db = new Pouch(this.dbAdapter() + this.name, function (err) {
-          if (err) {
-            dfrd.reject(err);
-          } else {
+        return this.getDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
             db.get(model.id, function (err, doc) {
               if (err) {
-                dfrd.reject(err);
+                reject(err);
               } else {
                 db.remove(doc, function (err, doc) {
                   if (err) {
-                    dfrd.reject(err);
+                    reject(err);
                   } else {
-                    dfrd.resolve(doc);
+                    resolve(doc);
                   }
                 });
               }
             });
-          }
+          });
         });
-        return dfrd.promise();
       },
 
       deleteAll: function () {
-        var dfrd;
-        dfrd = new $.Deferred();
+        var data;
+        data = this;
 
-        Pouch.destroy(this.dbAdapter() + this.name, function (err, info) {
-          dfrd.resolve();
+        return new Promise(function (resolve, reject) {
+          Pouch.destroy(data.dbAdapter() + data.name, function (err, info) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
         });
-
-        return dfrd.promise();
       }
     });
 

@@ -5,7 +5,8 @@ define(
     var Application = Backbone.Model.extend({
 
       initialize: function () {
-        var app = this;
+        var done, app;
+        app = this;
         BMP.FileInput.initialize();
         require(['router'], function (router) {
           app.set({
@@ -35,16 +36,9 @@ define(
             }
           });
 
-
-          $.when(
-            app.interactions.initialize,
-            app.datasuitcases.initialize,
-            app.forms.initialize,
-            app.pending.initialize,
-            app.stars.initialize
-          ).always(function () {
+          done = function () {
             if (navigator.onLine) {
-              app.populate().done(function () {
+              app.populate().then(function () {
                 app.initialRender();
               });
             } else {
@@ -53,13 +47,21 @@ define(
                   app.initialRender();
                 },
                 error: function () {
-                  app.populate().done(function () {
+                  app.populate().then(function () {
                     app.initialRender();
                   });
                 }
               });
             }
-          });
+          };
+
+          Promise.all([
+            app.interactions.initialize,
+            app.datasuitcases.initialize,
+            app.forms.initialize,
+            app.pending.initialize,
+            app.stars.initialize
+          ]).then(done, done);
         });
       },
 
@@ -70,76 +72,74 @@ define(
       },
 
       populate: function () {
-        var app = this,
-          dfrd = new $.Deferred(),
-          promise = dfrd.promise();
+        var app = this;
 
-        API.getAnswerSpaceMap().then(
-          function (data) {
-            var models = [];
-            _.each(data, function (value, key) {
-              var model;
-              if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
-                model = value.pertinent;
-                model._id = model.name.toLowerCase();
-                model.dbid = key;
-                models.push(model);
-              }
-              if (key.substr(0, 1) === 'a') {
-                model = {
-                  _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-                  dbid: key
-                };
-                models.push(model);
-
-                app.save(value.pertinent);
-              }
-            }, app);
-
-            app.interactions.set(models).save();
-            _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-              if (!app.datasuitcases.get(element)) {
-                app.datasuitcases.create({_id: element}, {success: function (model) {
-                  model.populate();
-                }});
-              } else {
-                if (navigator.onLine) {
-                  app.datasuitcases.get(element).populate();
+        return new Promise(function (resolve, reject) {
+          API.getAnswerSpaceMap().then(
+            function (data) {
+              var models = [];
+              _.each(data, function (value, key) {
+                var model;
+                if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
+                  model = value.pertinent;
+                  model._id = model.name.toLowerCase();
+                  model.dbid = key;
+                  models.push(model);
                 }
-              }
-            });
+                if (key.substr(0, 1) === 'a') {
+                  model = {
+                    _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
+                    dbid: key
+                  };
+                  models.push(model);
 
-            app.trigger("initialize");
-            dfrd.resolve();
-          },
-          function () {
-            dfrd.reject();
-          }
-        );
-        return promise;
+                  app.save(value.pertinent);
+                }
+              }, app);
+
+              app.interactions.set(models).save();
+              _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
+                if (!app.datasuitcases.get(element)) {
+                  app.datasuitcases.create({_id: element}, {success: function (model) {
+                    model.populate();
+                  }});
+                } else {
+                  if (navigator.onLine) {
+                    app.datasuitcases.get(element).populate();
+                  }
+                }
+              });
+
+              app.trigger("initialize");
+              resolve();
+            },
+            function () {
+              reject();
+            }
+          );
+        });
       },
 
       checkLoginStatus: function () {
         //false
-        var app = this,
-          dfrd = $.Deferred();
+        var app = this;
 
-        API.getLoginStatus().then(function (data) {
-          var status = data.status || data;
-          if (app.get('loginStatus') !== status) {
-            app.interactions.reset();
-            app.datasuitcases.reset();
-            app.forms.reset();
-            app.populate().then(function () {
-              app.set({loginStatus: status});
-              dfrd.resolve();
-            });
-          } else {
-            dfrd.resolve();
-          }
+        return new Promise(function (resolve) {
+          API.getLoginStatus().then(function (data) {
+            var status = data.status || data;
+            if (app.get('loginStatus') !== status) {
+              app.interactions.reset();
+              app.datasuitcases.reset();
+              app.forms.reset();
+              app.populate().then(function () {
+                app.set({loginStatus: status});
+                resolve();
+              });
+            } else {
+              resolve();
+            }
+          });
         });
-
-        return dfrd.promise();
       },
 
       initialRender: function () {

@@ -38,6 +38,7 @@ module.exports = function (grunt) {
       all: {
         src: [
           'scripts/**/*.js',
+          '!scripts/frag/05-implementations.js',
           '!**/vendor/**/*'
         ],
         directives: {
@@ -85,25 +86,37 @@ module.exports = function (grunt) {
     clean: ['build'],
 
     requirejs: {
+      feature: {
+        options: {
+          baseUrl: 'scripts',
+          name: 'feature',
+          exclude: ['implementations'],
+          out: 'build/feature.js',
+          optimize: "none",
+          paths: {
+            feature: '../bower_components/amd-feature/feature'
+          }
+        }
+      },
       compile: {
         options: {
           baseUrl: 'scripts',
-          name: 'vendor/almond',
+          name: '../bower_components/almond/almond',
           include: ['main', 'router'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
             pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
-            text: 'vendor/text',
-            domReady: 'vendor/domReady',
-            feature: 'vendor/feature',
+            text: '../bower_components/requirejs-text/text',
+            domReady: '../bower_components/requirejs-domready/domReady',
+            feature: '../bower_components/amd-feature/feature',
             'es5-shim': 'empty:'
           },
           wrap: {
             startFile: [
               'scripts/frag/00-config.js',
-              'scripts/vendor/feature.js',
               'scripts/frag/05-implementations.js',
+              'build/feature.js',
               'scripts/frag/10-start.frag'
             ],
             endFile: 'scripts/frag/99-end.frag'
@@ -115,15 +128,14 @@ module.exports = function (grunt) {
       formsdeps: {
         options: {
           baseUrl: "bower_components",
-          include: ['picker.date', 'picker.time', 'moment', 'rivets'],
+          include: ['picker.date', 'picker.time', 'moment'],
           out: 'js/formsdeps.min.js',
           paths: {
-            'jquery': 'empty:',
+            jquery: 'empty:',
             "picker": 'pickadate/lib/picker',
             "picker.date": 'pickadate/lib/picker.date',
             "picker.time": 'pickadate/lib/picker.time',
-            "moment": 'momentjs/min/moment.min',
-            "rivets": "rivets/dist/rivets"
+            "moment": 'momentjs/min/moment.min'
           }
         }
       },
