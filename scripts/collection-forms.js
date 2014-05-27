@@ -37,7 +37,7 @@ define(
           collection.data.deleteAll();
         });
 
-        BlinkForms.getDefinition = function (name, action) {
+        BMP.Forms.getDefinition = function (name, action) {
           return new Promise(function (resolve) {
             require(['model-application'], function (app) {
               var def = app.forms.get(name),
