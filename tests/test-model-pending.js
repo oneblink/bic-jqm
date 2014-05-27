@@ -1,17 +1,14 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
+
   describe('Model - Pending', function () {
-    var Model;
+    var injector, Model;
 
     before(function (done) {
-      require(['model-pending'], function (rModel) {
-        Model = rModel;
+      injector = new Squire();
+
+      injector.require(['../scripts/model-pending'], function (required) {
+        Model = required;
         done();
       });
     });

@@ -1,16 +1,13 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
+
   describe('View - Star - jQuery Mobile Implementation', function () {
-    var View;
+    var injector, View;
 
     before(function (done) {
-      require(['view-star'], function (rView) {
+      injector = new Squire();
+
+      injector.require(['../scripts/view-star'], function (rView) {
         View = rView;
         done();
       });

@@ -1,128 +1,20 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('model-application-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('model-form-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('model-star-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('interaction.mustache', [], function () {
-//   "use strict";
-//   return "String";
-// });
-
-// define('view-interaction-mobile', [], function () {
-//   "use strict";
-//   return Backbone.View.extend();
-// });
-
-// define('view-star-mobile', [], function () {
-//   "use strict";
-//   return Backbone.View.extend();
-// });
-
-// define('collection-interactions-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('jquerymobile', [], function () {
-//   "use strict";
-//   console.log("Subtituting jQuery Mobile");
-// });
-
-// define('BlinkForms', [], function () {
-//   "use strict";
-//   return {};
-// });
-
-// define('text!template-interaction.mustache', [], function () {
-//   "use strict";
-//   return "string";
-// });
-
-// define('text!template-inputPrompt.mustache', [], function () {
-//   "use strict";
-//   return "string";
-// });
-
-// define('text!template-form.mustache', [], function () {
-//   "use strict";
-//   return "string";
-// });
-
-// define('text!template-category-list.mustache', [], function () {
-//   "use strict";
-//   return "string";
-// });
-
-// define('text!template-pending-mobile.mustache', [], function () {
-//   "use strict";
-//   return "string";
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('View - Interaction - jQuery Mobile Implementation', function () {
-    var View, originalApp, originalStarM, originalStarV;
+    var injector, View;
 
     before(function (done) {
-      require(['model-application', 'model-star', 'view-star'], function (app, StarModel, StarView) {
+      injector = new Squire();
 
-        originalApp = app;
-        originalStarM = StarModel;
-        originalStarV = StarView;
-        requirejs.undef('model-application');
-        requirejs.undef('model-star');
-        requirejs.undef('view-star');
+      injector.mock('model-application', function (param) {console.log(param)});
+      injector.mock('model-star', function (param) {console.log(param)});
+      injector.mock('view-star', function (param) {console.log(param)});
 
-        define('model-application', [], function () {
-          return function (param) {console.log(param)};
-        });
-
-        define('model-star', [], function () {
-          return function (param) {console.log(param)};
-        });
-
-        define('model-view', [], function () {
-          return function (param) {console.log(param)};
-        });
-
-        require(['view-interaction'], function (rView) {
-          View = rView;
+      injector.require(['../bower_components/requirejs-text/text'], function (text) {
+        injector.require(['../scripts/view-interaction'], function (required) {
+          View = required;
           done();
         });
-      });
-    });
-
-    after(function () {
-      requirejs.undef('model-application');
-      requirejs.undef('model-star');
-      requirejs.undef('view-star');
-      
-      define('model-application', ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars'], function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection) {
-        return originalApp;
-      });
-
-      define('model-star', [], function () {
-        return originalStarM;
-      });
-
-      define('model-view', [], function () {
-        return originalStarV;
       });
     });
 

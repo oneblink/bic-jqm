@@ -1,26 +1,16 @@
-/*global chai, describe, it, before, beforeEach, after, afterEach, expect, should, sinon*/
-/*global createContext*/ // Require.JS context helper from index.html
-// define('api-php', ['../../scripts/api-php.js', 'jquery'], function (API, $) {
-//   "use strict";
-//   // var stub = sinon.stub(API),
-//   //   promise = Promise.resolve();
-//   // stub.getAnswerSpace.returns(promise);
-//   // stub.getInteraction.returns(promise);
-//   // stub.getDataSuitcase.returns(promise);
-//   // stub.getForm.returns(promise);
-//   // return stub;
-// });
-
-define(['feature!promises'], function (Promise) {
+define(['Squire', 'feature!promises'], function (Squire, Promise) {
   "use strict";
-
-  var context;
+  
+  var injector;
 
   if (!window.Promise) {
     window.Promise = Promise;
   }
 
-  context = createContext({});
+  before(function (done) {
+    injector = new Squire();
+    done();
+  });
 
   describe('Data Abstraction Layer', function () {
 
@@ -31,7 +21,7 @@ define(['feature!promises'], function (Promise) {
         var Data, data, Model, id;
 
         before(function (done) {
-          context([adapter, 'model-pending'], function (klass, model) {
+          injector.require([adapter, 'model-pending'], function (klass, model) {
             Data = klass;
             Model = model;
             done();

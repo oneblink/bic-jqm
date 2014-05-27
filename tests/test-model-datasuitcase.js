@@ -10,31 +10,21 @@
 //   return stub;
 // });
 
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - DataSuitcase', function () {
-    var Model, originalAPI;
+    var Model;
 
     before(function (done) {
-      require(['api'], function (API) {
-
-        originalAPI = API;
-        requirejs.undef('api');
-
-        define('api', [], function () {
-          return function (param) {console.log(param)};
-        });
-        
-        require(['model-datasuitcase'], function (rModel) {
-          Model = rModel;
-          done();
-        });
+      var injector = new Squire();
+      injector.mock('api', {})
+      injector.require(['../scripts/model-datasuitcase'], function (model) {
+        Model = model;
+        done();
+      }, function (err) {
+        console.log(err);
+        done();
       });
-    });
-
-    after(function () {
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
     });
 
     it("should exist", function () {

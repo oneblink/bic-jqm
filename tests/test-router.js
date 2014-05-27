@@ -1,26 +1,25 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Router - jQuery Mobile Implementation', function () {
-    var context,
-      stubs,
-      model,
-      collection;
+    var injector, model, collection;
 
-      model = function (id) {
-        return {
-          id: id,
-          prepareForView: sinon.stub().returns({
-            then: function () {return {}}
-          }),
-          set: sinon.stub().returns({})
+      before(function (done) {
+
+        model = function (id) {
+          return {
+            id: id,
+            prepareForView: sinon.stub().returns({
+              then: function () {return {}}
+            }),
+            set: sinon.stub().returns({})
+          }
         }
-      }
 
-      collection = {};
+        collection = {};
 
-      stubs = {
-        'model-application': {
+        injector = new Squire();
+        injector.mock('model-application', {
           set: function () {return {}},
           interactions: {
             get: function (id) {
@@ -31,13 +30,13 @@ define(function () {
             },
             set: function () {return {}}
           }
-        },
-        'view-interaction': {
+        });
+        injector.mock('view-interaction', {
           render: function () {return {}}
-        }
-      };
+        });
+        done();
 
-      context = createContext(stubs);
+      });
 
     // THIS HAS BEEN MOVED TO MODEL-APPLICATION!!!
     describe('initialize()', function () {
@@ -57,7 +56,7 @@ define(function () {
 
       beforeEach(function (done) {
         require(['feature!promises'], function (Promise) {
-          context(['router'], function (module) {
+          injector.require(['../scripts/router'], function (module) {
             testmodel = model(1);
             sinon.stub(module, "inheritanceChain", function () {return testmodel});
             sinon.stub(module, "parseArgs", function () {return {}});
@@ -111,7 +110,7 @@ define(function () {
       var router;
 
       beforeEach(function (done) {
-        context(['router'], function (module) {
+        injector.require(['../scripts/router'], function (module) {
           router = module;
           done();
         });

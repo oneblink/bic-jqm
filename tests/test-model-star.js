@@ -1,25 +1,14 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   Backbone.sync = sinon.spy();
-//   return Backbone;
-// });
-
-define('model-application-mobile', [], function () {
-  "use strict";
-  var app = {
-    stars: new Backbone.Collection()
-  };
-  return app;
-});
-
-define(function () {
+define(['Squire'], function (Squire) {
     "use strict";
     describe('Model - Star', function () {
-      var Model;
+      var injector, Model;
 
       before(function (done) {
-        require(['model-star'], function (rModel) {
+        injector = new Squire();
+
+        injector.mock('model-application', Backbone.Model);
+
+        injector.require(['../scripts/model-star'], function (rModel) {
           Model = rModel;
           done();
         });
@@ -88,7 +77,7 @@ define(function () {
         });
 
         it("should destroy itself when state changed to false", function (done) {
-          require(['model-application-mobile'], function (app) {
+          injector.require(['model-application'], function (app) {
             var model = new Model({state: true});
             model.on("destroy", function () {
               done();  

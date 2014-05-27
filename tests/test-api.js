@@ -1,10 +1,11 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define(function () {
+define(['Squire'], function (Squire) {
   describe('API Facade', function () {
     var server, handler, api;
 
     before(function (done) {
-      require(['api'], function (rapi) {
+      var injector = new Squire();
+      injector.require(['../scripts/api'], function (rapi) {
         api = rapi;
 
         server = sinon.fakeServer.create();
@@ -28,6 +29,9 @@ define(function () {
           status.should.be.string('success');
           xhr.should.be.an('object');
         };
+        done();
+      }, function (err) {
+        console.log(err);
         done();
       });
     });
