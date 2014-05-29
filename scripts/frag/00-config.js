@@ -85,10 +85,6 @@
 
 require.config({
   shim: {
-    'BlinkForms': {
-      deps: ['signaturepad', 'BMP.Blobs'],
-      exports: 'BMP.Forms'
-    },
     'pouchdb': {
       exports: 'Pouch'
     },
