@@ -191,7 +191,7 @@ define(
 
           if (model.get("type") === "madl code") {
             /*jslint unparam: true*/
-            API.getInteractionResult(model.id, this.get('args'), data.options).then(
+            API.getInteractionResult(model.id, model.get('args'), data.options).then(
               function (result) {
                 model.save({
                   content: result,
