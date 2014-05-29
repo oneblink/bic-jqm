@@ -23,7 +23,13 @@
         paths: {
           feature: '/bower_components/amd-feature/feature',
           implementations: 'implementations',
-          Squire: '/bower_components/squire/src/Squire'
+          Squire: '/bower_components/squire/src/Squire',
+          pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly'
+        },
+        shim: {
+          pouchdb: {
+            exports: 'Pouch'
+          }
         }
       });
       mocha.setup('bdd');
@@ -73,7 +79,7 @@
       'test-collection-interactions.js',
       'test-collection-pending.js',
       'test-collection-stars.js',
-//        'test-data.js',
+      'test-data.js',
       'test-model-application.js',
       'test-model-datasuitcase.js',
       'test-model-form.js',

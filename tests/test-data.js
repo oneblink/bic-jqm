@@ -1,16 +1,9 @@
 define(['Squire', 'feature!promises'], function (Squire, Promise) {
   "use strict";
 
-  var injector;
-
   if (!window.Promise) {
     window.Promise = Promise;
   }
-
-  before(function (done) {
-    injector = new Squire();
-    done();
-  });
 
   describe('Data Abstraction Layer', function () {
 
@@ -18,12 +11,40 @@ define(['Squire', 'feature!promises'], function (Squire, Promise) {
 
       describe('adapter=' + adapter, function () {
 
-        var Data, data, Model, id;
+        var injector, Data, data, Model, id;
 
         before(function (done) {
-          injector.require([adapter, 'model-pending'], function (klass, model) {
+          injector = new Squire();
+
+          //injector.mock('pouchdb', {
+            //destroy: function () {},
+            //put: function () {},
+            //post: function () {},
+            //get: function () {},
+            //remove: function () {},
+            //bulkDocs: function () {},
+            //allDocs: function () {},
+            //changes: function () {},
+            //replicate: function () {},
+            //sync: function () {},
+            //putAttachment: function () {},
+            //getAttachment: function () {},
+            //removeAttachment: function () {},
+            //query: function () {},
+            //viewCleanup: function () {},
+            //info: function () {},
+            //compact: function () {},
+            //revsDiff: function () {},
+            //on: function () {},
+            //plugin: function () {}
+          //});
+
+          Model = Backbone.Model.extend({
+            idAttribute: "_id"
+          });
+
+          injector.require(['/scripts/' + adapter + '.js'], function (klass) {
             Data = klass;
-            Model = model;
             done();
           });
         });
