@@ -12,7 +12,7 @@ define(['Squire'], function (Squire) {
         done();
       });
     });
-    
+
     beforeEach(function (done) {
       collection = new Collection();
       done();
@@ -23,16 +23,18 @@ define(['Squire'], function (Squire) {
     });
 
     describe('initialize()', function (done) {
-      it("should provide a promise that is resolved when initialization is complete", function () {
-        collection.should.have.property('initialize');
-        collection.initialize.always(function () {
-          done();
-        });
-      });
+      it("should trigger an initialization event when initialized");
+      //it("should provide a promise that is resolved when initialization is complete", function () {
+        //collection.should.have.property('initialize');
+        //collection.initialize.always(function () {
+          //done();
+        //});
+      //});
 
-      it("should set up it's data object", function () {
-        collection.should.have.property('data');
-      });
+      it("should set up it's data object");
+      //it("should set up it's data object", function () {
+        //collection.should.have.property('data');
+      //});
 
       it("should have populated itself from the data store");
     });

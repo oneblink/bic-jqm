@@ -1,6 +1,6 @@
 define(['Squire', 'feature!promises'], function (Squire, Promise) {
   "use strict";
-  
+
   var injector;
 
   if (!window.Promise) {

@@ -5,8 +5,8 @@ define(['Squire'], function (Squire) {
 
     before(function (done) {
       var injector = new Squire();
-      injector.require(['../scripts/api'], function (rapi) {
-        api = rapi;
+      injector.require(['../scripts/api'], function (required) {
+        api = required;
 
         server = sinon.fakeServer.create();
         server.respondWith('/_R_/common/3/xhr/GetConfig.php', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);

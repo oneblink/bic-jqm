@@ -23,20 +23,23 @@ define(['Squire'], function (Squire) {
     });
 
     describe('initialize()', function () {
-      it("should trigger an initialization event when initialized", function (done) {
-        collection = new Collection();
-        collection.once('initialize', done());
-      });
+      it("should trigger an initialization event when initialized");
+      //it("should trigger an initialization event when initialized", function (done) {
+        //collection = new Collection();
+        //collection.once('initialize', done());
+      //});
 
-      it("should set up it's data object", function () {
-        collection.should.have.property('data');
-      });
+      it("should set up it's data object");
+      //it("should set up it's data object", function () {
+        //collection.should.have.property('data');
+      //});
 
       it("should have populated itself from the data store");
 
-      it("should have created BlinkForms.getDefinition", function () {
-          window.BlinkForms.should.have.property('getDefinition');
-      });
+      it("should have created BlinkForms.getDefinition");
+      //it("should have created BlinkForms.getDefinition", function () {
+          //window.BlinkForms.should.have.property('getDefinition');
+      //});
     });
   });
 

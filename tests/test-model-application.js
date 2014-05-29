@@ -30,7 +30,7 @@ define(['Squire'], function (Squire) {
     });
 
     it("should be an instance of backbone model", function () {
-      Model.should.be.an.instanceOf(Backbone.Model);
+      model.should.be.an.instanceOf(Backbone.Model);
     });
 
     describe('initialize()', function () {
