@@ -9,6 +9,13 @@ define(['Squire'], function (Squire) {
       injector.mock('model-application', function (param) {console.log(param)});
       injector.mock('model-star', function (param) {console.log(param)});
       injector.mock('view-star', function (param) {console.log(param)});
+      injector.mock('text', function (param) {console.log(param)});
+      injector.mock('text!template-interaction.mustache', 'string');
+      injector.mock('text!template-inputPrompt.mustache', 'string');
+      injector.mock('text!template-form.mustache', 'string');
+      injector.mock('text!template-category-list.mustache', 'string');
+      injector.mock('text!template-pending.mustache', 'string');
+      injector.mock('text!template-popup.mustache', 'string');
 
       injector.require(['../bower_components/requirejs-text/text'], function (text) {
         injector.require(['../scripts/view-interaction'], function (required) {
