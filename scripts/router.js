@@ -3,6 +3,10 @@ define(
   function (app, InteractionView) {
     "use strict";
     var Router = Backbone.Router.extend({
+      initialize: function () {
+        app.router = this;
+      },
+
       routeRequest: function (data) {
         var path = $.mobile.path.parseUrl(data.dataUrl),
           model;

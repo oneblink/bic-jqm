@@ -1,55 +1,17 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('model-application-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('jquerymobile', [], function () {
-//   "use strict";
-//   console.log("Subtituting jQuery Mobile");
-// });
-
-// define('BlinkForms', [], function () {
-//   "use strict";
-//   return {};
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - Form', function () {
-    var Model, originalAPI;
+    var injector, Model;
 
     before(function (done) {
-      require(['api'], function (API) {
+      injector = new Squire();
 
-        originalAPI = API;
-        requirejs.undef('api');
-
-        define('api', [], function () {
-          return function (param) {console.log(param)};
-        });
+      injector.mock('api', function (param) {console.log(param)});
         
-        require(['model-form'], function (rModel) {
-          Model = rModel;
-          done();
-        });
+      injector.require(['../scripts/model-form'], function (required) {
+        Model = required;
+        done();
       });
-    });
-
-    after(function () {
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
     });
 
     it("should exist", function () {

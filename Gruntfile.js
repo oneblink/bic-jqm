@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['connect', 'watch'],
+      background: ['connect:server', 'watch'],
       options: {
         logConcurrentOutput: true
       }

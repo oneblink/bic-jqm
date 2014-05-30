@@ -8,61 +8,58 @@ define(
         var done, app;
         app = this;
         BMP.FileInput.initialize();
-        require(['router'], function (router) {
-          app.set({
-            _id: window.BMP.BIC.siteVars.answerSpace
-          });
-
-          app.on('change', app.update);
-
-          app.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
-
-          app.interactions = new InteractionCollection();
-          app.datasuitcases = new DataSuitcaseCollection();
-          app.forms = new FormCollection();
-          app.pending = new PendingCollection();
-          app.stars = new StarsCollection();
-
-          app.router = router;
-          $(document).on('pagebeforeload', function (e, data) {
-            e.preventDefault();
-            $.mobile.loading('show');
-            if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
-              app.checkLoginStatus().then(function () {
-                app.router.routeRequest(data);
-              });
-            } else {
-              app.router.routeRequest(data);
-            }
-          });
-
-          done = function () {
-            if (navigator.onLine) {
-              app.populate().then(function () {
-                app.initialRender();
-              });
-            } else {
-              app.fetch({
-                success: function () {
-                  app.initialRender();
-                },
-                error: function () {
-                  app.populate().then(function () {
-                    app.initialRender();
-                  });
-                }
-              });
-            }
-          };
-
-          Promise.all([
-            app.interactions.initialize,
-            app.datasuitcases.initialize,
-            app.forms.initialize,
-            app.pending.initialize,
-            app.stars.initialize
-          ]).then(done, done);
+        app.set({
+          _id: window.BMP.BIC.siteVars.answerSpace
         });
+
+        app.on('change', app.update);
+
+        app.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
+
+        app.interactions = new InteractionCollection();
+        app.datasuitcases = new DataSuitcaseCollection();
+        app.forms = new FormCollection();
+        app.pending = new PendingCollection();
+        app.stars = new StarsCollection();
+
+        $(document).on('pagebeforeload', function (e, data) {
+          e.preventDefault();
+          $.mobile.loading('show');
+          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
+            app.checkLoginStatus().then(function () {
+              app.router.routeRequest(data);
+            });
+          } else {
+            app.router.routeRequest(data);
+          }
+        });
+
+        done = function () {
+          if (navigator.onLine) {
+            app.populate().then(function () {
+              app.initialRender();
+            });
+          } else {
+            app.fetch({
+              success: function () {
+                app.initialRender();
+              },
+              error: function () {
+                app.populate().then(function () {
+                  app.initialRender();
+                });
+              }
+            });
+          }
+        };
+
+        Promise.all([
+          app.interactions.initialize,
+          app.datasuitcases.initialize,
+          app.forms.initialize,
+          app.pending.initialize,
+          app.stars.initialize
+        ]).then(done, done);
       },
 
       idAttribute: "_id",

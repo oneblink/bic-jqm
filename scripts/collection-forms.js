@@ -1,7 +1,7 @@
 /*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
-  ['model-form', 'feature!data'],
-  function (Form, Data) {
+  ['model-form', 'feature!data', 'api'],
+  function (Form, Data, API) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Form,
@@ -20,18 +20,16 @@ define(
           });
         });
 
-        require(['api'], function (API) {
-          API.getForm().then(function (data) {
-            _.each(data, function (recordData) {
-              var record = JSON.parse(recordData),
-                preExisting = collection.findWhere({_id: record['default'].name});
-              if (preExisting) {
-                preExisting.set(record).save();
-              } else {
-                record._id = record['default'].name;
-                collection.create(record);
-              }
-            });
+        API.getForm().then(function (data) {
+          _.each(data, function (recordData) {
+            var record = JSON.parse(recordData),
+              preExisting = collection.findWhere({_id: record['default'].name});
+            if (preExisting) {
+              preExisting.set(record).save();
+            } else {
+              record._id = record['default'].name;
+              collection.create(record);
+            }
           });
         });
 

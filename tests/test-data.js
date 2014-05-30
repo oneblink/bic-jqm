@@ -1,26 +1,9 @@
-/*global chai, describe, it, before, beforeEach, after, afterEach, expect, should, sinon*/
-/*global createContext*/ // Require.JS context helper from index.html
-// define('api-php', ['../../scripts/api-php.js', 'jquery'], function (API, $) {
-//   "use strict";
-//   // var stub = sinon.stub(API),
-//   //   promise = Promise.resolve();
-//   // stub.getAnswerSpace.returns(promise);
-//   // stub.getInteraction.returns(promise);
-//   // stub.getDataSuitcase.returns(promise);
-//   // stub.getForm.returns(promise);
-//   // return stub;
-// });
-
-define(['feature!promises'], function (Promise) {
+define(['Squire', 'feature!promises'], function (Squire, Promise) {
   "use strict";
-
-  var context;
 
   if (!window.Promise) {
     window.Promise = Promise;
   }
-
-  context = createContext({});
 
   describe('Data Abstraction Layer', function () {
 
@@ -28,12 +11,40 @@ define(['feature!promises'], function (Promise) {
 
       describe('adapter=' + adapter, function () {
 
-        var Data, data, Model, id;
+        var injector, Data, data, Model, id;
 
         before(function (done) {
-          context([adapter, 'model-pending'], function (klass, model) {
+          injector = new Squire();
+
+          //injector.mock('pouchdb', {
+            //destroy: function () {},
+            //put: function () {},
+            //post: function () {},
+            //get: function () {},
+            //remove: function () {},
+            //bulkDocs: function () {},
+            //allDocs: function () {},
+            //changes: function () {},
+            //replicate: function () {},
+            //sync: function () {},
+            //putAttachment: function () {},
+            //getAttachment: function () {},
+            //removeAttachment: function () {},
+            //query: function () {},
+            //viewCleanup: function () {},
+            //info: function () {},
+            //compact: function () {},
+            //revsDiff: function () {},
+            //on: function () {},
+            //plugin: function () {}
+          //});
+
+          Model = Backbone.Model.extend({
+            idAttribute: "_id"
+          });
+
+          injector.require(['/scripts/' + adapter + '.js'], function (klass) {
             Data = klass;
-            Model = model;
             done();
           });
         });

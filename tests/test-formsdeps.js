@@ -83,6 +83,5 @@ define(function () {
         Forms.getDefinition().should.be.an.instanceOf(Promise);
       });
     });
-
   });
 });
