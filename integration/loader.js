@@ -19,6 +19,7 @@ require.config({
     'picker.time': '/bower_components/pickadate/lib/picker.time',
     sinon: '/bower_components/sinonjs/sinon',
     mustache: '/bower_components/mustache/mustache',
+    bluebird: '/bower_components/bluebird/js/browser/bluebird',
     implementations: '/tests/implementations'
   },
   shim: {
@@ -38,6 +39,7 @@ require.config({
 });
 
 require([
+    'feature!promises',
     'text!/integration/config.json',
     'text!/integration/getform.json',
     'text!/integration/mojo.xml',
@@ -54,9 +56,10 @@ require([
     'text!template-interaction.mustache',
     'text!template-pending.mustache',
     'text!template-popup.mustache'
-  ], function (config, getform, mojo, $, _, Backbone, BMP, BlinkForms, Mustache) {
+  ], function (Promise, config, getform, mojo, $, _, Backbone, BMP, BlinkForms, Mustache) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
+  window.Promise = Promise;
 
   var server = sinon.fakeServer.create();
   server.autoRespond = true;
