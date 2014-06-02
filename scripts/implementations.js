@@ -4,7 +4,7 @@ define(function () {
     'data': [
       {
         isAvailable: function () {
-          return (Modernizr.indexeddb && indexedDB.open('idbTest', 1).onupgradeneeded === null) || window.BMP.isBlinkGap;
+          return (Modernizr.indexeddb && window.indexedDB.open('idbTest', 1).onupgradeneeded === null) || window.BMP.isBlinkGap;
         },
 
         implementation: 'data-pouch'
