@@ -6,13 +6,25 @@ define(['Squire'], function (Squire) {
 
 
     before(function (done) {
+      var collectionMock = function () {
+        return {
+          datastore: function () {
+            return this;
+          },
+          load: function () {
+            return Promise.resolve();
+          },
+          download: function () {}
+        }
+      };
+
       injector = new Squire();
 
-      injector.mock('collection-interactions', Backbone.Collection);
-      injector.mock('collection-datasuitcases', Backbone.Collection);
-      injector.mock('collection-forms', Backbone.Collection);
-      injector.mock('collection-pending', Backbone.Collection);
-      injector.mock('collection-stars', Backbone.Collection);
+      injector.mock('collection-interactions', collectionMock);
+      injector.mock('collection-datasuitcases', collectionMock);
+      injector.mock('collection-forms', collectionMock);
+      injector.mock('collection-pending', collectionMock);
+      injector.mock('collection-stars', collectionMock);
       injector.mock('domReady', function (param) {console.log(param)});
       injector.mock('api', function (param) {console.log(param)});
 
@@ -102,10 +114,6 @@ define(['Squire'], function (Squire) {
     describe('#setup', function (done) {
       before(function (done) {
         model.datastore();
-
-        sinon.stub(model, 'populate', function () {
-          return Promise.resolve();
-        });
         sinon.stub(model.data, 'read', function () {
           return Promise.resolve()
         });
@@ -113,7 +121,6 @@ define(['Squire'], function (Squire) {
       });
 
       after(function (done) {
-        model.populate.restore();
         model.data.read.restore();
         done();
       });

@@ -4,7 +4,7 @@ define(
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
-        var callback;
+        var setupCallback, formsCallback;
 
         BMP.FileInput.initialize();
 
@@ -22,18 +22,20 @@ define(
           }
         });
 
-        callback = function () {
+        formsCallback = function () {
+          app.forms.download();
+          app.initialRender();
+        };
+
+        setupCallback = function () {
           if (navigator.onLine) {
-            app.populate().then(
-              function () {app.initialRender()},
-              function () {app.initialRender()}
-            );
+            app.populate().then(formsCallback, formsCallback);
           } else {
             app.initialRender();
           }
         };
 
-        app.datastore().collections().then(app.setup().then(callback, callback));
+        app.datastore().collections().then(app.setup().then(setupCallback, setupCallback));
       },
 
       routeRequest: function (data) {

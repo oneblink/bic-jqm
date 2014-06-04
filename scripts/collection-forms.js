@@ -7,36 +7,6 @@ define(
       model: Form,
 
       initialize: function () {
-        var collection = this;
-        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Form');
-        collection.initialize = new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: function () {
-              resolve();
-            },
-            error: function () {
-              reject();
-            }
-          });
-        });
-
-        API.getForm().then(function (data) {
-          _.each(data, function (recordData) {
-            var record = JSON.parse(recordData),
-              preExisting = collection.findWhere({_id: record['default'].name});
-            if (preExisting) {
-              preExisting.set(record).save();
-            } else {
-              record._id = record['default'].name;
-              collection.create(record);
-            }
-          });
-        });
-
-        collection.on("reset", function () {
-          collection.data.deleteAll();
-        });
-
         BlinkForms.getDefinition = function (name, action) {
           return new Promise(function (resolve) {
             require(['model-application'], function (app) {
@@ -100,7 +70,48 @@ define(
             });
           });
         };
+      },
+
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Form');
+        return this;
+      },
+
+      load: function () {
+        var collection = this;
+
+        return new Promise(function (resolve, reject) {
+          collection.fetch({
+            success: resolve,
+            error: reject
+          });
+        });
+      },
+
+      download: function () {
+        var collection = this;
+        API.getForm().then(function (data) {
+          _.each(data, function (recordData) {
+            var record = JSON.parse(recordData),
+              preExisting = collection.findWhere({_id: record['default'].name});
+            if (preExisting) {
+              preExisting.set(record).save();
+            } else {
+              record._id = record['default'].name;
+              collection.create(record);
+            }
+          });
+        });
+      },
+
+      events: function () {
+        var collection = this;
+
+        collection.on("reset", function () {
+          collection.data.deleteAll();
+        });
       }
+
     });
     return FormCollection;
   }

@@ -5,17 +5,18 @@ define(
     var FormCollection = Backbone.Collection.extend({
       model: Star,
 
-      initialize: function () {
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Star');
+        return this;
+      },
+
+      load: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Star');
-        collection.initialize = new Promise(function (resolve, reject) {
+
+        return new Promise(function (resolve, reject) {
           collection.fetch({
-            success: function () {
-              resolve();
-            },
-            error: function () {
-              reject();
-            }
+            success: resolve,
+            error: reject
           });
         });
       },

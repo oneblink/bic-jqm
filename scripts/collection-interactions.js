@@ -6,19 +6,24 @@ define(
 
       model: Interaction,
 
-      initialize: function () {
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Interaction');
+        return this;
+      },
+
+      load: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Interaction');
-        collection.initialize = new Promise(function (resolve, reject) {
+
+        return new Promise(function (resolve, reject) {
           collection.fetch({
-            success: function () {
-              resolve();
-            },
-            error: function () {
-              reject();
-            }
+            success: resolve,
+            error: reject
           });
         });
+      },
+
+      events: function () {
+        var collection = this;
 
         collection.on("reset", function () {
           collection.data.deleteAll();

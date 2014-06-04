@@ -26,11 +26,11 @@ define(
         app.stars = new StarsCollection();
 
         return Promise.all([
-          app.interactions.initialize,
-          app.datasuitcases.initialize,
-          app.forms.initialize,
-          app.pending.initialize,
-          app.stars.initialize
+          app.interactions.datastore().load(),
+          app.datasuitcases.datastore().load(),
+          app.forms.datastore().load(),
+          app.pending.datastore().load(),
+          app.stars.datastore().load()
         ]);
       },
 
