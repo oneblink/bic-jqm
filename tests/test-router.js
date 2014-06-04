@@ -29,7 +29,12 @@ define(['Squire'], function (Squire) {
               return collection[id];
             },
             set: function () {return {}}
-          }
+          },
+          datastore: function () {return this},
+          collections: function () {return Promise.resolve()},
+          setup: function () {return Promise.resolve()},
+          populate: function () {return Promise.resolve()},
+          initialRender: function () {}
         });
         injector.mock('view-interaction', {
           render: function () {return {}}
