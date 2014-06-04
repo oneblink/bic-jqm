@@ -162,7 +162,9 @@ define(['Squire'], function (Squire) {
 
     describe('#checkLoginStatus', function () {
       before(function (done) {
-        model.collections().then(done);
+        model.collections().then(function () {
+          done();
+        });
       });
 
       it("should return a promise", function () {
