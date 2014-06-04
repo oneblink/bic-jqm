@@ -88,17 +88,13 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
         expect(data.dbAdapter).to.be.a('function');
       });
 
-      it('should return pouchDB conneciton strings', function () {
-        expect(data.dbAdapter()).to.match(/.*:\/\//)
-      });
-
-      it('should use indexeddb when available', function () {
+      it('should return an indexeddb connection string when available', function () {
         if (window.indexedDB) {
           expect(data.dbAdapter()).to.match(/idb:\/\//)
         }
       });
 
-      it('should use websql when inside isBlinkGap', function () {
+      it('should return a websql connection string when inside isBlinkGap', function () {
         window.BMP.isBlinkGap = true;
         expect(data.dbAdapter()).to.match(/websql:\/\//)
         window.BMP.isBlinkGap = false;

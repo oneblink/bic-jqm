@@ -110,6 +110,7 @@
     <div id="mocha"></div>
     <script>
       require([
+      'feature!promises',
       'test-api.js',
       'test-collection-datasuitcases.js',
       'test-collection-forms.js',
@@ -126,7 +127,11 @@
       'test-router.js',
       'test-view-interaction.js',
       'test-view-star.js'
-      ], function () {
+      ], function (Promise) {
+        if (!window.Promise) {
+          window.Promise = Promise;
+        }
+
         var runner = mocha.run();
 
         var failedTests = [];
