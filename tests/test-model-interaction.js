@@ -14,11 +14,6 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    after(function () {
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
-    });
-
     it("should exist", function () {
       should.exist(Model);
     });
