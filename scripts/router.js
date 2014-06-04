@@ -4,7 +4,36 @@ define(
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
+        var callback;
+
+        BMP.FileInput.initialize();
+
         app.router = this;
+
+        $(document).on('pagebeforeload', function (e, data) {
+          e.preventDefault();
+          $.mobile.loading('show');
+          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
+            app.checkLoginStatus().then(function () {
+              app.router.routeRequest(data);
+            });
+          } else {
+            app.router.routeRequest(data);
+          }
+        });
+
+        callback = function () {
+          if (navigator.onLine) {
+            app.populate().then(
+              function () {app.initialRender()},
+              function () {app.initialRender()}
+            );
+          } else {
+            app.initialRender();
+          }
+        };
+
+        app.datastore().collections().then(app.setup().then(callback, callback));
       },
 
       routeRequest: function (data) {

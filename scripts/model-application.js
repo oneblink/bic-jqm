@@ -4,17 +4,20 @@ define(
     "use strict";
     var Application = Backbone.Model.extend({
 
-      initialize: function () {
-        var done, app;
-        app = this;
-        BMP.FileInput.initialize();
-        app.set({
-          _id: window.BMP.BIC.siteVars.answerSpace
-        });
+      idAttribute: "_id",
 
-        app.on('change', app.update);
+      defaults: {
+        _id: window.BMP.BIC.siteVars.answerSpace,
+        loginStatus: false
+      },
 
-        app.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
+        return this;
+      },
+
+      collections: function () {
+        var app = this;
 
         app.interactions = new InteractionCollection();
         app.datasuitcases = new DataSuitcaseCollection();
@@ -22,50 +25,24 @@ define(
         app.pending = new PendingCollection();
         app.stars = new StarsCollection();
 
-        $(document).on('pagebeforeload', function (e, data) {
-          e.preventDefault();
-          $.mobile.loading('show');
-          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
-            app.checkLoginStatus().then(function () {
-              app.router.routeRequest(data);
-            });
-          } else {
-            app.router.routeRequest(data);
-          }
-        });
-
-        done = function () {
-          if (navigator.onLine) {
-            app.populate().then(function () {
-              app.initialRender();
-            });
-          } else {
-            app.fetch({
-              success: function () {
-                app.initialRender();
-              },
-              error: function () {
-                app.populate().then(function () {
-                  app.initialRender();
-                });
-              }
-            });
-          }
-        };
-
-        Promise.all([
+        return Promise.all([
           app.interactions.initialize,
           app.datasuitcases.initialize,
           app.forms.initialize,
           app.pending.initialize,
           app.stars.initialize
-        ]).then(done, done);
+        ]);
       },
 
-      idAttribute: "_id",
+      setup: function () {
+        var app = this;
 
-      defaults: {
-        loginStatus: false
+        return new Promise(function (resolve, reject) {
+          app.fetch({
+            success: resolve,
+            error: reject
+          });
+        });
       },
 
       populate: function () {
