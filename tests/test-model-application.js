@@ -168,10 +168,10 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should return a promise", function () {
+      it("should return a promise");//, function () {
         // Temporarily disabling as it causes side effects that break tests
         //expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
-      });
+      //});
     });
 
     describe('#initialRender', function () {
