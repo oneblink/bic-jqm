@@ -14,7 +14,8 @@ define(['Squire'], function (Squire) {
           load: function () {
             return Promise.resolve();
           },
-          download: function () {}
+          download: function () {},
+          reset: function () {}
         }
       };
 
@@ -26,7 +27,10 @@ define(['Squire'], function (Squire) {
       injector.mock('collection-pending', collectionMock);
       injector.mock('collection-stars', collectionMock);
       injector.mock('domReady', function (param) {console.log(param)});
-      injector.mock('api', function (param) {console.log(param)});
+      injector.mock('api', {
+        getAnswerSpaceMap: function () {return Promise.resolve([])},
+        getLoginStatus: function () {return Promise.resolve({})}
+      });
 
       injector.require(['../scripts/model-application.js'], function (required) {
         model = required;
@@ -157,6 +161,10 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#checkLoginStatus', function () {
+      before(function (done) {
+        model.collections().then(done);
+      });
+
       it("should return a promise", function () {
         expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
       });
