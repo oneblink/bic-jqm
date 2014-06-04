@@ -38,7 +38,9 @@ module.exports = function (grunt) {
       all: {
         src: [
           'scripts/**/*.js',
+          'tests/**/*.js',
           '!scripts/frag/05-implementations.js',
+          '!tests/implementations.js',
           '!**/vendor/**/*'
         ],
         directives: {

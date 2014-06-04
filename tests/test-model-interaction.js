@@ -1,3 +1,4 @@
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - Interaction', function () {
@@ -6,7 +7,7 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('api', function (param) {console.log(param)});
+      injector.mock('api', function () { return null; });
 
       injector.require(['../scripts/model-interaction'], function (required) {
         Model = required;

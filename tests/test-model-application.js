@@ -1,3 +1,4 @@
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
   "use strict";
 
@@ -14,9 +15,9 @@ define(['Squire'], function (Squire) {
           load: function () {
             return Promise.resolve();
           },
-          download: function () {},
-          reset: function () {}
-        }
+          download: function () { return null; },
+          reset: function () { return null; }
+        };
       };
 
       injector = new Squire();
@@ -26,10 +27,10 @@ define(['Squire'], function (Squire) {
       injector.mock('collection-forms', collectionMock);
       injector.mock('collection-pending', collectionMock);
       injector.mock('collection-stars', collectionMock);
-      injector.mock('domReady', function (param) {console.log(param)});
+      injector.mock('domReady', function () { return null; });
       injector.mock('api', {
-        getAnswerSpaceMap: function () {return Promise.resolve([])},
-        getLoginStatus: function () {return Promise.resolve({})}
+        getAnswerSpaceMap: function () { return Promise.resolve([]); },
+        getLoginStatus: function () { return Promise.resolve({}); }
       });
 
       injector.require(['../scripts/model-application.js'], function (required) {
@@ -112,14 +113,14 @@ define(['Squire'], function (Squire) {
         model.collections().then(function () {
           done();
         });
-      })
+      });
     });
 
-    describe('#setup', function (done) {
+    describe('#setup', function () {
       before(function (done) {
         model.datastore();
         sinon.stub(model.data, 'read', function () {
-          return Promise.resolve()
+          return Promise.resolve();
         });
         done();
       });
@@ -136,7 +137,7 @@ define(['Squire'], function (Squire) {
 
       it("should read from it's data store", function (done) {
         model.setup().then(function () {
-          expect(model.data.read.called).to.be.true;
+          expect(model.data.read.called).to.equal(true);
           done();
         });
       });
@@ -173,6 +174,7 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#initialRender', function () {
+      it("should do things, wonderous things");
     });
   });
 });

@@ -1,15 +1,4 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
 define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - DataSuitcase', function () {
@@ -17,12 +6,11 @@ define(['Squire'], function (Squire) {
 
     before(function (done) {
       var injector = new Squire();
-      injector.mock('api', {})
+      injector.mock('api', {});
       injector.require(['../scripts/model-datasuitcase'], function (model) {
         Model = model;
         done();
-      }, function (err) {
-        console.log(err);
+      }, function () {
         done();
       });
     });

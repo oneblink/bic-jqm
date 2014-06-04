@@ -1,3 +1,4 @@
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
   "use strict";
   describe('Collection - Pending', function () {
@@ -7,8 +8,8 @@ define(['Squire'], function (Squire) {
       injector = new Squire();
 
       injector.mock('model-pending', Backbone.Model);
-      injector.mock('data-inMemory', function (param) {console.log(param)});
-      injector.mock('api', function (param) {console.log(param)});
+      injector.mock('data-inMemory', function () { return null; });
+      injector.mock('api', function () { return null; });
 
       injector.require(['../scripts/collection-pending'], function (required) {
         Collection = required;
@@ -41,7 +42,7 @@ define(['Squire'], function (Squire) {
       beforeEach(function (done) {
         collection.datastore();
         sinon.stub(collection.data, 'readAll', function () {
-          return Promise.resolve()
+          return Promise.resolve();
         });
         done();
       });
@@ -52,7 +53,7 @@ define(['Squire'], function (Squire) {
 
       it("should populate the datastore from cache", function (done) {
         collection.load().then(function () {
-          expect(collection.data.readAll.called).to.be.true;
+          expect(collection.data.readAll.called).to.equal(true);
           done();
         });
       });

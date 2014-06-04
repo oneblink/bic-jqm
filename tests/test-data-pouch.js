@@ -1,6 +1,8 @@
-define(['Squire', 'pouchdb'], function (Squire, Pouch) {
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+define(['Squire'], function (Squire) {
+  "use strict";
   describe('Data Abstraction Layer - PouchDB', function () {
-    var server, Data, data, model, dbAdapter;
+    var Data, data, model, dbAdapter;
 
     before(function (done) {
       var injector = new Squire();
@@ -31,13 +33,12 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       // Where wilderbeats roam free
       // And the dread lord DOM walks the land
       data.dbAdapter = dbAdapter;
-      data.create(model).then(function (doc) {
+      data.create(model).then(function () {
         data.deleteAll().then(
           function () {
             done();
           },
-          function (err) {
-            console.log(err);
+          function () {
             done();
           }
         );
@@ -62,7 +63,7 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should resolve with a db', function (done) {
         data.getDB().then(function (db) {
-          expect(db).to.exist;
+          expect(db).to.not.equal(undefined).and.not.equal(null);
           expect(db).to.be.an('object');
           expect(db).to.have.property('get');
           expect(db).to.have.property('post');
@@ -75,9 +76,9 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       //it('should reject if a db cannot be created');
       it('should reject if a db cannot be created', function (done) {
-        data.dbAdapter = function () {return 'iwgiapugpi://'};
+        data.dbAdapter = function () { return 'iwgiapugpi://'; };
         data.getDB().then(null, function (err) {
-          expect(err).to.exist;
+          expect(err).to.not.equal(undefined).and.not.equal(null);
           done();
         });
       });
@@ -90,19 +91,19 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should return an indexeddb connection string when available', function () {
         if (window.indexedDB) {
-          expect(data.dbAdapter()).to.match(/idb:\/\//)
+          expect(data.dbAdapter()).to.match(/idb:\/\//);
         }
       });
 
       it('should return a websql connection string when inside isBlinkGap', function () {
         window.BMP.isBlinkGap = true;
-        expect(data.dbAdapter()).to.match(/websql:\/\//)
+        expect(data.dbAdapter()).to.match(/websql:\/\//);
         window.BMP.isBlinkGap = false;
       });
 
       it('should return false when indexeddb is not supported and not inside phonegap', function () {
         if (!window.indexedDB || window.indexedDB.open('idbTest', 1).onupgradeneeded !== null) {
-          expect(data.dbAdapter()).to.be.false;
+          expect(data.dbAdapter()).to.equal(false);
         }
       });
     });
@@ -118,8 +119,8 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should resolve with the newly created object', function (done) {
         data.create(model).then(function (doc) {
-          expect(doc).to.exist;
-          expect(doc._id).to.exist;
+          expect(doc).to.not.equal(undefined).and.not.equal(null);
+          expect(doc._id).to.not.equal(undefined).and.not.equal(null);
           expect(doc.cat).to.equal('hat');
           done();
         });
@@ -128,13 +129,13 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       it('should create an object in the database', function (done) {
         data.getDB().then(function (db) {
           db.allDocs(function (err, response) {
-            expect(err).to.not.exist;
-            expect(response).to.exist;
+            expect(err).to.not.equal(undefined);
+            expect(response).to.not.equal(undefined).and.not.equal(null);
             expect(response).to.be.an('object');
             expect(response.total_rows).to.equal(0);
-            data.create(model).then(function (model) {
+            data.create(model).then(function () {
               db.allDocs(function (err, response) {
-                expect(err).to.not.exist;
+                expect(err).to.not.equal(undefined);
                 expect(response).to.be.an('object');
                 expect(response.total_rows).to.equal(1);
                 done();
@@ -166,13 +167,13 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
               cat: createdModel.cat,
               hat: 'cat'
             };
-          }
+          };
           data.update(createdModel).then(function (updatedModel) {
-            expect(updatedModel).to.exist;
+            expect(updatedModel).to.not.equal(undefined).and.not.equal(null);
             expect(updatedModel).to.have.property('hat', 'cat');
             done();
           });
-        })
+        });
       });
 
       it('should update the object in the database', function (done) {
@@ -187,22 +188,22 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
               cat: createdModel.cat,
               hat: 'cat'
             };
-          }
+          };
           data.update(createdModel).then(function () {
             data.getDB().then(function (db) {
               db.get(createdModel._id, function (err, doc) {
-                expect(err).to.not.exist;
-                expect(doc).to.exist;
+                expect(err).to.not.equal(undefined);
+                expect(doc).to.not.equal(undefined).and.not.equal(null);
                 expect(doc).to.have.property('hat', 'cat');
                 done();
-              })
+              });
             });
           });
         });
       });
 
       it('should reject if the _id field is not present', function (done) {
-        data.update(model).then(null, function (err) {
+        data.update(model).then(null, function () {
           done();
         });
       });
@@ -217,9 +218,9 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
               cat: createdModel.cat,
               hat: 'cat'
             };
-          }
+          };
           data.update(createdModel).then(null, function (err) {
-            expect(err).to.exist;
+            expect(err).to.not.equal(undefined).and.not.equal(null);
             done();
           });
         });
@@ -238,7 +239,7 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       it('should resolve with the object from the db', function (done) {
         data.create(model).then(function (createdModel) {
           data.read({id: createdModel._id}).then(function (doc) {
-            expect(doc).to.exist;
+            expect(doc).to.not.equal(undefined).and.not.equal(null);
             expect(doc).to.have.property('cat', 'hat');
             done();
           });
@@ -247,7 +248,7 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should reject if the object could not be retreived', function (done) {
         data.read({id: 1}).then(null, function (err) {
-          expect(err).to.exist;
+          expect(err).to.not.equal(undefined).and.not.equal(null);
           done();
         });
       });
@@ -264,12 +265,12 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should resolve with all the objects stored in the db', function (done) {
         data.readAll().then(function (docs) {
-          expect(docs).to.exist;
+          expect(docs).to.not.equal(undefined).and.not.equal(null);
           expect(docs).to.be.an('array');
           expect(docs).to.have.property('length', 0);
-          data.create(model).then(function (createdModel) {
+          data.create(model).then(function () {
             data.readAll().then(function (docs) {
-              expect(docs).to.exist;
+              expect(docs).to.not.equal(undefined).and.not.equal(null);
               expect(docs).to.be.an('array');
               expect(docs).to.have.property('length', 1);
               expect(docs[0]).to.have.property('cat', 'hat');
@@ -280,9 +281,9 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       });
 
       it('should reject with', function (done) {
-        data.dbAdapter = function () {return 'iwgiapugpi://'};
+        data.dbAdapter = function () { return 'iwgiapugpi://'; };
         data.readAll().then(null, function (err) {
-          expect(err).to.exist;
+          expect(err).to.not.equal(undefined).and.not.equal(null);
           done();
         });
       });
@@ -300,10 +301,10 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       it('should resolve with deletion confirmation', function (done) {
         data.create(model).then(function (createdModel) {
           data.delete({id: createdModel._id}).then(function (doc) {
-            expect(doc).to.exist;
+            expect(doc).to.not.equal(undefined).and.not.equal(null);
             expect(doc).to.have.property('ok', true);
             data.readAll().then(function (docs) {
-              expect(docs).to.exist;
+              expect(docs).to.not.equal(undefined).and.not.equal(null);
               expect(docs).to.have.property('length', 0);
               done();
             });
@@ -313,7 +314,7 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
 
       it('should reject with any errors encountered', function (done) {
         data.delete({id: 1}).then(null, function (err) {
-          expect(err).to.exist;
+          expect(err).to.not.equal(undefined).and.not.equal(null);
           done();
         });
       });
@@ -335,9 +336,9 @@ define(['Squire', 'pouchdb'], function (Squire, Pouch) {
       });
 
       it('should reject with an error if it fails', function (done) {
-        data.dbAdapter = function () {return 'iwgiapugpi://'};
+        data.dbAdapter = function () { return 'iwgiapugpi://'; };
         data.deleteAll().then(null, function (err) {
-          expect(err).to.exist;
+          expect(err).to.not.equal(undefined).and.not.equal(null);
           done();
         });
       });
