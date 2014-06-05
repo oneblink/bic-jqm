@@ -113,6 +113,8 @@ define(
         collection.on("reset", function () {
           collection.data.deleteAll();
         });
+
+        return this;
       }
 
     });

@@ -15,6 +15,9 @@ define(['Squire'], function (Squire) {
           load: function () {
             return Promise.resolve();
           },
+          events: function () {
+            return this;
+          },
           download: function () { return null; },
           reset: function () { return null; }
         };

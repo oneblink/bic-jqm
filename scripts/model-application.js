@@ -26,9 +26,9 @@ define(
         app.stars = new StarsCollection();
 
         return Promise.all([
-          app.interactions.datastore().load(),
-          app.datasuitcases.datastore().load(),
-          app.forms.datastore().load(),
+          app.interactions.datastore().events().load(),
+          app.datasuitcases.datastore().events().load(),
+          app.forms.datastore().events().load(),
           app.pending.datastore().load(),
           app.stars.datastore().load()
         ]);
@@ -58,14 +58,14 @@ define(
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
-                  models.push(model);
+                  models.push(model, {merge: true});
                 }
                 if (key.substr(0, 1) === 'a') {
                   model = {
                     _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
                     dbid: key
                   };
-                  models.push(model);
+                  models.push(model, {merge: true});
 
                   app.save(value.pertinent);
                 }
