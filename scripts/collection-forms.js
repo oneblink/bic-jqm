@@ -8,7 +8,7 @@ define(
 
       initialize: function () {
         BlinkForms.getDefinition = function (name, action) {
-          return new Promise(function (resolve) {
+          return new Promise(function (resolve, reject) {
             require(['model-application'], function (app) {
               var def = app.forms.get(name),
                 elements,
@@ -21,7 +21,10 @@ define(
                   return attrs;
                 };
 
-              //def = _.clone(def.attributes);
+              if (!def) {
+                return reject();
+              }
+
               def = JSON.parse(JSON.stringify(def.attributes));
 
               if (_.isArray(def['default']._elements)) {
