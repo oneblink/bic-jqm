@@ -33,6 +33,7 @@ define(['Squire'], function (Squire) {
         // Or all hell breaks loose in the land of DOMException
         // Where wilderbeats roam free
         // And the dread lord DOM walks the land
+
         data.dbAdapter = dbAdapter;
         data.create(model).then(function () {
           data.deleteAll().then(
@@ -43,6 +44,8 @@ define(['Squire'], function (Squire) {
               done();
             }
           );
+        }, function () {
+          done();
         });
       });
 
