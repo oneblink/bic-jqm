@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['connect:server', 'watch'],
+      background: ['connect:keepalive', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -18,19 +18,20 @@ module.exports = function (grunt) {
       },
       keepalive: {
         options: {
-          port: 9999,
+          port: 9998,
           keepalive: true
         }
       }
     },
 
     watch: {
-      source: {
+      scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['default'],
-        options: {
-          livereload: true
-        }
+        tasks: ['jslint', 'connect:server', 'mocha:tests'],
+      },
+      build: {
+        files: ['buildtests/**'],
+        tasks: ['jslint', 'build', 'connect:server', 'mocha:build'],
       }
     },
 
@@ -39,6 +40,7 @@ module.exports = function (grunt) {
         src: [
           'scripts/**/*.js',
           'tests/**/*.js',
+          'buildtests/**/*.js',
           '!scripts/frag/05-implementations.js',
           '!tests/implementations.js',
           '!**/vendor/**/*'
@@ -71,11 +73,17 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      all: {
+      tests: {
         options: {
           urls: [
             'http://localhost:9999/tests/index.html',
-            'http://localhost:9999/tests/build.html'
+          ]
+        }
+      },
+      build: {
+        options: {
+          urls: [
+            'http://localhost:9999/buildtests/index.html'
           ]
         }
       },
