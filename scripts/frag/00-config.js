@@ -59,7 +59,8 @@
     q: getPaths('q/0.9.7/q.min'),
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
     formsdeps: rootPath + "/formsdeps.min",
-    'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min')
+    'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
+    pouchdb: getPaths('pouchdb/2.2.3/pouchdb-nightly.min')
   };
 
   // check if we are using a pre-bundles Require.JS
@@ -85,9 +86,6 @@
 
 require.config({
   shim: {
-    'pouchdb': {
-      exports: 'Pouch'
-    },
     'BMP.Blobs': {
       deps: ['underscore', 'jquery'],
       exports: 'BMP'

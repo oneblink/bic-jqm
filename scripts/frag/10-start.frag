@@ -11,9 +11,10 @@
             'jquerymobile',
             'BMP.Blobs',
             'modernizr',
+            'pouchdb',
             'feature!es5'
         ], factory);
     } else {
         root.bic = factory();
     }
-}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr) {
+}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch) {

@@ -1,12 +1,14 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true, Pouch:true */
 define(['Squire'], function (Squire) {
   "use strict";
-  describe('Data Abstraction Layer - PouchDB', function () {
-    if (window.indexedDB && window.indexedDB.open('idbTest', 1).onupgradeneeded === null) {
+
+  if (window.indexedDB && window.indexedDB.open('idbTest', 1).onupgradeneeded === null) {
+    describe('Data Abstraction Layer - PouchDB', function () {
       var Data, data, model, dbAdapter;
 
       before(function (done) {
         var injector = new Squire();
+
 
         model = {
           toJSON: function () {
@@ -14,9 +16,12 @@ define(['Squire'], function (Squire) {
           }
         };
 
-        injector.require(['../scripts/data-pouch'], function (required) {
-          Data = required;
-          done();
+        require(['pouchdb'], function (Pouch) {
+          window.Pouch = Pouch;
+          injector.require(['../scripts/data-pouch'], function (required) {
+            Data = required;
+            done();
+          });
         });
       });
 
@@ -347,7 +352,7 @@ define(['Squire'], function (Squire) {
           });
         });
       });
-    }
-  });
+    });
+  }
 });
 
