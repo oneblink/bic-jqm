@@ -13,7 +13,7 @@ define(
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
           $.mobile.loading('show');
-          if (app.has('currentInteraction') && app.get('currentInteraction').get('dbid') === "i" + app.get('loginPromptInteraction')) {
+          if (app.currentInteraction && app.currentInteraction.get('dbid') === "i" + app.get('loginPromptInteraction')) {
             app.checkLoginStatus().then(function () {
               app.router.routeRequest(data);
             });
@@ -44,7 +44,7 @@ define(
 
         model = this.inheritanceChain(path.hrefNoSearch);
 
-        app.set({currentInteraction: model});
+        app.currentInteraction = model;
 
         this.parseArgs(path.search.substr(1), model);
 
