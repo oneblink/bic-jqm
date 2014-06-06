@@ -5,7 +5,7 @@
     <title>Mocha Tests</title>
 
     <!-- mocha + chai + sinon-->
-    <link rel="stylesheet" href="assets/mocha.css" />
+    <link rel="stylesheet" href="/bower_components/mocha/mocha.css" />
     <script src="/bower_components/mocha/mocha.js"></script>
     <script src="/bower_components/chai/chai.js"></script>
     <script src="/bower_components/sinon-chai/lib/sinon-chai.js"></script>
@@ -25,11 +25,6 @@
           implementations: 'implementations',
           Squire: '/bower_components/squire/src/Squire',
           pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly'
-        },
-        shim: {
-          pouchdb: {
-            exports: 'Pouch'
-          }
         }
       });
       mocha.setup('bdd');
@@ -51,7 +46,44 @@
       };
       window.Modernizr = {indexeddb: false};
       window.BlinkForms = {};
-      Backbone.sync = function () {return arguments;}
+      Backbone.sync = function (method, model, options) {
+        var data, promise;
+        data = model.data || model.collection.data;
+
+        switch (method) {
+        case "read":
+          promise = model.id !== undefined ? data.read(model) : data.readAll();
+          break;
+        case "create":
+          promise = data.create(model);
+          break;
+        case "update":
+          promise = data.update(model);
+          break;
+        case "patch":
+          promise = data.update(model);
+          break;
+        case "delete":
+          promise = data['delete'](model);
+          break;
+        default:
+          promise = Promise.reject(new Error('unknown method'));
+        }
+
+        promise.then(function (response) {
+          if (options.success) {
+            options.success(response);
+          }
+        }, function (response) {
+          if (options.error) {
+            options.error(response);
+          }
+        });
+
+        model.trigger('request', model, promise, options);
+
+        return promise;
+      };
       $.mobile = {
         loading: function () {},
         path: {
@@ -73,13 +105,14 @@
     <div id="mocha"></div>
     <script>
       require([
+      'feature!promises',
       'test-api.js',
       'test-collection-datasuitcases.js',
       'test-collection-forms.js',
       'test-collection-interactions.js',
       'test-collection-pending.js',
       'test-collection-stars.js',
-      'test-data.js',
+      'test-data-pouch.js',
       'test-model-application.js',
       'test-model-datasuitcase.js',
       'test-model-form.js',
@@ -89,7 +122,11 @@
       'test-router.js',
       'test-view-interaction.js',
       'test-view-star.js'
-      ], function () {
+      ], function (Promise) {
+        if (!window.Promise) {
+          window.Promise = Promise;
+        }
+
         var runner = mocha.run();
 
         var failedTests = [];

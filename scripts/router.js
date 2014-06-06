@@ -4,7 +4,38 @@ define(
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
+        var setupCallback, formsCallback;
+
+        BMP.FileInput.initialize();
+
         app.router = this;
+
+        $(document).on('pagebeforeload', function (e, data) {
+          e.preventDefault();
+          $.mobile.loading('show');
+          if (app.currentInteraction && app.currentInteraction.get('dbid') === "i" + app.get('loginPromptInteraction')) {
+            app.checkLoginStatus().then(function () {
+              app.router.routeRequest(data);
+            });
+          } else {
+            app.router.routeRequest(data);
+          }
+        });
+
+        formsCallback = function () {
+          app.forms.download();
+          app.initialRender();
+        };
+
+        setupCallback = function () {
+          if (navigator.onLine) {
+            app.populate().then(formsCallback, formsCallback);
+          } else {
+            app.initialRender();
+          }
+        };
+
+        app.datastore().collections().then(app.setup().then(setupCallback, setupCallback));
       },
 
       routeRequest: function (data) {
@@ -13,7 +44,7 @@ define(
 
         model = this.inheritanceChain(path.hrefNoSearch);
 
-        app.set({currentInteraction: model});
+        app.currentInteraction = model;
 
         this.parseArgs(path.search.substr(1), model);
 

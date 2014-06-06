@@ -4,42 +4,48 @@ define(['Squire'], function (Squire) {
   describe('Router - jQuery Mobile Implementation', function () {
     var injector, model, collection;
 
-      before(function (done) {
+    before(function (done) {
 
-        model = function (id) {
-          return {
-            id: id,
-            prepareForView: sinon.stub().returns({
-              then: function () {return {}}
-            }),
-            set: sinon.stub().returns({})
-          }
-        }
+      model = function (id) {
+        return {
+          id: id,
+          prepareForView: sinon.stub().returns({
+            then: function () { return null; }
+          }),
+          set: sinon.stub().returns({})
+        };
+      };
 
-        collection = {};
+      collection = {};
 
-        injector = new Squire();
-        injector.mock('model-application', {
-          set: function () {return {}},
-          interactions: {
-            get: function (id) {
-              if (!collection[id]) {
-                collection[id] = model(id);
-              }
-              return collection[id];
-            },
-            set: function () {return {}}
-          }
-        });
-        injector.mock('view-interaction', {
-          render: function () {return {}}
-        });
-        done();
-
+      injector = new Squire();
+      injector.mock('model-application', {
+        set: function () { return null; },
+        interactions: {
+          get: function (id) {
+            if (!collection[id]) {
+              collection[id] = model(id);
+            }
+            return collection[id];
+          },
+          set: function () { return null; }
+        },
+        datastore: function () { return this; },
+        collections: function () { return Promise.resolve(); },
+        setup: function () { return Promise.resolve(); },
+        populate: function () { return Promise.resolve(); },
+        initialRender: function () { return null; }
       });
+      injector.mock('view-interaction', {
+        render: function () { return null; }
+      });
+      done();
+
+    });
 
     // THIS HAS BEEN MOVED TO MODEL-APPLICATION!!!
     describe('initialize()', function () {
+      it("should do things");
       //it("should create binding to pagebeforeload that passes the event data object to routeRequest", function () {
         //context(['router'], function (router) {
           //sinon.stub(router, "routeRequest");
@@ -58,8 +64,8 @@ define(['Squire'], function (Squire) {
         require(['feature!promises'], function (Promise) {
           injector.require(['../scripts/router'], function (module) {
             testmodel = model(1);
-            sinon.stub(module, "inheritanceChain", function () {return testmodel});
-            sinon.stub(module, "parseArgs", function () {return {}});
+            sinon.stub(module, "inheritanceChain", function () { return testmodel; });
+            sinon.stub(module, "parseArgs", function () { return null; });
             router = module;
             router.routeRequest({
               dataUrl: "/test",
@@ -78,16 +84,16 @@ define(['Squire'], function (Squire) {
 
 
       it("should call the inheritanceChain function to get the correct interaction model", function () {
-        router.inheritanceChain.called.should.be.true;
+        router.inheritanceChain.called.should.equal(true);
       });
 
       it("should start the parseArgs function", function () {
-        router.parseArgs.called.should.be.true;
+        router.parseArgs.called.should.equal(true);
       });
 
       it("should instruct the model to prepareForView", function () {
-        router.inheritanceChain.called.should.be.true;
-        testmodel.prepareForView.called.should.be.true;
+        router.inheritanceChain.called.should.equal(true);
+        testmodel.prepareForView.called.should.equal(true);
       });
 
       //it("should create a new view", function () {
@@ -116,8 +122,6 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      afterEach(function () {});
-
       it("should parse the path given to find the current interaction", function () {
         var data = "/councils/traffic";
         router.inheritanceChain(data).id.should.equal('traffic');
@@ -126,10 +130,11 @@ define(['Squire'], function (Squire) {
       //it("should detect interactions specified by ID (instead of name)");
 
       it("should use the path to determine the inheritance chain", function () {
-        var data = "/councils/traffic";
-        var model = router.inheritanceChain(data);
-        model.set.called.should.be.true;
-        model.set.calledWith({parent: 'councils'}).should.be.true;
+        var data, chainedModel;
+        data = "/councils/traffic";
+        chainedModel = router.inheritanceChain(data);
+        chainedModel.set.called.should.equal(true);
+        chainedModel.set.calledWith({parent: 'councils'}).should.equal(true);
       });
 
       //it("should set the parent of each interaction in the chain on the associated model", function () {

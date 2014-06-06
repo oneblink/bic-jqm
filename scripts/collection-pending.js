@@ -5,17 +5,18 @@ define(
     var PendingCollection = Backbone.Collection.extend({
       model: PendingItem,
 
-      initialize: function () {
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Pending');
+        return this;
+      },
+
+      load: function () {
         var collection = this;
-        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Pending');
-        collection.initialize = new Promise(function (resolve, reject) {
+
+        return new Promise(function (resolve, reject) {
           collection.fetch({
-            success: function () {
-              resolve();
-            },
-            error: function () {
-              reject();
-            }
+            success: resolve,
+            error: reject
           });
         });
       },

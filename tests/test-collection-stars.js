@@ -1,3 +1,4 @@
+/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
   "use strict";
 
@@ -8,7 +9,7 @@ define(['Squire'], function (Squire) {
       injector = new Squire();
 
       injector.mock('model-star', Backbone.Model);
-      injector.mock('data-inMemory', function (param) {console.log(param)});
+      injector.mock('data-inMemory', function () { return null; });
 
       injector.require(['../scripts/collection-stars'], function (required) {
         Collection = required;
@@ -16,31 +17,50 @@ define(['Squire'], function (Squire) {
       });
     });
 
+    beforeEach(function (done) {
+      collection = new Collection();
+      done();
+    });
+
     it("should exist", function () {
       should.exist(Collection);
     });
 
-    describe('initialize()', function () {
-      it("should trigger an initialization event when initialized");
-      //it("should trigger an initialization event when initialized", function (done) {
-        //collection = new Collection();
-        //collection.once('initialize', done());
-      //});
+    describe('#datastore', function () {
+      it('should create a datastore for the collection', function () {
+        expect(collection).to.not.have.property('data');
+        collection.datastore();
+        expect(collection).to.have.property('data');
+      });
 
-      it("should set up it's data object");
-      //it("should set up it's data object", function () {
-        //collection.should.have.property('data');
-      //});
+      it('should return itself', function () {
+        expect(collection.datastore()).to.equal(collection);
+      });
+    });
 
-      // it("should have populated itself from the data store", function (done) {
-      //   require(['data-pouch'], function (Data) {
-      //     should.equal(Data.called, true);
-      //     done();
-      //   });
-      // });
+    describe('#load', function () {
+      beforeEach(function (done) {
+        collection.datastore();
+        sinon.stub(collection.data, 'readAll', function () {
+          return Promise.resolve();
+        });
+        done();
+      });
+
+      it("should return a promise", function () {
+        expect(collection.load()).to.be.instanceOf(Promise);
+      });
+
+      it("should populate the datastore from cache", function (done) {
+        collection.load().then(function () {
+          expect(collection.data.readAll.called).to.equal(true);
+          done();
+        });
+      });
     });
 
     describe('clear(type)', function () {
+      it("should do things");
       // it("should trigger model.destroy() on all models of given type", function (done) {
       //   require(['wrapper-backbone'], function (Backbone) {
       //     Backbone.sync.reset();
