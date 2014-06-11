@@ -39,10 +39,10 @@ define(
               if (_.isArray(def['default']._behaviours)) {
                 def['default']._behaviours = _.map(def['default']._behaviours, collapseAction);
               }
-              if (_.isArray(def.default._checks)) {
+              if (_.isArray(def['default']._checks)) {
                 def['default']._checks = _.map(def['default']._checks, collapseAction);
               }
-              if (_.isArray(def.default._actions)) {
+              if (_.isArray(def['default']._actions)) {
                 def['default']._actions = _.map(def['default']._actions, collapseAction);
               }
 
