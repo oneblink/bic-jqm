@@ -40,14 +40,10 @@ require.config({
 
 require([
     'feature!promises',
-    'text!/integration/config.json',
-    'text!/integration/getform.json',
-    'text!/integration/mojo.xml',
     'jquery',
     'underscore',
     'backbone',
     'BMP.Blobs',
-    'BlinkForms',
     'mustache',
     'jquerymobile',
     'text!template-category-list.mustache',
@@ -56,22 +52,10 @@ require([
     'text!template-interaction.mustache',
     'text!template-pending.mustache',
     'text!template-popup.mustache'
-  ], function (Promise, config, getform, mojo, $, _, Backbone, BMP, BlinkForms, Mustache) {
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
-
-  var server = sinon.fakeServer.create();
-  server.autoRespond = true;
-
-  // Initial Load
-  server.respondWith('/_R_/common/3/xhr/GetConfig.php', [200, {"Content-Type": "application/json"}, config]);
-  server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3', [200, {"Content-Type": "application/json"}, getform]);
-  server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=1&_m=test&_lc=1', [200, { "Content-Type": "application/xml"}, mojo]);
-
-  // MADL
-  server.respondWith('/_R_/common/3/xhr/GetAnswer.php?asn=integration&iact=madl_code&ajax=false', [200, { "Content-Type": "text/html"}, 'MADL Code Interaction']);
-  server.respondWith('/_R_/common/3/xhr/GetAnswer.php?asn=integration&iact=set_datasuitcase&ajax=false', [200, { "Content-Type": "text/html"}, '<?xml version="1.0" encoding="UTF-8" ?><xml><test>Integration</test></xml>']);
 
   require(['main'], function () {
     console.log('BIC started!');
