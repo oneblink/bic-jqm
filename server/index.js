@@ -1,14 +1,14 @@
 Hapi = require('hapi');
 var server = new Hapi.Server('localhost', 9998);
 
-
 server.route({
   path: '/{param*}',
   method: 'GET',
   handler: {
     directory: {
       path: './',
-      listing: true
+      listing: true,
+      redirectToSlash: false
     }
   }
 });
@@ -53,3 +53,4 @@ server.start(function () {
   console.log('Server started at: ' + server.info.uri);
 });
 
+module.exports = server;

@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['connect:keepalive', 'watch'],
+      background: ['hapi', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -15,11 +15,15 @@ module.exports = function (grunt) {
         options: {
           port: 9999
         }
-      },
-      keepalive: {
+      }
+    },
+
+    hapi: {
+      server: {
         options: {
-          port: 9998,
-          keepalive: true
+          server: require('path').resolve('server/index.js'),
+          bases: {},
+          noasync: true
         }
       }
     },
@@ -215,6 +219,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-hapi');
 
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
