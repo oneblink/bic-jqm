@@ -45,6 +45,7 @@ require([
     'backbone',
     'BMP.Blobs',
     'mustache',
+    'BlinkForms',
     'jquerymobile',
     'text!template-category-list.mustache',
     'text!template-form.mustache',
