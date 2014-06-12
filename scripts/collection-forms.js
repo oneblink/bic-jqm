@@ -7,6 +7,9 @@ define(
       model: Form,
 
       initialize: function () {
+        if (!BlinkForms) {
+          window.BlinkForms = {};
+        }
         BlinkForms.getDefinition = function (name, action) {
           return new Promise(function (resolve, reject) {
             require(['model-application'], function (app) {
