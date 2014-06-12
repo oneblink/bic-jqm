@@ -8,11 +8,25 @@ server.route({
     directory: {
       path: './',
       listing: true,
-      redirectToSlash: false
     }
   }
 });
 
+server.route({
+  path: '/integration/{param*}',
+  method: 'GET',
+  handler: {
+    file: './integration/index.html'
+  }
+});
+
+server.route({
+  path: '/integration/loader.js',
+  method: 'GET',
+  handler: {
+    file: './integration/loader.js'
+  }
+});
 server.route({
   path: '/_R_/common/3/xhr/GetConfig.php',
   method: 'GET',
