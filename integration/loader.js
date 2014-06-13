@@ -10,8 +10,8 @@ require.config({
     feature: '/bower_components/amd-feature/feature',
     domReady: '/bower_components/requirejs-domready/domReady',
     text: '/bower_components/requirejs-text/text',
-    'BMP.Blobs': '/blink/bmp-blobs',
-    BlinkForms: '/blink/forms3jqm',
+    'BMP.Blobs': 'http://d1c6dfkb81l78v.cloudfront.net/blink/blobs/1377493706402/bmp-blobs.min',
+    BlinkForms: 'http://d1c6dfkb81l78v.cloudfront.net/blink/forms/3/3.1.0/forms3jqm.min',
     jquerymobile: '/bower_components/jquery-mobile-bower/js/jquery.mobile-1.3.2',
     moment: '/bower_components/momentjs/min/moment.min',
     picker: '/bower_components/pickadate/lib/picker',
@@ -47,12 +47,6 @@ require([
     'mustache',
     'BlinkForms',
     'jquerymobile',
-    'text!template-category-list.mustache',
-    'text!template-form.mustache',
-    'text!template-inputPrompt.mustache',
-    'text!template-interaction.mustache',
-    'text!template-pending.mustache',
-    'text!template-popup.mustache'
   ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
