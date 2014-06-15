@@ -1,7 +1,7 @@
 /*global google: true */
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'text!template-form.mustache', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache'],
-  function (Template, inputPromptTemplate, formTemplate, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate) {
+  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache'],
+  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -27,11 +27,6 @@ define(
         "click [pending]" : "pendingQueue",
 
         // Form Actions
-        "click #FormControls #submit" : "formSubmit",
-        "click #FormControls #cancel" : "formCancel",
-        "click #FormControls #save" : "formSave",
-        "click #nextFormPage" : "nextFormPage",
-        "click #previousFormPage" : "previousFormPage",
         "click #queue" : "pendingQueue",
 
         // Destroy
@@ -113,7 +108,8 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          view = this;
+          view = this,
+          subView;
 
         // Non-type specific
         if (_.has(inheritedAttributes, "themeSwatch")) {
@@ -171,37 +167,20 @@ define(
           // Form
           view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
-            footer: inheritedAttributes.footer,
-            content: formTemplate
+            footer: inheritedAttributes.footer
           }));
 
-          form = $('#ActiveFormContainer');
-          if (view.model.get("blinkFormAction") === "add" ||
-              view.model.get("blinkFormAction") === "edit" ||
-              view.model.get("blinkFormAction") === "view" ||
-              view.model.get("blinkFormAction") === "delete") {
-            BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction")).then(function (definition) {
-              var formPageCount;
+          subView = new FormView({
+            model: view.model,
+            el: view.$el.children('[data-role="content"]')
+          });
 
-              BlinkForms.initialize(definition);
-              form.append(BlinkForms.current.$form);
+          view.listenToOnce(subView, 'render', function () {
+            view.trigger('render');
+          });
 
-              if (view.model.get("blinkFormAction") === "edit") {
-                BlinkForms.current.setRecord(app.pending.get(view.model.get("args")['args[id]']).get("data"));
-              }
+          subView.render();
 
-              if (BlinkForms.current.get('pages').length > 1) {
-                // Multi page form. Prepare counters and stuff
-                formPageCount = view.$el.find('#FormPageCount');
-                formPageCount.find('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
-                formPageCount.find('#totalPages').html(BlinkForms.current.get('pages').length);
-                view.formPagingButtons();
-                formPageCount.removeAttr('style');
-              }
-
-              view.trigger("render");
-            });
-          }
         } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen
           view.$el.html(Mustache.render(Template, {
@@ -337,56 +316,6 @@ define(
         }
       },
 
-      formSubmit: function () {
-        this.addToQueue("Pending");
-      },
-
-      formCancel: function () {
-        $('#cancelPopup').popup('open');
-      },
-
-      formSave: function () {
-        this.addToQueue("Draft");
-      },
-
-      addToQueue: function (status) {
-        var view = this,
-          model;
-        BlinkForms.current.data().then(function (data) {
-          data._action = view.model.get("blinkFormAction");
-          var modelAttrs = {
-            type: "Form",
-            status: status,
-            name: view.model.get("blinkFormObjectName"),
-            action: view.model.get("blinkFormAction"),
-            answerspaceid: app.get("dbid"),
-            data: data
-          };
-          if (view.model.get("blinkFormAction") === "edit") {
-            model = app.pending.get(view.model.get("args")['args[id]']);
-            model.set(modelAttrs);
-          } else {
-            model = app.pending.create(modelAttrs);
-          }
-          $(window).on("pagechange", function () {
-            $(window).off("pagechange");
-            if (!navigator.onLine || model.get('status') === 'Draft') {
-              app.view.pendingQueue();
-            } else {
-              model.once('processed', function () {
-                if (model.get('status') === 'Submitted') {
-                  app.view.popup(model.get('result'));
-                } else {
-                  app.view.pendingQueue();
-                }
-              });
-              app.pending.processQueue();
-            }
-          });
-          history.back();
-        });
-      },
-
       pendingQueue: function () {
         //var el = $('#pendingContent');
         var pendingExtractor = function (status) {
@@ -450,44 +379,7 @@ define(
         }
       },
 
-      nextFormPage: function () {
-        var index = BlinkForms.current.get('pages').current.index();
 
-        if (index < BlinkForms.current.get('pages').length - 1) {
-          BlinkForms.current.get('pages').goto(index + 1);
-          $('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
-        }
-
-        this.formPagingButtons();
-      },
-
-      previousFormPage: function () {
-        var index = BlinkForms.current.get('pages').current.index();
-
-        if (index > 0) {
-          BlinkForms.current.get('pages').goto(index - 1);
-          $('#currentPage').html(BlinkForms.current.get('pages').current.index() + 1);
-        }
-
-        this.formPagingButtons();
-      },
-
-      formPagingButtons: function () {
-        var previous = $('#previousFormPage'),
-          next = $('#nextFormPage');
-
-        if (BlinkForms.current.get('pages').current.index() === 0) {
-          previous.addClass('ui-disabled');
-        } else {
-          previous.removeClass('ui-disabled');
-        }
-
-        if (BlinkForms.current.get('pages').current.index() === BlinkForms.current.get('pages').length - 1) {
-          next.addClass('ui-disabled', '');
-        } else {
-          next.removeClass('ui-disabled');
-        }
-      },
 
       basicMap: function () {
         var options, map, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
