@@ -52,6 +52,22 @@ server.route({
 });
 
 server.route({
+  path: '/_R_/common/3/xhr/GetFormList.php',
+  method: 'GET',
+  handler: {
+    file: './integration/formList.xml'
+  }
+});
+
+server.route({
+  path: '/_R_/common/3/xhr/GetFormRecord.php',
+  method: 'GET',
+  handler: {
+    file: './integration/formRecord.xml'
+  }
+});
+
+server.route({
   path: '/_R_/common/3/xhr/GetAnswer.php',
   method: 'GET',
   handler: function (request, reply) {
