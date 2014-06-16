@@ -1,6 +1,6 @@
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady'],
-  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady) {
+  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady', 'collection-form-records'],
+  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -24,13 +24,15 @@ define(
         app.forms = new FormCollection();
         app.pending = new PendingCollection();
         app.stars = new StarsCollection();
+        app.formRecords = new FormRecordsCollection();
 
         return Promise.all([
           app.interactions.datastore().events().load(),
           app.datasuitcases.datastore().events().load(),
           app.forms.datastore().events().load(),
           app.pending.datastore().load(),
-          app.stars.datastore().load()
+          app.stars.datastore().load(),
+          app.formRecords.datastore().load()
         ]);
       },
 

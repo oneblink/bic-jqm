@@ -1,0 +1,30 @@
+<table data-role="table" data-mode="columntoggle" class="ui-responsive table-stroke">
+  <thead>
+    <tr>
+      {{#headers}}
+      <th>{{.}}</th>
+      {{/headers}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#content}}
+    <tr>
+      {{#.}}
+      <td>{{.}}</td>
+      {{/.}}
+      {{#interactions}}
+      <td>
+        <a interaction="{{edit}}">Edit</a>
+        <a interaction="{{view}}">View</a>
+        <a interaction="{{delete}}">Delete</a>
+      </td>
+      {{/interactions}}
+    </tr>
+    {{/content}}
+    {{^content}}
+    <tr>
+      <th>No items on the remote server</th>
+    </tr>
+    {{/content}}
+  </tbody>
+</table>
