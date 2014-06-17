@@ -29,7 +29,7 @@ define(
             function (data) {
               var nodes, node, parsed, parseNodes;
 
-              nodes = data.evaluate('//test_form', data);
+              nodes = data.evaluate('//' + formName, data);
               node = nodes.iterateNext();
 
               parseNodes = function (key) {
