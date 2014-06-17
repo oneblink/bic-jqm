@@ -34,9 +34,15 @@ define(
 
               while (node) {
                 parsed = {};
+                parsed.formName = formName;
+                parsed.list = {};
 
                 _.each(node.children, function (key) {
-                  parsed[key.nodeName] = key.innerHTML;
+                  if (key.nodeName === 'id') {
+                    parsed.id = key.innerHTML;
+                  } else {
+                    parsed.list[key.nodeName] = key.innerHTML;
+                  }
                 });
 
                 parsed._id = formName + '-' + parsed.id;

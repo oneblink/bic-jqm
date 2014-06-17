@@ -11,19 +11,22 @@ define(
             var templateData = {};
 
             templateData.content = _.map(app.formRecords.models, function (value) {
-              var arr = [];
+              var record = {};
 
-              _.each(value.attributes, function (iv, ik) {
+              record.id = value.get("id");
+              record.contents = [];
+
+              _.each(value.attributes.list, function (iv, ik) {
                 if (ik !== 'id' && ik !== '_id') {
-                  arr.push(iv);
+                  record.contents.push(iv);
                 }
               });
 
-              return arr;
+              return record;
             });
 
             templateData.headers = [];
-            _.each(app.formRecords.at(0).attributes, function (value, key) {
+            _.each(app.formRecords.at(0).attributes.list, function (value, key) {
               if (key !== 'id' && key !== '_id') {
                 templateData.headers.push(key);
               }

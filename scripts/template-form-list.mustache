@@ -9,16 +9,14 @@
   <tbody>
     {{#content}}
     <tr>
-      {{#.}}
+      {{#contents}}
       <td>{{.}}</td>
-      {{/.}}
-      {{#interactions}}
+      {{/contents}}
       <td>
-        <a interaction="{{edit}}">Edit</a>
-        <a interaction="{{view}}">View</a>
-        <a interaction="{{delete}}">Delete</a>
+        {{#interactions.edit}}<a interaction="{{interactions.edit}}" _id="{{id}}">Edit</a>{{/interactions.edit}}
+        {{#interactions.view}}<a interaction="{{interactions.view}}" _id="{{id}}">View</a>{{/interactions.view}}
+        {{#interactions.delete}}<a interaction="{{interactions.delete}}" _id="{{id}}">Delete</a>{{/interactions.delete}}
       </td>
-      {{/interactions}}
     </tr>
     {{/content}}
     {{^content}}

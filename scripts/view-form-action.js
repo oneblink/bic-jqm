@@ -13,17 +13,26 @@ define(
           BlinkForms.initialize(definition);
           view.$el.append(BlinkForms.current.$form);
 
-          if (view.model.get("blinkFormAction") === "edit") {
-            BlinkForms.current.setRecord(app.pending.get(view.model.get("args")['args[id]']).get("data"));
-          }
-
           subView = new FormControls({
             model: view.model
           });
           subView.render();
           view.$el.append(subView.$el);
 
-          view.trigger("render");
+          if (view.model.get("args")['args[id]']) {
+            var formRecord;
+
+            formRecord = app.formRecords.get(view.model.get("blinkFormObjectName") + '-' + view.model.get("args")['args[id]']);
+            formRecord.populate(view.model.get("blinkFormAction"), function () {
+              BlinkForms.current.setRecord(formRecord.get('record'));
+              view.trigger("render");
+            });
+          } else if (view.model.get("args")['args[pid]']) {
+            BlinkForms.current.setRecord(app.pending.get(view.model.get("args")['args[pid]']).get("data"));
+            view.trigger("render");
+          } else {
+            view.trigger("render");
+          }
         });
 
         return view;
@@ -33,6 +42,3 @@ define(
     return FormActionView;
   }
 );
-
-
-

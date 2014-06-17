@@ -321,6 +321,7 @@ define(
         var pendingExtractor = function (status) {
           return _.map(app.pending.where({status: status}), function (pendingItem) {
             var pendingAttrs = _.clone(pendingItem.attributes);
+            pendingAttrs.cid = pendingItem.cid;
             pendingAttrs.editInteraction = app.interactions.where({
               blinkFormObjectName: pendingItem.get("name"),
               blinkFormAction: 'edit'
