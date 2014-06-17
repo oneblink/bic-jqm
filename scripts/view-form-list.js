@@ -26,11 +26,13 @@ define(
             });
 
             templateData.headers = [];
+            /*jslint unparam: true */
             _.each(app.formRecords.at(0).attributes.list, function (value, key) {
               if (key !== 'id' && key !== '_id') {
                 templateData.headers.push(key);
               }
             });
+            /*jslint unparam: false */
 
             templateData.interactions = {};
             templateData.interactions.edit = app.interactions.findWhere({

@@ -27,23 +27,25 @@ define(
         return new Promise(function (resolve, reject) {
           API.getFormList(formName).then(
             function (data) {
-              var nodes, node, parsed;
+              var nodes, node, parsed, parseNodes;
 
               nodes = data.evaluate('//test_form', data);
               node = nodes.iterateNext();
+
+              parseNodes = function (key) {
+                if (key.nodeName === 'id') {
+                  parsed.id = key.innerHTML;
+                } else {
+                  parsed.list[key.nodeName] = key.innerHTML;
+                }
+              };
 
               while (node) {
                 parsed = {};
                 parsed.formName = formName;
                 parsed.list = {};
 
-                _.each(node.children, function (key) {
-                  if (key.nodeName === 'id') {
-                    parsed.id = key.innerHTML;
-                  } else {
-                    parsed.list[key.nodeName] = key.innerHTML;
-                  }
-                });
+                _.each(node.children, parseNodes);
 
                 parsed._id = formName + '-' + parsed.id;
 
