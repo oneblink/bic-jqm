@@ -30,6 +30,7 @@ define(['Squire'], function (Squire) {
       injector.mock('collection-forms', collectionMock);
       injector.mock('collection-pending', collectionMock);
       injector.mock('collection-stars', collectionMock);
+      injector.mock('collection-form-records', collectionMock);
       injector.mock('domReady', function () { return null; });
       injector.mock('api', {
         getAnswerSpaceMap: function () { return Promise.resolve([]); },
@@ -80,6 +81,7 @@ define(['Squire'], function (Squire) {
         delete model.forms;
         delete model.pending;
         delete model.stars;
+        delete model.formRecords;
         done();
       });
 
@@ -110,6 +112,11 @@ define(['Squire'], function (Squire) {
       it("should create a collection for stars", function () {
         model.collections();
         expect(model).to.have.property('stars');
+      });
+
+      it("should create a collection for form records", function () {
+        model.collections();
+        expect(model).to.have.property('formRecords');
       });
 
       it("should resolve when the collections are all ready", function (done) {
