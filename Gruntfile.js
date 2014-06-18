@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['connect', 'watch'],
+      background: ['hapi', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -15,22 +15,27 @@ module.exports = function (grunt) {
         options: {
           port: 9999
         }
-      },
-      keepalive: {
+      }
+    },
+
+    hapi: {
+      server: {
         options: {
-          port: 9999,
-          keepalive: true
+          server: require('path').resolve('server/index.js'),
+          bases: {},
+          noasync: true
         }
       }
     },
 
     watch: {
-      source: {
+      scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['default'],
-        options: {
-          livereload: true
-        }
+        tasks: ['jslint', 'connect:server', 'mocha:tests'],
+      },
+      build: {
+        files: ['buildtests/**'],
+        tasks: ['jslint', 'build', 'connect:server', 'mocha:build'],
       }
     },
 
@@ -38,7 +43,10 @@ module.exports = function (grunt) {
       all: {
         src: [
           'scripts/**/*.js',
+          'tests/**/*.js',
+          'buildtests/**/*.js',
           '!scripts/frag/05-implementations.js',
+          '!tests/implementations.js',
           '!**/vendor/**/*'
         ],
         directives: {
@@ -69,11 +77,17 @@ module.exports = function (grunt) {
     },
 
     mocha: {
-      all: {
+      tests: {
         options: {
           urls: [
             'http://localhost:9999/tests/index.html',
-            'http://localhost:9999/tests/build.html'
+          ]
+        }
+      },
+      build: {
+        options: {
+          urls: [
+            'http://localhost:9999/buildtests/index.html'
           ]
         }
       },
@@ -205,6 +219,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-hapi');
 
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);

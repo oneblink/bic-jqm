@@ -46,7 +46,7 @@
 
   // dynamically set paths and fall-back paths;
   paths = {
-    BlinkForms: getPaths('blink/forms/3/3.1.0/forms3jqm.min'),
+    BlinkForms: getPaths('blink/forms/3/3.1.1/forms3jqm.min'),
     'BMP.Blobs': getPaths('blink/blobs/1377493706402/bmp-blobs.min'),
     signaturepad: getPaths('signaturepad/2.3.0/jq.sig.min'),
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),
@@ -59,7 +59,8 @@
     q: getPaths('q/0.9.7/q.min'),
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
     formsdeps: rootPath + "/formsdeps.min",
-    'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min')
+    'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
+    pouchdb: getPaths('pouchdb/2.2.3/pouchdb-nightly.min')
   };
 
   // check if we are using a pre-bundles Require.JS
@@ -85,13 +86,6 @@
 
 require.config({
   shim: {
-    'BlinkForms': {
-      deps: ['signaturepad', 'BMP.Blobs'],
-      exports: 'BlinkForms'
-    },
-    'pouchdb': {
-      exports: 'Pouch'
-    },
     'BMP.Blobs': {
       deps: ['underscore', 'jquery'],
       exports: 'BMP'

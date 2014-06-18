@@ -1,197 +1,159 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('model-datasuitcase-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('model-form-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('collection-datasuitcases-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('collection-forms-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('collection-interactions-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('collection-pending', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('collection-stars-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Collection.extend();
-// });
-
-// define('data-pouch', [], function () {
-//   "use strict";
-//   return function () {};
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
-// window.BMP = {
-//   siteVars: {
-//     answerSpace: 'Exists',
-//     answerSpaceId: 1
-//   }
-// };
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
 
   describe('Model - Application', function () {
-    var Model, oInt, oDS, oForm, oPend, oStar, oData, oAPI;
+    var injector, model;
+
 
     before(function (done) {
-      require(['collection-interactions',
-        'collection-datasuitcases',
-        'collection-forms',
-        'collection-pending',
-        'data-inMemory',
-        'api',
-        'collection-stars'], function (
-        InteractionCollection,
-        DataSuitcaseCollection,
-        FormCollection,
-        PendingCollection,
-        Data,
-        API,
-        StarsCollection
-      ) {
-        oInt = InteractionCollection;
-        oDS = DataSuitcaseCollection;
-        oForm = FormCollection;
-        oPend = PendingCollection;
-        oStar = StarsCollection;
-        oData = Data;
-        oAPI = StarsCollection;
-        requirejs.undef('collection-interactions');
-        requirejs.undef('collection-datasuitcases');
-        requirejs.undef('collection-forms');
-        requirejs.undef('collection-pending');
-        requirejs.undef('collection-stars');
-        requirejs.undef('data-inMemory');
-        requirejs.undef('api');
+      var collectionMock = function () {
+        return {
+          datastore: function () {
+            return this;
+          },
+          load: function () {
+            return Promise.resolve();
+          },
+          events: function () {
+            return this;
+          },
+          download: function () { return null; },
+          reset: function () { return null; }
+        };
+      };
 
-        define('collection-interactions', [], function () {
-          return Backbone.Collection;
-        });
+      injector = new Squire();
 
-        define('collection-datasuitcases', [], function () {
-          return Backbone.Collection;
-        });
+      injector.mock('collection-interactions', collectionMock);
+      injector.mock('collection-datasuitcases', collectionMock);
+      injector.mock('collection-forms', collectionMock);
+      injector.mock('collection-pending', collectionMock);
+      injector.mock('collection-stars', collectionMock);
+      injector.mock('collection-form-records', collectionMock);
+      injector.mock('domReady', function () { return null; });
+      injector.mock('api', {
+        getAnswerSpaceMap: function () { return Promise.resolve([]); },
+        getLoginStatus: function () { return Promise.resolve({}); }
+      });
 
-        define('collection-forms', [], function () {
-          return Backbone.Collection;
-        });
+      injector.require(['../scripts/model-application.js'], function (required) {
+        model = required;
+        done();
+      });
+    });
 
-        define('collection-pending', [], function () {
-          return Backbone.Collection;
-        });
 
-        define('collection-stars', [], function () {
-          return Backbone.Collection;
-        });
+    it("should exist", function () {
+      should.exist(model);
+    });
 
-        define('data-inMemory', [], function () {
-          return function (param) {console.log(param); };
-        });
+    it("should be an instance of backbone model", function () {
+      model.should.be.an.instanceOf(Backbone.Model);
+    });
 
-        define('api', [], function () {
-          return function (param) {console.log(param); };
-        });
+    describe('#datastore', function () {
+      afterEach(function (done) {
+        if (model.data) {
+          delete model.data;
+        }
+        done();
+      });
 
-        require(['model-application'], function (rModel) {
-          Model = rModel;
+      it('should return itself', function () {
+        expect(model.datastore()).to.be.equal(model);
+      });
+
+      it("should set up a data store", function () {
+        model.datastore();
+        expect(model).to.have.property('data');
+      });
+    });
+
+    describe('#collections', function () {
+      beforeEach(function (done) {
+        done();
+      });
+
+      afterEach(function (done) {
+        delete model.interactions;
+        delete model.datasuitcases;
+        delete model.forms;
+        delete model.pending;
+        delete model.stars;
+        delete model.formRecords;
+        done();
+      });
+
+      it("should return a promise", function () {
+        expect(model.collections()).to.be.instanceOf(Promise);
+      });
+
+      it("should create a collection for interactions", function () {
+        model.collections();
+        expect(model).to.have.property('interactions');
+      });
+
+      it("should create a collection for data suitcases", function () {
+        model.collections();
+        expect(model).to.have.property('datasuitcases');
+      });
+
+      it("should create a collection for forms", function () {
+        model.collections();
+        expect(model).to.have.property('forms');
+      });
+
+      it("should create a collection for pending items", function () {
+        model.collections();
+        expect(model).to.have.property('pending');
+      });
+
+      it("should create a collection for stars", function () {
+        model.collections();
+        expect(model).to.have.property('stars');
+      });
+
+      it("should create a collection for form records", function () {
+        model.collections();
+        expect(model).to.have.property('formRecords');
+      });
+
+      it("should resolve when the collections are all ready", function (done) {
+        model.collections().then(function () {
           done();
         });
       });
     });
 
-    after(function () {
-      requirejs.undef('collection-interactions');
-      requirejs.undef('collection-datasuitcases');
-      requirejs.undef('collection-forms');
-      requirejs.undef('collection-pending');
-      requirejs.undef('collection-stars');
-      requirejs.undef('data-inMemory');
-      requirejs.undef('api');
-      
-      define('collection-interactions', ['model-interaction', 'feature!data'], function (Interaction, Data) {
-        return function () {return oInt; };
+    describe('#setup', function () {
+      before(function (done) {
+        model.datastore();
+        sinon.stub(model.data, 'read', function () {
+          return Promise.resolve();
+        });
+        done();
       });
 
-      define('collection-datasuitcases', ['model-datasuitcase', 'feature!data'], function (DataSuitcase, Data) {
-        return function () {return oDS; };
+      after(function (done) {
+        model.data.read.restore();
+        done();
       });
 
-      define('collection-forms', ['model-form', 'feature!data'], function (Form, Data) {
-        return function () {return oForm; };
+      it("should return a promise", function () {
+        expect(model.setup()).to.be.instanceOf(Promise);
       });
 
-      define('collection-pending', ['model-pending', 'feature!data', 'api'], function (PendingItem, Data, API) {
-        return function () {return oPend; };
-      });
 
-      define('collection-stars', ['model-star', 'feature!data'], function (Star, Data) {
-        return function () {return oStar; };
-      });
-
-      define('data-inMemory', [], function () {
-        return function () {return oData; };
-      });
-
-      define('api', [], function () {
-        return function () {return oAPI; };
+      it("should read from it's data store", function (done) {
+        model.setup().then(function () {
+          expect(model.data.read.called).to.equal(true);
+          done();
+        });
       });
     });
 
-    it("should exist", function () {
-      should.exist(Model);
-    });
-
-    it("should be an instance of backbone model", function () {
-      Model.should.be.an.instanceOf(Backbone.Model);
-    });
-
-    describe('initialize()', function () {
-      it("should set up it's data store");
-
-      it("should create a collection for interactions");
-
-      it("should create a collection for data suitcases");
-
-      it("should create a collection for forms");
-
-      it("should create a collection for pending items");
-
-      it("should create a collection for stars");
-
-      it("should trigger an 'initialize' event when this + all collections are fully initialized");
-    });
-
-    describe('populate()', function () {
+    describe('#populate', function () {
       it("should do nothing if offline");
 
       it("should fetch the answerSpaceMap from API");
@@ -207,6 +169,23 @@ define(function () {
       it("should trigger an 'initalize' event when complete");
 
       it("should return a promise");
+    });
+
+    describe('#checkLoginStatus', function () {
+      before(function (done) {
+        model.collections().then(function () {
+          done();
+        });
+      });
+
+      it("should return a promise");//, function () {
+        // Temporarily disabling as it causes side effects that break tests
+        //expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
+      //});
+    });
+
+    describe('#initialRender', function () {
+      it("should do things, wonderous things");
     });
   });
 });

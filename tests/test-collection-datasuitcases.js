@@ -1,55 +1,59 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-define(function () {
+define(['Squire'], function (Squire) {
+  "use strict";
   describe('Collection - DataSuitcases', function () {
-    var Collection, collection, originalModel, originalData;
+    var injector, Collection, collection;
 
     before(function (done) {
-      require(['model-datasuitcase', 'data-inMemory'], function (Model, Data) {
-        originalModel = Model;
-        originalData = Data;
-        requirejs.undef('model-datasuitcase');
-        requirejs.undef('data-inMemory');
-
-        define('model-datasuitcase', [], function () {
-          return Backbone.Model;
-        });
-
-        define('data-inMemory', [], function () {
-          return function (param) {console.log(param)};
-        });
-
-        require(['collection-datasuitcases'], function (rColl) {
-          Collection = rColl;
-          collection = new Collection();
-          done();
-        });
+      injector = new Squire();
+      injector.mock('model-datasuitcase', Backbone.Model);
+      injector.mock('data-inMemory', function () { return null; });
+      injector.require(['../scripts/collection-datasuitcases'], function (required) {
+        Collection = required;
+        done();
       });
     });
 
-    after(function () {
-      requirejs.undef('model-datasuitcase');
-      requirejs.undef('data-inMemory');
-      define('model-datasuitcase', ['api'], function (API) {return originalModel; });
-      define('data-inMemory', [], function () {return originalData; });
+    beforeEach(function (done) {
+      collection = new Collection();
+      done();
     });
 
     it("should exist", function () {
-      should.exist(Collection);
+      should.exist(collection);
     });
 
-    describe('initialize()', function (done) {
-      it("should provide a promise that is resolved when initialization is complete", function () {
-        collection.should.have.property('initialize');
-        collection.initialize.always(function () {
+    describe('#datastore', function () {
+      it('should create a datastore for the collection', function () {
+        expect(collection).to.not.have.property('data');
+        collection.datastore();
+        expect(collection).to.have.property('data');
+      });
+
+      it('should return itself', function () {
+        expect(collection.datastore()).to.equal(collection);
+      });
+    });
+
+    describe('#load', function () {
+      beforeEach(function (done) {
+        collection.datastore();
+        sinon.stub(collection.data, 'readAll', function () {
+          return Promise.resolve();
+        });
+        done();
+      });
+
+      it("should return a promise", function () {
+        expect(collection.load()).to.be.instanceOf(Promise);
+      });
+
+      it("should populate the datastore from cache", function (done) {
+        collection.load().then(function () {
+          expect(collection.data.readAll.called).to.equal(true);
           done();
         });
       });
-
-      it("should set up it's data object", function () {
-        collection.should.have.property('data');
-      });
-
-      it("should have populated itself from the data store");
     });
   });
 });

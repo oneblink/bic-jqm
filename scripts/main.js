@@ -16,7 +16,7 @@ define(
       });
       /*jslint unparam: false*/
 
-      require(['model-application']);
+      require(['router']);
     }
 
     // Delay the app for Cordova

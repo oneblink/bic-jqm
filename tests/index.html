@@ -5,153 +5,22 @@
     <title>Mocha Tests</title>
 
     <!-- mocha + chai + sinon-->
-    <link rel="stylesheet" href="assets/mocha.css" />
-    <script src="assets/mocha.js"></script>
-    <script src="assets/chai.js"></script>
-    <script src="assets/sinon-chai.js"></script>
-    <script src="assets/sinon.js"></script>
-
-    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <link rel="stylesheet" href="/bower_components/mocha/mocha.css" />
+    <script src="/bower_components/mocha/mocha.js"></script>
+    <script src="/bower_components/chai/chai.js"></script>
+    <script src="/bower_components/sinon-chai/lib/sinon-chai.js"></script>
+    <script src="/bower_components/sinonjs/sinon.js"></script>
 
     <!-- global stuff-->
-    <script src="http://d1c6dfkb81l78v.cloudfront.net/jquery/1.9.1/jquery.min.js"></script>
-    <script src="http://d1c6dfkb81l78v.cloudfront.net/underscorejs/1.4.4/underscore-min.js"></script>
-    <script src="http://d1c6dfkb81l78v.cloudfront.net/backbonejs/1.0.0/backbone-min.js"></script>
-    <script src="http://d1c6dfkb81l78v.cloudfront.net/mustache/0.7.2/mustache.min.js"></script>
-    <script src="http://d1c6dfkb81l78v.cloudfront.net/blink/require/6/require.min.js"></script>
-    <script src="../scripts/frag/00-config.js"></script>
-    <script>
-    require.config({
-      paths: {
-        feature: '../bower_components/amd-feature/feature',
-        implementations: '../scripts/frag/05-implementations'
-      }
-    });
-    </script>
-
-    <!-- code coverage -->
-    <script>
-//        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-//            console.log('Not in PhantomJS, loading code coverage tool');
-//            document.write('<script src="assets/blanket.min.js" data-cover-adapter="assets/mocha-blanket.js" data-cover-only="//^...scripts/" data-cover-never="//vendor/"></' + 'script>');
-//        }
-    </script>
-
-    <!-- environment variables (normally in php) -->
-    <script>
-        mocha.setup('bdd');
-        //mocha.globals(['_$blanket']);
-        var should = chai.should();
-        var expect = chai.expect;
-
-        window.BMP = {
-          BIC: {
-            siteVars: {
-              answerSpace: 'Exists',
-              answerSpaceId: 1
-            }
-          },
-          FileInput: {
-            initialize: function () {
-                return "hello!";
-            }
-          }
-        };
-        window.Modernizr = {indexeddb: false};
-        window.BlinkForms = {};
-        Backbone.sync = function () {return arguments;}
-        $.mobile = {
-          loading: function () {},
-          path: {
-            parseUrl: function () {
-              return {
-                hrefNoSearch: "/test",
-                search: ""
-              }
-            }
-          },
-          showPageLoadingMsg: function () {},
-          pageLoadErrorMessageTheme: {},
-          pageLoadErrorMessage: {}
-        };
-
-
-        // Function to allow different requirejs contexts per test suite
-
-        var cnt = 0;
-        window.createContext = function (stubs) {
-          cnt ++;
-          var map = {};
-          _.each(stubs, function(value, key) {
-            var stubName = 'stub' + key + cnt;
-            map[key] = stubName;
-            define(stubName, function() {
-              return sinon.stub(value);
-            });
-          });
-          return requirejs.config({
-            context: name,
-            map: {
-              '*': map
-            },
-            baseUrl: '../scripts/',
-            paths: {
-              pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
-              feature: '../bower_components/amd-feature/feature',
-              text: '../bower_components/requirejs-text/text',
-              domReady: '../bower_components/requirejs-domready/domReady'
-              //implementations: '../scripts/frag/05-implementations'
-           }
-          });
-        }
-
-        // Start the tests!
-
-        require([
-//        'test-api.js',
-//        'test-collection-datasuitcases.js',
-//        'test-collection-forms.js',
-//        'test-collection-interactions.js',
-//        'test-collection-pending.js',
-//        'test-collection-stars.js',
-        'test-data.js',
-//        'test-model-application.js',
-//        'test-model-datasuitcase.js',
-//        'test-model-form.js',
-//        'test-model-interaction.js',
-//        'test-model-pending.js',
-//        'test-model-star.js',
-        'test-router.js',
-//        'test-view-interaction.js',
-//        'test-view-star.js'
-        ], function () {
-          var runner = mocha.run();
-
-          var failedTests = [];
-          runner.on('end', function(){
-            window.mochaResults = runner.stats;
-            window.mochaResults.reports = failedTests;
-          });
-
-          runner.on('fail', logFailure);
-
-          function logFailure(test, err){
-
-            var flattenTitles = function(test){
-              var titles = [];
-              while (test.parent.title){
-                titles.push(test.parent.title);
-                test = test.parent;
-              }
-              return titles.reverse();
-            };
-
-            failedTests.push({name: test.title, result: false, message: err.message, stack: err.stack, titles: flattenTitles(test) });
-          };
-        });
-    </script>
+    <script src="/bower_components/jquery/jquery.min.js"></script>
+    <script src="/bower_components/underscore/underscore-min.js"></script>
+    <script src="/bower_components/backbone/backbone-min.js"></script>
+    <script src="/bower_components/mustache/mustache.js"></script>
+    <script src="/bower_components/requirejs/require.js"></script>
+    <script src="/scripts/frag/00-config.js"></script>
 </head>
 <body>
     <div id="mocha"></div>
+    <script src="/tests/loader.js"></script>
 </body>
 </html>

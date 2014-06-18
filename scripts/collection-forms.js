@@ -1,46 +1,17 @@
 /*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
-  ['model-form', 'feature!data'],
-  function (Form, Data) {
+  ['model-form', 'feature!data', 'api'],
+  function (Form, Data, API) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
       model: Form,
 
       initialize: function () {
-        var collection = this;
-        collection.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Form');
-        collection.initialize = new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: function () {
-              resolve();
-            },
-            error: function () {
-              reject();
-            }
-          });
-        });
-
-        require(['api'], function (API) {
-          API.getForm().then(function (data) {
-            _.each(data, function (recordData) {
-              var record = JSON.parse(recordData),
-                preExisting = collection.findWhere({_id: record['default'].name});
-              if (preExisting) {
-                preExisting.set(record).save();
-              } else {
-                record._id = record['default'].name;
-                collection.create(record);
-              }
-            });
-          });
-        });
-
-        collection.on("reset", function () {
-          collection.data.deleteAll();
-        });
-
+        if (!BlinkForms) {
+          window.BlinkForms = {};
+        }
         BlinkForms.getDefinition = function (name, action) {
-          return new Promise(function (resolve) {
+          return new Promise(function (resolve, reject) {
             require(['model-application'], function (app) {
               var def = app.forms.get(name),
                 elements,
@@ -53,7 +24,10 @@ define(
                   return attrs;
                 };
 
-              //def = _.clone(def.attributes);
+              if (!def) {
+                return reject();
+              }
+
               def = JSON.parse(JSON.stringify(def.attributes));
 
               if (_.isArray(def['default']._elements)) {
@@ -64,6 +38,15 @@ define(
               }
               if (_.isArray(def['default']._pages)) {
                 def['default']._pages = _.map(def['default']._pages, collapseAction);
+              }
+              if (_.isArray(def['default']._behaviours)) {
+                def['default']._behaviours = _.map(def['default']._behaviours, collapseAction);
+              }
+              if (_.isArray(def['default']._checks)) {
+                def['default']._checks = _.map(def['default']._checks, collapseAction);
+              }
+              if (_.isArray(def['default']._actions)) {
+                def['default']._actions = _.map(def['default']._actions, collapseAction);
               }
 
               if (!action) {
@@ -93,7 +76,50 @@ define(
             });
           });
         };
+      },
+
+      datastore: function () {
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Form');
+        return this;
+      },
+
+      load: function () {
+        var collection = this;
+
+        return new Promise(function (resolve, reject) {
+          collection.fetch({
+            success: resolve,
+            error: reject
+          });
+        });
+      },
+
+      download: function () {
+        var collection = this;
+        API.getForm().then(function (data) {
+          _.each(data, function (recordData) {
+            var record = JSON.parse(recordData),
+              preExisting = collection.findWhere({_id: record['default'].name});
+            if (preExisting) {
+              preExisting.set(record).save();
+            } else {
+              record._id = record['default'].name;
+              collection.create(record);
+            }
+          });
+        });
+      },
+
+      events: function () {
+        var collection = this;
+
+        collection.on("reset", function () {
+          collection.data.deleteAll();
+        });
+
+        return this;
       }
+
     });
     return FormCollection;
   }

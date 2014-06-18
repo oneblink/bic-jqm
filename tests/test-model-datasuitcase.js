@@ -1,40 +1,18 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - DataSuitcase', function () {
-    var Model, originalAPI;
+    var Model;
 
     before(function (done) {
-      require(['api'], function (API) {
-
-        originalAPI = API;
-        requirejs.undef('api');
-
-        define('api', [], function () {
-          return function (param) {console.log(param)};
-        });
-        
-        require(['model-datasuitcase'], function (rModel) {
-          Model = rModel;
-          done();
-        });
+      var injector = new Squire();
+      injector.mock('api', {});
+      injector.require(['../scripts/model-datasuitcase'], function (model) {
+        Model = model;
+        done();
+      }, function () {
+        done();
       });
-    });
-
-    after(function () {
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
     });
 
     it("should exist", function () {

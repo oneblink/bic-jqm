@@ -1,45 +1,18 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   return Backbone;
-// });
-
-// define('jquerymobile', [], function () {
-//   "use strict";
-//   console.log("Subtituting jQuery Mobile");
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - Interaction', function () {
-    var Model, originalAPI;
+    var injector, Model;
 
     before(function (done) {
-      require(['api'], function (API) {
+      injector = new Squire();
 
-        originalAPI = API;
-        requirejs.undef('api');
+      injector.mock('api', function () { return null; });
 
-        define('api', [], function () {
-          return function (param) {console.log(param)};
-        });
-
-        require(['model-interaction'], function (rModel) {
-          Model = rModel;
-          done();
-        });
+      injector.require(['../scripts/model-interaction'], function (required) {
+        Model = required;
+        done();
       });
-    });
-
-    after(function () {
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
     });
 
     it("should exist", function () {

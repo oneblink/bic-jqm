@@ -1,93 +1,62 @@
 /*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
-// define('wrapper-backbone', [], function () {
-//   "use strict";
-//   Backbone.sync = function () {};
-//   return Backbone;
-// });
-
-// define('model-pending-mobile', [], function () {
-//   "use strict";
-//   return Backbone.Model.extend();
-// });
-
-// define('data-pouch', [], function () {
-//   "use strict";
-//   return sinon.spy();
-// });
-
-// define('api-php', ['../../scripts/api-php'], function (API) {
-//   "use strict";
-//   var stub = sinon.stub(API);
-//   return stub;
-// });
-
-// window.BMP = {
-//   siteVars: {
-//     answerSpace: 'Exists',
-//     answerSpaceId: 1
-//   }
-// };
-
-define(function () {
+define(['Squire'], function (Squire) {
   "use strict";
   describe('Collection - Pending', function () {
-    var Collection, collection, originalModel, originalData, originalAPI;
+    var injector, Collection, collection;
 
     before(function (done) {
-      require(['model-pending', 'data-inMemory', 'api'], function (Model, Data, API) {
+      injector = new Squire();
 
-        originalModel = Model;
-        originalData = Data;
-        originalAPI = API;
-        requirejs.undef('model-pending');
-        requirejs.undef('data-inMemory');
-        requirejs.undef('api');
+      injector.mock('model-pending', Backbone.Model);
+      injector.mock('data-inMemory', function () { return null; });
+      injector.mock('api', function () { return null; });
 
-        define('model-pending', [], function () {
-          return Backbone.Model;
-        });
-
-        define('data-inMemory', [], function () {
-          return function (param) {console.log(param); };
-        });
-      
-        define('api', [], function () {
-          return function (param) {console.log(param); };
-        });
-
-        require(['collection-pending'], function (rCol) {
-          Collection = rCol;
-          done();
-        });
+      injector.require(['../scripts/collection-pending'], function (required) {
+        Collection = required;
+        done();
       });
     });
 
-    after(function () {
-      requirejs.undef('model-pending');
-      requirejs.undef('data-inMemory');
-      requirejs.undef('api');
-      define('api', [], function () {return originalAPI; });
-      define('model-pending', ['api'], function (API) {return originalModel; });
-      define('data-inMemory', [], function () {return originalData; });
+    beforeEach(function (done) {
+      collection = new Collection();
+      done();
     });
 
     it("should exist", function () {
       should.exist(Collection);
     });
 
-    describe('initialize()', function () {
-      it("should trigger an initialization event when initialized", function (done) {
-        collection = new Collection();
-        collection.once('initialize', done());
+    describe('#datastore', function () {
+      it('should create a datastore for the collection', function () {
+        expect(collection).to.not.have.property('data');
+        collection.datastore();
+        expect(collection).to.have.property('data');
       });
 
-      it("should set up it's data object", function () {
-        collection.should.have.property('data');
+      it('should return itself', function () {
+        expect(collection.datastore()).to.equal(collection);
+      });
+    });
+
+    describe('#load', function () {
+      beforeEach(function (done) {
+        collection.datastore();
+        sinon.stub(collection.data, 'readAll', function () {
+          return Promise.resolve();
+        });
+        done();
       });
 
-      // it("should have populated itself from the data store", function () {
-      //   should.equal(Data.called, true);
-      // });
+      it("should return a promise", function () {
+        expect(collection.load()).to.be.instanceOf(Promise);
+      });
+
+      it("should populate the datastore from cache", function (done) {
+        collection.load().then(function () {
+          expect(collection.data.readAll.called).to.equal(true);
+          done();
+        });
+      });
     });
 
     describe('processQueue()', function () {
