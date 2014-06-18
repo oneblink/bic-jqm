@@ -5,11 +5,11 @@
   <div id="pendingContent" data-role="content">
     <ul data-role="listview">
       <li data-role="list-divider">Pending</li>
-      {{#pending}}<li><a interaction="{{editInteraction}}" _id="{{_id}}">{{name}}</a></li>{{/pending}}
+      {{#pending}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/pending}}
       {{^pending}}<li>No items pending transmission to server</li>{{/pending}}
 
       <li data-role="list-divider">Draft</li>
-      {{#draft}}<li><a interaction="{{editInteraction}}" _id="{{_id}}">{{name}}</a></li>{{/draft}}
+      {{#draft}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/draft}}
       {{^draft}}<li>No items saved as draft.</li>{{/draft}}
     </ul>
   </div>

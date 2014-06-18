@@ -33,6 +33,14 @@ define(
 
       getLoginStatus: function () {
         return $.ajax('/_R_/common/3/xhr/GetLogin.php');
+      },
+
+      getFormList: function (formName) {
+        return $.ajax('/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName);
+      },
+
+      getFormRecord: function (formName, formAction, recordID) {
+        return $.ajax('/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction);
       }
 
     };

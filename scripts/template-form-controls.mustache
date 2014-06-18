@@ -1,10 +1,10 @@
-<div id="ActiveFormContainer"></div>
-
-<div id="FormPageCount" data-role="controlgroup" data-type="horizontal" style="display: none;">
-  <a id="previousFormPage" data-role="button" data-icon="back">Previous</a>
-  <a data-role="button"><span id="currentPage">1</span> of <span id="totalPages">1</span> pages</a>
-  <a id="nextFormPage" data-role="button" data-icon="forward">Next</a>
+{{#pages}}
+<div id="FormPageCount" data-role="controlgroup" data-type="horizontal">
+  <a id="previousFormPage" data-role="button" data-icon="back" {{^previous}}class="ui-disable"{{/previous}}>Previous</a>
+  <a data-role="button"><span id="currentPage">{{current}}</span> of <span id="totalPages">{{total}}</span> pages</a>
+  <a id="nextFormPage" data-role="button" data-icon="forward" {{^next}}class="ui-disable"{{/next}}>Next</a>
 </div>
+{{/pages}}
 
 <fieldset id="FormControls" class="ui-grid-b">
   <div class="ui-block-a">

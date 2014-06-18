@@ -1,6 +1,6 @@
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady'],
-  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady) {
+  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady', 'collection-form-records'],
+  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -24,13 +24,15 @@ define(
         app.forms = new FormCollection();
         app.pending = new PendingCollection();
         app.stars = new StarsCollection();
+        app.formRecords = new FormRecordsCollection();
 
         return Promise.all([
           app.interactions.datastore().events().load(),
           app.datasuitcases.datastore().events().load(),
           app.forms.datastore().events().load(),
           app.pending.datastore().load(),
-          app.stars.datastore().load()
+          app.stars.datastore().load(),
+          app.formRecords.datastore().load()
         ]);
       },
 
@@ -51,27 +53,25 @@ define(
         return new Promise(function (resolve, reject) {
           API.getAnswerSpaceMap().then(
             function (data) {
-              var models = [];
               _.each(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
-                  models.push(model, {merge: true});
+                  app.interactions.add(model, {merge: true});
                 }
                 if (key.substr(0, 1) === 'a') {
                   model = {
                     _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
                     dbid: key
                   };
-                  models.push(model, {merge: true});
+                  app.interactions.add(model, {merge: true});
 
                   app.save(value.pertinent);
                 }
               }, app);
 
-              app.interactions.set(models).save();
               _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
                 if (!app.datasuitcases.get(element)) {
                   app.datasuitcases.create({_id: element}, {success: function (model) {
