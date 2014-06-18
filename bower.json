@@ -12,6 +12,7 @@
     "requirejs-domready": "~2.0.1"
   },
   "devDependencies": {
-    "requirejs": "~2.1"
+    "requirejs": "~2.1",
+    "assertive-chai": "~1.0.0"
   }
 }
