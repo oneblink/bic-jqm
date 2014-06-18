@@ -10,6 +10,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-application', function () { return null; });
       injector.mock('model-star', function () { return null; });
       injector.mock('view-star', function () { return null; });
+      injector.mock('view-form', function () { return null; });
       injector.mock('text', function () { return null; });
       injector.mock('text!template-interaction.mustache', 'string');
       injector.mock('text!template-inputPrompt.mustache', 'string');
