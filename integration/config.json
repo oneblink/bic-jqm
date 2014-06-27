@@ -10,18 +10,20 @@
       25962
     ],
     "interactions": [
-      80749,
-      80747,
       80750,
       80748,
       80745,
       80746,
-      80744,
+      80749,
+      80747,
+      81750,
       80740,
+      80744,
       80743,
       80741,
+      80742,
       80751,
-      80742
+      81749
     ],
     "forms": [
       "test_form"
@@ -33,12 +35,12 @@
       
     ],
     "c25960": [
-      80749,
-      80747,
       80750,
       80748,
       80745,
-      80746
+      80746,
+      80749,
+      80747
     ],
     "c25962": [
       
@@ -48,8 +50,8 @@
     "pertinent": {
       "cdnLocation": "awsCloudFront:blink\/integration",
       "defaultTransition": "fade",
-      "header": "<div data-role=\"panel\" id=\"sidebar\">\r\n    <ul data-role=\"listview\" data-theme=\"e\">\r\n    <li><a href=\"#sidebar\" data-rel=\"close\">Close panel<\/a><\/li>\r\n    <li><a interaction=\"message\">Message<\/a><\/li>\r\n    <li><a interaction=\"madl_code\">MADL Code<\/a><\/li>\r\n    <li><a category=\"xslt\">XSLT<\/a><\/li>\r\n    <li><a category=\"form\">Forms<\/a><\/li>\r\n    <li><a category=\"parent_category\">Parent Category<\/a><\/li>\r\n    <\/ul>\r\n<\/div>\r\n<div data-role=\"header\">\r\n    <a href=\"#sidebar\" data-icon=\"bars\" data-iconpos=\"notext\">Sidebar<\/a>\r\n    <h1>Integration Testing answerSpace<\/h1>\r\n    <a pending data-icon=\"alert\">Pending<\/a>\r\n<\/div>",
-      "footer": "<div data-role=\"footer\" data-position=\"fixed\">\r\n    <a home data-icon=\"home\">Home<\/a>\r\n<\/div>",
+      "header": "<div data-role=\"panel\" id=\"sidebar\">\r\n    <ul data-role=\"listview\" data-theme=\"e\">\r\n    <li><a href=\"#sidebar\" data-rel=\"close\">Close panel<\/a><\/li>\r\n    <li><a interaction=\"message\">Message<\/a><\/li>\r\n    <li><a interaction=\"madl_code\">MADL Code<\/a><\/li>\r\n    <li><a category=\"xslt\">XSLT<\/a><\/li>\r\n    <li><a category=\"form\">Forms<\/a><\/li>\r\n    <li><a category=\"parent_category\">Parent Category<\/a><\/li>\r\n    <\/ul>\r\n<\/div>\r\n<div data-role=\"header\">\r\n    <h1>Integration Testing answerSpace<\/h1>\r\n    <div data-role=\"navbar\">\r\n        <ul>\r\n            <li><a back data-icon=\"back\">Back<\/a><\/li>\r\n            <li><a home data-icon=\"home\">Home<\/a><\/li>\r\n            <li><a href=\"#sidebar\" data-icon=\"bars\">Sidebar<\/a><\/li>\r\n            <li><a pending data-icon=\"alert\">Pending<\/a><\/li>\r\n        <\/ul>\r\n    <\/div>\r\n<\/div>",
+      "footer": "<div data-role=\"footer\" data-position=\"fixed\">\r\n    BlinkMobile!\r\n<\/div>",
       "displayName": null,
       "icon": null,
       "disabledMessage": "Access has been disabled.",
@@ -81,7 +83,7 @@
       "storageQuota": 0,
       "bicVersion": "v3",
       "characterEncoding": "iso-8859-1",
-      "bicClientVersion": "1397445266907",
+      "bicClientVersion": "1403052905307",
       "siteName": "integration",
       "registeredOnly": "allow all",
       "defaultScreen": "home",
@@ -176,67 +178,11 @@
       "name": "parent_category",
       "order": 6,
       "status": "active",
-      "registeredOnly": "allow all"
-    }
-  },
-  "i80749": {
-    "pertinent": {
-      "display": "hide",
-      "displayName": "TEST_FORM VIEW",
-      "icon": null,
-      "disabledMessage": "Access has been disabled.",
-      "helpMessage": null,
-      "message": null,
-      "inputPrompt": null,
-      "xml": null,
-      "xsl": null,
-      "jocr": null,
-      "jodi": null,
-      "description": null,
-      "hyperlink": null,
-      "hyperlinkTarget": "_blank",
-      "type": "form",
-      "blinkFormObjectName": "test_form",
-      "blinkFormAction": "view",
-      "name": "TEST_FORM_VIEW",
-      "order": 0,
-      "status": "active",
       "registeredOnly": "allow all",
       "tags": [
-        "nav-form"
-      ],
-      "keepAlive": false,
-      "mojoType": "server-hosted"
-    }
-  },
-  "i80747": {
-    "pertinent": {
-      "display": "show",
-      "displayName": "TEST_FORM ADD",
-      "icon": null,
-      "disabledMessage": "Access has been disabled.",
-      "helpMessage": null,
-      "message": null,
-      "inputPrompt": null,
-      "xml": null,
-      "xsl": null,
-      "jocr": null,
-      "jodi": null,
-      "description": null,
-      "hyperlink": null,
-      "hyperlinkTarget": "_blank",
-      "type": "form",
-      "blinkFormObjectName": "test_form",
-      "blinkFormAction": "add",
-      "name": "TEST_FORM_ADD",
-      "order": 0,
-      "status": "active",
-      "registeredOnly": "allow all",
-      "tags": [
-        "nav-form"
-      ],
-      "keepAlive": false,
-      "mojoType": "server-hosted"
+        "nav-integration",
+        "nav-child_category"
+      ]
     }
   },
   "i80750": {
@@ -359,30 +305,87 @@
       "mojoType": "server-hosted"
     }
   },
-  "i80744": {
+  "i80749": {
     "pertinent": {
-      "displayName": "Set DataSuitcase",
-      "description": "Set a basic DataSuitcase for testing",
+      "display": "hide",
+      "displayName": "TEST_FORM VIEW",
       "icon": null,
       "disabledMessage": "Access has been disabled.",
       "helpMessage": null,
-      "display": "show",
       "message": null,
       "inputPrompt": null,
       "xml": null,
       "xsl": null,
       "jocr": null,
       "jodi": null,
+      "description": null,
       "hyperlink": null,
       "hyperlinkTarget": "_blank",
-      "type": "madl code",
-      "name": "set_datasuitcase",
-      "order": 1,
+      "type": "form",
+      "blinkFormObjectName": "test_form",
+      "blinkFormAction": "view",
+      "name": "TEST_FORM_VIEW",
+      "order": 0,
       "status": "active",
       "registeredOnly": "allow all",
       "tags": [
-        "nav-xslt"
+        "nav-form"
       ],
+      "keepAlive": false,
+      "mojoType": "server-hosted"
+    }
+  },
+  "i80747": {
+    "pertinent": {
+      "display": "show",
+      "displayName": "TEST_FORM ADD",
+      "icon": null,
+      "disabledMessage": "Access has been disabled.",
+      "helpMessage": null,
+      "message": null,
+      "inputPrompt": null,
+      "xml": null,
+      "xsl": null,
+      "jocr": null,
+      "jodi": null,
+      "description": null,
+      "hyperlink": null,
+      "hyperlinkTarget": "_blank",
+      "type": "form",
+      "blinkFormObjectName": "test_form",
+      "blinkFormAction": "add",
+      "name": "TEST_FORM_ADD",
+      "order": 0,
+      "status": "active",
+      "registeredOnly": "allow all",
+      "tags": [
+        "nav-form"
+      ],
+      "keepAlive": false,
+      "mojoType": "server-hosted"
+    }
+  },
+  "i81750": {
+    "pertinent": {
+      "message": "<ul data-role=\"listview\">\r\n    <li><a interaction=\"ParentInt\">Parent<\/a><\/li>\r\n    <li><a back>Back<\/a><\/li>\r\n<\/ul>",
+      "display": "hide",
+      "displayName": null,
+      "icon": null,
+      "disabledMessage": "Access has been disabled.",
+      "helpMessage": null,
+      "inputPrompt": null,
+      "xml": null,
+      "xsl": null,
+      "jocr": null,
+      "jodi": null,
+      "description": null,
+      "hyperlink": null,
+      "hyperlinkTarget": "_blank",
+      "type": "message",
+      "name": "ChildInt",
+      "order": 0,
+      "status": "active",
+      "registeredOnly": "allow all",
       "keepAlive": false,
       "mojoType": "server-hosted",
       "blinkFormObjectName": null,
@@ -413,6 +416,36 @@
       "tags": [
         "nav-child_category",
         "nav-integration"
+      ],
+      "keepAlive": false,
+      "mojoType": "server-hosted",
+      "blinkFormObjectName": null,
+      "blinkFormAction": null
+    }
+  },
+  "i80744": {
+    "pertinent": {
+      "displayName": "Set DataSuitcase",
+      "description": "Set a basic DataSuitcase for testing",
+      "icon": null,
+      "disabledMessage": "Access has been disabled.",
+      "helpMessage": null,
+      "display": "show",
+      "message": null,
+      "inputPrompt": null,
+      "xml": null,
+      "xsl": null,
+      "jocr": null,
+      "jodi": null,
+      "hyperlink": null,
+      "hyperlinkTarget": "_blank",
+      "type": "madl code",
+      "name": "set_datasuitcase",
+      "order": 1,
+      "status": "active",
+      "registeredOnly": "allow all",
+      "tags": [
+        "nav-xslt"
       ],
       "keepAlive": false,
       "mojoType": "server-hosted",
@@ -477,6 +510,33 @@
       "blinkFormAction": null
     }
   },
+  "i80742": {
+    "pertinent": {
+      "displayName": "MADL Code",
+      "icon": null,
+      "disabledMessage": "Access has been disabled.",
+      "helpMessage": null,
+      "display": "show",
+      "message": null,
+      "inputPrompt": null,
+      "xml": null,
+      "xsl": null,
+      "jocr": null,
+      "jodi": null,
+      "description": null,
+      "hyperlink": null,
+      "hyperlinkTarget": "_blank",
+      "type": "madl code",
+      "name": "madl_code",
+      "order": 3,
+      "status": "active",
+      "registeredOnly": "allow all",
+      "keepAlive": false,
+      "mojoType": "server-hosted",
+      "blinkFormObjectName": null,
+      "blinkFormAction": null
+    }
+  },
   "i80751": {
     "pertinent": {
       "xml": "test",
@@ -507,14 +567,14 @@
       "blinkFormAction": null
     }
   },
-  "i80742": {
+  "i81749": {
     "pertinent": {
-      "displayName": "MADL Code",
+      "message": "<ul data-role=\"listview\">\r\n    <li><a interaction=\"ChildInt\">Child<\/a><\/li>\r\n    <li><a back>Back<\/a><\/li>\r\n<\/ul>",
+      "displayName": "Nested Interactions",
       "icon": null,
       "disabledMessage": "Access has been disabled.",
       "helpMessage": null,
       "display": "show",
-      "message": null,
       "inputPrompt": null,
       "xml": null,
       "xsl": null,
@@ -523,11 +583,15 @@
       "description": null,
       "hyperlink": null,
       "hyperlinkTarget": "_blank",
-      "type": "madl code",
-      "name": "madl_code",
-      "order": 3,
+      "type": "message",
+      "name": "ParentInt",
+      "order": 7,
       "status": "active",
       "registeredOnly": "allow all",
+      "tags": [
+        "nav-child_category",
+        "nav-integration"
+      ],
       "keepAlive": false,
       "mojoType": "server-hosted",
       "blinkFormObjectName": null,
