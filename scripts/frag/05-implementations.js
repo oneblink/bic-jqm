@@ -1,9 +1,3 @@
-define('es5-builtin', [], function () {
-  'use strict';
-  return {};
-});
-
-
 define('implementations', [], function () {
   'use strict';
   return {
@@ -27,7 +21,9 @@ define('implementations', [], function () {
       },
       {
         isAvailable: function () { return true; },
-        implementation: 'es5-builtin'
+        module: function () {
+          return {};
+        }
       }
     ],
     promises: [
