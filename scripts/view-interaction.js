@@ -45,7 +45,8 @@ define(
           attributes = "",
           first = true,
           count,
-          path;
+          path,
+          pathParts;
 
         if (e.target.tagName !== 'A') {
           $element = $(e.target).parents('a');
@@ -83,14 +84,24 @@ define(
           }
         }
 
-        path = $.mobile.path.parseLocation().pathname;
-        if ($.mobile.path.parseLocation().search) {
-          path = $.mobile.path.parseLocation().pathname.substr(0, $.mobile.path.parseLocation().pathname.length - 1);
+        path = '';
+        pathParts = $.mobile.path.parseLocation().pathname.split('/');
+        pathParts.shift();
+        if (pathParts[pathParts.length - 1] === "") {
+          pathParts.pop();
         }
 
-        if (path.slice(-1) === "/") {
-          path = path.slice(0, path.length - 1);
+        for (count = pathParts.length - 1; count !== -1; count = count - 1) {
+          if (!app.interactions.get(pathParts[count].toLowerCase()).get('type') && path.indexOf(pathParts[count]) === -1 && path.indexOf(pathParts[count].toLowerCase()) === -1 && pathParts[count] !== location && pathParts[count] !== location.toLowerCase()) {
+            if (path !== '') {
+              path = pathParts[count] + '/' + path;
+            } else {
+              path = pathParts[count];
+            }
+          }
         }
+
+        path = '/' + path;
 
         $.mobile.changePage(path + '/' + location + attributes);
       },
