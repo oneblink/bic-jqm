@@ -27,6 +27,15 @@ server.route({
     file: './integration/loader.js'
   }
 });
+
+server.route({
+  path: '/integration/cache.manifest',
+  method: 'GET',
+  handler: {
+    file: './integration/cache.manifest'
+  }
+});
+
 server.route({
   path: '/_R_/common/3/xhr/GetConfig.php',
   method: 'GET',
