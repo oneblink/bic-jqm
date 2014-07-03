@@ -1,5 +1,5 @@
 window.Modernizr = {
-  indexeddb: false
+  indexeddb: true
 };
 
 require.config({
@@ -21,6 +21,7 @@ require.config({
     sinon: '/bower_components/sinonjs/sinon',
     mustache: '/bower_components/mustache/mustache',
     bluebird: '/bower_components/bluebird/js/browser/bluebird',
+    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
     implementations: '/tests/implementations'
   },
   shim: {
@@ -47,11 +48,13 @@ require([
     'BMP.Blobs',
     'mustache',
     'BlinkForms',
+    'pouchdb',
     'jquerymobile',
-  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms) {
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
+  window.Pouch = Pouch;
 
   require(['main'], function () {
     console.log('BIC started!');
