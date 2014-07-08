@@ -59,14 +59,14 @@ define(
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
-                  app.interactions.add(model, {merge: true});
+                  app.interactions.add(model, {merge: true}).save();
                 }
                 if (key.substr(0, 1) === 'a') {
                   model = {
                     _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
                     dbid: key
                   };
-                  app.interactions.add(model, {merge: true});
+                  app.interactions.add(model, {merge: true}).save();
 
                   app.save(value.pertinent);
                 }
