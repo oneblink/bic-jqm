@@ -11,7 +11,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-application', Backbone.Model);
       injector.mock('model-form', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
-      injector.mock('api', {});
+      injector.mock('feature!api', {});
 
       injector.require(['../scripts/collection-forms'], function (rCol) {
         Collection = rCol;

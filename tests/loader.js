@@ -94,7 +94,7 @@ $.mobile = {
 
 require([
   'feature!promises',
-  'test-api.js',
+  'test-api-web.js',
   'test-collection-datasuitcases.js',
   'test-collection-forms.js',
   'test-collection-interactions.js',

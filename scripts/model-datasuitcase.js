@@ -1,5 +1,5 @@
 define(
-  ['api'],
+  ['feature!api'],
   function (API) {
     "use strict";
     var DataSuitcase = Backbone.Model.extend({

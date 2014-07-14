@@ -6,7 +6,7 @@ define(['Squire'], function (Squire) {
 
     before(function (done) {
       var injector = new Squire();
-      injector.mock('api', {});
+      injector.mock('feature!api', {});
       injector.require(['../scripts/model-datasuitcase'], function (model) {
         Model = model;
         done();

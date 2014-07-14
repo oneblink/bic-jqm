@@ -66,6 +66,14 @@ define('implementations', [], function () {
 
         implementation: '../scripts/data-inMemory'
       }
+    ],
+    'api': [
+      {
+        isAvailable: function () {
+          return true;
+        },
+        implementation: 'api-web'
+      }
     ]
   };
 });

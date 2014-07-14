@@ -32,7 +32,7 @@ define(['Squire'], function (Squire) {
       injector.mock('collection-stars', collectionMock);
       injector.mock('collection-form-records', collectionMock);
       injector.mock('domReady', function () { return null; });
-      injector.mock('api', {
+      injector.mock('feature!api', {
         getAnswerSpaceMap: function () { return Promise.resolve([]); },
         getLoginStatus: function () { return Promise.resolve({}); }
       });

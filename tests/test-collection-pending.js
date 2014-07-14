@@ -9,7 +9,7 @@ define(['Squire'], function (Squire) {
 
       injector.mock('model-pending', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
-      injector.mock('api', function () { return null; });
+      injector.mock('feature!api', function () { return null; });
 
       injector.require(['../scripts/collection-pending'], function (required) {
         Collection = required;

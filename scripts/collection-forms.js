@@ -1,6 +1,6 @@
 /*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
-  ['model-form', 'feature!data', 'api'],
+  ['model-form', 'feature!data', 'feature!api'],
   function (Form, Data, API) {
     "use strict";
     var FormCollection = Backbone.Collection.extend({
