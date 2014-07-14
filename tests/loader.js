@@ -6,7 +6,8 @@ require.config({
     feature: '/bower_components/amd-feature/feature',
     implementations: 'implementations',
     Squire: '/bower_components/squire/src/Squire',
-    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly'
+    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
+    uuid: '/bower_components/node-uuid/uuid'
   }
 });
 mocha.setup('bdd');

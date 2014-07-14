@@ -4,6 +4,9 @@
 define(function () {
   "use strict";
   describe('Forms v3 dependencies', function () {
+
+    this.timeout(8e3);
+
     describe('Moment.js', function () {
       before(function (done) {
         require(['moment'], function () {
@@ -32,6 +35,7 @@ define(function () {
 
     describe('Pick-a-Date.js', function () {
       before(function (done) {
+        this.timeout(5e3);
         require(['picker.date'], function () {
           done();
         });

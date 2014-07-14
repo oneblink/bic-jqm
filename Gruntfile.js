@@ -124,7 +124,8 @@ module.exports = function (grunt) {
             text: '../bower_components/requirejs-text/text',
             domReady: '../bower_components/requirejs-domready/domReady',
             feature: '../bower_components/amd-feature/feature',
-            'es5-shim': 'empty:'
+            'es5-shim': 'empty:',
+            uuid: '../bower_components/node-uuid/uuid'
           },
           wrap: {
             startFile: [
