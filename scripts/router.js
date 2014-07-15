@@ -1,5 +1,5 @@
 define(
-  ['model-application', 'view-interaction'],
+  ['model-application', 'view-interaction', 'backbone-sync'],
   function (app, InteractionView) {
     "use strict";
     var Router = Backbone.Router.extend({
