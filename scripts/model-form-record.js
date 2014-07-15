@@ -5,6 +5,10 @@ define(
     var FormRecord = Backbone.Model.extend({
       idAttribute: "_id",
 
+      url: function (action) {
+        return '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + this.get('formName') + '&_tid=' + this.get('id') + '&action=' + action;
+      },
+
       populate: function (action, callback) {
         var model = this;
         API.getFormRecord(model.get('formName'), action, model.get('id')).then(

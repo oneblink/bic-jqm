@@ -14,6 +14,21 @@ define(
         name: null
       },
 
+      url: function () {
+        var args, getargs;
+        args = this.get('args');
+        getargs = '';
+
+        if (args && typeof args === "object") {
+          _.each(args, function (value, key) {
+            if (value) {
+              getargs += '&' + key + '=' + value;
+            }
+          });
+        }
+        return '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + this.id + '&ajax=false' + getargs;
+      },
+
       inherit: function (config) {
         if (this.has("parent")) {
           var app = require('model-application'),

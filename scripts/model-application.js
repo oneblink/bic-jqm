@@ -11,6 +11,10 @@ define(
         loginStatus: false
       },
 
+      url: function () {
+        return '/_R_/common/3/xhr/GetConfig.php';
+      },
+
       datastore: function () {
         this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
         return this;
