@@ -1,6 +1,6 @@
 define(
-  [],
-  function () {
+  ['uuid'],
+  function (uuid) {
     "use strict";
     var API = {
       getAnswerSpaceMap: function () {
@@ -28,6 +28,7 @@ define(
       },
 
       setPendingItem: function (formname, formaction, formdata) {
+        formdata._uuid = uuid.v4();
         return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
       },
 
