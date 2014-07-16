@@ -21,7 +21,7 @@ define(function () {
     'api': [
       {
         isAvailable: function () {
-          return false;
+          return window.cordova && window.cordova.offline;
         },
         implementation: 'api-native'
       },
