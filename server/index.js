@@ -77,6 +77,14 @@ server.route({
 });
 
 server.route({
+  path: '/scripts/uuid.js',
+  method: 'GET',
+  handler: {
+    file: './bower_components/node-uuid/uuid.js'
+  }
+});
+
+server.route({
   path: '/_R_/common/3/xhr/GetAnswer.php',
   method: 'GET',
   handler: function (request, reply) {
