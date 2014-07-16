@@ -15,6 +15,8 @@ define(
         return '/_R_/common/3/xhr/GetConfig.php';
       },
 
+      httpMethod: 'read',
+
       datastore: function () {
         this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
         return this;
@@ -31,71 +33,53 @@ define(
         app.formRecords = new FormRecordsCollection();
 
         return Promise.all([
-          app.interactions.datastore().events().load(),
-          app.datasuitcases.datastore().events().load(),
-          app.forms.datastore().events().load(),
-          app.pending.datastore().load(),
-          app.stars.datastore().load(),
-          app.formRecords.datastore().load()
+          app.interactions.datastore().events().fetch(),
+          app.datasuitcases.datastore().events().fetch(),
+          app.forms.datastore().events().fetch(),
+          app.pending.datastore().fetch(),
+          app.stars.datastore().fetch(),
+          app.formRecords.datastore().fetch()
         ]);
       },
 
-      setup: function () {
-        var app = this;
+      parse: function (response) {
+        var app, data;
 
-        return new Promise(function (resolve, reject) {
-          app.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
-      },
+        app = this;
+        data = {};
 
-      populate: function () {
-        var app = this;
+        _.each(response, function (value, key) {
+          var model;
+          if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
+            model = value.pertinent;
+            model._id = model.name.toLowerCase();
+            model.dbid = key;
+            app.interactions.add(model, {merge: true}).save();
+          }
+          if (key.substr(0, 1) === 'a') {
+            model = {
+              _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
+              dbid: key
+            };
+            app.interactions.add(model, {merge: true}).save();
 
-        return new Promise(function (resolve, reject) {
-          API.getAnswerSpaceMap().then(
-            function (data) {
-              _.each(data, function (value, key) {
-                var model;
-                if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
-                  model = value.pertinent;
-                  model._id = model.name.toLowerCase();
-                  model.dbid = key;
-                  app.interactions.add(model, {merge: true}).save();
-                }
-                if (key.substr(0, 1) === 'a') {
-                  model = {
-                    _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-                    dbid: key
-                  };
-                  app.interactions.add(model, {merge: true}).save();
+            data = value.pertinent;
+          }
+        }, app);
 
-                  app.save(value.pertinent);
-                }
-              }, app);
-
-              _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-                if (!app.datasuitcases.get(element)) {
-                  app.datasuitcases.create({_id: element}, {success: function (model) {
-                    model.populate();
-                  }});
-                } else {
-                  if (navigator.onLine) {
-                    app.datasuitcases.get(element).populate();
-                  }
-                }
-              });
-
-              app.trigger("initialize");
-              resolve();
-            },
-            function () {
-              reject();
+        _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
+          if (!app.datasuitcases.get(element)) {
+            app.datasuitcases.create({_id: element}, {success: function (model) {
+              model.populate();
+            }});
+          } else {
+            if (navigator.onLine) {
+              app.datasuitcases.get(element).populate();
             }
-          );
+          }
         });
+
+        return data;
       },
 
       checkLoginStatus: function () {

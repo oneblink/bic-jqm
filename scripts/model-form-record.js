@@ -1,6 +1,6 @@
 define(
-  ['feature!api'],
-  function (API) {
+  [],
+  function () {
     "use strict";
     var FormRecord = Backbone.Model.extend({
       idAttribute: "_id",
@@ -9,31 +9,23 @@ define(
         return '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + this.get('formName') + '&_tid=' + this.get('id') + '&action=' + action;
       },
 
-      populate: function (action, callback) {
-        var model = this;
-        API.getFormRecord(model.get('formName'), action, model.get('id')).then(
-          function (data) {
-            var nodes, node, record;
+      httpMethod: 'read',
 
-            record = {};
-            nodes = data.evaluate('//' + model.get('formName'), data);
-            node = nodes.iterateNext();
+      parse: function (response) {
+        var nodes, node, record;
 
-            _.each(node.children, function (key) {
-              record[key.nodeName] = key.innerHTML;
-            });
+        record = {};
+        nodes = response.evaluate('//' + this.get('formName'), response);
+        node = nodes.iterateNext();
 
-            model.set({
-              record: record,
-              contentTime: Date.now()
-            });
+        _.each(node.children, function (key) {
+          record[key.nodeName] = key.innerHTML;
+        });
 
-            model.save({}, {
-              success: callback,
-              error: callback
-            });
-          }
-        );
+        return {
+          record: record,
+          contentTime: Date.now()
+        };
       }
     });
 

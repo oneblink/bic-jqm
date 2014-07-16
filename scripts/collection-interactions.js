@@ -11,17 +11,6 @@ define(
         return this;
       },
 
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
-      },
-
       events: function () {
         var collection = this;
 

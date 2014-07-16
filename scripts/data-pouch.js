@@ -141,6 +141,39 @@ define(
             }
           });
         });
+      },
+
+      sync: function (method, model, options) {
+        var data, promise;
+
+        data = this;
+
+        switch (method) {
+        case "read":
+          promise = model.id !== undefined ? data.read(model) : data.readAll();
+          break;
+        case "create":
+          promise = data.create(model);
+          break;
+        case "update":
+          promise = data.update(model);
+          break;
+        case "patch":
+          promise = data.update(model);
+          break;
+        case "delete":
+          promise = data['delete'](model);
+          break;
+        }
+
+        promise.then(
+          function (resp) {
+            options.success(resp);
+          },
+          function (err) {
+            options.error(err);
+          }
+        );
       }
     });
 

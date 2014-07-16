@@ -1,6 +1,6 @@
 define(
-  ['feature!api'],
-  function (API) {
+  [],
+  function () {
     "use strict";
     var DataSuitcase = Backbone.Model.extend({
       idAttribute: "_id",
@@ -15,22 +15,13 @@ define(
         return '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + this.id + '&_lc=' + time;
       },
 
-      populate: function () {
-        var model = this,
-          time = 0;
+      httpMethod: 'read',
 
-        if (this.has("contentTime")) {
-          time = this.get("contentTime");
-        }
-
-        API.getDataSuitcase(this.id, time).then(
-          function (data) {
-            model.save({
-              data: data,
-              contentTime: Date.now()
-            });
-          }
-        );
+      parse: function (response) {
+        return {
+          data: response.data,
+          contentTime: Date.now()
+        };
       }
     });
     return DataSuitcase;

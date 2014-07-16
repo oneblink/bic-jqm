@@ -1,6 +1,6 @@
 define(
-  ['model-form-record', 'feature!data', 'feature!api'],
-  function (FormRecord, Data, API) {
+  ['model-form-record', 'feature!data'],
+  function (FormRecord, Data) {
     "use strict";
     var FormRecordCollection = Backbone.Collection.extend({
       model: FormRecord,
@@ -10,56 +10,38 @@ define(
         return this;
       },
 
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+      url: function (formName) {
+        return '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName;
       },
 
-      pull: function (formName) {
-        var collection = this;
+      parse: function (response, options) {
+        var collection, nodes, node, parsed, parseNodes;
 
-        return new Promise(function (resolve, reject) {
-          API.getFormList(formName).then(
-            function (data) {
-              var nodes, node, parsed, parseNodes;
+        collection = this;
 
-              nodes = data.evaluate('//' + formName, data);
-              node = nodes.iterateNext();
+        nodes = response.evaluate('//' + options.formName, response);
+        node = nodes.iterateNext();
 
-              parseNodes = function (key) {
-                if (key.nodeName === 'id') {
-                  parsed.id = key.innerHTML;
-                } else {
-                  parsed.list[key.nodeName] = key.innerHTML;
-                }
-              };
+        parseNodes = function (key) {
+          if (key.nodeName === 'id') {
+            parsed.id = key.innerHTML;
+          } else {
+            parsed.list[key.nodeName] = key.innerHTML;
+          }
+        };
 
-              while (node) {
-                parsed = {};
-                parsed.formName = formName;
-                parsed.list = {};
+        while (node) {
+          parsed = {};
+          parsed.formName = options.formName;
+          parsed.list = {};
 
-                _.each(node.children, parseNodes);
+          _.each(node.children, parseNodes);
 
-                parsed._id = formName + '-' + parsed.id;
+          parsed._id = options.formName + '-' + parsed.id;
 
-                collection.add(parsed, {merge: true});
-                node = nodes.iterateNext();
-              }
-
-              resolve();
-            },
-            function () {
-              reject();
-            }
-          );
-        });
+          collection.add(parsed, {merge: true});
+          node = nodes.iterateNext();
+        }
       }
     });
     return FormRecordCollection;

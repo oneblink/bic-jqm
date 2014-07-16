@@ -3,75 +3,89 @@ define(
   function () {
     "use strict";
 
+    Backbone.emulateHTTP = true;
+
     // Save traditional sync method as ajaxSync
     Backbone.ajaxSync = Backbone.sync;
 
     // New sync method
-    Backbone.dataSync = function (method, model, options) {
+    Backbone.sync = function (method, model, options) {
+      var success, error, data;
 
-      //if (navigator.onLine) {
-        // Initiate request
-        // Timeout
-          // Read from cache
-        // Write to cache
-        // Respond
-      //} else {
-        // Read from cache
-        // If failed, throw error
-        // If worked, show cached content
-        // + set a stale variable
-      //}
-
-      var data, promise;
+      if (!model.data && !model.collection.data) {
+        if (options.error) {
+          return options.error('No data store set on the model/collection');
+        }
+        return;
+      }
       data = model.data || model.collection.data;
+
+      options = options || {};
+      success = options.success;
+      error = options.error;
+
+      model.trigger('request', model, null, options);
 
       switch (method) {
       case "read":
-        promise = model.id !== undefined ? data.read(model) : data.readAll();
+        // Read from data
+        // Process network request
+        // Update data
+        // Return data
+        if (model.httpMethod && method === model.httpMethod && method === "read" && navigator.onLine) {
+          options.success = function (syncResponse) {
+            options.success = function (ajaxResponse) {
+              options.success = function (dataResponse) {
+                success(dataResponse);
+              };
+              options.error = function () {
+                error("Unable to update data store");
+              };
+              model.set(ajaxResponse);
+              data.sync("update", ajaxResponse, options);
+            };
+            options.error = function () {
+              error("Unable to fetch new data");
+            };
+            model.set(syncRespone);
+            Backbone.ajaxSync(method, model, options);
+          };
+          options.error = function () {
+            options.success = function (ajaxResponse) {
+              options.success = function (dataResponse) {
+                success(dataResponse);
+              };
+              options.error = function () {
+                success(ajaxResponse);
+              };
+              model.set(ajaxResponse);
+              data.sync("create", model, options);
+            };
+            options.error = function () {
+              error('Could not retreive data');
+            };
+            Backbone.ajaxSync(method, model, options);
+          };
+          data.sync(method, model, options);
+        } else {
+          data.sync(method, model, options);
+        }
         break;
       case "create":
-        promise = data.create(model);
+        data.sync(method, model, options);
         break;
       case "update":
-        promise = data.update(model);
+        data.sync(method, model, options);
         break;
       case "patch":
-        promise = data.update(model);
+        data.sync(method, model, options);
         break;
       case "delete":
-        promise = data['delete'](model);
+        data.sync(method, model, options);
         break;
-      default:
-        promise = Promise.reject(new Error('unknown method'));
       }
 
-      promise.then(function (response) {
-        if (options.success) {
-          options.success(response);
-        }
-      }, function (response) {
-        if (options.error) {
-          options.error(response);
-        }
-      });
-
-      model.trigger('request', model, promise, options);
-
-      return promise;
+      return;
     };
-
-    // Fallback to traditional sync when not specified
-    Backbone.getSyncMethod = function (model) {
-      if (model.data || (model.collection && model.collection.data)) {
-        return Backbone.dataSync;
-      }
-      return Backbone.ajaxSync;
-    };
-
-    // Hook Backbone.sync up to the data layer
-    Backbone.sync = function (method, model, options) {
-      return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
-    };
-
   }
 );

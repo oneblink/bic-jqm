@@ -1,6 +1,6 @@
 define(
-  ['feature!api'],
-  function (API) {
+  [],
+  function () {
     "use strict";
     var Interaction = Backbone.Model.extend({
 
@@ -27,6 +27,15 @@ define(
           });
         }
         return '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + this.id + '&ajax=false' + getargs;
+      },
+
+      httpMethod: 'read',
+
+      parse: function (response) {
+        return {
+          content: response,
+          contentTime: Date.now()
+        };
       },
 
       inherit: function (config) {
@@ -205,26 +214,14 @@ define(
           }
 
           if (model.get("type") === "madl code") {
-            /*jslint unparam: true*/
-            API.getInteractionResult(model.id, model.get('args'), data.options).then(
-              function (result) {
-                model.save({
-                  content: result,
-                  contentTime: Date.now()
-                }, {
-                  success: function () {
-                    resolve(model);
-                  },
-                  error: function () {
-                    resolve(model);
-                  }
-                });
+            model.fetch({
+              success: function () {
+                resolve(model);
               },
-              function (jqXHR, textStatus, errorThrown) {
-                reject(errorThrown);
+              error: function () {
+                resolve(model);
               }
-            );
-            /*jslint unparam: false*/
+            });
           }
 
           if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {

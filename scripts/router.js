@@ -4,7 +4,7 @@ define(
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
-        var collectionCallback, setupCallback, formsCallback;
+        var collectionCallback;
 
         BMP.FileInput.initialize();
 
@@ -22,21 +22,18 @@ define(
           }
         });
 
-        formsCallback = function () {
-          app.forms.download();
-          app.initialRender();
-        };
-
-        setupCallback = function () {
-          if (navigator.onLine) {
-            app.populate().then(formsCallback, formsCallback);
-          } else {
-            app.initialRender();
-          }
-        };
-
         collectionCallback = function () {
-          app.setup().then(setupCallback, setupCallback);
+          app.fetch({
+            success: function () {
+              if (navigator.onLine) {
+                app.forms.download();
+              }
+              app.initialRender();
+            },
+            error: function () {
+              app.initialRender();
+            }
+          });
         };
 
         app.datastore().collections().then(collectionCallback, collectionCallback);

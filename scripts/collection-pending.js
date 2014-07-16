@@ -10,17 +10,6 @@ define(
         return this;
       },
 
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
-      },
-
       processQueue: function () {
         _.each(this.where({status: "Pending"}), function (element) {
           /*jslint unparam: true*/
