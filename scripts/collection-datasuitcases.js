@@ -19,16 +19,6 @@ define(
             error: reject
           });
         });
-      },
-
-      events: function () {
-        var collection = this;
-
-        collection.on("reset", function () {
-          collection.data.deleteAll();
-        });
-
-        return this;
       }
     });
     return DataSuitcaseCollection;

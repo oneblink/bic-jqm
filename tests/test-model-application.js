@@ -20,9 +20,6 @@ define(['Squire'], function (Squire) {
         datastore: function () {
           return this;
         },
-        events: function () {
-          return this;
-        },
         load: function () {
           return Promise.resolve();
         },

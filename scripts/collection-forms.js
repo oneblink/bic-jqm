@@ -108,16 +108,6 @@ define(
             }
           });
         });
-      },
-
-      events: function () {
-        var collection = this;
-
-        collection.on("reset", function () {
-          collection.data.deleteAll();
-        });
-
-        return this;
       }
 
     });

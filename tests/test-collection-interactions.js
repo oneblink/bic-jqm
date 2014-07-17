@@ -58,10 +58,6 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    describe('#events', function () {
-      it("binds events to the collection");
-    });
-
     describe('#save', function () {
       it("should persist any models to the data store");
     });

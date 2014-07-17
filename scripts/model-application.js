@@ -27,9 +27,9 @@ define(
         app.formRecords = new FormRecordsCollection();
 
         return Promise.all([
-          app.interactions.datastore().events().load(),
-          app.datasuitcases.datastore().events().load(),
-          app.forms.datastore().events().load(),
+          app.interactions.datastore().load(),
+          app.datasuitcases.datastore().load(),
+          app.forms.datastore().load(),
           app.pending.datastore().load(),
           app.stars.datastore().load(),
           app.formRecords.datastore().load()
@@ -113,9 +113,9 @@ define(
           API.getLoginStatus().then(function (data) {
             var status = data.status || data;
             if (app.get('loginStatus') !== status) {
-              app.interactions.reset();
-              app.datasuitcases.reset();
-              app.forms.reset();
+              app.interactions.set([]);
+              app.datasuitcases.set([]);
+              app.forms.set([]);
               app.populate().then(function () {
                 app.set({loginStatus: status});
                 resolve();

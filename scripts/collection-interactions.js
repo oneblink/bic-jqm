@@ -22,16 +22,6 @@ define(
         });
       },
 
-      events: function () {
-        var collection = this;
-
-        collection.on("reset", function () {
-          collection.data.deleteAll();
-        });
-
-        return this;
-      },
-
       save: function () {
         _.each(this.models, function (model) {
           model.save();
