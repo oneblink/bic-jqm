@@ -56,7 +56,7 @@ server.route({
   path: '/_R_/common/3/xhr/GetMoJO.php',
   method: 'GET',
   handler: {
-    file: './integration/mojo.json'
+    file: './integration/mojo.xml'
   }
 });
 
