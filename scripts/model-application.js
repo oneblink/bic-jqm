@@ -53,7 +53,7 @@ define(
         return new Promise(function (resolve, reject) {
           API.getAnswerSpaceMap().then(
             function (data) {
-              var interaction = [];
+              var interactions = [];
               _.each(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
@@ -61,7 +61,7 @@ define(
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
                   app.interactions.add(model, {merge: true}).save();
-                  interaction.push(model._id);
+                  interactions.push(model._id);
                 }
                 if (key.substr(0, 1) === 'a') {
                   model = {
@@ -69,7 +69,7 @@ define(
                     dbid: key
                   };
                   app.interactions.add(model, {merge: true}).save();
-
+                  interactions.push(model._id);
                   app.save(value.pertinent);
                 }
               }, app);
@@ -85,6 +85,15 @@ define(
                   }
                 }
               });
+
+              _.each(
+                _.reject(app.interactions.models, function (model) {
+                  return _.contains(interactions, model.id);
+                }),
+                function (model) {
+                  model.destroy();
+                }
+              );
 
               app.trigger("initialize");
               resolve();
