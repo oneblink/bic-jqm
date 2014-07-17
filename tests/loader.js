@@ -44,13 +44,15 @@ Backbone.sync = function (method, model, options) {
     promise = data.create(model);
     break;
   case "update":
-    promise = data.update(model);
+    //promise = data.update(model);
+    promise = Promise.resolve();
     break;
   case "patch":
     promise = data.update(model);
     break;
   case "delete":
-    promise = data['delete'](model);
+    //promise = data['delete'](model);
+    promise = Promise.resolve();
     break;
   default:
     promise = Promise.reject(new Error('unknown method'));
