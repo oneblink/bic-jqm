@@ -23,7 +23,12 @@ In that case, you should:
 1. Check out the source
 2. Switch to develop branch
 3. Set up git-flow
-4. NPM install
+4. npm install
+5. bower install
+6. openssl genrsa -out ./server/key.pem
+7. openssl req -new -key ./server/key.pem -out ./server/csr.pem
+8. openssl x509 -req -days 9999 -in ./server/csr.pem -signkey ./server/key.pem -out ./server/cert.pem
+9. rm ./server/csr.pem
 
 Developing
 ----------------
