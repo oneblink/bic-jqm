@@ -94,7 +94,7 @@ define(
             data: data
           };
           if (view.model.get("blinkFormAction") === "edit") {
-            model = app.pending.get(view.model.get("args")['args[id]']);
+            model = app.pending.get(view.model.get("args")['args[pid]']);
             model.set(modelAttrs);
           } else {
             model = app.pending.create(modelAttrs);
