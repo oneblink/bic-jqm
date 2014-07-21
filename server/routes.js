@@ -75,6 +75,14 @@ module.exports = function (server) {
   });
 
   server.route({
+    path: '/_R_/common/3/xhr/SaveFormRecord.php',
+    method: 'POST',
+    handler: function (request, reply) {
+      reply('<div>Way to go, sport!</div>');
+    }
+  });
+
+  server.route({
     path: '/scripts/uuid.js',
     method: 'GET',
     handler: {
