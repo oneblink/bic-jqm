@@ -107,6 +107,7 @@ define(
               model.once('processed', function () {
                 if (model.get('status') === 'Submitted') {
                   app.view.popup(model.get('result'));
+                  model.destroy();
                 } else {
                   app.view.pendingQueue();
                 }
