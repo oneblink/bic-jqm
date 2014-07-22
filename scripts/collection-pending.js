@@ -29,8 +29,16 @@ define(
               // NEED TO CHECK STATUS === 200 && RESULT !== BLANK!!!!
               //element.destroy({wait: true});
               if (data && xhr.status === 200) {
-                element.set({status: 'Submitted'});
-                element.set({result: data});
+                element.save({
+                  status: 'Submitted',
+                  result: data
+                });
+              } else if (status === 'error' && data.responseText) {
+                var errors = JSON.parse(data.responseText);
+                element.save({
+                  status: 'Failed Validation',
+                  errors: errors
+                });
               }
               element.trigger('processed');
             }
