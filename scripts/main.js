@@ -23,7 +23,16 @@ define(
     function init() {
       if (window.BMP.isBlinkGap === true) {
         if (cordova.available === true) {
-          start();
+          if (cordova.offline) {
+            if (cordova.offline.available === true) {
+              start();
+            } else {
+              // Poll
+              window.setTimeout(init(), 1000);
+            }
+          } else {
+            start();
+          }
         } else {
           // Poll
           window.setTimeout(init(), 1000);
