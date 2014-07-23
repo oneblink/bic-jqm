@@ -6,12 +6,13 @@ define(
     var API = {
       getAnswerSpaceMap: function () {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
-            resolve,
+          console.log('Calling cordova.offline.retrieveContent');
+          cordova.offline.retrieveContent(
+            function (data) {
+              resolve(JSON.parse(data));
+            },
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetConfig.php'
-            }
+            '/_R_/common/3/xhr/GetConfig.php'
           );
         });
       },
@@ -26,36 +27,33 @@ define(
           });
         }
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
+          cordova.offline.retrieveContent(
             resolve,
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs
-            }
+            '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs
           );
         });
       },
 
       getForm: function () {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
-            resolve,
+          cordova.offline.retrieveContent(
+            function (data) {
+              resolve();
+              //resolve(JSON.parse(data));
+            },
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetForm.php?_v=3'
-            }
+            '/_R_/common/3/xhr/GetForm.php?_v=3'
           );
         });
       },
 
       getDataSuitcase: function (suitcase, time) {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
+          cordova.offline.retrieveContent(
             resolve,
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time
-            }
+            '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time
           );
         });
       },
@@ -67,40 +65,33 @@ define(
 
       getLoginStatus: function () {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
+          cordova.offline.retrieveContent(
             resolve,
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetLogin.php'
-            }
+            '/_R_/common/3/xhr/GetLogin.php'
           );
         });
       },
 
       getFormList: function (formName) {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
+          cordova.offline.retrieveContent(
             resolve,
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
-            }
+            '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
           );
         });
       },
 
       getFormRecord: function (formName, formAction, recordID) {
         return new Promise(function (resolve, reject) {
-          cordova.offliner.retrieveContent(
+          cordova.offline.retrieveContent(
             resolve,
             reject,
-            {
-              url: '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
-            }
+            '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
           );
         });
       }
-
     };
 
     return API;
