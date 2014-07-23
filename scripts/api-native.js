@@ -6,7 +6,6 @@ define(
     var API = {
       getAnswerSpaceMap: function () {
         return new Promise(function (resolve, reject) {
-          console.log('Calling cordova.offline.retrieveContent');
           cordova.offline.retrieveContent(
             function (data) {
               resolve(JSON.parse(data));
@@ -39,8 +38,7 @@ define(
         return new Promise(function (resolve, reject) {
           cordova.offline.retrieveContent(
             function (data) {
-              resolve();
-              //resolve(JSON.parse(data));
+              resolve(JSON.parse(data));
             },
             reject,
             '/_R_/common/3/xhr/GetForm.php?_v=3'
