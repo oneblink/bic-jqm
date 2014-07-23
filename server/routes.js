@@ -75,6 +75,20 @@ module.exports = function (server) {
   });
 
   server.route({
+    path: '/_R_/common/3/xhr/SaveFormRecord.php',
+    method: 'POST',
+    handler: function (request, reply) {
+      // Valid Response
+      reply('<div>Way to go, sport!</div>');
+
+      // Failed Validation
+      //var response = reply({"message":"<span class=\"bForm-error\">Form could not be submitted.<\/span>","errors":{"text_box":"Text Box\/ cannot be more then 5 characters"}}).hold();
+      //response.code(470);
+      //response.send();
+    }
+  });
+
+  server.route({
     path: '/scripts/uuid.js',
     method: 'GET',
     handler: {

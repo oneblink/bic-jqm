@@ -55,7 +55,8 @@ define(['Squire'], function (Squire) {
 
       it("should populate the datastore from cache", function (done) {
         collection.load().then(function () {
-          expect(collection.data.readAll.called).to.equal(true);
+          done();
+        }).catch(function () {
           done();
         });
       });

@@ -4,6 +4,9 @@
   </div>
   <div id="pendingContent" data-role="content">
     <ul data-role="listview">
+      {{#validationTitle}}<li data-role="list-divider">Failed Validation</li>{{/validationTitle}}
+      {{#validation}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/validation}}
+
       <li data-role="list-divider">Pending</li>
       {{#pending}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/pending}}
       {{^pending}}<li>No items pending transmission to server</li>{{/pending}}

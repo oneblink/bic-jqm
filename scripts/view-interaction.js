@@ -348,7 +348,9 @@ define(
 
         this.$el.append(Mustache.render(pendingTemplate, {
           pending: pendingExtractor("Pending"),
-          draft: pendingExtractor("Draft")
+          draft: pendingExtractor("Draft"),
+          validation: pendingExtractor("Failed Validation"),
+          validationTitle: pendingExtractor("Failed Validation").length > 0
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');

@@ -10,7 +10,7 @@ define(
 
         BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction")).then(function (definition) {
 
-          BlinkForms.initialize(definition);
+          BlinkForms.initialize(definition, view.model.get("blinkFormAction"));
           view.$el.append(BlinkForms.current.$form);
 
           subView = new FormControls({
