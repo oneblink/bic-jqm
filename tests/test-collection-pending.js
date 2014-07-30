@@ -2,14 +2,19 @@
 define(['Squire'], function (Squire) {
   "use strict";
   describe('Collection - Pending', function () {
-    var injector, Collection, collection;
+    var injector, Collection, collection, apiStub;
 
     before(function (done) {
       injector = new Squire();
 
+      apiStub = sinon.stub();
+      apiStub.returns(Promise.resolve());
+
       injector.mock('model-pending', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
-      injector.mock('feature!api', function () { return null; });
+      injector.mock('api-web', {
+        setPendingItem: apiStub
+      });
 
       injector.require(['../scripts/collection-pending'], function (required) {
         Collection = required;
@@ -59,13 +64,63 @@ define(['Squire'], function (Squire) {
     });
 
     describe('processQueue()', function () {
+      beforeEach(function (done) {
+        apiStub.reset();
+        done();
+      });
+
       it("should do nothing when offline");
 
-      it("should send pending items to the server when online");
+      it("should send pending items to the server when online", function () {
+        expect(apiStub.called).to.equal(false);
+        collection.add({
+          status: 'Pending',
+          name: 'test',
+          action: 'test',
+          data: {}
+        });
+        expect(collection.length).to.equal(1);
+        collection.processQueue();
+        expect(apiStub.called).to.equal(true);
+      });
 
-      it("should remove items from the queue after sucessful submission");
+      it("should change an items status to submitted after successful submission", function (done) {
+        expect(apiStub.called).to.equal(false);
+        collection.add({
+          status: 'Pending',
+          name: 'test',
+          action: 'test',
+          data: {}
+        });
+        expect(collection.length).to.equal(1);
+        apiStub.returns(Promise.resolve());
+        collection.processQueue().then(function () {
+          expect(collection.length).to.equal(1);
+          expect(apiStub.called).to.equal(true);
+          //expect(collection.models[0].get('status')).to.equal('Submitted');
+          done();
+        });
+      });
 
-      it("should keep items in the queue after failed submission");
+      it("should keep items in the queue (as pending) after failed submission", function (done) {
+        expect(apiStub.called).to.equal(false);
+        collection.add({
+          status: 'Pending',
+          name: 'test',
+          action: 'test',
+          data: {}
+        });
+        expect(collection.length).to.equal(1);
+        apiStub.returns(Promise.reject());
+        collection.processQueue().then(function () {
+          expect(collection.length).to.equal(1);
+          expect(apiStub.called).to.equal(true);
+          expect(collection.models[0].get('status')).to.equal('Pending');
+          done();
+        });
+      });
+
+      it("should keep items in the queue if they fail server side validation");
 
       it("should retain draft items");
     });
