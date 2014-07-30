@@ -74,7 +74,9 @@ define(
       getFormList: function (formName) {
         return new Promise(function (resolve, reject) {
           cordova.offline.retrieveContent(
-            resolve,
+            function (data) {
+              resolve($.parseXML(data));
+            },
             reject,
             '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
           );
@@ -84,7 +86,9 @@ define(
       getFormRecord: function (formName, formAction, recordID) {
         return new Promise(function (resolve, reject) {
           cordova.offline.retrieveContent(
-            resolve,
+            function (data) {
+              resolve($.parseXML(data));
+            },
             reject,
             '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
           );
