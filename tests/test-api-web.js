@@ -6,7 +6,7 @@ define(['Squire'], function (Squire) {
 
     before(function (done) {
       var injector = new Squire();
-      injector.require(['../scripts/api'], function (required) {
+      injector.require(['../scripts/api-web'], function (required) {
         api = required;
 
         server = sinon.fakeServer.create();

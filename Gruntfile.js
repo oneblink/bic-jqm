@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['hapi', 'watch'],
+      background: ['hapi:http', 'hapi:https', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -19,9 +19,16 @@ module.exports = function (grunt) {
     },
 
     hapi: {
-      server: {
+      http: {
         options: {
-          server: require('path').resolve('server/index.js'),
+          server: require('path').resolve('server/http.js'),
+          bases: {},
+          noasync: true
+        }
+      },
+      https: {
+        options: {
+          server: require('path').resolve('server/https.js'),
           bases: {},
           noasync: true
         }
@@ -124,7 +131,8 @@ module.exports = function (grunt) {
             text: '../bower_components/requirejs-text/text',
             domReady: '../bower_components/requirejs-domready/domReady',
             feature: '../bower_components/amd-feature/feature',
-            'es5-shim': 'empty:'
+            'es5-shim': 'empty:',
+            uuid: '../bower_components/node-uuid/uuid'
           },
           wrap: {
             startFile: [

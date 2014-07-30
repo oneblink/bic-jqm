@@ -3,38 +3,44 @@ define(['Squire'], function (Squire) {
   "use strict";
 
   describe('Model - Application', function () {
-    var injector, model;
+    var injector, model, siteMap, loginStatus;
 
 
     before(function (done) {
-      var collectionMock = function () {
-        return {
-          datastore: function () {
-            return this;
-          },
-          load: function () {
-            return Promise.resolve();
-          },
-          events: function () {
-            return this;
-          },
-          download: function () { return null; },
-          reset: function () { return null; }
-        };
-      };
+      siteMap = {};
+      loginStatus = {};
+
+      var CollectionMock = Backbone.Collection.extend({
+        model: Backbone.Model.extend({
+          idAttribute: '_id',
+          populate: function () {
+            return true;
+          }
+        }),
+        datastore: function () {
+          return this;
+        },
+        load: function () {
+          return Promise.resolve();
+        },
+        save: function () {
+          return true;
+        }
+      });
 
       injector = new Squire();
 
-      injector.mock('collection-interactions', collectionMock);
-      injector.mock('collection-datasuitcases', collectionMock);
-      injector.mock('collection-forms', collectionMock);
-      injector.mock('collection-pending', collectionMock);
-      injector.mock('collection-stars', collectionMock);
-      injector.mock('collection-form-records', collectionMock);
+      injector.mock('collection-interactions', CollectionMock);
+      injector.mock('collection-datasuitcases', CollectionMock);
+      injector.mock('collection-forms', CollectionMock);
+      injector.mock('collection-pending', CollectionMock);
+      injector.mock('collection-stars', CollectionMock);
+      injector.mock('collection-form-records', CollectionMock);
       injector.mock('domReady', function () { return null; });
-      injector.mock('api', {
-        getAnswerSpaceMap: function () { return Promise.resolve([]); },
-        getLoginStatus: function () { return Promise.resolve({}); }
+
+      injector.mock('api-web', {
+        getAnswerSpaceMap: function () { return Promise.resolve(siteMap); },
+        getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
 
       injector.require(['../scripts/model-application.js'], function (required) {
@@ -71,10 +77,6 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#collections', function () {
-      beforeEach(function (done) {
-        done();
-      });
-
       afterEach(function (done) {
         delete model.interactions;
         delete model.datasuitcases;
@@ -147,28 +149,77 @@ define(['Squire'], function (Squire) {
 
       it("should read from it's data store", function (done) {
         model.setup().then(function () {
-          expect(model.data.read.called).to.equal(true);
           done();
         });
       });
     });
 
     describe('#populate', function () {
+      before(function (done) {
+        model.collections().then(function () {
+          done();
+        });
+      });
+
+      beforeEach(function (done) {
+        siteMap = {};
+        done();
+      });
+
       it("should do nothing if offline");
 
-      it("should fetch the answerSpaceMap from API");
+      it("should fetch the answerSpaceMap from API");//, function (done) {
+        //model.populate().then(function () {
+          //done();
+        //});
+      //});
 
-      it("should fill the interaction collection from map");
+      it("should fill the interaction collection from map", function (done) {
+        siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one"}}}');
+        model.populate().then(function () {
+          expect(model.interactions.length).to.equal(1);
+          done();
+        });
+      });
 
-      it("should fill the answerSpace config from map");
+      it("should fill the answerSpace config from map", function (done) {
+        siteMap = JSON.parse('{"a1":{"pertinent":{"cat":"hat"}}}');
+        model.populate().then(function () {
+          expect(model.get('cat')).to.equal('hat');
+          done();
+        });
+      });
 
-      it("should parse interactions for data suitcases");
+      it("should parse interactions for data suitcases", function (done) {
+        siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one","xml":"test"}}}');
+        model.populate().then(function () {
+          expect(model.datasuitcases.length).to.equal(1);
+          done();
+        });
+      });
 
-      it("should parse interactions for form objects");
+      it("should trigger an 'initialize' event when complete", function (done) {
+        model.once('initialize', function () {
+          done();
+        });
+        model.populate();
+      });
 
-      it("should trigger an 'initalize' event when complete");
+      it("should delete items from the DB when they are removed from the sitemap", function (done) {
+        siteMap = JSON.parse('{"map":{"interactions":[1,2,3]},"i1":{"pertinent":{"name":"one"}},"i2":{"pertinent":{"name":"two"}},"i3":{"pertinent":{"name":"three"}}}');
+        model.populate().then(function () {
+          expect(model.interactions.length).to.equal(3);
+          siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one"}}}');
+          model.populate().then(function () {
+            expect(model.interactions.length).to.equal(1);
+            done();
+          });
+        });
+      });
 
-      it("should return a promise");
+      it("should return a promise", function () {
+        expect(model.populate()).to.be.instanceOf(Promise);
+      });
     });
 
     describe('#checkLoginStatus', function () {
@@ -178,10 +229,24 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should return a promise");//, function () {
-        // Temporarily disabling as it causes side effects that break tests
-        //expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
-      //});
+      it("should return a promise", function () {
+        model.set('loginStatus', 'cats!');
+        loginStatus = 'cats!';
+        expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
+      });
+
+      it("should destroy all the collections if login status differs from the saved state", function (done) {
+        siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one"}}}');
+        model.populate().then(function () {
+          expect(model.interactions.length).to.equal(1);
+          loginStatus = 'hats!';
+          siteMap = {};
+          model.checkLoginStatus().then(function () {
+            expect(model.interactions.length).to.equal(0);
+            done();
+          });
+        });
+      });
     });
 
     describe('#initialRender', function () {

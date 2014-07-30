@@ -6,7 +6,8 @@ require.config({
     feature: '/bower_components/amd-feature/feature',
     implementations: 'implementations',
     Squire: '/bower_components/squire/src/Squire',
-    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly'
+    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
+    uuid: '/bower_components/node-uuid/uuid'
   }
 });
 mocha.setup('bdd');
@@ -30,30 +31,10 @@ window.BMP = {
 window.Modernizr = {indexeddb: false};
 window.BlinkForms = {};
 
+/*jslint unparam: true */
 Backbone.sync = function (method, model, options) {
   "use strict";
-  var data, promise;
-  data = model.data || model.collection.data;
-
-  switch (method) {
-  case "read":
-    promise = model.id !== undefined ? data.read(model) : data.readAll();
-    break;
-  case "create":
-    promise = data.create(model);
-    break;
-  case "update":
-    promise = data.update(model);
-    break;
-  case "patch":
-    promise = data.update(model);
-    break;
-  case "delete":
-    promise = data['delete'](model);
-    break;
-  default:
-    promise = Promise.reject(new Error('unknown method'));
-  }
+  var promise = Promise.resolve({});
 
   promise.then(function (response) {
     if (options.success) {
@@ -65,10 +46,9 @@ Backbone.sync = function (method, model, options) {
     }
   });
 
-  model.trigger('request', model, promise, options);
-
   return promise;
 };
+/*jslint unparam: false */
 
 $.mobile = {
   loading: function () {
@@ -94,7 +74,7 @@ $.mobile = {
 
 require([
   'feature!promises',
-  'test-api.js',
+  'test-api-web.js',
   'test-collection-datasuitcases.js',
   'test-collection-forms.js',
   'test-collection-interactions.js',

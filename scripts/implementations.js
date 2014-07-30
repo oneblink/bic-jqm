@@ -17,6 +17,20 @@ define(function () {
 
         implementation: 'data-inMemory'
       }
+    ],
+    'api': [
+      {
+        isAvailable: function () {
+          return window.cordova && window.cordova.offline;
+        },
+        implementation: 'api-native'
+      },
+      {
+        isAvailable: function () {
+          return true;
+        },
+        implementation: 'api-web'
+      }
     ]
   };
 });

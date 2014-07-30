@@ -2,11 +2,18 @@
 define(['Squire'], function (Squire) {
   "use strict";
   describe('Model - DataSuitcase', function () {
-    var Model;
+    var Model, apiStub;
 
     before(function (done) {
       var injector = new Squire();
-      injector.mock('api', {});
+
+      apiStub = sinon.stub();
+      apiStub.returns(Promise.resolve());
+
+      injector.mock('api-web', {
+        getDataSuitcase: apiStub
+      });
+
       injector.require(['../scripts/model-datasuitcase'], function (model) {
         Model = model;
         done();
@@ -35,10 +42,22 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    describe("populate()", function () {
+    describe("#populate", function () {
+      var model;
+
+      beforeEach(function (done) {
+        model = new Model({_id: "TestID"});
+        apiStub.reset();
+        done();
+      });
+
       it("should do nothing if offline");
 
-      it("should request a Data Suitcase from the api");
+      it("should request a Data Suitcase from the api", function (done) {
+        model.populate();
+        expect(apiStub.called).to.equal(true);
+        done();
+      });
 
       it("should use a default contentTime of 0");
 

@@ -1,5 +1,5 @@
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady', 'collection-form-records'],
+  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
@@ -27,9 +27,9 @@ define(
         app.formRecords = new FormRecordsCollection();
 
         return Promise.all([
-          app.interactions.datastore().events().load(),
-          app.datasuitcases.datastore().events().load(),
-          app.forms.datastore().events().load(),
+          app.interactions.datastore().load(),
+          app.datasuitcases.datastore().load(),
+          app.forms.datastore().load(),
           app.pending.datastore().load(),
           app.stars.datastore().load(),
           app.formRecords.datastore().load()
@@ -53,6 +53,7 @@ define(
         return new Promise(function (resolve, reject) {
           API.getAnswerSpaceMap().then(
             function (data) {
+              var interactions = [];
               _.each(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
@@ -60,6 +61,7 @@ define(
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
                   app.interactions.add(model, {merge: true}).save();
+                  interactions.push(model._id);
                 }
                 if (key.substr(0, 1) === 'a') {
                   model = {
@@ -67,7 +69,7 @@ define(
                     dbid: key
                   };
                   app.interactions.add(model, {merge: true}).save();
-
+                  interactions.push(model._id);
                   app.save(value.pertinent);
                 }
               }, app);
@@ -83,6 +85,15 @@ define(
                   }
                 }
               });
+
+              _.each(
+                _.reject(app.interactions.models, function (model) {
+                  return _.contains(interactions, model.id);
+                }),
+                function (model) {
+                  model.destroy();
+                }
+              );
 
               app.trigger("initialize");
               resolve();
@@ -102,9 +113,9 @@ define(
           API.getLoginStatus().then(function (data) {
             var status = data.status || data;
             if (app.get('loginStatus') !== status) {
-              app.interactions.reset();
-              app.datasuitcases.reset();
-              app.forms.reset();
+              app.interactions.set([]);
+              app.datasuitcases.set([]);
+              app.forms.set([]);
               app.populate().then(function () {
                 app.set({loginStatus: status});
                 resolve();

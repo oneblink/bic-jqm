@@ -9,7 +9,8 @@
     "pouchdb": "~2.2.3",
     "momentjs": "~2.5.1",
     "requirejs-text": "~2.0.12",
-    "requirejs-domready": "~2.0.1"
+    "requirejs-domready": "~2.0.1",
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {
     "requirejs": "~2.1",

@@ -85,7 +85,16 @@ define(
         }
 
         path = '';
-        pathParts = $.mobile.path.parseLocation().pathname.split('/');
+        pathParts = $.mobile.path.parseLocation().pathname;
+        if (window.cordova && window.cordova.offline && window.cordova.offline.available && pathParts.indexOf(window.cordova.offline.filePathPrex) !== -1) {
+          // Remove file path
+          pathParts = pathParts.substr(pathParts.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
+          // Remove domain info
+          pathParts = pathParts.substr(pathParts.indexOf('/'));
+          // Remove file suffix
+          pathParts = pathParts.substr(0, pathParts.indexOf('.'));
+        }
+        pathParts = pathParts.split('/');
         pathParts.shift();
         if (pathParts[pathParts.length - 1] === "") {
           pathParts.pop();
@@ -348,7 +357,9 @@ define(
 
         this.$el.append(Mustache.render(pendingTemplate, {
           pending: pendingExtractor("Pending"),
-          draft: pendingExtractor("Draft")
+          draft: pendingExtractor("Draft"),
+          validation: pendingExtractor("Failed Validation"),
+          validationTitle: pendingExtractor("Failed Validation").length > 0
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');

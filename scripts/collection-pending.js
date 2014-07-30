@@ -1,5 +1,5 @@
 define(
-  ['model-pending', 'feature!data', 'api'],
+  ['model-pending', 'feature!data', 'feature!api'],
   function (PendingItem, Data, API) {
     "use strict";
     var PendingCollection = Backbone.Collection.extend({
@@ -22,21 +22,39 @@ define(
       },
 
       processQueue: function () {
-        _.each(this.where({status: "Pending"}), function (element) {
-          /*jslint unparam: true*/
-          API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).always(
-            function (data, status, xhr) {
-              // NEED TO CHECK STATUS === 200 && RESULT !== BLANK!!!!
-              //element.destroy({wait: true});
-              if (data && xhr.status === 200) {
-                element.set({status: 'Submitted'});
-                element.set({result: data});
-              }
-              element.trigger('processed');
+        var promises, callback;
+        promises = [];
+        /*jslint unparam: true*/
+        callback = function (element, callback) {
+          return function (data, status, xhr) {
+            if (data && xhr.status === 200) {
+              element.save({
+                status: 'Submitted',
+                result: data
+              });
+            } else if (status === 'error' && data.responseText) {
+              var errors = JSON.parse(data.responseText);
+              element.save({
+                status: 'Failed Validation',
+                errors: errors
+              });
             }
-          );
-          /*jslint unparam: false*/
+            element.trigger('processed');
+            callback();
+          };
+        };
+        /*jslint unparam: false*/
+
+        _.each(this.where({status: "Pending"}), function (element) {
+          promises.push(new Promise(function (resolve, reject) {
+            API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).then(
+              callback(element, resolve),
+              callback(element, reject)
+            );
+          }));
         }, this);
+
+        return Promise.all(promises);
       }
     });
 

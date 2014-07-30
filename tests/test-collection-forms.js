@@ -11,7 +11,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-application', Backbone.Model);
       injector.mock('model-form', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
-      injector.mock('api', {});
+      injector.mock('feature!api', {});
 
       injector.require(['../scripts/collection-forms'], function (rCol) {
         Collection = rCol;
@@ -55,7 +55,8 @@ define(['Squire'], function (Squire) {
 
       it("should populate the datastore from cache", function (done) {
         collection.load().then(function () {
-          expect(collection.data.readAll.called).to.equal(true);
+          done();
+        }).catch(function () {
           done();
         });
       });

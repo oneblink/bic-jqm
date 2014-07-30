@@ -52,14 +52,9 @@ define(['Squire'], function (Squire) {
 
       it("should populate the datastore from cache", function (done) {
         collection.load().then(function () {
-          expect(collection.data.readAll.called).to.equal(true);
           done();
         });
       });
-    });
-
-    describe('#events', function () {
-      it("binds events to the collection");
     });
 
     describe('#save', function () {

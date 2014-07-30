@@ -46,6 +46,15 @@ define(
         var path = $.mobile.path.parseUrl(data.dataUrl),
           model;
 
+        if (window.cordova && window.cordova.offline && window.cordova.offline.available && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
+          // Remove file path
+          path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
+          // Remove domain info
+          path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf('/'));
+          // Remove file suffix
+          path.hrefNoSearch = path.hrefNoSearch.substr(0, path.hrefNoSearch.indexOf('.'));
+        }
+
         model = this.inheritanceChain(path.hrefNoSearch);
 
         app.currentInteraction = model;
