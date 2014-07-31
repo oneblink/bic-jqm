@@ -3,8 +3,12 @@ define(
   function (uuid) {
     "use strict";
     var API = {
-      getAnswerSpaceMap: function () {
-        return $.ajax('/_R_/common/3/xhr/GetConfig.php');
+      getAnswerSpaceMap: function (user) {
+        var userString = '';
+        if (user) {
+          userString = '&_username=' + user;
+        }
+        return $.ajax('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString);
       },
 
       getInteractionResult: function (iact, args, options) {

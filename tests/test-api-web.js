@@ -10,13 +10,15 @@ define(['Squire'], function (Squire) {
         api = required;
 
         server = sinon.fakeServer.create();
-        server.respondWith('/_R_/common/3/xhr/GetConfig.php', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace, [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false&0=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 3}']);
         server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 2}']);
         server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
         server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+
+        server.autoRespond = true;
 
         /*jslint unparam: true */
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
@@ -53,7 +55,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
     });
 
@@ -64,7 +65,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
 
       /*jslint unparam: true */
@@ -79,7 +79,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
 
       it('should handle POST data passed in via options param', function (done) {
@@ -96,7 +95,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
       /*jslint unparam: false */
     });
@@ -108,7 +106,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
     });
 
@@ -119,7 +116,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
     });
 
@@ -130,7 +126,6 @@ define(['Squire'], function (Squire) {
           .done(function () {
             done();
           });
-        server.respond();
       });
     });
   });
