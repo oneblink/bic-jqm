@@ -4,14 +4,18 @@ define(
   function (uuid) {
     "use strict";
     var API = {
-      getAnswerSpaceMap: function () {
+      getAnswerSpaceMap: function (user) {
         return new Promise(function (resolve, reject) {
+          var userString = '';
+          if (user) {
+            userString = '&_username=' + user;
+          }
           cordova.offline.retrieveContent(
             function (data) {
               resolve(JSON.parse(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetConfig.php'
+            '/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString
           );
         });
       },
