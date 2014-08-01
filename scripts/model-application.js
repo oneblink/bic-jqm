@@ -137,6 +137,9 @@ define(
             transition: 'fade'
           });
           $(document).on('pageshow', function () {
+            if (window.BootStatus && window.BootStatus.notifySuccess) {
+              window.BootStatus.notifySuccess();
+            }
             $('#temp').remove();
           });
         });
