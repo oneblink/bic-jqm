@@ -148,6 +148,12 @@ define(
 
     window.BMP.BIC3 = new Application();
 
+    window.BMP.BIC3.history = { length: 0 };
+
+    window.onpopstate = function(event) {
+      window.BMP.BIC3.history.length += 1;
+    };
+
     return window.BMP.BIC3;
   }
 );
