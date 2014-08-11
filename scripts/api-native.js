@@ -45,7 +45,7 @@ define(
               resolve(JSON.parse(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetForm.php?_v=3'
+            '/_R_/common/3/xhr/GetForm.php?_v=3&_asid=' + window.BMP.BIC.siteVars.answerSpaceId
           );
         });
       },
@@ -66,13 +66,7 @@ define(
       },
 
       getLoginStatus: function () {
-        return new Promise(function (resolve, reject) {
-          cordova.offline.retrieveContent(
-            resolve,
-            reject,
-            '/_R_/common/3/xhr/GetLogin.php'
-          );
-        });
+        return $.ajax('/_R_/common/3/xhr/GetLogin.php');
       },
 
       getFormList: function (formName) {
@@ -94,7 +88,7 @@ define(
               resolve($.parseXML(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
+            '/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
           );
         });
       }

@@ -24,7 +24,7 @@ define(
       },
 
       getForm: function () {
-        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3');
+        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_asid=' + window.BMP.BIC.siteVars.answerSpaceId);
       },
 
       getDataSuitcase: function (suitcase, time) {
@@ -45,7 +45,7 @@ define(
       },
 
       getFormRecord: function (formName, formAction, recordID) {
-        return $.ajax('/_R_/common/3/xhr/GetFormRecord.php?_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction);
+        return $.ajax('/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction);
       }
 
     };
