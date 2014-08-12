@@ -115,7 +115,14 @@ define(
               app.pending.processQueue();
             }
           });
-          history.back();
+
+          if (window.BMP.BIC3.history.length === 0) {
+            history.pushState({}, null, '/' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '/');
+            history.go(0);
+          } else {
+            history.back();
+          }
+          
         });
       }
 
