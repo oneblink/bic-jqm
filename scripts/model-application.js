@@ -80,9 +80,7 @@ define(
                     model.populate();
                   }});
                 } else {
-                  if (navigator.onLine) {
-                    app.datasuitcases.get(element).populate();
-                  }
+                  app.datasuitcases.get(element).populate();
                 }
               });
 
@@ -150,7 +148,7 @@ define(
 
     window.BMP.BIC3.history = { length: 0 };
 
-    window.onpopstate = function(event) {
+    window.onpopstate = function () {
       window.BMP.BIC3.history.length += 1;
     };
 
