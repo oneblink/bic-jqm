@@ -34,7 +34,7 @@ define(
 
       dbAdapter: function () {
         var type = false;
-        if (window.BMP.isBlinkGap === true && Pouch.adapters.websql) {
+        if (window.BMP.BIC.isBlinkGap === true && Pouch.adapters.websql) {
           type = 'websql://';
         } else if (Pouch.adapters.idb) {
           type = 'idb://';

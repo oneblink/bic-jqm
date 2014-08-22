@@ -21,7 +21,7 @@ define(
 
     // Delay the app for Cordova
     function init() {
-      if (window.BMP.isBlinkGap === true) {
+      if (window.BMP.BIC.isBlinkGap === true) {
         if (cordova.available === true) {
           if (cordova.offline) {
             if (cordova.offline.available === true) {

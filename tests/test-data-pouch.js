@@ -105,9 +105,9 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return a websql connection string when inside isBlinkGap', function () {
-          window.BMP.isBlinkGap = true;
+          window.BMP.BIC.isBlinkGap = true;
           expect(data.dbAdapter()).to.match(/websql:\/\//);
-          window.BMP.isBlinkGap = false;
+          window.BMP.BIC.isBlinkGap = false;
         });
 
         it('should return false when indexeddb is not supported and not inside phonegap', function () {
