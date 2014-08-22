@@ -80,9 +80,7 @@ define(
                     model.populate();
                   }});
                 } else {
-                  if (navigator.onLine) {
-                    app.datasuitcases.get(element).populate();
-                  }
+                  app.datasuitcases.get(element).populate();
                 }
               });
 

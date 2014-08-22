@@ -28,7 +28,7 @@ define(
         };
 
         setupCallback = function () {
-          if (navigator.onLine) {
+          if (navigator.onLine || window.BMP.BIC.isBlinkGap) {
             app.populate().then(formsCallback, formsCallback);
           } else {
             app.initialRender();
