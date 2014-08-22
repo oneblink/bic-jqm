@@ -122,7 +122,7 @@ define(
           } else {
             history.back();
           }
-          
+
         });
       }
 

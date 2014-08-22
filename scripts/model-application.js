@@ -150,7 +150,7 @@ define(
 
     window.BMP.BIC3.history = { length: 0 };
 
-    window.onpopstate = function(event) {
+    window.onpopstate = function () {
       window.BMP.BIC3.history.length += 1;
     };
 
