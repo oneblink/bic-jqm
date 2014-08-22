@@ -53,7 +53,7 @@ define('implementations', [], function () {
     data: [
       {
         isAvailable: function () {
-          return Modernizr.indexeddb || window.BMP.isBlinkGap;
+          return Modernizr.indexeddb || window.BMP.BIC.isBlinkGap;
         },
 
         implementation: 'data-pouch'
