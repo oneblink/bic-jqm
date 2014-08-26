@@ -43,15 +43,14 @@ define(
       },
 
       create: function (model) {
-        var data;
-        data = this;
-        return this.getDB().then(function (db) {
-          return new Promise(function (resolve, reject) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          that.getDB().then(function (db) {
             db.post(model.toJSON(), function (err, response) {
               if (err) {
                 reject(err);
               } else {
-                data.read(response).then(function (doc) {
+                that.read(response).then(function (doc) {
                   resolve(doc);
                 });
               }
@@ -61,15 +60,14 @@ define(
       },
 
       update: function (model) {
-        var data;
-        data = this;
-        return this.getDB().then(function (db) {
-          return new Promise(function (resolve, reject) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          that.getDB().then(function (db) {
             db.put(model.toJSON(), function (err) {
               if (err) {
                 reject(err);
               } else {
-                data.read(model).then(function (doc) {
+                that.read(model).then(function (doc) {
                   resolve(doc);
                 });
               }
@@ -79,8 +77,9 @@ define(
       },
 
       read: function (model) {
-        return this.getDB().then(function (db) {
-          return new Promise(function (resolve, reject) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          that.getDB().then(function (db) {
             db.get(model.id, function (err, doc) {
               if (err) {
                 reject(err);
@@ -93,8 +92,9 @@ define(
       },
 
       readAll: function () {
-        return this.getDB().then(function (db) {
-          return new Promise(function (resolve, reject) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          that.getDB().then(function (db) {
             db.allDocs({include_docs: true}, function (err, response) {
               if (err) {
                 reject(err);
@@ -109,8 +109,9 @@ define(
       },
 
       'delete': function (model) {
-        return this.getDB().then(function (db) {
-          return new Promise(function (resolve, reject) {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          that.getDB().then(function (db) {
             db.get(model.id, function (err, doc) {
               if (err) {
                 reject(err);
