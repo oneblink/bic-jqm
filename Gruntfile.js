@@ -1,4 +1,11 @@
 /*jslint indent:2, node:true*/
+var now = new Date();
+
+var uglifyConfig = {
+  files: {}
+};
+uglifyConfig.files['versions/' + now.valueOf() + '/bic.min.js'] = ['versions/' + now.valueOf() + '/bic.js'];
+
 module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
@@ -151,7 +158,7 @@ module.exports = function (grunt) {
         options: {
           baseUrl: "bower_components",
           include: ['picker.date', 'picker.time', 'moment'],
-          out: 'js/formsdeps.min.js',
+          out: 'versions/' + now.valueOf() + '/formsdeps.min.js',
           paths: {
             jquery: 'empty:',
             "picker": 'pickadate/lib/picker',
@@ -183,20 +190,21 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'js/bic.js'
+            dest: 'versions/' + now.valueOf() + '/bic.js'
+          },
+          {
+            src: 'buildFiles/files/*',
+            dest: 'versions/' + now.valueOf() + '/',
+            filter: 'isFile',
+            expand: true,
+            flatten: true
           }
         ]
       }
     },
 
     uglify: {
-      bic: {
-        files: {
-          'js/bic.min.js': [
-            'js/bic.js'
-          ]
-        }
-      },
+      bic: uglifyConfig,
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
@@ -213,6 +221,21 @@ module.exports = function (grunt) {
           screw_ie8: false
         }
       }
+    },
+
+    mustache_render: {
+      versions: {
+        files : [
+          {
+            data: {
+              timestamp: now.valueOf(),
+              datestamp: now.toISOString()
+            },
+            template: 'buildFiles/templates/versions.json',
+            dest: 'versions/' + now.valueOf() + '/versions.json'
+          }
+        ]
+      }
     }
 
   });
@@ -228,11 +251,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-hapi');
+  grunt.loadNpmTasks('grunt-mustache-render');
 
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
+  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 
