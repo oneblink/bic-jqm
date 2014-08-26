@@ -60,7 +60,7 @@ define(
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
-                  app.interactions.add(model, {merge: true}).save();
+                  app.interactions.add(model, {merge: true});
                   interactions.push(model._id);
                 }
                 if (key.substr(0, 1) === 'a') {
@@ -68,7 +68,7 @@ define(
                     _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
                     dbid: key
                   };
-                  app.interactions.add(model, {merge: true}).save();
+                  app.interactions.add(model, {merge: true});
                   interactions.push(model._id);
                   app.save(value.pertinent);
                 }
@@ -92,6 +92,8 @@ define(
                   model.destroy();
                 }
               );
+
+              app.interactions.save();
 
               app.trigger("initialize");
               resolve();
