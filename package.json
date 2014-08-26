@@ -1,7 +1,7 @@
 {
   "name": "BICv3",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.1.0",
+  "version": "3.1.11",
   "main": "Gruntfile.js",
   "dependencies": {},
   "repository": "git@github.com:blinkmobile/bic-v3.git",
