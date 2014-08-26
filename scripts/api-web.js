@@ -24,7 +24,7 @@ define(
       },
 
       getForm: function () {
-        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_asid=' + window.BMP.BIC.siteVars.answerSpaceId);
+        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId);
       },
 
       getDataSuitcase: function (suitcase, time) {

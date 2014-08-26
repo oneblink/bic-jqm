@@ -45,7 +45,7 @@ define(
               resolve(JSON.parse(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetForm.php?_v=3&_asid=' + window.BMP.BIC.siteVars.answerSpaceId
+            '/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId
           );
         });
       },
