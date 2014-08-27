@@ -6,18 +6,17 @@
 
 
 
-{{=<< >>=}}
 {
-  "id": "3/<<timestamp>>",
-  "datestamp": "<<datestamp>>",
-  "version": "3.x.x",
+  "id": "3/{{timestamp}}",
+  "datestamp": "{{datestamp}}",
+  "version": "{{version}}",
   "bicVersion": "v3",
-  "template": "blink/bic/{{id}}/index.mustache",
+  "template": "blink/bic/{{timestamp}}/index.mustache",
   "deprecated": "false",
-  "url": "https://github.com/blinkmobile/bic-v3/releases/tag/v3.x.x",
+  "url": "https://github.com/blinkmobile/bic-v3/releases/tag/v{{version}}",
   "scripts": [
     "blink/require/6/require.min.js",
-    "blink/bic/{{id}}/bic.min.js"
+    "blink/bic/{{timestamp}}/bic.min.js"
   ],
   "styleSheets": {
     "theme": [
@@ -34,7 +33,6 @@
     ]
   }
 }
-<<={{ }}=>>
 
 
 

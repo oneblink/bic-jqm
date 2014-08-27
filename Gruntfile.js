@@ -1,4 +1,5 @@
 /*jslint indent:2, node:true*/
+var version = require('./version.json').version;
 var now = new Date();
 
 var uglifyConfig = {
@@ -229,10 +230,38 @@ module.exports = function (grunt) {
           {
             data: {
               timestamp: now.valueOf(),
-              datestamp: now.toISOString()
+              datestamp: now.toISOString(),
+              version: version
             },
             template: 'buildFiles/templates/versions.json',
             dest: 'versions/' + now.valueOf() + '/versions.json'
+          }
+        ]
+      }
+    },
+
+    bumpup: {
+      files: [
+        'package.json',
+        'bower.json'
+      ],
+      setters: {
+        version: function (oldValue, releaseType, options, buildMeta) {
+          return version;
+        }
+      }
+    },
+
+    replace: {
+      bicVersion: {
+        src: [
+          'scripts/model-application.js'
+        ],
+        overwrite: true,
+        replacements: [
+          {
+            from: /window\.BMP\.BIC3\.version = '.+?'/,
+            to: 'window.BMP.BIC3.version = \'' + version + '\''
           }
         ]
       }
@@ -252,11 +281,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-hapi');
   grunt.loadNpmTasks('grunt-mustache-render');
+  grunt.loadNpmTasks('grunt-bumpup');
+  grunt.loadNpmTasks('grunt-text-replace');
 
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render', 'bumpup']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 
