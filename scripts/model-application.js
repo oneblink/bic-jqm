@@ -154,7 +154,7 @@ define(
       window.BMP.BIC3.history.length += 1;
     };
 
-    window.BMP.BIC3.version = '3.1.11';
+    window.BMP.BIC3.version = '3.1.12';
 
     return window.BMP.BIC3;
   }
