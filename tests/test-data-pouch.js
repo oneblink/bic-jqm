@@ -289,13 +289,15 @@ define(['Squire'], function (Squire) {
           });
         });
 
-        it('should reject with', function (done) {
-          data.dbAdapter = function () { return 'iwgiapugpi://'; };
-          data.readAll().then(null, function (err) {
-            expect(err).to.not.equal(undefined).and.not.equal(null);
-            done();
-          });
-        });
+        //it('should reject with an error', function (done) {
+          //data.dbAdapter = function () { return 'iwgiapugpi://'; };
+          //data.readAll().then(
+            //function (err) {
+              //expect(err).to.not.equal(undefined).and.not.equal(null);
+              //done();
+            //}
+          //);
+        //});
       });
 
       describe('#delete', function () {

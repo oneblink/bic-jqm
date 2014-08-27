@@ -1,4 +1,12 @@
 /*jslint indent:2, node:true*/
+var version = require('./version.json').version;
+var now = new Date();
+
+var uglifyConfig = {
+  files: {}
+};
+uglifyConfig.files['versions/' + now.valueOf() + '/bic.min.js'] = ['versions/' + now.valueOf() + '/bic.js'];
+
 module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
@@ -151,7 +159,7 @@ module.exports = function (grunt) {
         options: {
           baseUrl: "bower_components",
           include: ['picker.date', 'picker.time', 'moment'],
-          out: 'js/formsdeps.min.js',
+          out: 'versions/' + now.valueOf() + '/formsdeps.min.js',
           paths: {
             jquery: 'empty:',
             "picker": 'pickadate/lib/picker',
@@ -183,20 +191,21 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'js/bic.js'
+            dest: 'versions/' + now.valueOf() + '/bic.js'
+          },
+          {
+            src: 'buildFiles/files/*',
+            dest: 'versions/' + now.valueOf() + '/',
+            filter: 'isFile',
+            expand: true,
+            flatten: true
           }
         ]
       }
     },
 
     uglify: {
-      bic: {
-        files: {
-          'js/bic.min.js': [
-            'js/bic.js'
-          ]
-        }
-      },
+      bic: uglifyConfig,
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
@@ -213,6 +222,49 @@ module.exports = function (grunt) {
           screw_ie8: false
         }
       }
+    },
+
+    mustache_render: {
+      versions: {
+        files : [
+          {
+            data: {
+              timestamp: now.valueOf(),
+              datestamp: now.toISOString(),
+              version: version
+            },
+            template: 'buildFiles/templates/versions.json',
+            dest: 'versions/' + now.valueOf() + '/versions.json'
+          }
+        ]
+      }
+    },
+
+    bumpup: {
+      files: [
+        'package.json',
+        'bower.json'
+      ],
+      setters: {
+        version: function (oldValue, releaseType, options, buildMeta) {
+          return version;
+        }
+      }
+    },
+
+    replace: {
+      bicVersion: {
+        src: [
+          'scripts/model-application.js'
+        ],
+        overwrite: true,
+        replacements: [
+          {
+            from: /window\.BMP\.BIC3\.version = '.+?'/,
+            to: 'window.BMP.BIC3.version = \'' + version + '\''
+          }
+        ]
+      }
     }
 
   });
@@ -228,11 +280,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-hapi');
+  grunt.loadNpmTasks('grunt-mustache-render');
+  grunt.loadNpmTasks('grunt-bumpup');
+  grunt.loadNpmTasks('grunt-text-replace');
 
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'requirejs', 'copy', 'clean', 'uglify']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render', 'bumpup']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 

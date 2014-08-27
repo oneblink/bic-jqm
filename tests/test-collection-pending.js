@@ -112,12 +112,17 @@ define(['Squire'], function (Squire) {
         });
         expect(collection.length).to.equal(1);
         apiStub.returns(Promise.reject());
-        collection.processQueue().then(function () {
-          expect(collection.length).to.equal(1);
-          expect(apiStub.called).to.equal(true);
-          expect(collection.models[0].get('status')).to.equal('Pending');
-          done();
-        });
+        collection.processQueue().then(
+          function () {
+            return;
+          },
+          function () {
+            expect(collection.length).to.equal(1);
+            expect(apiStub.called).to.equal(true);
+            expect(collection.models[0].get('status')).to.equal('Pending');
+            done();
+          }
+        );
       });
 
       it("should keep items in the queue if they fail server side validation");
