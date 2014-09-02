@@ -117,8 +117,7 @@ define(
           });
 
           if (window.BMP.BIC3.history.length === 0) {
-            history.pushState({}, null, '/' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '/');
-            history.go(0);
+            window.BMP.BIC3.view.home();
           } else {
             history.back();
           }
