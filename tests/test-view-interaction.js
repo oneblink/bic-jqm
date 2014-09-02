@@ -46,6 +46,25 @@ define(['Squire'], function (Squire) {
       //});
     //});
 
+    describe('view = new View({})', function () {
+      var view;
+
+      before(function () {
+        view = new View({});
+      });
+
+      it('should have a home method', function () {
+        expect(view.home).to.be.an.instanceOf(Function);
+      });
+
+      it('should be accessible as BMP.BIC3.view', function () {
+        should.exist(window.BMP);
+        should.exist(BMP.BIC3);
+        should.exist(BMP.BIC3.view);
+        expect(BMP.BIC3.view).to.equal(view);
+      });
+    });
+
     describe('events', function () {
       it("should handle click [keyword]");
       it("should handle click [interaction]");
