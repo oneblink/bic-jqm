@@ -150,10 +150,6 @@ define(
 
     window.BMP.BIC3.history = { length: 0 };
 
-    window.onpopstate = function () {
-      window.BMP.BIC3.history.length += 1;
-    };
-
     window.BMP.BIC3.version = '3.1.12';
 
     return window.BMP.BIC3;

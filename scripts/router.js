@@ -12,6 +12,10 @@ define(
 
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
+
+          // keep track of history depth for forms post-submission behaviour
+          window.BMP.BIC3.history.length += 1;
+
           $.mobile.loading('show');
           if (app.currentInteraction && app.currentInteraction.get('dbid') === "i" + app.get('loginPromptInteraction')) {
             app.checkLoginStatus().then(function () {
@@ -135,4 +139,3 @@ define(
     return new Router();
   }
 );
-
