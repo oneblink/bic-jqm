@@ -28,14 +28,14 @@ define(
               start();
             } else {
               // Poll
-              window.setTimeout(init(), 1000);
+              window.setTimeout(init, 1000);
             }
           } else {
             start();
           }
         } else {
-          // Poll
-          window.setTimeout(init(), 1000);
+          // Wait for deviceready event
+          document.addEventListener('deviceready', init, false);
         }
       } else {
         start();
