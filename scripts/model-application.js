@@ -150,7 +150,7 @@ define(
 
     window.BMP.BIC3.history = { length: 0 };
 
-    window.BMP.BIC3.version = '3.1.12';
+    window.BMP.BIC3.version = '3.1.13';
 
     return window.BMP.BIC3;
   }
