@@ -336,8 +336,17 @@ define(['Squire'], function (Squire) {
           expect(data.deleteAll).to.be.a('function');
         });
 
-        it('should return an XHR compatible promise', function () {
-          expect(data.deleteAll()).to.be.instanceOf(Promise);
+        it('should return an XHR compatible promise', function (done) {
+          var del = data.deleteAll();
+          expect(del).to.be.instanceOf(Promise);
+          del.then(
+            function () {
+              done();
+            },
+            function () {
+              done();
+            }
+          );
         });
 
         it('should resolve if successful', function (done) {
