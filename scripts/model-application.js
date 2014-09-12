@@ -136,7 +136,7 @@ define(
             reloadPage: true,
             transition: 'fade'
           });
-          $(document).on('pageshow', function () {
+          $(document).one('pageshow', function () {
             if (window.BootStatus && window.BootStatus.notifySuccess) {
               window.BootStatus.notifySuccess();
             }
