@@ -13,14 +13,19 @@ define(
           time = this.get("contentTime");
         }
 
-        API.getDataSuitcase(this.id, time).then(
-          function (data) {
-            model.save({
-              data: data,
-              contentTime: Date.now()
-            });
-          }
-        );
+        return new Promise(function (resolve, reject) {
+          API.getDataSuitcase(model.id, time).then(
+            function (data) {
+              model.save({
+                data: data,
+                contentTime: Date.now()
+              }, {
+                success: resolve,
+                error: reject
+              });
+            }
+          );
+        });
       }
     });
     return DataSuitcase;
