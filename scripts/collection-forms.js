@@ -96,6 +96,11 @@ define(
 
       download: function () {
         var collection = this;
+
+        if (!(navigator.onLine || window.BMP.BIC.isBlinkGap)) {
+          return Promise.resolve();
+        }
+
         API.getForm().then(function (data) {
           _.each(data, function (recordData) {
             var record = JSON.parse(recordData),

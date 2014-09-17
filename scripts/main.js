@@ -52,7 +52,6 @@ define(
 
       switch (method) {
       case "read":
-        //promise = model.id !== undefined ? data.read(model) : data.readAll();
         promise = model.id !== undefined ? data.read(model) : data.readAll();
         break;
       case "create":

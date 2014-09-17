@@ -8,7 +8,7 @@ define(
         if (user) {
           userString = '&_username=' + user;
         }
-        return $.ajax('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString);
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString));
       },
 
       getInteractionResult: function (iact, args, options) {
@@ -20,32 +20,32 @@ define(
             }
           });
         }
-        return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options));
       },
 
       getForm: function () {
-        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId);
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId));
       },
 
       getDataSuitcase: function (suitcase, time) {
-        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: "text"});
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: "text"}));
       },
 
       setPendingItem: function (formname, formaction, formdata) {
         formdata._uuid = uuid.v4();
-        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
+        return Promise.resolve($.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata));
       },
 
       getLoginStatus: function () {
-        return $.ajax('/_R_/common/3/xhr/GetLogin.php');
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetLogin.php'));
       },
 
       getFormList: function (formName) {
-        return $.ajax('/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName);
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName));
       },
 
       getFormRecord: function (formName, formAction, recordID) {
-        return $.ajax('/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction);
+        return Promise.resolve($.ajax('/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction));
       }
 
     };

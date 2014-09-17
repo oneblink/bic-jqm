@@ -25,7 +25,7 @@ define(
       save: function () {
         return Promise.all(_.map(this.models, function (model) {
           return new Promise(function (resolve, reject) {
-            model.save({
+            model.save({}, {
               success: resolve,
               error: reject
             });

@@ -13,7 +13,7 @@ define(
 
       datastore: function () {
         this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
-        return this;
+        return Promise.resolve(this);
       },
 
       collections: function () {
@@ -50,17 +50,21 @@ define(
       populate: function () {
         var app = this;
 
+        if (!(navigator.onLine || window.BMP.BIC.isBlinkGap)) {
+          return Promise.resolve();
+        }
+
         return API.getAnswerSpaceMap()
           .then(
             function (data) {
-              return Promise.all(_.map(data, function (value, key) {
+              return Promise.all(_.compact(_.map(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
                   app.interactions.add(model, {merge: true});
-                  return Promise.resolve(model._id);
+                  return model._id;
                 }
                 if (key.substr(0, 1) === 'a') {
                   return new Promise(function (resolve, reject) {
@@ -71,13 +75,13 @@ define(
                     app.interactions.add(model, {merge: true});
                     app.save(value.pertinent, {
                       success: function () {
-                        resolve(model._id);
+                        resolve(window.BMP.BIC.siteVars.answerSpace.toLowerCase());
                       },
                       error: reject
                     });
                   });
                 }
-              }));
+              })));
             }
           )
           .then(
@@ -117,12 +121,7 @@ define(
           )
           .then(
             function () {
-              return new Promise(function (resolve, reject) {
-                app.interactions.save().then(
-                  resolve,
-                  reject
-                );
-              });
+              return app.interactions.save();
             }
           );
       },
