@@ -21,7 +21,9 @@ define('implementations', [], function () {
       },
       {
         isAvailable: function () { return true; },
-        implementation: 'es5-builtin'
+        module: function () {
+          return {};
+        }
       }
     ],
     promises: [
