@@ -37,8 +37,14 @@ define(
           .then(function () {
             return app.populate();
           })
+          .then(null, function () {
+            return;
+          })
           .then(function () {
             return app.forms.download();
+          })
+          .then(null, function () {
+            return;
           })
           .then(function () {
             return app.initialRender();
