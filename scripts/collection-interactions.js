@@ -23,9 +23,14 @@ define(
       },
 
       save: function () {
-        _.each(this.models, function (model) {
-          model.save();
-        });
+        return Promise.all(_.map(this.models, function (model) {
+          return new Promise(function (resolve, reject) {
+            model.save({}, {
+              success: resolve,
+              error: reject
+            });
+          });
+        }));
       },
 
       comparator: "order"

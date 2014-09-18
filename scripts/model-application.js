@@ -50,59 +50,80 @@ define(
       populate: function () {
         var app = this;
 
-        return new Promise(function (resolve, reject) {
-          API.getAnswerSpaceMap().then(
+        if (!(navigator.onLine || window.BMP.BIC.isBlinkGap)) {
+          return Promise.resolve();
+        }
+
+        return Promise.resolve(API.getAnswerSpaceMap())
+          .then(
             function (data) {
-              var interactions = [];
-              _.each(data, function (value, key) {
+              return Promise.all(_.compact(_.map(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
                   model = value.pertinent;
                   model._id = model.name.toLowerCase();
                   model.dbid = key;
                   app.interactions.add(model, {merge: true});
-                  interactions.push(model._id);
+                  return model._id;
                 }
                 if (key.substr(0, 1) === 'a') {
-                  model = {
-                    _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-                    dbid: key
-                  };
-                  app.interactions.add(model, {merge: true});
-                  interactions.push(model._id);
-                  app.save(value.pertinent);
+                  return new Promise(function (resolve, reject) {
+                    model = {
+                      _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
+                      dbid: key
+                    };
+                    app.interactions.add(model, {merge: true});
+                    app.save(value.pertinent, {
+                      success: function () {
+                        resolve(window.BMP.BIC.siteVars.answerSpace.toLowerCase());
+                      },
+                      error: reject
+                    });
+                  });
                 }
-              }, app);
-
-              _.each(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-                if (!app.datasuitcases.get(element)) {
-                  app.datasuitcases.create({_id: element}, {success: function (model) {
-                    model.populate();
-                  }});
-                } else {
-                  app.datasuitcases.get(element).populate();
-                }
-              });
-
-              _.each(
+              })));
+            }
+          )
+          .then(
+            function (interactions) {
+              return Promise.all(_.map(
                 _.reject(app.interactions.models, function (model) {
                   return _.contains(interactions, model.id);
                 }),
                 function (model) {
-                  model.destroy();
+                  return new Promise(function (resolve, reject) {
+                    model.destroy({
+                      success: resolve,
+                      error: reject
+                    });
+                  });
                 }
-              );
-
-              app.interactions.save();
-
-              app.trigger("initialize");
-              resolve();
-            },
+              ));
+            }
+          )
+          .then(
             function () {
-              reject();
+              return Promise.all(_.map(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
+                return new Promise(function (resolve, reject) {
+                  if (!app.datasuitcases.get(element)) {
+                    app.datasuitcases.create({_id: element}, {
+                      success: function (model) {
+                        model.populate().then(resolve, resolve);
+                      },
+                      error: reject
+                    });
+                  } else {
+                    app.datasuitcases.get(element).populate().then(resolve, resolve);
+                  }
+                });
+              }));
+            }
+          )
+          .then(
+            function () {
+              return app.interactions.save();
             }
           );
-        });
       },
 
       checkLoginStatus: function () {
@@ -136,7 +157,7 @@ define(
             reloadPage: true,
             transition: 'fade'
           });
-          $(document).on('pageshow', function () {
+          $(document).one('pageshow', function () {
             if (window.BootStatus && window.BootStatus.notifySuccess) {
               window.BootStatus.notifySuccess();
             }
@@ -154,7 +175,7 @@ define(
       window.BMP.BIC3.history.length += 1;
     };
 
-    window.BMP.BIC3.version = '3.1.14';
+    window.BMP.BIC3.version = '3.1.15';
 
     return window.BMP.BIC3;
   }

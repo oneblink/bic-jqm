@@ -4,8 +4,6 @@ define(
     "use strict";
     var Router = Backbone.Router.extend({
       initialize: function () {
-        var collectionCallback, setupCallback, formsCallback;
-
         BMP.FileInput.initialize();
 
         app.router = this;
@@ -26,24 +24,34 @@ define(
           }
         });
 
-        formsCallback = function () {
-          app.forms.download();
-          app.initialRender();
-        };
-
-        setupCallback = function () {
-          if (navigator.onLine || window.BMP.BIC.isBlinkGap) {
-            app.populate().then(formsCallback, formsCallback);
-          } else {
-            app.initialRender();
-          }
-        };
-
-        collectionCallback = function () {
-          app.setup().then(setupCallback, setupCallback);
-        };
-
-        app.datastore().collections().then(collectionCallback, collectionCallback);
+        Promise.resolve(app.datastore())
+          .then(function () {
+            return app.collections();
+          })
+          .then(function () {
+            return app.setup();
+          })
+          .then(null, function () {
+            return;
+          })
+          .then(function () {
+            return app.populate();
+          })
+          .then(null, function () {
+            return;
+          })
+          .then(function () {
+            return app.forms.download();
+          })
+          .then(null, function () {
+            return;
+          })
+          .then(function () {
+            return app.initialRender();
+          })
+          .then(null, function (err) {
+            throw err;
+          });
       },
 
       routeRequest: function (data) {

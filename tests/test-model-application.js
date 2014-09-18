@@ -14,7 +14,7 @@ define(['Squire'], function (Squire) {
         model: Backbone.Model.extend({
           idAttribute: '_id',
           populate: function () {
-            return true;
+            return Promise.resolve();
           }
         }),
         datastore: function () {
@@ -24,7 +24,7 @@ define(['Squire'], function (Squire) {
           return Promise.resolve();
         },
         save: function () {
-          return true;
+          return Promise.resolve();
         }
       });
 
@@ -196,13 +196,6 @@ define(['Squire'], function (Squire) {
           expect(model.datasuitcases.length).to.equal(1);
           done();
         });
-      });
-
-      it("should trigger an 'initialize' event when complete", function (done) {
-        model.once('initialize', function () {
-          done();
-        });
-        model.populate();
       });
 
       it("should delete items from the DB when they are removed from the sitemap", function (done) {

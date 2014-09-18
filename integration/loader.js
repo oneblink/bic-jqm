@@ -21,7 +21,8 @@ require.config({
     mustache: '/bower_components/mustache/mustache',
     bluebird: '/bower_components/bluebird/js/browser/bluebird',
     pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
-    implementations: '/tests/implementations'
+    implementations: '/tests/implementations',
+    'es5-shim': '//d1c6dfkb81l78v.cloudfront.net/es5-shim/2.3.0/es5-shim.min'
   },
   shim: {
     'underscore': {
@@ -34,6 +35,10 @@ require.config({
     'BMP.Blobs': {
       deps: ['underscore', 'jquery'],
       exports: 'BMP'
+    },
+    'signaturepad': {
+      deps: ['jquery'],
+      exports: '$'
     }
   },
   baseUrl: '/scripts'
@@ -47,13 +52,12 @@ require([
     'BMP.Blobs',
     'mustache',
     'BlinkForms',
-    'pouchdb',
     'jquerymobile',
-  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch) {
+    'feature!es5'
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
-  window.Pouch = Pouch;
 
   require(['main'], function () {
     console.log('BIC started!');
