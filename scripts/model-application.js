@@ -13,7 +13,7 @@ define(
 
       datastore: function () {
         this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
-        return Promise.resolve(this);
+        return this;
       },
 
       collections: function () {
@@ -54,7 +54,7 @@ define(
           return Promise.resolve();
         }
 
-        return API.getAnswerSpaceMap()
+        return Promise.resolve(API.getAnswerSpaceMap())
           .then(
             function (data) {
               return Promise.all(_.compact(_.map(data, function (value, key) {

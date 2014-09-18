@@ -34,27 +34,16 @@ define(['Squire'], function (Squire) {
         collections: function () { return Promise.resolve(); },
         setup: function () { return Promise.resolve(); },
         populate: function () { return Promise.resolve(); },
-        initialRender: function () { return null; }
+        initialRender: function () { return null; },
+        forms: {
+          download: function () { return null; }
+        }
       });
       injector.mock('view-interaction', {
         render: function () { return null; }
       });
       done();
 
-    });
-
-    // THIS HAS BEEN MOVED TO MODEL-APPLICATION!!!
-    describe('initialize()', function () {
-      it("should do things");
-      //it("should create binding to pagebeforeload that passes the event data object to routeRequest", function () {
-        //context(['router'], function (router) {
-          //sinon.stub(router, "routeRequest");
-          //$(document).trigger('pagebeforeload', {});
-          //router.routeRequest.called.should.be.true;
-          //router.routeRequest.calledWith({}).should.be.true;
-          //router.routeRequest.restore();
-        //});
-      //});
     });
 
     describe('routeRequest(data)', function () {

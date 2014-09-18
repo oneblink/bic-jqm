@@ -24,15 +24,15 @@ define(
           }
         });
 
-        app.datastore()
+        Promise.resolve(app.datastore())
           .then(function () {
             return app.collections();
           })
           .then(function () {
             return app.setup();
           })
-          .then(null, function (x) {
-            console.log(x)
+          .then(null, function () {
+            return;
           })
           .then(function () {
             return app.populate();
