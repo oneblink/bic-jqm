@@ -344,7 +344,7 @@ define(
             pendingAttrs.cid = pendingItem.cid;
             pendingAttrs.editInteraction = app.interactions.where({
               blinkFormObjectName: pendingItem.get("name"),
-              blinkFormAction: 'edit'
+              blinkFormAction: pendingItem.get("action")
             });
             if (pendingAttrs.editInteraction && pendingAttrs.editInteraction.length > 0) {
               pendingAttrs.editInteraction = pendingAttrs.editInteraction[0].id;
