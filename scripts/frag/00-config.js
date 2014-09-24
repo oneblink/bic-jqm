@@ -15,9 +15,11 @@
     scripts = document.getElementsByTagName('script');
     document.currentScript = scripts[scripts.length - 1];
   }
-  /*jslint regexp:true*/ // this regular expression has been double-checked
-  rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
-  /*jslint regexp:false*/
+  if (document.currentScript.src) {
+    /*jslint regexp:true*/ // this regular expression has been double-checked
+    rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+    /*jslint regexp:false*/
+  }
 
   // determine our current CDN based on how we referenced Require.JS
   scripts = document.getElementsByTagName('script');
@@ -43,6 +45,25 @@
     ];
     return result;
   };
+
+  if (window.cordova && window.cordova.offline) {
+    window.oldLoad = window.require.load;
+    window.require.load = function (context, id, url) {
+      cordova.offline.fixURLsInString(
+        function (fixed) {
+          console.log('FixedURL: ' + url + ' to ' + fixed);
+          window.oldLoad(context, id, fixed);
+        },
+        function (err) {
+          console.log(err);
+        },
+        {
+          string: url
+        }
+      )
+    }
+    rootPath = document.currentScript;
+  }
 
   // dynamically set paths and fall-back paths;
   paths = {
