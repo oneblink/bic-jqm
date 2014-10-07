@@ -15,13 +15,7 @@ define(
           window.BMP.BIC3.history.length += 1;
 
           $.mobile.loading('show');
-          if (app.currentInteraction && app.currentInteraction.get('dbid') === "i" + app.get('loginPromptInteraction')) {
-            app.checkLoginStatus().then(function () {
-              app.router.routeRequest(data);
-            });
-          } else {
-            app.router.routeRequest(data);
-          }
+          app.router.routeRequest(data);
         });
 
         Promise.resolve(app.datastore())
