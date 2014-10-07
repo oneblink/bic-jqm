@@ -12,7 +12,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['hapi:http', 'hapi:https', 'watch'],
+      background: ['hapi', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -33,14 +33,14 @@ module.exports = function (grunt) {
           bases: {},
           noasync: true
         }
-      },
-      https: {
-        options: {
-          server: require('path').resolve('server/https.js'),
-          bases: {},
-          noasync: true
-        }
-      }
+      }//,
+      // https: {
+      //   options: {
+      //     server: require('path').resolve('server/https.js'),
+      //     bases: {},
+      //     noasync: true
+      //   }
+      // }
     },
 
     watch: {

@@ -52,12 +52,14 @@ require([
     'BMP.Blobs',
     'mustache',
     'BlinkForms',
+    'pouchdb',
     'jquerymobile',
     'feature!es5'
-  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms) {
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
+  window.Pouch = Pouch;
 
   require(['main'], function () {
     console.log('BIC started!');
