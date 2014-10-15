@@ -106,12 +106,8 @@ define(
               return Promise.all(_.map(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
                 return new Promise(function (resolve, reject) {
                   if (!app.datasuitcases.get(element)) {
-                    app.datasuitcases.add({_id: element}, {
-                      success: function (model) {
-                        model.populate().then(resolve, resolve);
-                      },
-                      error: reject
-                    });
+                    app.datasuitcases.add({_id: element});
+                    app.datasuitcases.get(element).populate().then(resolve,resolve);
                   } else {
                     app.datasuitcases.get(element).populate().then(resolve, resolve);
                   }
