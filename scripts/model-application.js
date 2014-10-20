@@ -175,6 +175,10 @@ define(
 
     window.BMP.BIC3.version = '3.1.15';
 
+    // keep BMP.BIC and BMP.BIC3 the same
+    $.extend(window.BMP.BIC3, window.BMP.BIC);
+    window.BMP.BIC = window.BMP.BIC3;
+
     return window.BMP.BIC3;
   }
 );
