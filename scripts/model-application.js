@@ -104,10 +104,10 @@ define(
           .then(
             function () {
               return Promise.all(_.map(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-                return new Promise(function (resolve, reject) {
+                return new Promise(function (resolve) { // args.[1] 'reject'
                   if (!app.datasuitcases.get(element)) {
                     app.datasuitcases.add({_id: element});
-                    app.datasuitcases.get(element).populate().then(resolve,resolve);
+                    app.datasuitcases.get(element).populate().then(resolve, resolve);
                   } else {
                     app.datasuitcases.get(element).populate().then(resolve, resolve);
                   }
