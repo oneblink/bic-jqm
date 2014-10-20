@@ -58,6 +58,14 @@ define(['Squire'], function (Squire) {
       model.should.be.an.instanceOf(Backbone.Model);
     });
 
+    it("should have an id property", function () {
+      expect(model).to.have.property('id');
+    });
+
+    it("should have a loginStatus attribute", function () {
+      expect(model.attributes).to.have.property('loginStatus');
+    });
+
     describe('#datastore', function () {
       afterEach(function (done) {
         if (model.data) {
@@ -94,31 +102,37 @@ define(['Squire'], function (Squire) {
       it("should create a collection for interactions", function () {
         model.collections();
         expect(model).to.have.property('interactions');
+        expect(model.interactions).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should create a collection for data suitcases", function () {
         model.collections();
         expect(model).to.have.property('datasuitcases');
+        expect(model.datasuitcases).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should create a collection for forms", function () {
         model.collections();
         expect(model).to.have.property('forms');
+        expect(model.forms).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should create a collection for pending items", function () {
         model.collections();
         expect(model).to.have.property('pending');
+        expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should create a collection for stars", function () {
         model.collections();
         expect(model).to.have.property('stars');
+        expect(model.stars).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should create a collection for form records", function () {
         model.collections();
         expect(model).to.have.property('formRecords');
+        expect(model.formRecords).to.be.an.instanceOf(Backbone.Collection);
       });
 
       it("should resolve when the collections are all ready", function (done) {
