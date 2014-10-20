@@ -1,4 +1,4 @@
-# BIC v3 and Require.JS
+# BIC-jQM and Require.JS
 
 This project uses [Require.JS](http://requirejs.org/) to lazy-load components as
 they are needed, and to enable the development of isolated modules. As such, any
@@ -7,7 +7,7 @@ will actually execute as intended.
 
 This is different to [BIC v2](https://github.com/blinkmobile/bic-v2), where you
 could rely on jQuery and jQuery UI being available to your code at any time. In
-BIC v3, jQuery and [jQuery Mobile](http://jquerymobile.com/) are loaded
+BIC-jQM, jQuery and [jQuery Mobile](http://jquerymobile.com/) are loaded
 asynchronously and non-deterministically. Unless you use the Require.JS API, you
 cannot depend on these libraries being available.
 
@@ -24,13 +24,13 @@ require(['jquery'], function ($) {
 });
 ```
 
-If your code requires access to the BIC v3 JavaScript APIs, then you need to
+If your code requires access to the BIC-jQM JavaScript APIs, then you need to
 declare that, too.
 
 ```javascript
 require(['bic'], function () {
 
-  /* insert your code that uses BMP.BIC3 */
+  /* insert your code that uses BMP.BIC */
 
 });
 ```
@@ -41,7 +41,7 @@ you can declare them in one step.
 ```javascript
 require(['jquery', 'bic', 'jquerymobile'], function ($) {
 
-  /* insert your code that uses BMP.BIC3 */
+  /* insert your code that uses BMP.BIC */
   /* insert your code that uses jQuery */
 
   /**

@@ -1,4 +1,4 @@
-BICv3
+BIC-jQM (jQuery Mobile)
 =====
 The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.
 

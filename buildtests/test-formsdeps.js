@@ -60,7 +60,7 @@ define(function () {
       //});
     //});
 
-    //describe('BIC v3 + Forms v3', function () {
+    //describe('BIC-JQM + Forms v3', function () {
       //before(function (done) {
         //require(['bic', 'BlinkForms'], function () {
           //setTimeout(function () {

@@ -1,4 +1,4 @@
-# BIC v3
+# BIC-jQM
 
 ## Navigation APIs
 
