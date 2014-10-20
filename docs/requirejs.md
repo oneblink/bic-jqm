@@ -28,9 +28,10 @@ If your code requires access to the BIC-jQM JavaScript APIs, then you need to
 declare that, too.
 
 ```javascript
-require(['bic'], function () {
+require(['bic'], function (bic) {
 
-  /* insert your code that uses BMP.BIC */
+  /* bic === BMP.BIC */
+  /* insert your code that uses BMP.BIC or bic */
 
 });
 ```
