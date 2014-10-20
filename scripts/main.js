@@ -21,22 +21,8 @@ define(
 
     // Delay the app for Cordova
     function init() {
-      if (window.BMP.BIC.isBlinkGap === true) {
-        if (cordova.available === true) {
-          if (cordova.offline) {
-            if (cordova.offline.available === true) {
-              start();
-            } else {
-              // Poll
-              window.setTimeout(init, 1000);
-            }
-          } else {
-            start();
-          }
-        } else {
-          // Wait for deviceready event
-          document.addEventListener('deviceready', init, false);
-        }
+      if (window.BMP.BlinkGap.isHere()) {
+        window.BMP.BlinkGap.whenReady().then(start, start);
       } else {
         start();
       }

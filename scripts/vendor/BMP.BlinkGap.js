@@ -11,8 +11,10 @@
 
   BMP = window.BMP;
 
+  BMP.BlinkGap = {};
+
   // detect BlinkGap / PhoneGap / Callback
-  window.isBlinkGapDevice = function () {
+  BMP.BlinkGap.isHere = function () {
     if (window.isBlinkGap || window.cordova) {
       return true;
     }
@@ -26,24 +28,22 @@
     );
   };
 
-  BMP.BlinkGap = {};
-
   BMP.BlinkGap.isReady = function () {
-    return window.isBlinkGapDevice() && !!(
+    return BMP.BlinkGap.isHere() && !!(
       (window.PhoneGap && window.PhoneGap.available) ||
       (window.cordova && window.cordova.available)
     );
   };
 
   BMP.BlinkGap.hasCamera = function () {
-    return window.isBlinkGapDevice() && !!(
+    return BMP.BlinkGap.isHere() && !!(
       (window.Camera && window.Camera.getPicture) ||
       (navigator.camera && navigator.camera.getPicture)
     );
   };
 
   BMP.BlinkGap.hasTouchDraw = function () {
-    return window.isBlinkGapDevice() && !!(
+    return BMP.BlinkGap.isHere() && !!(
       (window.BGTouchDraw && window.BGTouchDraw.getDrawing) ||
       (navigator.bgtouchdraw && navigator.bgtouchdraw.getDrawing)
     );
@@ -51,7 +51,7 @@
 
   BMP.BlinkGap.hasOffline = function () {
     return !!(
-      window.isBlinkGapDevice() &&
+      BMP.BlinkGap.isHere() &&
       window.cordova &&
       window.cordova.offline
     );
@@ -94,7 +94,7 @@
     };
 
     checkFn = function () {
-      if (window.isBlinkGapDevice()) {
+      if (BMP.BlinkGap.isHere()) {
         if (BMP.BlinkGap.isReady()) {
           dfrd.resolve();
         } else if (document.addEventListener) {
