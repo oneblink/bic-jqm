@@ -32,6 +32,7 @@ define(['Squire'], function (Squire) {
         },
         datastore: function () { return this; },
         collections: function () { return Promise.resolve(); },
+        whenPopulated: function () { return Promise.resolve(); },
         setup: function () { return Promise.resolve(); },
         populate: function () { return Promise.resolve(); },
         initialRender: function () { return null; },
@@ -50,18 +51,16 @@ define(['Squire'], function (Squire) {
       var router, testmodel;
 
       beforeEach(function (done) {
-        require(['feature!promises'], function (Promise) {
-          injector.require(['../scripts/router'], function (module) {
-            testmodel = model(1);
-            sinon.stub(module, "inheritanceChain", function () { return testmodel; });
-            sinon.stub(module, "parseArgs", function () { return null; });
-            router = module;
-            router.routeRequest({
-              dataUrl: "/test",
-              deferred: Promise.resolve()
-            });
-            done();
+        injector.require(['../scripts/router'], function (module) {
+          testmodel = model(1);
+          sinon.stub(module, "inheritanceChain", function () { return testmodel; });
+          sinon.stub(module, "parseArgs", function () { return null; });
+          router = module;
+          router.routeRequest({
+            dataUrl: "/test",
+            deferred: Promise.resolve()
           });
+          setTimeout(done, 1e3);
         });
       });
 

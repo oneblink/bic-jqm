@@ -1,3 +1,4 @@
+/*globals pollUntil*/
 define(
   ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
@@ -19,21 +20,36 @@ define(
       collections: function () {
         var app = this;
 
-        app.interactions = new InteractionCollection();
-        app.datasuitcases = new DataSuitcaseCollection();
-        app.forms = new FormCollection();
-        app.pending = new PendingCollection();
-        app.stars = new StarsCollection();
-        app.formRecords = new FormRecordsCollection();
+        if (this.collections._promise) {
+          // return a cached promise when possible
+          return this.collections._promise;
+        }
 
-        return Promise.all([
-          app.interactions.datastore().load(),
-          app.datasuitcases.datastore().load(),
-          app.forms.datastore().load(),
-          app.pending.datastore().load(),
-          app.stars.datastore().load(),
-          app.formRecords.datastore().load()
-        ]);
+        this.collections._promise = new Promise(function (resolve, reject) {
+          pollUntil(function () {
+            // need to wait for the data layer to be configured RE: cordova
+            return !!app.data;
+          }, null, function () {
+            // now data is safe to use, so we can get started
+            app.interactions = app.interactions || new InteractionCollection();
+            app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
+            app.forms = app.forms || new FormCollection();
+            app.pending = app.pending || new PendingCollection();
+            app.stars = app.stars || new StarsCollection();
+            app.formRecords = app.formRecords || new FormRecordsCollection();
+
+            Promise.all([
+              app.interactions.datastore().load(),
+              app.datasuitcases.datastore().load(),
+              app.forms.datastore().load(),
+              app.pending.datastore().load(),
+              app.stars.datastore().load(),
+              app.formRecords.datastore().load()
+            ]).then(resolve, reject);
+          });
+        });
+
+        return this.collections._promise;
       },
 
       setup: function () {
@@ -50,11 +66,14 @@ define(
       populate: function () {
         var app = this;
 
-        if (!(navigator.onLine || window.BMP.BIC.isBlinkGap)) {
+        if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
           return Promise.resolve();
         }
 
-        return Promise.resolve(API.getAnswerSpaceMap())
+        return app.collections()
+          .then(function () {
+            return Promise.resolve(API.getAnswerSpaceMap());
+          })
           .then(
             function (data) {
               return Promise.all(_.compact(_.map(data, function (value, key) {
@@ -125,6 +144,28 @@ define(
               return app.interactions.save();
             }
           );
+      },
+
+      whenPopulated: function () {
+        var me = this;
+        return new Promise(function (resolve, reject) {
+          me.collections().then(function () {
+            var timeout;
+            if (me.interactions.length) {
+              resolve();
+            } else {
+              me.interactions.once('add', function () {
+                clearTimeout(timeout);
+                resolve();
+              });
+              timeout = setTimeout(function () {
+                reject(new Error('whenPopulated timed out after 20 seconds'));
+              }, 20e3);
+            }
+          }, function () {
+            reject(new Error('whenPopulated failed due to collections'));
+          });
+        });
       },
 
       checkLoginStatus: function () {
