@@ -66,11 +66,14 @@ define(
       populate: function () {
         var app = this;
 
-        if (!(navigator.onLine || window.BMP.BIC.isBlinkGap)) {
+        if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
           return Promise.resolve();
         }
 
-        return Promise.resolve(API.getAnswerSpaceMap())
+        return app.collections()
+          .then(function () {
+            return Promise.resolve(API.getAnswerSpaceMap());
+          })
           .then(
             function (data) {
               return Promise.all(_.compact(_.map(data, function (value, key) {
