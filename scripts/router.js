@@ -52,7 +52,7 @@ define(
         var path = $.mobile.path.parseUrl(data.dataUrl),
           model;
 
-        if (window.cordova && window.cordova.offline && window.cordova.offline.available && window.cordova.offline.filePathPrex && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
+        if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
           // Remove file path
           path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
           // Remove domain info
@@ -61,31 +61,31 @@ define(
           path.hrefNoSearch = path.hrefNoSearch.substr(0, path.hrefNoSearch.indexOf('.'));
         }
 
-        if (path.hrefNoSearch.substr(0, 13) === '/offlineData/') {
-          path.hrefNoSearch = path.hrefNoSearch.substr(12);
-        }
+        app.whenPopulated().then(function () {
 
-        model = this.inheritanceChain(path.hrefNoSearch);
+          model = app.router.inheritanceChain(path.hrefNoSearch);
 
-        app.currentInteraction = model;
+          app.currentInteraction = model;
 
-        this.parseArgs(path.search.substr(1), model);
+          app.router.parseArgs(path.search.substr(1), model);
 
-        model.prepareForView(data).then(function (model) {
-          new InteractionView({
-            tagName: 'div',
-            model: model
-          }).once("render", function () {
-            this.$el.attr("data-url", data.dataUrl);
-            this.$el.attr("data-external-page", true);
-            this.$el.one('pagecreate', $.mobile._bindPageRemove);
-            data.deferred.resolve(data.absUrl, data.options, this.$el);
-          }).render(data);
-        }, function () {
-          data.deferred.reject(data.absUrl, data.options);
-          $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
-          setTimeout($.mobile.hidePageLoadingMsg, 1500);
+          model.prepareForView(data).then(function (model) {
+            new InteractionView({
+              tagName: 'div',
+              model: model
+            }).once("render", function () {
+              this.$el.attr("data-url", data.dataUrl);
+              this.$el.attr("data-external-page", true);
+              this.$el.one('pagecreate', $.mobile._bindPageRemove);
+              data.deferred.resolve(data.absUrl, data.options, this.$el);
+            }).render(data);
+          }, function () {
+            data.deferred.reject(data.absUrl, data.options);
+            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+            setTimeout($.mobile.hidePageLoadingMsg, 1500);
+          });
         });
+
       },
 
       inheritanceChain: function (data) {

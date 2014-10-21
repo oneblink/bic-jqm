@@ -58,6 +58,14 @@ define(['Squire'], function (Squire) {
       model.should.be.an.instanceOf(Backbone.Model);
     });
 
+    it("should have an id property", function () {
+      expect(model).to.have.property('id');
+    });
+
+    it("should have a loginStatus attribute", function () {
+      expect(model.attributes).to.have.property('loginStatus');
+    });
+
     describe('#datastore', function () {
       afterEach(function (done) {
         if (model.data) {
@@ -77,13 +85,19 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#collections', function () {
+      beforeEach(function () {
+        model.datastore();
+      });
+
       afterEach(function (done) {
+        delete model.data;
         delete model.interactions;
         delete model.datasuitcases;
         delete model.forms;
         delete model.pending;
         delete model.stars;
         delete model.formRecords;
+        delete model.collections._promise;
         done();
       });
 
@@ -91,34 +105,57 @@ define(['Squire'], function (Squire) {
         expect(model.collections()).to.be.instanceOf(Promise);
       });
 
-      it("should create a collection for interactions", function () {
-        model.collections();
-        expect(model).to.have.property('interactions');
+      it("should create a collection for interactions", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('interactions');
+          expect(model.interactions).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
       });
 
-      it("should create a collection for data suitcases", function () {
+      it("should create a collection for data suitcases", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('datasuitcases');
+          expect(model.datasuitcases).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
         model.collections();
-        expect(model).to.have.property('datasuitcases');
       });
 
-      it("should create a collection for forms", function () {
+      it("should create a collection for forms", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('forms');
+          expect(model.forms).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
         model.collections();
-        expect(model).to.have.property('forms');
       });
 
-      it("should create a collection for pending items", function () {
+      it("should create a collection for pending items", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('pending');
+          expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
         model.collections();
-        expect(model).to.have.property('pending');
       });
 
-      it("should create a collection for stars", function () {
+      it("should create a collection for stars", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('stars');
+          expect(model.stars).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
         model.collections();
-        expect(model).to.have.property('stars');
       });
 
-      it("should create a collection for form records", function () {
+      it("should create a collection for form records", function (done) {
+        model.collections().then(function () {
+          expect(model).to.have.property('formRecords');
+          expect(model.formRecords).to.be.an.instanceOf(Backbone.Collection);
+          done();
+        });
         model.collections();
-        expect(model).to.have.property('formRecords');
       });
 
       it("should resolve when the collections are all ready", function (done) {

@@ -115,15 +115,24 @@ module.exports = function (grunt) {
     clean: ['build'],
 
     requirejs: {
-      feature: {
+      outside: {
         options: {
           baseUrl: 'scripts',
           name: 'feature',
+          include: ['feature', 'pollUntil', 'BlinkGap'],
           exclude: ['implementations'],
-          out: 'build/feature.js',
+          out: 'build/outside.js',
           optimize: "none",
           paths: {
-            feature: '../bower_components/amd-feature/feature'
+            feature: '../bower_components/amd-feature/feature',
+            pollUntil: '../node_modules/poll-until/poll-until',
+            BlinkGap: 'vendor/BMP.BlinkGap'
+          },
+          shim: {
+            BlinkGap: {
+              deps: ['pollUntil'],
+              exports: 'BMP.BlinkGap'
+            }
           }
         }
       },
@@ -146,7 +155,7 @@ module.exports = function (grunt) {
             startFile: [
               'scripts/frag/00-config.js',
               'scripts/frag/05-implementations.js',
-              'build/feature.js',
+              'build/outside.js',
               'scripts/frag/10-start.frag'
             ],
             endFile: 'scripts/frag/99-end.frag'

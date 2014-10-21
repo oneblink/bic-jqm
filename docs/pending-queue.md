@@ -1,4 +1,4 @@
-# BIC v3: Pending Queue
+# BIC-jQM: Pending Queue
 
 ## non-deterministic initialisation
 

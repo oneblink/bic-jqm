@@ -14,6 +14,8 @@ require.config({
     BlinkForms: '//d1c6dfkb81l78v.cloudfront.net/blink/forms/3/3.1.1/forms3jqm.min',
     signaturepad: '//d1c6dfkb81l78v.cloudfront.net/signaturepad/2.3.0/jq.sig.min',
     jquerymobile: '/bower_components/jquery-mobile-bower/js/jquery.mobile-1.3.2',
+    pollUntil: '/node_modules/poll-until/poll-until',
+    BlinkGap: '/scripts/vendor/BMP.BlinkGap',
     moment: '/bower_components/momentjs/min/moment.min',
     picker: '/bower_components/pickadate/lib/picker',
     'picker.date': '/bower_components/pickadate/lib/picker.date',
@@ -31,6 +33,10 @@ require.config({
     'backbone': {
       deps: ['jquery', 'underscore'],
       exports: 'Backbone'
+    },
+    BlinkGap: {
+      deps: ['pollUntil'],
+      exports: 'BMP.BlinkGap'
     },
     'BMP.Blobs': {
       deps: ['underscore', 'jquery'],
@@ -53,13 +59,16 @@ require([
     'mustache',
     'BlinkForms',
     'pouchdb',
+    'pollUntil',
     'jquerymobile',
-    'feature!es5'
-  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch) {
+    'feature!es5',
+    'BlinkGap'
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch, pollUntil) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
   window.Pouch = Pouch;
+  window.pollUntil = pollUntil;
 
   require(['main'], function () {
     console.log('BIC started!');
