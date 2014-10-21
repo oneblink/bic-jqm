@@ -18,7 +18,7 @@ following somewhat-cumbersome ritual is required:
 ```javascript
 require(['jquery', 'bic'], function ($) {
   $(document).one('pagebeforeload', function () {
-    $.when(BMP.BIC3.pending.initialize).then(function () {
+    $.when(BMP.BIC.pending.initialize).then(function () {
 
       /* here your code can safely manipulate the pending queue */
 
@@ -31,7 +31,7 @@ Just checking the Promise should be all that is necessary for
 Interaction-specific and Form Behaviour-specific code:
 
 ```javascript
-$.when(BMP.BIC3.pending.initialize).then(function () {
+$.when(BMP.BIC.pending.initialize).then(function () {
 
   /* here your Interaction code can safely manipulate the pending queue */
 
@@ -76,7 +76,7 @@ The `status` property has special meaning. See the `processQueue` method below.
 ## API
 
 As you may have guessed from the above, the pending queue object is globally
-exposed as `BMP.BIC3.pending`. The functionality exposed here is similar to [ORM](http://en.wikipedia.org/wiki/Object-relational_mapping)
+exposed as `BMP.BIC.pending`. The functionality exposed here is similar to [ORM](http://en.wikipedia.org/wiki/Object-relational_mapping)
 systems that you may have encountered in other environments.
 
 ### PendingItem
@@ -99,12 +99,12 @@ events are available.
 This constructor is private (not globally available), but documenting it is
 a necessary part of explaining how the other APIs are used.
 
-### BMP.BIC3.pending = new PendingCollection()
+### BMP.BIC.pending = new PendingCollection()
 
 This is globally-accessible object created via the `PendingCollection`
 constructor.
 
-### BMP.BIC3.pending.create = function (model)
+### BMP.BIC.pending.create = function (model)
 
 - @param {Object} model see the Form Records Data Model (`model.id` is optional)
 - @returns {PendingItem}
@@ -113,13 +113,13 @@ Asynchronously stores a new model in the pending queue. A unique UUID will be
 assigned to that entry in the pending queue while it is being stored.
 
 ```javascript
-var pendingRecord = BMP.BIC3.pending.create({ /* see Data Model */ });
+var pendingRecord = BMP.BIC.pending.create({ /* see Data Model */ });
 pendingRecord.once('change', function () {
   // pendingRecord.id is now available, indicating that the record is saved
 });
 ```
 
-### BMP.BIC3.pending.processQueue = function ()
+### BMP.BIC.pending.processQueue = function ()
 
 Processes each PendingItem in the queue. If the `status` property is `Pending`,
 then an attempt will be made to submit the entry to the server. All other values
