@@ -7,7 +7,15 @@ require.config({
     implementations: 'implementations',
     Squire: '/bower_components/squire/src/Squire',
     pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
-    uuid: '/bower_components/node-uuid/uuid'
+    uuid: '/bower_components/node-uuid/uuid',
+    pollUntil: '/node_modules/poll-until/poll-until',
+    BlinkGap: '/scripts/vendor/BMP.BlinkGap'
+  },
+  shim: {
+    BlinkGap: {
+      deps: ['pollUntil'],
+      exports: 'BMP.BlinkGap'
+    }
   }
 });
 mocha.setup('bdd');
@@ -74,6 +82,8 @@ $.mobile = {
 
 require([
   'feature!promises',
+  'pollUntil',
+  'BlinkGap',
   'test-api-web.js',
   'test-collection-datasuitcases.js',
   'test-collection-forms.js',
@@ -90,11 +100,12 @@ require([
   'test-router.js',
   'test-view-interaction.js',
   'test-view-star.js'
-], function (Promise) {
+], function (Promise, pollUntil) {
   "use strict";
   if (!window.Promise) {
     window.Promise = Promise;
   }
+  window.pollUntil = window.pollUntil || pollUntil;
 
   var runner, failedTests, logFailure;
 
