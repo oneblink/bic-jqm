@@ -59,8 +59,8 @@ require([
     'mustache',
     'BlinkForms',
     'pouchdb',
-    'jquerymobile',
     'pollUntil',
+    'jquerymobile',
     'feature!es5',
     'BlinkGap'
   ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch, pollUntil) {
@@ -68,6 +68,7 @@ require([
   window.Mustache = Mustache;
   window.Promise = Promise;
   window.Pouch = Pouch;
+  window.pollUntil = pollUntil;
 
   require(['main'], function () {
     console.log('BIC started!');
