@@ -60,13 +60,44 @@ require(['bic'], function (bic) {
 });
 ```
 
-#### .populate()
+#### .whenPopulated()
 
-- @returns {Promise}
+- @returns {Promise} resolved when collections are safe to use
 
-The boot sequence automatically calls `BMP.BIC3.populate()` once, causing BMP-jQM
-to retrieve configuration information from the server.
 
-We call this again if the end-user's login status changes, as the per-user
-configuration may be different from the anonymous configuration (e.g.
-Interactions that require users to login).
+## Backbone.Collection
+
+You may use the [`Backbone.Collection`](http://backbonejs.org/#Collection) and
+the [`Backbone.Events`](http://backbonejs.org/#Events) APIs on the objects
+listed in this section.
+
+### collections on BMP.BIC3
+
+See the example below for the list of BMP.BIC3 collections:
+
+```javascript
+require(['bic'], function (bic) {
+  bic.whenPopulated().then(function () {
+    bic.interactions;
+    bic.datasuitcases;
+    bic.forms; // collection of form definitions
+    bic.pending; // populated when saving client-side drafts / submissions
+    bic.formRecords; // populated when listing server-side records
+  });
+});
+```
+
+These collections are initially empty, so you may wish to interrogate the
+[`.length`](http://backbonejs.org/#Collection-length) property and/or hook the
+`add` event before assuming that the collection is not empty, like so:
+
+```javascript
+require(['bic'], function (bic) {
+  bic.whenPopulated().then(function () {
+    bic.interactions;
+    bic.datasuitcases;
+    bic.forms; // collection of form definitions
+    bic.pending; // populated when saving client-side drafts / submissions
+    bic.formRecords; // populated when listing server-side records
+  });
+```

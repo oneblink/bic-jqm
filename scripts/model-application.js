@@ -1,3 +1,4 @@
+/*globals pollUntil*/
 define(
   ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
@@ -125,6 +126,28 @@ define(
               return app.interactions.save();
             }
           );
+      },
+
+      whenPopulated: function () {
+        var me = this;
+        return new Promise(function (resolve, reject) {
+          me.collections().then(function () {
+            var timeout;
+            if (me.interactions.length) {
+              resolve();
+            } else {
+              me.interactions.once('add', function () {
+                clearTimeout(timeout);
+                resolve();
+              });
+              timeout = setTimeout(function () {
+                reject(new Error('whenPopulated timed out after 20 seconds'));
+              }, 20e3);
+            }
+          }, function () {
+            reject(new Error('whenPopulated failed due to collections'));
+          });
+        });
       },
 
       checkLoginStatus: function () {
