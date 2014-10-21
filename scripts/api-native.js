@@ -15,7 +15,9 @@ define(
               resolve(JSON.parse(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString
+            {
+              url: '/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace + userString
+            }
           );
         });
       },
@@ -33,7 +35,9 @@ define(
           cordova.offline.retrieveContent(
             resolve,
             reject,
-            '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs
+            {
+              url: '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs
+            }
           );
         });
       },
@@ -45,7 +49,9 @@ define(
               resolve(JSON.parse(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId
+            {
+              url: '/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId
+            }
           );
         });
       },
@@ -55,7 +61,9 @@ define(
           cordova.offline.retrieveContent(
             resolve,
             reject,
-            '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time
+            {
+              url: '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time
+            }
           );
         });
       },
@@ -76,7 +84,9 @@ define(
               resolve($.parseXML(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
+            {
+              url: '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
+            }
           );
         });
       },
@@ -88,7 +98,9 @@ define(
               resolve($.parseXML(data));
             },
             reject,
-            '/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
+            {
+              url: '/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
+            }
           );
         });
       }
