@@ -14,3 +14,5 @@ js/bic.js.map
 js/bic.min.js
 js
 versions
+bic.js
+formsdeps.min.js
