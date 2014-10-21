@@ -52,13 +52,17 @@ define(
         var path = $.mobile.path.parseUrl(data.dataUrl),
           model;
 
-        if (window.cordova && window.cordova.offline && window.cordova.offline.available && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
+        if (window.cordova && window.cordova.offline && window.cordova.offline.available && window.cordova.offline.filePathPrex && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
           // Remove file path
           path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
           // Remove domain info
           path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf('/'));
           // Remove file suffix
           path.hrefNoSearch = path.hrefNoSearch.substr(0, path.hrefNoSearch.indexOf('.'));
+        }
+
+        if (path.hrefNoSearch.substr(0, 13) === '/offlineData/') {
+          path.hrefNoSearch = path.hrefNoSearch.substr(12);
         }
 
         model = this.inheritanceChain(path.hrefNoSearch);
@@ -92,6 +96,10 @@ define(
 
         if (path[0] === "") {
           path.shift();
+        }
+
+        if (path[0] === window.initialURLHashed) {
+          path[0] = window.BMP.BIC.siteVars.answerSpace;
         }
 
         _.each(path, function (element, index) {
