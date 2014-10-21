@@ -20,21 +20,36 @@ define(
       collections: function () {
         var app = this;
 
-        app.interactions = new InteractionCollection();
-        app.datasuitcases = new DataSuitcaseCollection();
-        app.forms = new FormCollection();
-        app.pending = new PendingCollection();
-        app.stars = new StarsCollection();
-        app.formRecords = new FormRecordsCollection();
+        if (this.collections._promise) {
+          // return a cached promise when possible
+          return this.collections._promise;
+        }
 
-        return Promise.all([
-          app.interactions.datastore().load(),
-          app.datasuitcases.datastore().load(),
-          app.forms.datastore().load(),
-          app.pending.datastore().load(),
-          app.stars.datastore().load(),
-          app.formRecords.datastore().load()
-        ]);
+        this.collections._promise = new Promise(function (resolve, reject) {
+          pollUntil(function () {
+            // need to wait for the data layer to be configured RE: cordova
+            return !!app.data;
+          }, null, function () {
+            // now data is safe to use, so we can get started
+            app.interactions = app.interactions || new InteractionCollection();
+            app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
+            app.forms = app.forms || new FormCollection();
+            app.pending = app.pending || new PendingCollection();
+            app.stars = app.stars || new StarsCollection();
+            app.formRecords = app.formRecords || new FormRecordsCollection();
+
+            Promise.all([
+              app.interactions.datastore().load(),
+              app.datasuitcases.datastore().load(),
+              app.forms.datastore().load(),
+              app.pending.datastore().load(),
+              app.stars.datastore().load(),
+              app.formRecords.datastore().load()
+            ]).then(resolve, reject);
+          });
+        });
+
+        return this.collections._promise;
       },
 
       setup: function () {
