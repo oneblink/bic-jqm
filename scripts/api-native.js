@@ -22,7 +22,7 @@ define(
         });
       },
 
-      getInteractionResult: function (iact, args) {
+      getInteractionResult: function (iact, args, options) {
         var getargs = '';
         if (args && typeof args === "object") {
           _.each(args, function (value, key) {
@@ -31,15 +31,7 @@ define(
             }
           });
         }
-        return new Promise(function (resolve, reject) {
-          cordova.offline.retrieveContent(
-            resolve,
-            reject,
-            {
-              url: '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs
-            }
-          );
-        });
+        return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=' + iact + '&ajax=false' + getargs, options);
       },
 
       getForm: function () {
