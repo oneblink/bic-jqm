@@ -61,30 +61,34 @@ define(
           path.hrefNoSearch = path.hrefNoSearch.substr(0, path.hrefNoSearch.indexOf('.'));
         }
 
-        app.whenPopulated().then(function () {
+        app.whenPopulated()
+          .then(null, function () {
+            return null;
+          })
+          .then(function () {
 
-          model = app.router.inheritanceChain(path.hrefNoSearch);
+            model = app.router.inheritanceChain(path.hrefNoSearch);
 
-          app.currentInteraction = model;
+            app.currentInteraction = model;
 
-          app.router.parseArgs(path.search.substr(1), model);
+            app.router.parseArgs(path.search.substr(1), model);
 
-          model.prepareForView(data).then(function (model) {
-            new InteractionView({
-              tagName: 'div',
-              model: model
-            }).once("render", function () {
-              this.$el.attr("data-url", data.dataUrl);
-              this.$el.attr("data-external-page", true);
-              this.$el.one('pagecreate', $.mobile._bindPageRemove);
-              data.deferred.resolve(data.absUrl, data.options, this.$el);
-            }).render(data);
-          }, function () {
-            data.deferred.reject(data.absUrl, data.options);
-            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
-            setTimeout($.mobile.hidePageLoadingMsg, 1500);
+            model.prepareForView(data).then(function (model) {
+              new InteractionView({
+                tagName: 'div',
+                model: model
+              }).once("render", function () {
+                this.$el.attr("data-url", data.dataUrl);
+                this.$el.attr("data-external-page", true);
+                this.$el.one('pagecreate', $.mobile._bindPageRemove);
+                data.deferred.resolve(data.absUrl, data.options, this.$el);
+              }).render(data);
+            }, function () {
+              data.deferred.reject(data.absUrl, data.options);
+              $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+              setTimeout($.mobile.hidePageLoadingMsg, 1500);
+            });
           });
-        });
 
       },
 
@@ -98,8 +102,9 @@ define(
           path.shift();
         }
 
-        if (path[0] === window.initialURLHashed) {
+        if (path[0] === window.initialURLHashed && path[path.length - 1] === 'offlinedata') {
           path[0] = window.BMP.BIC.siteVars.answerSpace;
+          path.pop();
         }
 
         _.each(path, function (element, index) {
