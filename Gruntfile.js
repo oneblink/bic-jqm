@@ -46,7 +46,7 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['jslint', 'connect:server', 'mocha:tests'],
+        tasks: ['build-dev', 'jslint', 'connect:server', 'mocha:tests'],
       },
       build: {
         files: ['buildtests/**'],
@@ -210,6 +210,14 @@ module.exports = function (grunt) {
             flatten: true
           }
         ]
+      },
+      dev: {
+        files: [
+          {
+            src: 'build/bic.js',
+            dest: 'integration/bic.js'
+          }
+        ]
       }
     },
 
@@ -296,7 +304,8 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build-dev', ['clean', 'requirejs', 'copy:dev', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 

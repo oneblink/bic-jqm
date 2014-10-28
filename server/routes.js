@@ -19,10 +19,18 @@ module.exports = function (server) {
   });
 
   server.route({
-    path: '/integration/loader.js',
+    path: '/integration/bic.js',
     method: 'GET',
     handler: {
-      file: './integration/loader.js'
+      file: './integration/bic.js'
+    }
+  });
+
+  server.route({
+    path: '/integration/formsdeps.min.js',
+    method: 'GET',
+    handler: {
+      file: './integration/formsdeps.min.js'
     }
   });
 
@@ -33,6 +41,14 @@ module.exports = function (server) {
       file: './bower_components/node-uuid/uuid.js'
     }
   });
+
+  // server.route({
+  //   path: '/_R_/common/3/util/GetCacheManifest.php',//?_id=20403&_ver=3/1411018236186&gzip=false',
+  //   method: 'GET',
+  //   handler: {
+  //     file: './integration/cache.manifest'
+  //   }
+  // });
 
   server.route({
     path: '/_R_/{param*}',

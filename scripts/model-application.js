@@ -71,6 +71,9 @@ define(
         }
 
         return app.collections()
+          .then(null, function () {
+            return null;
+          })
           .then(function () {
             return Promise.resolve(API.getAnswerSpaceMap());
           })
