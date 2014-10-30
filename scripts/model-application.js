@@ -217,7 +217,7 @@ define(
       window.BMP.BIC3.history.length += 1;
     };
 
-    window.BMP.BIC3.version = '3.1.15';
+    window.BMP.BIC3.version = '3.1.16';
 
     // keep BMP.BIC and BMP.BIC3 the same
     $.extend(window.BMP.BIC3, window.BMP.BIC);
