@@ -1,5 +1,5 @@
 {
-  "name": "bic-v3",
+  "name": "bic-jqm",
   "version": "3.1.15",
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "dependencies": {

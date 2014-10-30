@@ -12,9 +12,11 @@
             'BMP.Blobs',
             'modernizr',
             'pouchdb',
-            'feature!es5'
+            'pollUntil',
+            'feature!es5',
+            'BlinkGap'
         ], factory);
     } else {
         root.bic = factory();
     }
-}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch) {
+}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch, pollUntil) {

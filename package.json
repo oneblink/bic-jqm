@@ -1,9 +1,11 @@
 {
-  "name": "BICv3",
+  "name": "bic-jqm",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
   "version": "3.1.15",
   "main": "Gruntfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "poll-until": "^1.0.0"
+  },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {
     "grunt": "~0.4",

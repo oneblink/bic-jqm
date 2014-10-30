@@ -12,7 +12,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['hapi:http', 'hapi:https', 'watch'],
+      background: ['hapi', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -33,20 +33,20 @@ module.exports = function (grunt) {
           bases: {},
           noasync: true
         }
-      },
-      https: {
-        options: {
-          server: require('path').resolve('server/https.js'),
-          bases: {},
-          noasync: true
-        }
-      }
+      }//,
+      // https: {
+      //   options: {
+      //     server: require('path').resolve('server/https.js'),
+      //     bases: {},
+      //     noasync: true
+      //   }
+      // }
     },
 
     watch: {
       scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['jslint', 'connect:server', 'mocha:tests'],
+        tasks: ['build-dev', 'jslint', 'connect:server', 'mocha:tests'],
       },
       build: {
         files: ['buildtests/**'],
@@ -115,15 +115,24 @@ module.exports = function (grunt) {
     clean: ['build'],
 
     requirejs: {
-      feature: {
+      outside: {
         options: {
           baseUrl: 'scripts',
           name: 'feature',
+          include: ['feature', 'pollUntil', 'BlinkGap'],
           exclude: ['implementations'],
-          out: 'build/feature.js',
+          out: 'build/outside.js',
           optimize: "none",
           paths: {
-            feature: '../bower_components/amd-feature/feature'
+            feature: '../bower_components/amd-feature/feature',
+            pollUntil: '../node_modules/poll-until/poll-until',
+            BlinkGap: 'vendor/BMP.BlinkGap'
+          },
+          shim: {
+            BlinkGap: {
+              deps: ['pollUntil'],
+              exports: 'BMP.BlinkGap'
+            }
           }
         }
       },
@@ -146,7 +155,7 @@ module.exports = function (grunt) {
             startFile: [
               'scripts/frag/00-config.js',
               'scripts/frag/05-implementations.js',
-              'build/feature.js',
+              'build/outside.js',
               'scripts/frag/10-start.frag'
             ],
             endFile: 'scripts/frag/99-end.frag'
@@ -199,6 +208,14 @@ module.exports = function (grunt) {
             filter: 'isFile',
             expand: true,
             flatten: true
+          }
+        ]
+      },
+      dev: {
+        files: [
+          {
+            src: 'build/bic.js',
+            dest: 'integration/bic.js'
           }
         ]
       }
@@ -287,7 +304,8 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build-dev', ['clean', 'requirejs', 'copy:dev', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 
