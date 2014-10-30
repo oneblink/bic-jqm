@@ -100,6 +100,11 @@ define(
           pathParts.pop();
         }
 
+        if (pathParts[0] === 'offlineData' && pathParts[1] === window.initialURLHashed) {
+          pathParts.pop();
+          pathParts[0] = window.BMP.BIC.siteVars.answerSpace;
+        }
+
         for (count = pathParts.length - 1; count !== -1; count = count - 1) {
           if (!app.interactions.get(pathParts[count].toLowerCase()).get('type') && path.indexOf(pathParts[count]) === -1 && path.indexOf(pathParts[count].toLowerCase()) === -1 && pathParts[count] !== location && pathParts[count] !== location.toLowerCase()) {
             if (path !== '') {

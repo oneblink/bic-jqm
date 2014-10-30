@@ -16,7 +16,11 @@
     document.currentScript = scripts[scripts.length - 1];
   }
   /*jslint regexp:true*/ // this regular expression has been double-checked
-  rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+  if (window.BICURL) {
+    rootPath = window.BICURL.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+  } else {
+    rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+  }
   /*jslint regexp:false*/
 
   // determine our current CDN based on how we referenced Require.JS

@@ -19,72 +19,18 @@ module.exports = function (server) {
   });
 
   server.route({
-    path: '/integration/loader.js',
+    path: '/integration/bic.js',
     method: 'GET',
     handler: {
-      file: './integration/loader.js'
+      file: './integration/bic.js'
     }
   });
 
   server.route({
-    path: '/_R_/common/3/util/GetCacheManifest.php',
+    path: '/integration/formsdeps.min.js',
     method: 'GET',
     handler: {
-      file: './integration/cache.manifest'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/GetConfig.php',
-    method: 'GET',
-    handler: {
-      file: './integration/config.json'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/GetForm.php',
-    method: 'GET',
-    handler: {
-      file: './integration/getform.json'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/GetMoJO.php',
-    method: 'GET',
-    handler: {
-      file: './integration/mojo.xml'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/GetFormList.php',
-    method: 'GET',
-    handler: {
-      file: './integration/formList.xml'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/GetFormRecord.php',
-    method: 'GET',
-    handler: {
-      file: './integration/formRecord.xml'
-    }
-  });
-
-  server.route({
-    path: '/_R_/common/3/xhr/SaveFormRecord.php',
-    method: 'POST',
-    handler: function (request, reply) {
-      // Valid Response
-      reply('<div>Way to go, sport!</div>');
-
-      // Failed Validation
-      //var response = reply({"message":"<span class=\"bForm-error\">Form could not be submitted.<\/span>","errors":{"text_box":"Text Box\/ cannot be more then 5 characters"}}).hold();
-      //response.code(470);
-      //response.send();
+      file: './integration/formsdeps.min.js'
     }
   });
 
@@ -96,14 +42,23 @@ module.exports = function (server) {
     }
   });
 
+  // server.route({
+  //   path: '/_R_/common/3/util/GetCacheManifest.php',//?_id=20403&_ver=3/1411018236186&gzip=false',
+  //   method: 'GET',
+  //   handler: {
+  //     file: './integration/cache.manifest'
+  //   }
+  // });
+
   server.route({
-    path: '/_R_/common/3/xhr/GetAnswer.php',
-    method: 'GET',
-    handler: function (request, reply) {
-      if (request.query.iact === 'set_datasuitcase') {
-        reply('<?xml version="1.0" encoding="UTF-8" ?><xml><test>Integration</test></xml>');
-      } else {
-        reply('MADL Code Interaction');
+    path: '/_R_/{param*}',
+    method: ['GET', 'POST'],
+    handler: {
+      proxy: {
+        host: 'blinkm.co',
+        port: 80,
+        protocol: 'http',
+        passThrough: true
       }
     }
   });
