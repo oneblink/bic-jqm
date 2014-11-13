@@ -33,6 +33,9 @@ define(
 
       setPendingItem: function (formname, formaction, formdata) {
         formdata._uuid = uuid.v4();
+        formdata._submittedTime = $.now();
+        formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
+        formdata._submittedTimezoneOffset /= -60;
         return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
       },
 
