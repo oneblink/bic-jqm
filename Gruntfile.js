@@ -1,5 +1,7 @@
 /*jslint indent:2, node:true*/
-var version = require('./version.json').version;
+var versions = require('./version.json');
+var version = versions.bic;
+var forms = versions.forms;
 var now = new Date();
 
 var uglifyConfig = {
@@ -245,14 +247,21 @@ module.exports = function (grunt) {
       versions: {
         files : [
           {
+            template: 'buildFiles/templates/versions.json',
+            dest: 'versions/' + now.valueOf() + '/versions.json',
             data: {
               timestamp: now.valueOf(),
               datestamp: now.toISOString(),
               version: version
-            },
-            template: 'buildFiles/templates/versions.json',
-            dest: 'versions/' + now.valueOf() + '/versions.json'
-          }
+            }
+          },
+          {
+            template: 'buildFiles/templates/appcache.mustache',
+            dest: 'versions/' + now.valueOf() + '/appcache.mustache',
+            data: {
+              forms: forms
+            }
+          },
         ]
       }
     },
@@ -279,6 +288,18 @@ module.exports = function (grunt) {
           {
             from: /window\.BMP\.BIC3\.version = '.+?'/,
             to: 'window.BMP.BIC3.version = \'' + version + '\''
+          }
+        ]
+      },
+      formsVersion: {
+        src: [
+          'scripts/frag/00-config.js'
+        ],
+        overwrite: true,
+        replacements: [
+          {
+            from: /blink\/forms\/3\/.*\/forms3jqm\.min/,
+            to: 'blink/forms/3/' + forms + '/forms3jqm.min',
           }
         ]
       }
