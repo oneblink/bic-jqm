@@ -13,66 +13,17 @@ define(
         BlinkForms.getDefinition = function (name, action) {
           return new Promise(function (resolve, reject) {
             require(['model-application'], function (app) {
-              var def = app.forms.get(name),
-                elements,
-                elNames,
-                collapseAction = function (d) {
-                  var attrs = d['default'] || {};
-                  if (action && d[action]) {
-                    _.extend(attrs, d[action]);
-                  }
-                  return attrs;
-                };
+              var def = app.forms.get(name);
 
               if (!def) {
-                return reject();
+                return reject(new Error('unable to locate "' + name + '" definition'));
               }
 
-              def = JSON.parse(JSON.stringify(def.attributes));
-
-              if (_.isArray(def['default']._elements)) {
-                def['default']._elements = _.map(def['default']._elements, collapseAction);
+              try {
+                resolve(BlinkForms.flattenDefinition(def, action));
+              } catch (err) {
+                reject(err);
               }
-              if (_.isArray(def['default']._sections)) {
-                def['default']._sections = _.map(def['default']._sections, collapseAction);
-              }
-              if (_.isArray(def['default']._pages)) {
-                def['default']._pages = _.map(def['default']._pages, collapseAction);
-              }
-              if (_.isArray(def['default']._behaviours)) {
-                def['default']._behaviours = _.map(def['default']._behaviours, collapseAction);
-              }
-              if (_.isArray(def['default']._checks)) {
-                def['default']._checks = _.map(def['default']._checks, collapseAction);
-              }
-              if (_.isArray(def['default']._actions)) {
-                def['default']._actions = _.map(def['default']._actions, collapseAction);
-              }
-
-              if (!action) {
-                resolve(def['default']);
-                return;
-              }
-
-              if (def[action] && def[action]._elements) {
-                elements = def['default']._elements;
-                delete def['default']._elements;
-                elNames = def[action]._elements;
-                delete def[action]._elements;
-                _.extend(def['default'], def[action]);
-
-                // remove all elements not needed for this action
-                elements = _.filter(elements, function (el) {
-                  return elNames.indexOf(el.name) !== -1;
-                });
-                // sort elements as per the action-specific order
-                elements = _.sortBy(elements, function (el) {
-                  return elNames.indexOf(el.name);
-                });
-
-                def['default']._elements = elements;
-              }
-              resolve(def['default']);
             });
           });
         };
