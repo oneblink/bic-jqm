@@ -27,6 +27,9 @@ define(
               });
             } else if (view.model.get("args")['args[pid]']) {
               BlinkForms.current.setRecord(app.pending.get(view.model.get("args")['args[pid]']).get("data"));
+              if (BlinkForms.current.getErrors) {
+                BlinkForms.current.getErrors()
+              }
               view.trigger("render");
             } else {
               view.trigger("render");
