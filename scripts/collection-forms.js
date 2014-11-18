@@ -20,7 +20,7 @@ define(
               }
 
               try {
-                resolve(BlinkForms.flattenDefinition(def, action));
+                resolve(BlinkForms.flattenDefinition(def.attributes, action));
               } catch (err) {
                 reject(err);
               }
