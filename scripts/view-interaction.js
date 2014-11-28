@@ -356,6 +356,9 @@ define(
             } else {
               pendingAttrs.editInteraction = null;
             }
+            if (!pendingAttrs.label) {
+              pendingAttrs.label = pendingAttrs.name;
+            }
             return pendingAttrs;
           });
         };

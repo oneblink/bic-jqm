@@ -82,13 +82,13 @@ define(
         var view, model;
 
         view = this;
-
         BlinkForms.current.data().then(function (data) {
           data._action = view.model.get("blinkFormAction");
           var modelAttrs = {
             type: "Form",
             status: status,
             name: view.model.get("blinkFormObjectName"),
+            label: view.model.get('displayName'),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
             data: data
