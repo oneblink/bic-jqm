@@ -49,7 +49,7 @@ define(
       },
 
       routeRequest: function (data) {
-        var path = $.mobile.path.parseUrl(data.dataUrl),
+        var path = $.mobile.path.parseUrl(data.absUrl),
           model;
 
         if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
@@ -67,7 +67,7 @@ define(
           })
           .then(function () {
 
-            model = app.router.inheritanceChain(path.hrefNoSearch);
+            model = app.router.inheritanceChain(path.pathname);
 
             app.currentInteraction = model;
 
