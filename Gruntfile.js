@@ -20,14 +20,6 @@ module.exports = function (grunt) {
       }
     },
 
-    connect: {
-      server: {
-        options: {
-          port: 9999
-        }
-      }
-    },
-
     hapi: {
       http: {
         options: {
@@ -48,11 +40,11 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['build-dev', 'jslint', 'connect:server', 'mocha:tests'],
+        tasks: ['build-dev', 'jslint', 'mocha:tests'],
       },
       build: {
         files: ['buildtests/**'],
-        tasks: ['jslint', 'build', 'connect:server', 'mocha:build'],
+        tasks: ['jslint', 'build', 'mocha:build']
       }
     },
 
@@ -307,7 +299,6 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jslint');
@@ -322,7 +313,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-bumpup');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
+  grunt.registerTask('test', ['build', 'jslint', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
   grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
