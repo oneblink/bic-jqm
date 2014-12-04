@@ -28,6 +28,9 @@ define(
 
         // Form Actions
         "click #queue" : "pendingQueue",
+        "click .clearPendingItem": "clearPendingItem",
+        "click #submitPendingItems": "submitPendingItems",
+        "click #clearPendingItems": "clearPendingItems",
 
         // Destroy
         "pageremove" : "destroy"
@@ -366,13 +369,59 @@ define(
         };
 
         this.$el.append(Mustache.render(pendingTemplate, {
-          pending: pendingExtractor("Pending"),
-          draft: pendingExtractor("Draft"),
-          validation: pendingExtractor("Failed Validation"),
-          validationTitle: pendingExtractor("Failed Validation").length > 0
+          pending: pendingExtractor('Pending'),
+          pendingPresent: pendingExtractor('Pending').length > 0,
+          draft: pendingExtractor('Draft'),
+          draftPresent: pendingExtractor('Draft').length > 0,
+          validation: pendingExtractor('Failed Validation'),
+          validationPresent: pendingExtractor('Failed Validation').length > 0
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').popup('open');
+      },
+
+      clearPendingItem: function (e) {
+        var $element, popup = $('#pendingPopup');
+
+        if (e.target.tagName !== 'A') {
+          $element = $(e.target).parents('a');
+        } else {
+          $element = $(e.target);
+        }
+
+        app.pending.get($element[0].attributes._pid.value).destroy();
+        popup.one('popupafterclose', function() {
+          popup.remove();
+        });
+        popup.popup('close');
+      },
+
+      submitPendingItems: function () {
+        var popup = $('#pendingPopup');
+        $.mobile.loading('show');
+        app.pending.processQueue()
+          .then(null, function () {
+            return null;
+          })
+          .then(function () {
+            popup.one('popupafterclose', function() {
+              popup.remove();
+              $.mobile.loading('hide');
+            });
+            popup.popup('close');
+          });
+      },
+
+      clearPendingItems: function () {
+        var items, popup = $('#pendingPopup');
+        items = app.pending.where({status: 'Draft'});
+        for(var i = 0; i < items.length; i++) {
+          items[i].destroy();
+        }
+        popup.one('popupafterclose', function() {
+          popup.remove();
+        });
+        popup.popup('close');
       },
 
       popup: function (data) {
