@@ -1,7 +1,7 @@
 /*global google: true */
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache'],
-  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate) {
+  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache'],
+  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -31,6 +31,7 @@ define(
         "click .clearPendingItem": "clearPendingItem",
         "click #submitPendingItems": "submitPendingItems",
         "click #clearPendingItems": "clearPendingItems",
+        "click #clearPendingItemsConfirmation": "clearPendingItemsConfirmation",
 
         // Destroy
         "pageremove" : "destroy"
@@ -377,6 +378,9 @@ define(
           validationPresent: pendingExtractor('Failed Validation').length > 0
         }));
         this.$el.trigger('pagecreate');
+        $('#pendingPopup').one('popupafterclose', function() {
+          $('#pendingPopup').remove();
+        });
         $('#pendingPopup').popup('open');
       },
 
@@ -390,9 +394,6 @@ define(
         }
 
         app.pending.get($element[0].attributes._pid.value).destroy();
-        popup.one('popupafterclose', function() {
-          popup.remove();
-        });
         popup.popup('close');
       },
 
@@ -405,7 +406,6 @@ define(
           })
           .then(function () {
             popup.one('popupafterclose', function() {
-              popup.remove();
               $.mobile.loading('hide');
             });
             popup.popup('close');
@@ -413,7 +413,7 @@ define(
       },
 
       clearPendingItems: function () {
-        var items, popup = $('#pendingPopup');
+        var items, popup = $('#clearConfirmationPopup');
         items = app.pending.where({status: 'Draft'});
         for(var i = 0; i < items.length; i++) {
           items[i].destroy();
@@ -422,6 +422,26 @@ define(
           popup.remove();
         });
         popup.popup('close');
+      },
+
+      clearPendingItemsConfirmation: function () {
+        var pendingPopup = $('#pendingPopup');
+
+        pendingPopup.one('popupafterclose', function() {
+          console.log('firing');
+          $('#clearConfirmationPopup').popup({
+            afterclose: function () {
+              $('#clearConfirmationPopup').remove();
+            }
+          });
+          setInterval(function () {
+            $('#clearConfirmationPopup').popup('open');
+          }, 100)
+        });
+
+        this.$el.append(Mustache.render(clearConfirmationPopupTemplate, {}));
+        this.$el.trigger('pagecreate');
+        pendingPopup.popup('close');
       },
 
       popup: function (data) {
