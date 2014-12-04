@@ -114,9 +114,9 @@ define(
             answerspaceid: app.get("dbid"),
             data: data
           };
-          if (view.model.get("blinkFormAction") === "edit") {
-            model = app.pending.get(view.model.get("args")['args[pid]']);
-            model.set(modelAttrs);
+          if (view.model.get('args')['args[pid]']) {
+            model = app.pending.get(view.model.get('args')['args[pid]']);
+            model.save(modelAttrs);
           } else {
             model = app.pending.create(modelAttrs);
           }
