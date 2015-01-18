@@ -72,11 +72,11 @@ define(
       formClose: function () {
         var that = this;
         $('#closePopup').popup({
-          afteropen: function(event) {
+          afteropen: function (event) {
             $(event.target).on('click', '#save', {view: that}, that.formSave);
             $(event.target).on('click', '#discard', {view: that}, that.formDiscard);
           },
-          afterclose: function(event) {
+          afterclose: function (event) {
             $(event.target).off('click', '#save');
             $(event.target).off('click', '#discard');
           }
@@ -86,14 +86,14 @@ define(
 
       formSave: function (e) {
         e.data.view.addToQueue('Draft');
-        $('#closePopup').one('popupafterclose', function() {
+        $('#closePopup').one('popupafterclose', function () {
           history.back();
         });
         $('#closePopup').popup('close');
       },
 
       formDiscard: function () {
-        $('#closePopup').one('popupafterclose', function() {
+        $('#closePopup').one('popupafterclose', function () {
           history.back();
         });
         $('#closePopup').popup('close');

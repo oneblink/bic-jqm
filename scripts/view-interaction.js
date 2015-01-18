@@ -378,7 +378,7 @@ define(
           validationPresent: pendingExtractor('Failed Validation').length > 0
         }));
         this.$el.trigger('pagecreate');
-        $('#pendingPopup').one('popupafterclose', function() {
+        $('#pendingPopup').one('popupafterclose', function () {
           $('#pendingPopup').remove();
         });
         $('#pendingPopup').popup('open');
@@ -405,7 +405,7 @@ define(
             return null;
           })
           .then(function () {
-            popup.one('popupafterclose', function() {
+            popup.one('popupafterclose', function () {
               $.mobile.loading('hide');
             });
             popup.popup('close');
@@ -413,12 +413,12 @@ define(
       },
 
       clearPendingItems: function () {
-        var items, popup = $('#clearConfirmationPopup');
+        var items, popup = $('#clearConfirmationPopup'), i;
         items = app.pending.where({status: 'Draft'});
-        for(var i = 0; i < items.length; i++) {
+        for (i = 0; i < items.length; i = i + 1) {
           items[i].destroy();
         }
-        popup.one('popupafterclose', function() {
+        popup.one('popupafterclose', function () {
           popup.remove();
         });
         popup.popup('close');
@@ -427,8 +427,7 @@ define(
       clearPendingItemsConfirmation: function () {
         var pendingPopup = $('#pendingPopup');
 
-        pendingPopup.one('popupafterclose', function() {
-          console.log('firing');
+        pendingPopup.one('popupafterclose', function () {
           $('#clearConfirmationPopup').popup({
             afterclose: function () {
               $('#clearConfirmationPopup').remove();
@@ -436,7 +435,7 @@ define(
           });
           setInterval(function () {
             $('#clearConfirmationPopup').popup('open');
-          }, 100)
+          }, 100);
         });
 
         this.$el.append(Mustache.render(clearConfirmationPopupTemplate, {}));
