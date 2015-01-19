@@ -7,7 +7,7 @@ define(
 
       initialize: function () {
         $('body').append(this.$el);
-        window.BMP.BIC3.view = this;
+        window.BMP.BIC.view = this;
 
         // this.$el.once("pageremove", function () {
         //   console.log("Backbone view cleanup");

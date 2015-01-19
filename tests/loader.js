@@ -9,7 +9,8 @@ require.config({
     pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
     uuid: '/bower_components/node-uuid/uuid',
     pollUntil: '/node_modules/poll-until/poll-until',
-    BlinkGap: '/scripts/vendor/BMP.BlinkGap'
+    BlinkGap: '/scripts/vendor/BMP.BlinkGap',
+    text: '../bower_components/requirejs-text/text'
   },
   shim: {
     BlinkGap: {

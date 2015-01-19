@@ -11,19 +11,17 @@ define(['Squire'], function (Squire) {
       injector.mock('model-star', function () { return null; });
       injector.mock('view-star', function () { return null; });
       injector.mock('view-form', function () { return null; });
-      injector.mock('text', function () { return null; });
       injector.mock('text!template-interaction.mustache', 'string');
       injector.mock('text!template-inputPrompt.mustache', 'string');
       injector.mock('text!template-form.mustache', 'string');
       injector.mock('text!template-category-list.mustache', 'string');
       injector.mock('text!template-pending.mustache', 'string');
       injector.mock('text!template-popup.mustache', 'string');
+      injector.mock('text!template-clear-confirmation-popup.mustache', 'string');
 
-      injector.require(['../bower_components/requirejs-text/text'], function () {
-        injector.require(['../scripts/view-interaction'], function (required) {
-          View = required;
-          done();
-        });
+      injector.require(['../scripts/view-interaction'], function (required) {
+        View = required;
+        done();
       });
     });
 
@@ -57,11 +55,11 @@ define(['Squire'], function (Squire) {
         expect(view.home).to.be.an.instanceOf(Function);
       });
 
-      it('should be accessible as BMP.BIC3.view', function () {
+      it('should be accessible as BMP.BIC.view', function () {
         should.exist(window.BMP);
-        should.exist(BMP.BIC3);
-        should.exist(BMP.BIC3.view);
-        expect(BMP.BIC3.view).to.equal(view);
+        should.exist(BMP.BIC);
+        should.exist(BMP.BIC.view);
+        expect(BMP.BIC.view).to.equal(view);
       });
     });
 

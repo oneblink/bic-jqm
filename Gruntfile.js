@@ -14,13 +14,20 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     concurrent: {
-      background: ['hapi', 'watch'],
+      background: ['hapi:http', 'watch'],
       options: {
         logConcurrentOutput: true
       }
     },
 
     hapi: {
+      test: {
+        options: {
+          server: require('path').resolve('server/http.js'),
+          bases: {},
+          noasync: false
+        }
+      },
       http: {
         options: {
           server: require('path').resolve('server/http.js'),
@@ -40,7 +47,7 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['build-dev', 'jslint', 'mocha:tests'],
+        tasks: ['build-dev', 'jslint', 'mocha:tests']
       },
       build: {
         files: ['buildtests/**'],
@@ -89,14 +96,14 @@ module.exports = function (grunt) {
       tests: {
         options: {
           urls: [
-            'http://localhost:9999/tests/index.html',
+            'http://localhost:9998/tests/index.html'
           ]
         }
       },
       build: {
         options: {
           urls: [
-            'http://localhost:9999/buildtests/index.html'
+            'http://localhost:9998/buildtests/index.html'
           ]
         }
       },
@@ -291,7 +298,7 @@ module.exports = function (grunt) {
         replacements: [
           {
             from: /blink\/forms\/3\/.*\/forms3jqm\.min/,
-            to: 'blink/forms/3/' + forms + '/forms3jqm.min',
+            to: 'blink/forms/3/' + forms + '/forms3jqm.min'
           }
         ]
       }
@@ -313,7 +320,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-bumpup');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'jslint', 'mocha']);
+  grunt.registerTask('test', ['build', 'jslint', 'hapi:test', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
   grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
