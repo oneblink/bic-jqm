@@ -100,13 +100,13 @@ define(['Squire'], function (Squire) {
 
         it('should return an indexeddb connection string when available', function () {
           if (window.indexedDB) {
-            expect(data.dbAdapter()).to.match(/idb:\/\//);
+            expect(data.dbAdapter()).to.match(/idb/);
           }
         });
 
         it('should return a websql connection string when inside isBlinkGap', function () {
           window.BMP.BIC.isBlinkGap = true;
-          expect(data.dbAdapter()).to.match(/websql:\/\//);
+          expect(data.dbAdapter()).to.match(/websql/);
           window.BMP.BIC.isBlinkGap = false;
         });
 
@@ -354,16 +354,7 @@ define(['Squire'], function (Squire) {
             done();
           });
         });
-
-        it('should reject with an error if it fails', function (done) {
-          data.dbAdapter = function () { return 'iwgiapugpi://'; };
-          data.deleteAll().then(null, function (err) {
-            expect(err).to.not.equal(undefined).and.not.equal(null);
-            done();
-          });
-        });
       });
     });
   }
 });
-

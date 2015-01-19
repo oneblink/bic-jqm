@@ -22,7 +22,7 @@ require.config({
     'picker.time': '/bower_components/pickadate/lib/picker.time',
     mustache: '/bower_components/mustache/mustache',
     bluebird: '/bower_components/bluebird/js/browser/bluebird',
-    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
+    pouchdb: '/bower_components/pouchdb/dist/pouchdb',
     implementations: '/tests/implementations',
     'es5-shim': '//d1c6dfkb81l78v.cloudfront.net/es5-shim/2.3.0/es5-shim.min'
   },

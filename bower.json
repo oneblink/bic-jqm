@@ -6,7 +6,7 @@
     "almond": "~0.2.9",
     "amd-feature": "~1.1.0",
     "pickadate": "~3.4.0",
-    "pouchdb": "~2.2.3",
+    "pouchdb": "~3.2.1",
     "momentjs": "~2.5.1",
     "requirejs-text": "~2.0.12",
     "requirejs-domready": "~2.0.1",

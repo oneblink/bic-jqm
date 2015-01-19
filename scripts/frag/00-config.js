@@ -64,7 +64,7 @@
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
     formsdeps: rootPath + "/formsdeps.min",
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
-    pouchdb: getPaths('pouchdb/2.2.3/pouchdb-nightly.min')
+    pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
   };
 
   // check if we are using a pre-bundles Require.JS

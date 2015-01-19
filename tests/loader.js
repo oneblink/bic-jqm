@@ -6,7 +6,7 @@ require.config({
     feature: '/bower_components/amd-feature/feature',
     implementations: 'implementations',
     Squire: '/bower_components/squire/src/Squire',
-    pouchdb: '/bower_components/pouchdb/dist/pouchdb-nightly',
+    pouchdb: '/bower_components/pouchdb/dist/pouchdb',
     uuid: '/bower_components/node-uuid/uuid',
     pollUntil: '/node_modules/poll-until/poll-until',
     BlinkGap: '/scripts/vendor/BMP.BlinkGap',

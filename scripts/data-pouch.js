@@ -18,7 +18,12 @@ define(
           return Promise.resolve(db);
         }
         return new Promise(function (resolve, reject) {
-          var pouch = new Pouch(me.dbAdapter() + me.name, function (err) {
+          Pouch.prefix = '';
+          var pouch = new Pouch({
+            name: me.name,
+            adapter: me.dbAdapter(),
+            auto_compaction: true
+          }, function (err) {
             if (err) {
               reject(err);
             } else {
@@ -35,9 +40,9 @@ define(
       dbAdapter: function () {
         var type = false;
         if (window.BMP.BIC.isBlinkGap === true && Pouch.adapters.websql) {
-          type = 'websql://';
+          type = 'websql';
         } else if (Pouch.adapters.idb) {
-          type = 'idb://';
+          type = 'idb';
         }
         return type;
       },
@@ -130,16 +135,18 @@ define(
       },
 
       deleteAll: function () {
-        var data;
-        data = this;
+        var that = this;
 
         return new Promise(function (resolve, reject) {
-          Pouch.destroy(data.dbAdapter() + data.name, function (err, info) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
+          that.getDB().then(function (db) {
+            db.destroy(function (err) {
+              if (err) {
+                reject(err);
+              } else {
+                that.db = null;
+                resolve();
+              }
+            });
           });
         });
       }
