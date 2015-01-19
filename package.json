@@ -1,7 +1,7 @@
 {
   "name": "bic-jqm",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.1.20",
+  "version": "3.1.21",
   "main": "Gruntfile.js",
   "dependencies": {
     "poll-until": "^1.0.0"
@@ -12,7 +12,6 @@
     "grunt-bumpup": "^0.6.1",
     "grunt-concurrent": "~0.5",
     "grunt-contrib-clean": "~0.5",
-    "grunt-contrib-connect": "~0.7",
     "grunt-contrib-copy": "~0.5",
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-uglify": "~0.4",

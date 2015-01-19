@@ -6,8 +6,7 @@ define(
 
       events: {
         "click #FormControls #submit" : "formSubmit",
-        "click #FormControls #cancel" : "formCancel",
-        "click #FormControls #save" : "formSave",
+        "click #FormControls #close" : "formClose",
         "click #nextFormPage" : "nextFormPage",
         "click #previousFormPage" : "previousFormPage"
       },
@@ -70,32 +69,54 @@ define(
         this.addToQueue("Pending");
       },
 
-      formCancel: function () {
-        $('#cancelPopup').popup('open');
+      formClose: function () {
+        var that = this;
+        $('#closePopup').popup({
+          afteropen: function (event) {
+            $(event.target).on('click', '#save', {view: that}, that.formSave);
+            $(event.target).on('click', '#discard', {view: that}, that.formDiscard);
+          },
+          afterclose: function (event) {
+            $(event.target).off('click', '#save');
+            $(event.target).off('click', '#discard');
+          }
+        });
+        $('#closePopup').popup('open');
       },
 
-      formSave: function () {
-        this.addToQueue("Draft");
+      formSave: function (e) {
+        e.data.view.addToQueue('Draft');
+        $('#closePopup').one('popupafterclose', function () {
+          history.back();
+        });
+        $('#closePopup').popup('close');
+      },
+
+      formDiscard: function () {
+        $('#closePopup').one('popupafterclose', function () {
+          history.back();
+        });
+        $('#closePopup').popup('close');
       },
 
       addToQueue: function (status) {
         var view, model;
 
         view = this;
-
         BlinkForms.current.data().then(function (data) {
           data._action = view.model.get("blinkFormAction");
           var modelAttrs = {
             type: "Form",
             status: status,
             name: view.model.get("blinkFormObjectName"),
+            label: view.model.get('displayName'),
             action: view.model.get("blinkFormAction"),
             answerspaceid: app.get("dbid"),
             data: data
           };
-          if (view.model.get("blinkFormAction") === "edit") {
-            model = app.pending.get(view.model.get("args")['args[pid]']);
-            model.set(modelAttrs);
+          if (view.model.get('args')['args[pid]']) {
+            model = app.pending.get(view.model.get('args')['args[pid]']);
+            model.save(modelAttrs);
           } else {
             model = app.pending.create(modelAttrs);
           }

@@ -1,7 +1,7 @@
 /*global google: true */
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache'],
-  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate) {
+  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache'],
+  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate) {
     "use strict";
     var InteractionView = Backbone.View.extend({
 
@@ -28,6 +28,10 @@ define(
 
         // Form Actions
         "click #queue" : "pendingQueue",
+        "click .clearPendingItem": "clearPendingItem",
+        "click #submitPendingItems": "submitPendingItems",
+        "click #clearPendingItems": "clearPendingItems",
+        "click #clearPendingItemsConfirmation": "clearPendingItemsConfirmation",
 
         // Destroy
         "pageremove" : "destroy"
@@ -346,7 +350,9 @@ define(
         var pendingExtractor = function (status) {
           return _.map(app.pending.where({status: status}), function (pendingItem) {
             var pendingAttrs = _.clone(pendingItem.attributes);
-            pendingAttrs.cid = pendingItem.cid;
+            if (!pendingAttrs._id) {
+              pendingAttrs._id = pendingItem.cid;
+            }
             pendingAttrs.editInteraction = app.interactions.where({
               blinkFormObjectName: pendingItem.get("name"),
               blinkFormAction: pendingItem.get("action")
@@ -356,18 +362,85 @@ define(
             } else {
               pendingAttrs.editInteraction = null;
             }
+            if (!pendingAttrs.label) {
+              pendingAttrs.label = pendingAttrs.name;
+            }
             return pendingAttrs;
           });
         };
 
         this.$el.append(Mustache.render(pendingTemplate, {
-          pending: pendingExtractor("Pending"),
-          draft: pendingExtractor("Draft"),
-          validation: pendingExtractor("Failed Validation"),
-          validationTitle: pendingExtractor("Failed Validation").length > 0
+          pending: pendingExtractor('Pending'),
+          pendingPresent: pendingExtractor('Pending').length > 0,
+          draft: pendingExtractor('Draft'),
+          draftPresent: pendingExtractor('Draft').length > 0,
+          validation: pendingExtractor('Failed Validation'),
+          validationPresent: pendingExtractor('Failed Validation').length > 0
         }));
         this.$el.trigger('pagecreate');
+        $('#pendingPopup').one('popupafterclose', function () {
+          $('#pendingPopup').remove();
+        });
         $('#pendingPopup').popup('open');
+      },
+
+      clearPendingItem: function (e) {
+        var $element, popup = $('#pendingPopup');
+
+        if (e.target.tagName !== 'A') {
+          $element = $(e.target).parents('a');
+        } else {
+          $element = $(e.target);
+        }
+
+        app.pending.get($element[0].attributes._pid.value).destroy();
+        popup.popup('close');
+      },
+
+      submitPendingItems: function () {
+        var popup = $('#pendingPopup');
+        $.mobile.loading('show');
+        app.pending.processQueue()
+          .then(null, function () {
+            return null;
+          })
+          .then(function () {
+            popup.one('popupafterclose', function () {
+              $.mobile.loading('hide');
+            });
+            popup.popup('close');
+          });
+      },
+
+      clearPendingItems: function () {
+        var items, popup = $('#clearConfirmationPopup'), i;
+        items = app.pending.where({status: 'Draft'});
+        for (i = 0; i < items.length; i = i + 1) {
+          items[i].destroy();
+        }
+        popup.one('popupafterclose', function () {
+          popup.remove();
+        });
+        popup.popup('close');
+      },
+
+      clearPendingItemsConfirmation: function () {
+        var pendingPopup = $('#pendingPopup');
+
+        pendingPopup.one('popupafterclose', function () {
+          $('#clearConfirmationPopup').popup({
+            afterclose: function () {
+              $('#clearConfirmationPopup').remove();
+            }
+          });
+          setInterval(function () {
+            $('#clearConfirmationPopup').popup('open');
+          }, 100);
+        });
+
+        this.$el.append(Mustache.render(clearConfirmationPopupTemplate, {}));
+        this.$el.trigger('pagecreate');
+        pendingPopup.popup('close');
       },
 
       popup: function (data) {

@@ -4,15 +4,51 @@
   </div>
   <div id="pendingContent" data-role="content">
     <ul data-role="listview">
-      {{#validationTitle}}<li data-role="list-divider">Failed Validation</li>{{/validationTitle}}
-      {{#validation}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/validation}}
+      {{#validationPresent}}<li data-role="list-divider">Failed Validation</li>{{/validationPresent}}
+      {{#validation}}
+      <li>
+        <div>
+          <h2>{{label}}</h2>
+          <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
+            <a class="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
+            <a interaction="{{editInteraction}}" _pid="{{_id}}" data-role="button" style="width: 49%;">Edit</a>
+          </div>
+        </div>
+      </li>
+      {{/validation}}
 
       <li data-role="list-divider">Pending</li>
-      {{#pending}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/pending}}
+      {{#pending}}
+      <li>
+        <div>
+          <h2>{{label}}</h2>
+        </div>
+      </li>
+      {{/pending}}
+      {{#pendingPresent}}
+      <li>
+        <a id="submitPendingItems" href="#">Submit All</a>
+      </li>
+      {{/pendingPresent}}
       {{^pending}}<li>No items pending transmission to server</li>{{/pending}}
 
       <li data-role="list-divider">Draft</li>
-      {{#draft}}<li><a interaction="{{editInteraction}}" _pid="{{cid}}">{{name}}</a></li>{{/draft}}
+      {{#draft}}
+      <li>
+        <div>
+          <h2>{{label}}</h2>
+          <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
+            <a class="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
+            <a interaction="{{editInteraction}}" _pid="{{_id}}" data-role="button" style="width: 49%;">Edit</a>
+          </div>
+        </div>
+      </li>
+      {{/draft}}
+      {{#draftPresent}}
+      <li>
+        <a id="clearPendingItemsConfirmation" href="#">Clear All</a>
+      </li>
+      {{/draftPresent}}
       {{^draft}}<li>No items saved as draft.</li>{{/draft}}
     </ul>
   </div>
