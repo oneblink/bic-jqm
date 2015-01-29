@@ -6,17 +6,17 @@ define(
       id: 'ActiveFormContainer',
 
       render: function () {
-        var view = this, subView;
+        var view = this;
 
         BlinkForms.getDefinition(view.model.get("blinkFormObjectName"), view.model.get("blinkFormAction"))
           .then(function (definition) {
             BlinkForms.initialize(definition, view.model.get("blinkFormAction"));
             view.$el.append(BlinkForms.current.$form);
-            subView = new FormControls({
+            view.subView = new FormControls({
               model: view.model
             });
-            subView.render();
-            view.$el.append(subView.$el);
+            view.subView.render();
+            view.$el.append(view.subView.$el);
 
             if (view.model.get("args")['args[id]']) {
               var formRecord;
