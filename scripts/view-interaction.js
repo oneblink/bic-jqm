@@ -137,8 +137,7 @@ define(
         var form,
           rawform,
           inheritedAttributes = this.model.inherit({}),
-          view = this,
-          subView;
+          view = this;
 
         // Non-type specific
         if (_.has(inheritedAttributes, "themeSwatch")) {
@@ -199,16 +198,16 @@ define(
             footer: inheritedAttributes.footer
           }));
 
-          subView = new FormView({
+          view.subView = new FormView({
             model: view.model,
             el: view.$el.children('[data-role="content"]')
           });
 
-          view.listenToOnce(subView, 'render', function () {
+          view.listenToOnce(view.subView, 'render', function () {
             view.trigger('render');
           });
 
-          subView.render();
+          view.subView.render();
 
         } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen

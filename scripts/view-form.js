@@ -4,34 +4,34 @@ define(
     "use strict";
     var FormView = Backbone.View.extend({
       render: function () {
-        var view, action, subView;
+        var view, action;
 
         view = this;
         action = view.model.get("blinkFormAction");
 
         if (action === "list") {
-          subView = new FormList({
+          view.subView = new FormList({
             model: view.model
           });
         } else if (action === "search") {
-          subView = new FormSearch({
+          view.subView = new FormSearch({
             model: view.model
           });
         } else {
           if ($('#ActiveFormContainer').length > 0) {
             $('#ActiveFormContainer').attr('id', 'FormContainer');
           }
-          subView = new FormAction({
+          view.subView = new FormAction({
             model: view.model
           });
         }
 
-        view.listenToOnce(subView, 'render', function () {
-          view.$el.append(subView.$el);
+        view.listenToOnce(view.subView, 'render', function () {
+          view.$el.append(view.subView.$el);
           view.trigger('render');
         });
 
-        subView.render();
+        view.subView.render();
 
         return view;
       }

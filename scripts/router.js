@@ -8,6 +8,21 @@ define(
 
         app.router = this;
 
+        if (BMP.isBlinkGap) {
+          $(document).on('pause', this.suspendApplication);
+          $(document).on('resume', this.resumeApplication);
+        }
+
+        if (document.hidden !== undefined) {
+          $(document).on('visibilitychange', function () {
+            if (document.hidden) {
+              app.router.suspendApplication();
+            } else {
+              app.router.resumeApplication();
+            }
+          });
+        }
+
         $(document).on('pagebeforeload', function (e, data) {
           e.preventDefault();
 
@@ -148,6 +163,28 @@ define(
         }
 
         return this;
+      },
+
+      suspendApplication: function () {
+        var url = $.mobile.path.parseLocation();
+        // Store current URL
+        localStorage.setItem('pauseURL', url.hrefNoHash);
+        // Store form data, if applicable
+        if (BMP.BIC.currentInteraction.get('type') === 'form') {
+          if (app.currentInteraction.get('args')['args[pid]']) {
+            app.view.subView.subView.subView.addToQueue('Draft', true);
+          } else {
+            app.view.subView.subView.subView.addToQueue('Draft', true)
+              .then(function (model) {
+                localStorage.setItem('pauseURL', url.hrefNoHash + '/?args[pid]=' + model.id);
+              });
+          }
+        }
+      },
+
+      resumeApplication: function () {
+        $.mobile.changePage(localStorage.getItem('pauseURL'));
+        localStorage.removeItem('pauseURL');
       }
     });
 
