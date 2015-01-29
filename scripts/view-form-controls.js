@@ -99,52 +99,64 @@ define(
         $('#closePopup').popup('close');
       },
 
-      addToQueue: function (status) {
-        var view, model;
+      addToQueue: function (status, supressQueue) {
+        var view = this;
+        var model;
+        supressQueue = supressQueue || false;
 
-        view = this;
-        BlinkForms.current.data().then(function (data) {
-          data._action = view.model.get("blinkFormAction");
-          var modelAttrs = {
-            type: "Form",
-            status: status,
-            name: view.model.get("blinkFormObjectName"),
-            label: view.model.get('displayName'),
-            action: view.model.get("blinkFormAction"),
-            answerspaceid: app.get("dbid"),
-            data: data
-          };
-          if (view.model.get('args')['args[pid]']) {
-            model = app.pending.get(view.model.get('args')['args[pid]']);
-            model.save(modelAttrs);
-          } else {
-            model = app.pending.create(modelAttrs);
-          }
-          $(window).one("pagechange", function () {
-            if (!navigator.onLine || model.get('status') === 'Draft') {
-              app.view.pendingQueue();
-            } else {
-              model.once('processed', function () {
-                if (model.get('status') === 'Submitted') {
-                  app.view.popup(model.get('result'));
-                  model.destroy();
+        return new Promise(function (resolve, reject) {
+          BlinkForms.current.data().then(function (data) {
+            var modelAttrs;
+            var options = {};
+
+            options.success = function (updatedModel) {
+              if (!supressQueue) {
+                $(window).one('pagechange', function () {
+                  if (!navigator.onLine || model.get('status') === 'Draft') {
+                    app.view.pendingQueue();
+                  } else {
+                    model.once('processed', function () {
+                      if (model.get('status') === 'Submitted') {
+                        app.view.popup(model.get('result'));
+                        model.destroy();
+                      } else {
+                        app.view.pendingQueue();
+                      }
+                    });
+                    app.pending.processQueue();
+                  }
+                });
+
+                if (window.BMP.BIC3.history.length === 0) {
+                  window.BMP.BIC3.view.home();
                 } else {
-                  app.view.pendingQueue();
+                  history.back();
                 }
-              });
-              app.pending.processQueue();
+              }
+              resolve(updatedModel);
+            };
+
+            options.error = reject;
+
+            data._action = view.model.get('blinkFormAction');
+            modelAttrs = {
+              type: 'Form',
+              status: status,
+              name: view.model.get('blinkFormObjectName'),
+              label: view.model.get('displayName'),
+              action: view.model.get('blinkFormAction'),
+              answerspaceid: app.get('dbid'),
+              data: data
+            };
+            if (view.model.get('args')['args[pid]']) {
+              model = app.pending.get(view.model.get('args')['args[pid]']);
+              model.save(modelAttrs, options);
+            } else {
+              model = app.pending.create(modelAttrs, options);
             }
           });
-
-          if (window.BMP.BIC3.history.length === 0) {
-            window.BMP.BIC3.view.home();
-          } else {
-            history.back();
-          }
-
         });
       }
-
     });
 
     return FormControlView;
