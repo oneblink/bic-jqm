@@ -1,6 +1,6 @@
 define(
-  ['feature!api'],
-  function (API) {
+  ['facade', 'feature!api'],
+  function (facade, API) {
     "use strict";
     var Interaction = Backbone.Model.extend({
 
@@ -190,26 +190,43 @@ define(
           }
 
           if (model.get("type") === "madl code") {
-            /*jslint unparam: true*/
-            API.getInteractionResult(model.id, model.get('args'), data.options).then(
-              function (result) {
-                model.save({
-                  content: result,
-                  contentTime: Date.now()
-                }, {
-                  success: function () {
-                    resolve(model);
-                  },
-                  error: function () {
-                    resolve(model);
+            require(['model-application'], function (app) {
+              /*jslint unparam: true*/
+              API.getInteractionResult(model.id, model.get('args'), data.options).then(
+                function (result) {
+                  model.save({
+                    content: result,
+                    contentTime: Date.now()
+                  }, {
+                    success: function () {
+                      resolve(model);
+                      if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid') && data.options.data) {
+                        app.checkLoginStatus().then(function () {
+                          if (app.get('loginStatus') === 'LOGGED IN') {
+                            facade.publish('parseAuthString', data.options.data);
+                          }
+                        });
+                      }
+                    },
+                    error: function () {
+                      resolve(model);
+                    }
+                  });
+                },
+                function (jqXHR, textStatus, errorThrown) {
+                  if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
+                    if (data.options.data) {
+                      // Offline login attempt;
+                      console.log('Captured offline login attempt');
+                    } else {
+                      console.log('Captured offline login prompt', model.get('content'));
+                    }
                   }
-                });
-              },
-              function (jqXHR, textStatus, errorThrown) {
-                reject(errorThrown);
-              }
-            );
-            /*jslint unparam: false*/
+                  reject(errorThrown);
+                }
+              );
+              /*jslint unparam: false*/
+            });
           }
 
           if (model.get("type") === "xslt" && model.get("xml").indexOf('stars:') === 0) {

@@ -18,7 +18,7 @@ define(
       window.BMP.Authentication = new Auth();
       /*jslint unparam: false*/
 
-      require(['router']);
+      require(['router', 'auth']);
     }
 
     // Delay the app for Cordova
