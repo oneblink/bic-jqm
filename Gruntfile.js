@@ -1,4 +1,3 @@
-/*jslint indent:2, node:true*/
 var versions = require('./version.json');
 var version = versions.bic;
 var forms = versions.forms;
@@ -47,48 +46,25 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ['scripts/**', 'tests/**'],
-        tasks: ['build-dev', 'jslint', 'mocha:tests']
+        tasks: ['build-dev', 'eslint', 'mocha:tests']
       },
       build: {
         files: ['buildtests/**'],
-        tasks: ['jslint', 'build', 'mocha:build']
+        tasks: ['eslint', 'build', 'mocha:build']
       }
     },
 
-    jslint: {
-      all: {
-        src: [
+    eslint: {
+      target: [
           'scripts/**/*.js',
           'tests/**/*.js',
           'buildtests/**/*.js',
           '!scripts/frag/05-implementations.js',
           '!tests/implementations.js',
           '!**/vendor/**/*'
-        ],
-        directives: {
-          "browser": true,
-          "es5": true,
-          "nomen": true,
-          "indent": 2,
-          "stupid": true,
-          "predef" : [
-            "define",
-            "require",
-            "requirejs",
-            "$",
-            "_",
-            "Backbone",
-            "Mustache",
-            "Pouch",
-            "BlinkForms",
-            "jquerymobile",
-            "BMP",
-            "Modernizr"
-          ]
-        },
-        options: {
-          errorsOnly: true
-        }
+      ],
+      options: {
+        configFile: '.eslintrc'
       }
     },
 
@@ -310,7 +286,7 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -322,7 +298,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-bumpup');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'jslint', 'hapi:test', 'mocha']);
+  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
   grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
