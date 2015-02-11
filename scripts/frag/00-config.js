@@ -107,6 +107,9 @@ require.config({
     },
     underscore: {
       exports: '_'
+    },
+    sjcl: {
+      exports: 'sjcl'
     }
   },
   bundles: {
