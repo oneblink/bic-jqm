@@ -9,7 +9,6 @@ define([], function () {
   mediator.channels = {};
 
   publish = function (channel) {
-    console.log('Mediator Publish', arguments);
     var args;
 
     if (!mediator.channels[channel]) {
@@ -24,7 +23,6 @@ define([], function () {
   };
 
   subscribe = function (channel, fn) {
-    console.log('Mediator Subscribe', arguments);
     if (!mediator.channels[channel]) {
       mediator.channels[channel] = [];
     }
