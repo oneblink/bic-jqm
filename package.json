@@ -9,6 +9,7 @@
   },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {
+    "backbone": "^1.1.2",
     "grunt": "~0.4",
     "grunt-bumpup": "^0.6.1",
     "grunt-concurrent": "~0.5",

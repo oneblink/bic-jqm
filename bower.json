@@ -16,7 +16,6 @@
     "requirejs": "~2.1",
     "jquery": "1.9.1",
     "underscore": "1.4.4",
-    "backbone": "1.0.0",
     "mustache": "~0.8.1",
     "mocha": "~1.19.0",
     "chai": "~1.9.1",
