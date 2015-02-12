@@ -193,17 +193,29 @@ define(
             require(['model-application'], function (app) {
               /*jslint unparam: true*/
               API.getInteractionResult(model.id, model.get('args'), data.options).then(
+                // Online
                 function (result) {
                   model.save({
                     content: result,
                     contentTime: Date.now()
                   }, {
                     success: function () {
+                      var credentials;
                       resolve(model);
-                      if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid') && data.options.data) {
+
+                      if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
                         app.checkLoginStatus().then(function () {
-                          if (app.get('loginStatus') === 'LOGGED IN') {
-                            facade.publish('parseAuthString', data.options.data);
+                          if (app.get('loginStatus') === 'LOGGED IN' && data.options.data) {
+                            credentials = model.parseAuthString(data.options.data);
+                            facade.publish('storeAuth', credentials);
+                            model.save({
+                              'content-principal': result
+                            });
+                          } else if (!model.get('args')['args[logout]']) {
+                            // Logged Out
+                            model.save({
+                              'content-anonymous': result
+                            });
                           }
                         });
                       }
@@ -214,15 +226,31 @@ define(
                   });
                 },
                 function (jqXHR, textStatus, errorThrown) {
+                  // Offline
+                  var credentials;
+
                   if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
                     if (data.options.data) {
                       // Offline login attempt;
-                      console.log('Captured offline login attempt');
+                      credentials = model.parseAuthString(data.options.data);
+                      model.listenToOnce(app, 'loginProcessed', function () {
+                        console.log('Caught the loginProcessed');
+                        if (app.get('loginStatus') === 'LOGGED IN') {
+                          model.set('content', model.get('content-principal'));
+                        } else {
+                          model.set('content', model.get('content-anonymous'));
+                        }
+                        resolve(model);
+                      });
+                      console.log('Processing login');
+                      facade.publish('authenticateAuth', credentials);
                     } else {
-                      console.log('Captured offline login prompt', model.get('content'));
+                      model.set('content', model.get('content-anonymous'));
+                      resolve(model);
                     }
+                  } else {
+                    reject(errorThrown);
                   }
-                  reject(errorThrown);
                 }
               );
               /*jslint unparam: false*/
@@ -266,6 +294,33 @@ define(
           }
 
         });
+      },
+
+      parseAuthString: function (authString) {
+        var credentials = {};
+        authString = authString.split('&');
+
+        for (var i = 0; i < authString.length; i++) {
+          var split = authString[i].split('=');
+          switch (split[0]) {
+            case 'username':
+              credentials.principal = split[1];
+              break;
+            case 'password':
+              credentials.credential = split[1];
+              break;
+            case 'submit':
+              break;
+            default:
+              credentials[split[0]] = split[1];
+          }
+          if (!credentials.expiry) {
+            // 3 day default expiry
+            credentials.expiry = 86400000 * 3;
+          }
+        }
+
+        return credentials;
       }
     });
 

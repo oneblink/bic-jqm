@@ -1,7 +1,7 @@
 /*globals pollUntil*/
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
-  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
+  ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
+  function (facade, InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     "use strict";
     var Application = Backbone.Model.extend({
 
@@ -114,6 +114,16 @@ define(
 
       setup: function () {
         var app = this;
+
+        facade.subscribe('applicationModel', 'loggedIn', function () {
+          app.set('loginStatus', 'LOGGED IN');
+          app.trigger('loginProcessed');
+        });
+
+        facade.subscribe('applicationModel', 'loggedOut', function () {
+          app.set('loginStatus', 'LOGGED OUT');
+          app.trigger('loginProcessed');
+        });
 
         return new Promise(function (resolve, reject) {
           app.fetch({
