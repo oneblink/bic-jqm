@@ -4,9 +4,14 @@ define([], function () {
   var publish;
   var subscribe;
   var mediator;
+  var log;
 
   mediator = {};
   mediator.channels = {};
+
+  log = function (type, channel, args) {
+    console.log(Date.now() + ': ' + type + ' ' + channel, args);
+  };
 
   publish = function (channel) {
     var args;
@@ -19,6 +24,11 @@ define([], function () {
       var subscription = mediator.channels[channel][i];
       subscription.callback.apply(subscription.context, args);
     }
+
+    if (BMP.Debug) {
+      log('Publish', channel, args);
+    }
+
     return this;
   };
 
@@ -27,6 +37,11 @@ define([], function () {
       mediator.channels[channel] = [];
     }
     mediator.channels[channel].push({ context: this, callback: fn });
+
+    if (BMP.Debug) {
+      log('Subscribe', channel);
+    }
+
     return this;
   };
 
