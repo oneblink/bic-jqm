@@ -1,4 +1,7 @@
-/*global mocha:true, chai:true */
+/*eslint-disable no-unused-vars*/
+var should = chai.should();
+var expect = chai.expect;
+/*eslint-enable no-unused-vars*/
 
 require.config({
   baseUrl: '/tests/',
@@ -19,9 +22,8 @@ require.config({
     }
   }
 });
+
 mocha.setup('bdd');
-var should = chai.should();
-var expect = chai.expect;
 
 window.BMP = {
   BIC: {
@@ -32,17 +34,16 @@ window.BMP = {
   },
   FileInput: {
     initialize: function () {
-      "use strict";
-      return "hello!";
+      'use strict';
+      return 'hello!';
     }
   }
 };
 window.Modernizr = {indexeddb: false};
 window.BlinkForms = {};
 
-/*jslint unparam: true */
 Backbone.sync = function (method, model, options) {
-  "use strict";
+  'use strict';
   var promise = Promise.resolve({});
 
   promise.then(function (response) {
@@ -57,24 +58,23 @@ Backbone.sync = function (method, model, options) {
 
   return promise;
 };
-/*jslint unparam: false */
 
 $.mobile = {
   loading: function () {
-    "use strict";
+    'use strict';
     return null;
   },
   path: {
     parseUrl: function () {
-      "use strict";
+      'use strict';
       return {
-        hrefNoSearch: "/test",
-        search: ""
+        hrefNoSearch: '/test',
+        search: ''
       };
     }
   },
   showPageLoadingMsg: function () {
-    "use strict";
+    'use strict';
     return null;
   },
   pageLoadErrorMessageTheme: {},
@@ -102,22 +102,24 @@ require([
   'test-view-interaction.js',
   'test-view-star.js'
 ], function (Promise, pollUntil) {
-  "use strict";
+  'use strict';
+  var runner, failedTests, logFailure;
+
   if (!window.Promise) {
     window.Promise = Promise;
   }
   window.pollUntil = window.pollUntil || pollUntil;
 
-  var runner, failedTests, logFailure;
+
 
   runner = mocha.run();
   failedTests = [];
   logFailure = function (test, err) {
-    var flattenTitles = function (test) {
+    var flattenTitles = function (innerTest) {
       var titles = [];
-      while (test.parent.title) {
-        titles.push(test.parent.title);
-        test = test.parent;
+      while (innerTest.parent.title) {
+        titles.push(innerTest.parent.title);
+        innerTest = innerTest.parent;
       }
       return titles.reverse();
     };

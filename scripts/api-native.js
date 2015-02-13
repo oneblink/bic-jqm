@@ -1,8 +1,7 @@
-/*global cordova: true */
 define(
   ['uuid'],
   function (uuid) {
-    "use strict";
+    'use strict';
     var API = {
       getAnswerSpaceMap: function (user) {
         return new Promise(function (resolve, reject) {
@@ -24,7 +23,7 @@ define(
 
       getInteractionResult: function (iact, args, options) {
         var getargs = '';
-        if (args && typeof args === "object") {
+        if (args && typeof args === 'object') {
           _.each(args, function (value, key) {
             if (value) {
               getargs += '&' + key + '=' + value;

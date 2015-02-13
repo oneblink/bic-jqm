@@ -1,7 +1,7 @@
 define(
   ['uuid'],
   function (uuid) {
-    "use strict";
+    'use strict';
     var API = {
       getAnswerSpaceMap: function (user) {
         var userString = '';
@@ -13,7 +13,7 @@ define(
 
       getInteractionResult: function (iact, args, options) {
         var getargs = '';
-        if (args && typeof args === "object") {
+        if (args && typeof args === 'object') {
           _.each(args, function (value, key) {
             if (value) {
               getargs += '&' + key + '=' + value;
@@ -28,7 +28,7 @@ define(
       },
 
       getDataSuitcase: function (suitcase, time) {
-        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: "text"});
+        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: 'text'});
       },
 
       setPendingItem: function (formname, formaction, formdata) {

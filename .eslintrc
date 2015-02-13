@@ -2,19 +2,53 @@
   "env": {
     "amd": true,
     "browser": true,
-    "mocha": false,
+    "mocha": true,
     "node": false
   },
   "globals": {
-    "$": false,
-    "_": false,
-    "Backbone": false,
-    "BlinkForms": true,
+    /* Blink */
     "BMP": true,
-    "Mustache": false,
-    "Promise": false
+    "BlinkForms": true,
+    /* Libraries */
+    "pollUntil": true,
+    "cordova": true,
+    "Pouch": true,
+    "Modernizr": true,
+    "Backbone": true,
+    "$": true,
+    "_": true,
+    "Mustache": true,
+    /* Testing */
+    "mocha": true,
+    "sinon": true,
+    "should": true,
+    "expect": true,
+    "chai": true
   },
   "rules": {
+    /* Possible Errors */
+    "no-extra-parens": 2,
+    "no-reserved-keys": 2,
+    "valid-jsdoc": 0, /* TODO: 2 */
+    /* Best Practices */
+    "block-scoped-var": 2,
+    "complexity": [1, 3],
+    "default-case": 2,
+    "guard-for-in": 2,
+    "no-div-regex": 2,
+    "no-else-return": 2,
+    "no-eq-null": 2,
+    "no-floating-decimal": 2,
+    "no-process-env": 2,
+    "no-self-compare": 2,
+    "no-void": 2,
+    "no-warning-comments": 0, /* TODO: 2 */
+    "radix": 2,
+    "vars-on-top": 2,
+    "wrap-iife": 2,
+    /* Variables */
+    "no-catch-shadow": 2,
+    /* Stylistic Issues */
     "no-mixed-spaces-and-tabs": [2],
     "no-underscore-dangle": 0,
     "quotes": [1, "single", "avoid-escape"]

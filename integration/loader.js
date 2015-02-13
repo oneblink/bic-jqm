@@ -6,7 +6,7 @@ require.config({
   paths: {
     jquery: '/bower_components/jquery/jquery',
     underscore: '/bower_components/underscore/underscore',
-    backbone: '/bower_components/backbone/backbone',
+    backbone: '/node_modules/backbone/backbone',
     feature: '/bower_components/amd-feature/feature',
     domReady: '/bower_components/requirejs-domready/domReady',
     text: '/bower_components/requirejs-text/text',
@@ -24,15 +24,13 @@ require.config({
     bluebird: '/bower_components/bluebird/js/browser/bluebird',
     pouchdb: '/bower_components/pouchdb/dist/pouchdb',
     implementations: '/tests/implementations',
-    'es5-shim': '//d1c6dfkb81l78v.cloudfront.net/es5-shim/2.3.0/es5-shim.min'
+    'es5-shim': '//d1c6dfkb81l78v.cloudfront.net/es5-shim/2.3.0/es5-shim.min',
+    authentication: '../offlineLogin/authentication',
+    sjcl: '../offlineLogin/node_modules/sjcl/sjcl'
   },
   shim: {
     'underscore': {
       exports: '_'
-    },
-    'backbone': {
-      deps: ['jquery', 'underscore'],
-      exports: 'Backbone'
     },
     BlinkGap: {
       deps: ['pollUntil'],
@@ -45,6 +43,13 @@ require.config({
     'signaturepad': {
       deps: ['jquery'],
       exports: '$'
+    },
+    sjcl: {
+      exports: 'sjcl'
+    },
+    authentication: {
+      deps: ['sjcl'],
+      exports: 'Authentication'
     }
   },
   baseUrl: '/scripts'
@@ -60,15 +65,17 @@ require([
     'BlinkForms',
     'pouchdb',
     'pollUntil',
+    'authentication',
     'jquerymobile',
     'feature!es5',
     'BlinkGap'
-  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch, pollUntil) {
+  ], function (Promise, $, _, Backbone, BMP, Mustache, BlinkForms, Pouch, pollUntil, Authentication) {
   window.BlinkForms = BlinkForms;
   window.Mustache = Mustache;
   window.Promise = Promise;
   window.Pouch = Pouch;
   window.pollUntil = pollUntil;
+  window.Authentication = Authentication;
 
   require(['main'], function () {
     console.log('BIC started!');

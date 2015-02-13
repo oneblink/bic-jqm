@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('View - Interaction - jQuery Mobile Implementation', function () {
     var injector, View;
 
@@ -25,24 +24,13 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(View);
     });
 
-    it("should be a Backbone.View object constructor", function () {
+    it('should be a Backbone.View object constructor', function () {
       View.should.be.an.instanceOf(Function);
     });
-
-    //describe('initialize()', function () {
-      //it('should add a div to the DOM', function () {
-        //var divsBefore, divsAfter, difference;//, view;
-        //divsBefore = $('body > div').length;
-        ////view = new View({});
-        //divsAfter = $('body > div').length;
-        //difference = divsAfter - divsBefore;
-        //difference.should.equal(1);
-      //});
-    //});
 
     describe('view = new View({})', function () {
       var view;
@@ -64,13 +52,13 @@ define(['Squire'], function (Squire) {
     });
 
     describe('events', function () {
-      it("should handle click [keyword]");
-      it("should handle click [interaction]");
-      it("should handle click [category]");
-      it("should handle click [masterCategory]");
-      it("should handle click [back]");
-      it("should handle click [home]");
-      it("should handle click [login]");
+      it('should handle click [keyword]');
+      it('should handle click [interaction]');
+      it('should handle click [category]');
+      it('should handle click [masterCategory]');
+      it('should handle click [back]');
+      it('should handle click [home]');
+      it('should handle click [login]');
     });
 
     describe('attributes', function () {
@@ -92,12 +80,12 @@ define(['Squire'], function (Squire) {
       it('should render custom input prompt screens');
       it('should render XSLT interactions');
       it('should render Form interactions');
-      it("should render the Home Screen");
-      it("should render Category interactions");
-      it("should render Message interactions");
+      it('should render the Home Screen');
+      it('should render Category interactions');
+      it('should render Message interactions');
       it('should render Other interaction types');
       it('should trigger a render event');
-      it("should return the current view");
+      it('should return the current view');
     });
 
     describe('maps()', function () {

@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Collection - DataSuitcases', function () {
     var injector, Collection, collection;
 
@@ -19,7 +18,7 @@ define(['Squire'], function (Squire) {
       done();
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(collection);
     });
 
@@ -44,11 +43,11 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(collection.load()).to.be.instanceOf(Promise);
       });
 
-      it("should populate the datastore from cache", function (done) {
+      it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
         });

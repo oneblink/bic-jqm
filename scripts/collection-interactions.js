@@ -1,7 +1,7 @@
 define(
   ['model-interaction', 'feature!data'],
   function (Interaction, Data) {
-    "use strict";
+    'use strict';
     var InteractionCollection = Backbone.Collection.extend({
 
       model: Interaction,
@@ -33,7 +33,7 @@ define(
         }));
       },
 
-      comparator: "order"
+      comparator: 'order'
 
     });
 

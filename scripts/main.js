@@ -1,22 +1,18 @@
-/*jslint browser:true, indent:2, nomen:true*/
-/*global requirejs, require, define, module*/
-/*global $, cordova*/
-/*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
-  ['model-application'],
-  function (app) {
-    "use strict";
+  ['model-application', 'authentication'],
+  function (app, Auth) {
+    'use strict';
 
     function start() {
       // AJAX Default Options
-      /*jslint unparam: true*/
       $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
         jqXHR.setRequestHeader('X-Blink-Config',
           JSON.stringify(window.BMP.BIC.siteVars));
       });
-      /*jslint unparam: false*/
 
-      require(['router']);
+      window.BMP.Authentication = new Auth();
+
+      require(['router', 'auth']);
     }
 
     // Delay the app for Cordova
@@ -37,20 +33,20 @@ define(
       data = model.data || model.collection.data;
 
       switch (method) {
-      case "read":
+      case 'read':
         promise = model.id !== undefined ? data.read(model) : data.readAll();
         break;
-      case "create":
+      case 'create':
         promise = data.create(model);
         break;
-      case "update":
+      case 'update':
         promise = data.update(model);
         break;
-      case "patch":
+      case 'patch':
         promise = data.update(model);
         break;
-      case "delete":
-        promise = data['delete'](model);
+      case 'delete':
+        promise = data.delete(model);
         break;
       default:
         promise = Promise.reject(new Error('unknown method'));
@@ -73,7 +69,7 @@ define(
 
     // Fallback to traditional sync when not specified
     Backbone.getSyncMethod = function (model) {
-      if (model.data || (model.collection && model.collection.data)) {
+      if (model.data || model.collection && model.collection.data) {
         return Backbone.dataSync;
       }
       return Backbone.ajaxSync;

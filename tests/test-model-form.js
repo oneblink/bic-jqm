@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Model - Form', function () {
     var injector, Model;
 
@@ -15,16 +14,16 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(Model);
     });
 
-    describe("populate()", function () {
-      it("should do nothing if offline");
+    describe('populate()', function () {
+      it('should do nothing if offline');
 
-      it("should get a form definition from the api");
+      it('should get a form definition from the api');
 
-      it("should save the form definition the the data store");
+      it('should save the form definition the the data store');
     });
   });
 });

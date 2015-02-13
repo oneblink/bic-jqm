@@ -1,8 +1,3 @@
-/*jslint browser:true, indent:2*/
-/*global define, require*/ // Require.JS and AMD
-// Temporary Fixes
-// These will end up in Global Require (I hope...)
-
 (function () {
   'use strict';
   var cloudfront, filesystem, rootPath, paths, getPaths, scripts, s, script,
@@ -15,13 +10,11 @@
     scripts = document.getElementsByTagName('script');
     document.currentScript = scripts[scripts.length - 1];
   }
-  /*jslint regexp:true*/ // this regular expression has been double-checked
   if (window.BICURL) {
     rootPath = window.BICURL.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
   } else {
     rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
   }
-  /*jslint regexp:false*/
 
   // determine our current CDN based on how we referenced Require.JS
   scripts = document.getElementsByTagName('script');
@@ -56,22 +49,22 @@
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),
     jquery: getPaths('jquery/1.9.1/jquery.min'),
     bluebird: getPaths('bluebird/1.2.4/bluebird.min'),
-    backbone: getPaths('backbonejs/1.0.0/backbone-min'),
+    backbone: getPaths('backbonejs/1.1.2/backbone-min'),
     lodash: getPaths('lodash/2.4.1/lodash.compat.min'),
     modernizr: getPaths('modernizr/2.7.1/modernizr.custom.26204.min'),
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     q: getPaths('q/0.9.7/q.min'),
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
-    formsdeps: rootPath + "/formsdeps.min",
+    formsdeps: rootPath + '/formsdeps.min',
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
     pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
   };
 
   // check if we are using a pre-bundles Require.JS
   supportsBundles = true;
-  if (require.version < "2.2") {
+  if (require.version < '2.2') {
     supportsBundles = false;
-    if (require.version >= "2.1") {
+    if (require.version >= '2.1') {
       versionMatches = require.version.match(/(\d+)\.(\d+)\.(\d+)/);
       if (versionMatches && versionMatches[3] >= 10) {
         supportsBundles = true; // introduced in Require.JS 2.1.10
@@ -107,6 +100,9 @@ require.config({
     },
     underscore: {
       exports: '_'
+    },
+    sjcl: {
+      exports: 'sjcl'
     }
   },
   bundles: {

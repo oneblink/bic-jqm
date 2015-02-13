@@ -1,14 +1,14 @@
 define(
   ['text!template-form-controls.mustache', 'model-application'],
   function (Template, app) {
-    "use strict";
+    'use strict';
     var FormControlView = Backbone.View.extend({
 
       events: {
-        "click #FormControls #submit" : "formSubmit",
-        "click #FormControls #close" : "formClose",
-        "click #nextFormPage" : "nextFormPage",
-        "click #previousFormPage" : "previousFormPage"
+        'click #FormControls #submit': 'formSubmit',
+        'click #FormControls #close': 'formClose',
+        'click #nextFormPage': 'nextFormPage',
+        'click #previousFormPage': 'previousFormPage'
       },
 
       render: function () {
@@ -66,7 +66,7 @@ define(
       },
 
       formSubmit: function () {
-        this.addToQueue("Pending");
+        this.addToQueue('Pending');
       },
 
       formClose: function () {

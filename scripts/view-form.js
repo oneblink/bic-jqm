@@ -1,22 +1,20 @@
 define(
-  ['view-form-action', 'view-form-list', 'view-form-search'],
-  function (FormAction, FormList, FormSearch) {
-    "use strict";
+  ['view-form-action', 'view-form-list'],
+  function (FormAction, FormList) {
+    'use strict';
     var FormView = Backbone.View.extend({
       render: function () {
         var view, action;
 
         view = this;
-        action = view.model.get("blinkFormAction");
+        action = view.model.get('blinkFormAction');
 
-        if (action === "list") {
+        if (action === 'list') {
           view.subView = new FormList({
             model: view.model
           });
-        } else if (action === "search") {
-          view.subView = new FormSearch({
-            model: view.model
-          });
+        } else if (action === 'search') {
+          view.subView = null;
         } else {
           if ($('#ActiveFormContainer').length > 0) {
             $('#ActiveFormContainer').attr('id', 'FormContainer');
@@ -40,5 +38,3 @@ define(
     return FormView;
   }
 );
-
-

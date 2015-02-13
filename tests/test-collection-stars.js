@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
 
   describe('Collection - Stars', function () {
     var injector, Collection, collection;
@@ -22,7 +21,7 @@ define(['Squire'], function (Squire) {
       done();
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(Collection);
     });
 
@@ -47,11 +46,11 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(collection.load()).to.be.instanceOf(Promise);
       });
 
-      it("should populate the datastore from cache", function (done) {
+      it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
         });
@@ -59,20 +58,20 @@ define(['Squire'], function (Squire) {
     });
 
     describe('clear(type)', function () {
-      it("should do things");
-      // it("should trigger model.destroy() on all models of given type", function (done) {
+      it('should do things');
+      // it('should trigger model.destroy() on all models of given type', function (done) {
       //   require(['wrapper-backbone'], function (Backbone) {
       //     Backbone.sync.reset();
-      //     collection.add({type: "test"}).clear("test");
+      //     collection.add({type: 'test'}).clear('test');
       //     collection.length.should.equal(0);
       //     done();
       //   });
       // });
 
-      // it("should ignore model not of given type", function (done) {
+      // it('should ignore model not of given type', function (done) {
       //   require(['wrapper-backbone'], function (Backbone) {
       //     Backbone.sync.reset();
-      //     collection.add({type: "nottest"}).clear("test");
+      //     collection.add({type: 'nottest'}).clear('test');
       //     collection.length.should.equal(1);
       //     done();
       //   });

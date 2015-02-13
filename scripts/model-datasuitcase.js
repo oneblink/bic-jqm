@@ -1,16 +1,16 @@
 define(
   ['feature!api'],
   function (API) {
-    "use strict";
+    'use strict';
     var DataSuitcase = Backbone.Model.extend({
-      idAttribute: "_id",
+      idAttribute: '_id',
 
       populate: function () {
         var model = this,
           time = 0;
 
-        if (this.has("contentTime")) {
-          time = this.get("contentTime");
+        if (this.has('contentTime')) {
+          time = this.get('contentTime');
         }
 
         return new Promise(function (resolve, reject) {

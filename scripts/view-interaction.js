@@ -2,55 +2,55 @@
 define(
   ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache'],
   function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate) {
-    "use strict";
+    'use strict';
     var InteractionView = Backbone.View.extend({
 
       initialize: function () {
         $('body').append(this.$el);
         window.BMP.BIC.view = this;
 
-        // this.$el.once("pageremove", function () {
-        //   console.log("Backbone view cleanup");
+        // this.$el.once('pageremove', function () {
+        //   console.log('Backbone view cleanup');
 
         // })
       },
 
       events: {
         // Old Blink Link Shortcut Methods
-        "click [keyword]" : "blinklink",
-        "click [interaction]" : "blinklink",
-        "click [category]" : "blinklink",
-        "click [masterCategory]" : "blinklink",
-        "click [back]" : "back",
-        "click [home]" : "home",
-        "click [login]" : "blinklink",
-        "click [pending]" : "pendingQueue",
+        'click [keyword]': 'blinklink',
+        'click [interaction]': 'blinklink',
+        'click [category]': 'blinklink',
+        'click [masterCategory]': 'blinklink',
+        'click [back]': 'back',
+        'click [home]': 'home',
+        'click [login]': 'blinklink',
+        'click [pending]': 'pendingQueue',
 
         // Form Actions
-        "click #queue" : "pendingQueue",
-        "click .clearPendingItem": "clearPendingItem",
-        "click #submitPendingItems": "submitPendingItems",
-        "click #clearPendingItems": "clearPendingItems",
-        "click #clearPendingItemsConfirmation": "clearPendingItemsConfirmation",
+        'click #queue': 'pendingQueue',
+        'click .clearPendingItem': 'clearPendingItem',
+        'click #submitPendingItems': 'submitPendingItems',
+        'click #clearPendingItems': 'clearPendingItems',
+        'click #clearPendingItemsConfirmation': 'clearPendingItemsConfirmation',
 
         // Destroy
-        "pageremove" : "destroy"
+        'pageremove': 'destroy'
       },
 
       attributes: {
-        "data-role": "page"
+        'data-role': 'page'
       },
 
       blinklink: function (e) {
-        e.preventDefault();
+        var $element;
+        var location;
+        var attributes = '';
+        var first = true;
+        var count;
+        var path;
+        var pathParts;
 
-        var $element,
-          location,
-          attributes = "",
-          first = true,
-          count,
-          path,
-          pathParts;
+        e.preventDefault();
 
         if (e.target.tagName !== 'A') {
           $element = $(e.target).parents('a');
@@ -58,32 +58,32 @@ define(
           $element = $(e.target);
         }
 
-        location = "";
-        if ($element.attr("keyword")) {
-          location = $element.attr("keyword");
-        } else if ($element.attr("interaction")) {
-          location = $element.attr("interaction");
-        } else if ($element.attr("category")) {
-          location = $element.attr("category");
-        } else if ($element.attr("masterCategory")) {
-          location = $element.attr("masterCategory");
-        } else if ($element.attr("home") === "") {
-          location = app.get("siteName");
-        } else if ($element.attr("login") === "") {
-          if (app.has("loginAccess") && app.has("loginUseInteractions") && app.has("loginUseInteractions") && app.has("loginPromptInteraction")) {
-            location = app.get("loginPromptInteraction");
+        location = '';
+        if ($element.attr('keyword')) {
+          location = $element.attr('keyword');
+        } else if ($element.attr('interaction')) {
+          location = $element.attr('interaction');
+        } else if ($element.attr('category')) {
+          location = $element.attr('category');
+        } else if ($element.attr('masterCategory')) {
+          location = $element.attr('masterCategory');
+        } else if ($element.attr('home') === '') {
+          location = app.get('siteName');
+        } else if ($element.attr('login') === '') {
+          if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
+            location = app.get('loginPromptInteraction');
           } else {
-            location = app.get("siteName");
+            location = app.get('siteName');
           }
         }
 
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
-          if ($element[0].attributes[count].name.substr(0, 1) === "_") {
+          if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {
-              attributes += "&args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
+              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
             } else {
               first = false;
-              attributes = "/?args[" + $element[0].attributes[count].name.substr(1) + "]=" + $element[0].attributes[count].value;
+              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
             }
           }
         }
@@ -100,7 +100,7 @@ define(
         }
         pathParts = pathParts.split('/');
         pathParts.shift();
-        if (pathParts[pathParts.length - 1] === "") {
+        if (pathParts[pathParts.length - 1] === '') {
           pathParts.pop();
         }
 
@@ -130,7 +130,7 @@ define(
       },
 
       home: function () {
-        $.mobile.changePage('/' + app.get("siteName"));
+        $.mobile.changePage('/' + app.get('siteName'));
       },
 
       render: function (data) {
@@ -140,14 +140,14 @@ define(
           view = this;
 
         // Non-type specific
-        if (_.has(inheritedAttributes, "themeSwatch")) {
-          this.$el.attr("data-theme", inheritedAttributes.themeSwatch);
+        if (_.has(inheritedAttributes, 'themeSwatch')) {
+          this.$el.attr('data-theme', inheritedAttributes.themeSwatch);
         }
 
         // Input Prompt
-        if (this.model.has("inputPrompt") && !(this.model.has("args"))) {
-          rawform = this.model.get("inputPrompt");
-          if (rawform.substr(0, 6) === "<form>") {
+        if (this.model.has('inputPrompt') && !this.model.has('args')) {
+          rawform = this.model.get('inputPrompt');
+          if (rawform.substr(0, 6) === '<form>') {
             form = rawform;
           } else {
             form = Mustache.render(inputPromptTemplate, {inputs: rawform});
@@ -157,37 +157,37 @@ define(
             footer: inheritedAttributes.footer,
             content: form
           }));
-          this.trigger("render");
-        } else if (view.model.has("type") && view.model.get("type") === "xslt") {
+          this.trigger('render');
+        } else if (view.model.has('type') && view.model.get('type') === 'xslt') {
           // XSLT
-          view.model.once("change:content", function () {
-            if (typeof view.model.get("content") === 'object') {
+          view.model.once('change:content', function () {
+            if (typeof view.model.get('content') === 'object') {
               view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
                 content: ''
               }));
-              view.$el.children('[data-role=content]')[0].appendChild(view.model.get("content"));
+              view.$el.children('[data-role=content]')[0].appendChild(view.model.get('content'));
               view.processStars();
-              view.trigger("render");
-            } else if (typeof view.model.get("content") === 'string') {
+              view.trigger('render');
+            } else if (typeof view.model.get('content') === 'string') {
               view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
-                content: view.model.get("content")
+                content: view.model.get('content')
               }));
-              view.trigger("render");
+              view.trigger('render');
             } else {
               view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
-                content: "Unknown error rendering XSLT interaction."
+                content: 'Unknown error rendering XSLT interaction.'
               }));
-              view.trigger("render");
+              view.trigger('render');
             }
           });
           this.model.performXSLT();
-        } else if (this.model.has("type") && this.model.get("type") === "form") {
+        } else if (this.model.has('type') && this.model.get('type') === 'form') {
           if ($('#ActiveFormContainer').length > 0) {
             $('#ActiveFormContainer').attr('id', 'FormContainer');
           }
@@ -215,19 +215,19 @@ define(
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: Mustache.render(categoryTemplate, {
-              models: view.model.get("interactionList"),
+              models: view.model.get('interactionList'),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
             })
           }));
-          view.trigger("render");
-        } else if (!this.model.has("type")) {
+          view.trigger('render');
+        } else if (!this.model.has('type')) {
           // Category
           view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: Mustache.render(categoryTemplate, {
               models: _.map(_.filter(app.interactions.models, function (value) {
-                return value.get("display") !== "hide" && _.filter(value.get("tags"), function (element) {
+                return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
                   return element === 'nav-' + this.model.id.toLowerCase();
                 }, this).length > 0;
               }, view), function (value) {
@@ -236,66 +236,63 @@ define(
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
             })
           }));
-          view.trigger("render");
-        } else if (this.model.get("type") === "message") {
+          view.trigger('render');
+        } else if (this.model.get('type') === 'message') {
           this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: inheritedAttributes.message
           }));
-          this.trigger("render");
+          this.trigger('render');
         } else {
           // MADL, others
           this.$el.html(Mustache.render(Template, inheritedAttributes));
-          if (this.model.has("content")) {
+          if (this.model.has('content')) {
             this.blinkAnswerMessages();
             this.maps();
             this.processStars();
           }
-          this.trigger("render");
+          this.trigger('render');
         }
         return this;
       },
 
       maps: function () {
-        var mapDiv = this.$el.find("[class=googlemap]"), script;
+        var mapDiv = this.$el.find('[class=googlemap]'), script;
 
         if (mapDiv.length !== 0) {
-          //this.$el.append('<style type="text/css">.googlemap { width: 100%; height: 360px; }</style>');
-          //this.$el.append('<script src="/_BICv3_/js/gMaps.js"></script>');
+          //this.$el.append('<style type='text/css'>.googlemap { width: 100%; height: 360px; }</style>');
+          //this.$el.append('<script src='/_BICv3_/js/gMaps.js'></script>');
           if (mapDiv.attr('data-marker-title') !== undefined) {
           // Address Map
-            window.BMP.BIC3.MapCallback = this.addressMap;
+            window.BMP.BIC.mapCallback = this.addressMap;
           } else if (mapDiv.attr('data-kml') !== undefined) {
           // KML Map
-            window.BMP.BIC3.MapCallback = this.kmlMap;
+            window.BMP.BIC.MapCallback = this.kmlMap;
           } else if (mapDiv.attr('data-map-action') !== undefined) {
           // Directions Map
-            window.BMP.BIC3.MapCallback = this.directionsMap;
+            window.BMP.BIC.mapCallback = this.directionsMap;
           } else {
           // Basic Map
-            window.BMP.BIC3.MapCallback = this.basicMap;
+            window.BMP.BIC.mapCallback = this.basicMap;
           }
 
           if (window.google === undefined) {
-            script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = "https://maps.googleapis.com/maps/api/js?v=3&sensor=true&callback=window.BMP.BIC3.MapCallback";
+            script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=true&callback=window.BMP.BIC.mapCallback';
             $('body').append(script);
           } else {
-            window.BMP.BIC3.MapCallback();
+            window.BMP.BIC.mapCallback();
           }
         }
       },
 
       blinkAnswerMessages: function (message) {
+        var blinkAnswerMessage = this.model.get('content').match(/<!-- blinkAnswerMessage:\{.*\} -->/g);
+
         if (!message) {
           // First Pass - Extract content
-
-          /*jslint regexp: true */
-          var blinkAnswerMessage = this.model.get('content').match(/<!-- blinkAnswerMessage:\{.*\} -->/g);
-          /*jslint regexp: false */
-
           if ($.type(blinkAnswerMessage) === 'array') {
             _.each(blinkAnswerMessage, function (element) {
               this.blinkAnswerMessages(element.substring(24, element.length - 4));
@@ -353,8 +350,8 @@ define(
               pendingAttrs._id = pendingItem.cid;
             }
             pendingAttrs.editInteraction = app.interactions.where({
-              blinkFormObjectName: pendingItem.get("name"),
-              blinkFormAction: pendingItem.get("action")
+              blinkFormObjectName: pendingItem.get('name'),
+              blinkFormAction: pendingItem.get('action')
             });
             if (pendingAttrs.editInteraction && pendingAttrs.editInteraction.length > 0) {
               pendingAttrs.editInteraction = pendingAttrs.editInteraction[0].id;
@@ -457,7 +454,6 @@ define(
       processStars: function () {
         var elements = this.$el.find('.blink-starrable');
         if (elements) {
-          /*jslint unparam: true*/
           elements.each(function (index, element) {
             var attrs,
               model = app.stars.get($(element).data('id')),
@@ -475,14 +471,13 @@ define(
             });
             star.render();
           });
-          /*jslint unparam: false*/
         }
       },
 
 
 
       basicMap: function () {
-        var options, map, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+        var options, map, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         options = {
           center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
@@ -490,16 +485,16 @@ define(
           mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
         };
 
-        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+        map = new google.maps.Map($('[class=\'googlemap\']')[0], options);
 
-        $(document).bind("pageshow", function () {
-          google.maps.event.trigger(map, "resize");
+        $(document).bind('pageshow', function () {
+          google.maps.event.trigger(map, 'resize');
           map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
         });
       },
 
       addressMap: function () {
-        var geocoder, options, map, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+        var geocoder, options, map, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         geocoder = new google.maps.Geocoder();
 
@@ -513,16 +508,16 @@ define(
             zoom: parseInt(mapDiv.attr('data-zoom'), 10),
             mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
           };
-          map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
-          $(document).bind("pageshow", function () {
-            google.maps.event.trigger(map, "resize");
+          map = new google.maps.Map($('[class=\'googlemap\']')[0], options);
+          $(document).bind('pageshow', function () {
+            google.maps.event.trigger(map, 'resize');
             map.setCenter(results[0].geometry.location);
           });
         });
       },
 
       kmlMap: function () {
-        var options, map, kml, mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+        var options, map, kml, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         options = {
           center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
@@ -530,12 +525,12 @@ define(
           mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
         };
 
-        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+        map = new google.maps.Map($('[class=\'googlemap\']')[0], options);
         kml = new google.maps.KmlLayer(mapDiv.attr('data-kml'), {preserveViewport: true});
         kml.setMap(map);
 
-        $(document).bind("pageshow", function () {
-          google.maps.event.trigger(map, "resize");
+        $(document).bind('pageshow', function () {
+          google.maps.event.trigger(map, 'resize');
           map.setCenter(new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')));
         });
       },
@@ -543,15 +538,15 @@ define(
       directionsMap: function () {
         var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, getGeoLocation, mapDiv;
 
-        mapDiv = window.BMP.BIC3.view.$el.find("[class=googlemap]");
+        mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
-        getGeoLocation = function (options) {
+        getGeoLocation = function (geoOptions) {
           var defaultOptions = {
               enableHighAccuracy: true,
               maximumAge: 5 * 60 * 1000, // 5 minutes
               timeout: 5 * 1000 // 5 seconds
             };
-          options = $.extend({}, defaultOptions, $.isPlainObject(options) ? options : {});
+          geoOptions = $.extend({}, defaultOptions, $.isPlainObject(geoOptions) ? geoOptions : {});
 
           return new Promise(function (resolve, reject) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -577,7 +572,7 @@ define(
                 string = 'unknown error';
               }
               reject('GeoLocation error: ' + string);
-            }, options);
+            }, geoOptions);
           });
         };
 
@@ -590,12 +585,12 @@ define(
           mapTypeId: google.maps.MapTypeId[mapDiv.attr('data-type').toUpperCase()]
         };
 
-        map = new google.maps.Map($("[class=\'googlemap\']")[0], options);
+        map = new google.maps.Map($('[class=\'googlemap\']')[0], options);
 
-        directionsDisplay.setPanel($("[class='googledirections']")[0]);
+        directionsDisplay.setPanel($('[class="googledirections"]')[0]);
 
-        $(document).bind("pageshow", function () {
-          google.maps.event.trigger(map, "resize");
+        $(document).bind('pageshow', function () {
+          google.maps.event.trigger(map, 'resize');
           directionsDisplay.setMap(map);
         });
 

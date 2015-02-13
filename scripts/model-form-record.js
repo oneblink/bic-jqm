@@ -1,9 +1,9 @@
 define(
   ['feature!api'],
   function (API) {
-    "use strict";
+    'use strict';
     var FormRecord = Backbone.Model.extend({
-      idAttribute: "_id",
+      idAttribute: '_id',
 
       populate: function (action, callback) {
         var model = this;
@@ -36,4 +36,3 @@ define(
     return FormRecord;
   }
 );
-

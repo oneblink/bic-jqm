@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true, Pouch:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
 
   if (window.indexedDB && window.indexedDB.open('idbTest', 1).onupgradeneeded === null) {
     describe('Data Abstraction Layer - PouchDB', function () {
@@ -143,10 +142,10 @@ define(['Squire'], function (Squire) {
               expect(response).to.be.an('object');
               expect(response.total_rows).to.equal(0);
               data.create(model).then(function () {
-                db.allDocs(function (err, response) {
-                  expect(err).to.not.equal(undefined);
-                  expect(response).to.be.an('object');
-                  expect(response.total_rows).to.equal(1);
+                db.allDocs(function (innerErr, innerResponse) {
+                  expect(innerErr).to.not.equal(undefined);
+                  expect(innerResponse).to.be.an('object');
+                  expect(innerResponse.total_rows).to.equal(1);
                   done();
                 });
               });
@@ -278,11 +277,11 @@ define(['Squire'], function (Squire) {
             expect(docs).to.be.an('array');
             expect(docs).to.have.property('length', 0);
             data.create(model).then(function () {
-              data.readAll().then(function (docs) {
-                expect(docs).to.not.equal(undefined).and.not.equal(null);
-                expect(docs).to.be.an('array');
-                expect(docs).to.have.property('length', 1);
-                expect(docs[0]).to.have.property('cat', 'hat');
+              data.readAll().then(function (innerDocs) {
+                expect(innerDocs).to.not.equal(undefined).and.not.equal(null);
+                expect(innerDocs).to.be.an('array');
+                expect(innerDocs).to.have.property('length', 1);
+                expect(innerDocs[0]).to.have.property('cat', 'hat');
                 done();
               });
             });

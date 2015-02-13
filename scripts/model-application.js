@@ -1,11 +1,10 @@
-/*globals pollUntil*/
 define(
-  ['collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
-  function (InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
-    "use strict";
+  ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
+  function (facade, InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
+    'use strict';
     var Application = Backbone.Model.extend({
 
-      idAttribute: "_id",
+      idAttribute: '_id',
 
       defaults: {
         _id: window.BMP.BIC.siteVars.answerSpace,
@@ -31,6 +30,66 @@ define(
             return !!app.data;
           }, null, function () {
             // now data is safe to use, so we can get started
+
+            if (BMP.Authentication) {
+              app.meta = new Data(window.BMP.BIC.siteVars.answerSpace + '-Meta');
+              BMP.Authentication.getRecord = function (callback) {
+                app.meta.read({
+                  id: 'offlineLogin'
+                }).then(
+                  function (data) {
+                    callback(null, data.attributes);
+                  },
+                  function (err) {
+                    callback(err);
+                  }
+                );
+              };
+              BMP.Authentication.setRecord = function (data, callback) {
+                var model = {};
+                model.id = 'offlineLogin';
+                model.toJSON = function () {
+                  return model.attributes;
+                };
+                model.attributes = data;
+                model.attributes._id = model.id;
+
+                app.meta.read({
+                  id: model.id
+                }).then(
+                  function () {
+                    app.meta.delete({
+                      id: model.id
+                    }).then(
+                      function () {
+                        app.meta.create(model).then(
+                          function (document) {
+                            callback(null, document);
+                          },
+                          function (err) {
+                            callback(err);
+                          }
+                        );
+                      },
+                      function (err) {
+                        callback(err);
+                      }
+                    );
+                  },
+                  function () {
+                    app.meta.create(model).then(
+                      function (document) {
+                        callback(null, document);
+                      },
+                      function (err) {
+                        callback(err);
+                      }
+                    );
+                  }
+                );
+              };
+            }
+
             app.interactions = app.interactions || new InteractionCollection();
             app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
             app.forms = app.forms || new FormCollection();
@@ -54,6 +113,16 @@ define(
 
       setup: function () {
         var app = this;
+
+        facade.subscribe('applicationModel', 'loggedIn', function () {
+          app.set('loginStatus', 'LOGGED IN');
+          app.trigger('loginProcessed');
+        });
+
+        facade.subscribe('applicationModel', 'loggedOut', function () {
+          app.set('loginStatus', 'LOGGED OUT');
+          app.trigger('loginProcessed');
+        });
 
         return new Promise(function (resolve, reject) {
           app.fetch({
@@ -192,7 +261,7 @@ define(
 
       initialRender: function () {
         var app = this;
-        $.mobile.defaultPageTransition = app.get("defaultTransition");
+        $.mobile.defaultPageTransition = app.get('defaultTransition');
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().href, {
             changeHash: false,

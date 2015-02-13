@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Model - Star', function () {
     var injector, Model;
 
@@ -16,64 +15,64 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(Model);
     });
 
-    it("should be a constructor function", function () {
+    it('should be a constructor function', function () {
       Model.should.be.an.instanceOf(Function);
     });
 
-    describe("idAttribute", function () {
-      it("should be set to _id", function () {
-        var model = new Model({_id: "TestID"});
-        model.idAttribute.should.be.string("_id");
+    describe('idAttribute', function () {
+      it('should be set to _id', function () {
+        var model = new Model({_id: 'TestID'});
+        model.idAttribute.should.be.string('_id');
       });
 
-      it("should be picked up by the model", function () {
-        var model = new Model({_id: "TestID"});
-        model.id.should.be.string("TestID");
+      it('should be picked up by the model', function () {
+        var model = new Model({_id: 'TestID'});
+        model.id.should.be.string('TestID');
       });
     });
 
-    describe("initialize()", function () {
-      it("should listen for add events to trigger a model.save()");
+    describe('initialize()', function () {
+      it('should listen for add events to trigger a model.save()');
       //   , function (done) {
       //   require(['wrapper-backbone'], function (Backbone) {
-      //     var model = new Model({_id: "TestID"});
+      //     var model = new Model({_id: 'TestID'});
       //     Backbone.sync.reset();
-      //     model.trigger("add");
+      //     model.trigger('add');
       //     Backbone.sync.called.should.be.true;
       //     done();
       //   });
       // });
     });
 
-    describe("toggle()", function () {
-      it("should invert the boolean 'state' false to true");
-      //it("should invert the boolean 'state' false to true", function (done) {
+    describe('toggle()', function () {
+      it('should invert the boolean "state" false to true');
+      //it('should invert the boolean 'state' false to true', function (done) {
         //var model;
         //model = new Model({state: false});
         //model.on('change', function () {
-          //model.get("state").should.be.true;
+          //model.get('state').should.be.true;
           //done();
         //});
         //model.toggle();
       //});
 
-      it("should invert the boolean 'state' true to false");
-      //it("should invert the boolean 'state' true to false", function (done) {
+      it('should invert the boolean "state" true to false');
+      //it('should invert the boolean 'state' true to false', function (done) {
         //var model;
         //model = new Model({state: true});
         //model.on('change', function () {
-          //model.get("state").should.be.false;
+          //model.get('state').should.be.false;
           //done();
         //});
         //model.toggle();
       //});
 
-      it("should add itself to the stars collection when state changed to true");
-      //it("should add itself to the stars collection when state changed to true", function (done) {
+      it('should add itself to the stars collection when state changed to true');
+      //it('should add itself to the stars collection when state changed to true', function (done) {
         //var model = new Model({state: false});
         //model.on('add', function () {
           //done();
@@ -81,11 +80,11 @@ define(['Squire'], function (Squire) {
         //model.toggle();
       //});
 
-      it("should destroy itself when state changed to false");
-      //it("should destroy itself when state changed to false", function (done) {
+      it('should destroy itself when state changed to false');
+      //it('should destroy itself when state changed to false', function (done) {
         //injector.require(['model-application'], function (app) {
           //var model = new Model({state: true});
-          //model.on("destroy", function () {
+          //model.on('destroy', function () {
             //done();
           //})
           //model.toggle();

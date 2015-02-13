@@ -1,9 +1,7 @@
-/*jslint unparam: true*/
-/*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
   [],
   function () {
-    "use strict";
+    'use strict';
 
     var Data = function (name) {//, apiTrigger, apiCall, apiParameters) {
       var db;
@@ -18,11 +16,14 @@ define(
           return Promise.resolve(db);
         }
         return new Promise(function (resolve, reject) {
+          var pouch;
           Pouch.prefix = '';
-          var pouch = new Pouch({
+          pouch = new Pouch({
             name: me.name,
             adapter: me.dbAdapter(),
+            /*eslint-disable camelcase*/
             auto_compaction: true
+            /*eslint-enable camelcase*/
           }, function (err) {
             if (err) {
               reject(err);
@@ -100,7 +101,9 @@ define(
         var that = this;
         return new Promise(function (resolve, reject) {
           that.getDB().then(function (db) {
+            /*eslint-disable camelcase*/
             db.allDocs({include_docs: true}, function (err, response) {
+              /*eslint-enable camelcase*/
               if (err) {
                 reject(err);
               } else {
@@ -121,11 +124,11 @@ define(
               if (err) {
                 reject(err);
               } else {
-                db.remove(doc, function (err, doc) {
-                  if (err) {
-                    reject(err);
+                db.remove(doc, function (innerErr, innerDoc) {
+                  if (innerErr) {
+                    reject(innerErr);
                   } else {
-                    resolve(doc);
+                    resolve(innerDoc);
                   }
                 });
               }

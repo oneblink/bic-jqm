@@ -1,8 +1,5 @@
-/*jslint indent:2*/
-/*global define, require*/ // Require.JS and AMD
-/*global chai, describe, it, before, beforeEach, after, afterEach, expect, should, sinon*/
 define(function () {
-  "use strict";
+  'use strict';
   describe('Forms v3 dependencies', function () {
 
     this.timeout(8e3);

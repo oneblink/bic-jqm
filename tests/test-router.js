@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Router - jQuery Mobile Implementation', function () {
     var injector, model, collection;
 
@@ -53,11 +52,11 @@ define(['Squire'], function (Squire) {
       beforeEach(function (done) {
         injector.require(['../scripts/router'], function (module) {
           testmodel = model(1);
-          sinon.stub(module, "inheritanceChain", function () { return testmodel; });
-          sinon.stub(module, "parseArgs", function () { return null; });
+          sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
+          sinon.stub(module, 'parseArgs', function () { return null; });
           router = module;
           router.routeRequest({
-            dataUrl: "/test",
+            dataUrl: '/test',
             deferred: Promise.resolve()
           });
           setTimeout(done, 1e3);
@@ -71,33 +70,33 @@ define(['Squire'], function (Squire) {
       });
 
 
-      it("should call the inheritanceChain function to get the correct interaction model", function () {
+      it('should call the inheritanceChain function to get the correct interaction model', function () {
         router.inheritanceChain.called.should.equal(true);
       });
 
-      it("should start the parseArgs function", function () {
+      it('should start the parseArgs function', function () {
         router.parseArgs.called.should.equal(true);
       });
 
-      it("should instruct the model to prepareForView", function () {
+      it('should instruct the model to prepareForView', function () {
         router.inheritanceChain.called.should.equal(true);
         testmodel.prepareForView.called.should.equal(true);
       });
 
-      //it("should create a new view", function () {
+      //it('should create a new view', function () {
         //context(['view-interaction'], function (view) {
           //view.render.should.be.true;
           //view.reset();
         //});
       //});
 
-      //it("should resolve the event deferred (transitioning the view onscreen)", function (done) {
+      //it('should resolve the event deferred (transitioning the view onscreen)', function (done) {
         //dfrd.always(function () {
           //done();
         //});
       //});
 
-      //it("should remove old views from the DOM");
+      //it('should remove old views from the DOM');
     });
 
     describe('inheritanceChain(urlString)', function () {
@@ -110,49 +109,49 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should parse the path given to find the current interaction", function () {
-        var data = "/councils/traffic";
+      it('should parse the path given to find the current interaction', function () {
+        var data = '/councils/traffic';
         router.inheritanceChain(data).id.should.equal('traffic');
       });
 
-      //it("should detect interactions specified by ID (instead of name)");
+      //it('should detect interactions specified by ID (instead of name)');
 
-      it("should use the path to determine the inheritance chain", function () {
+      it('should use the path to determine the inheritance chain', function () {
         var data, chainedModel;
-        data = "/councils/traffic";
+        data = '/councils/traffic';
         chainedModel = router.inheritanceChain(data);
         chainedModel.set.called.should.equal(true);
         chainedModel.set.calledWith({parent: 'councils'}).should.equal(true);
       });
 
-      //it("should set the parent of each interaction in the chain on the associated model", function () {
-        //var interaction = router.inheritanceChain("/test/second");
+      //it('should set the parent of each interaction in the chain on the associated model', function () {
+        //var interaction = router.inheritanceChain('/test/second');
         //interaction.get('parent').should.be.string(interactionSetSpy.secondCall.args[0].parent);
       //});
 
-      //it("should set the topmost interaction in the chain to have a parent of the answerspace", function () {
-        //router.inheritanceChain("/test").get('parent').should.be.string("app");
+      //it('should set the topmost interaction in the chain to have a parent of the answerspace', function () {
+        //router.inheritanceChain('/test').get('parent').should.be.string('app');
       //});
 
-      //it("should return the correct interaction to attach the view to", function () {
-        //router.inheritanceChain("/test").should.be.instanceOf(Backbone.Model);
+      //it('should return the correct interaction to attach the view to', function () {
+        //router.inheritanceChain('/test').should.be.instanceOf(Backbone.Model);
       //});
 
-      it("should handle the same interaction being listed twice (last winning out)", function () {
-        var data = "/councils/traffic/trafficcams/traffic";
+      it('should handle the same interaction being listed twice (last winning out)', function () {
+        var data = '/councils/traffic/trafficcams/traffic';
         router.inheritanceChain(data).id.should.equal('traffic');
       });
 
-      it("should drop blank trailing values from the array", function () {
-        var data = "/councils/traffic/";
+      it('should drop blank trailing values from the array', function () {
+        var data = '/councils/traffic/';
         router.inheritanceChain(data).id.should.equal('traffic');
       });
     });
 
     //describe('parseArgs(argsString, model)', function () {
-      //it("should identify any GET arguments in the input string");
-      //it("should parse found arguments into an object");
-      //it("should set the object on the model as 'args'");
+      //it('should identify any GET arguments in the input string');
+      //it('should parse found arguments into an object');
+      //it('should set the object on the model as 'args'');
     //});
   });
 });

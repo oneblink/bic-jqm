@@ -1,9 +1,9 @@
 define(
   [],
   function () {
-    "use strict";
+    'use strict';
     var PendingItem = Backbone.Model.extend({
-      idAttribute: "_id"
+      idAttribute: '_id'
     });
 
     return PendingItem;

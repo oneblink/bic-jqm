@@ -1,7 +1,7 @@
 define(
   ['model-pending', 'feature!data', 'feature!api'],
   function (PendingItem, Data, API) {
-    "use strict";
+    'use strict';
     var PendingCollection = Backbone.Collection.extend({
       model: PendingItem,
 
@@ -24,28 +24,28 @@ define(
       processQueue: function () {
         var promises, callback;
         promises = [];
-        /*jslint unparam: true*/
-        callback = function (element, callback) {
+        callback = function (element, innerCallback) {
           return function (data, status, xhr) {
+            var errors;
+
             if (data && xhr.status === 200) {
               element.save({
                 status: 'Submitted',
                 result: data
               });
             } else if (status === 'error' && data.responseText) {
-              var errors = JSON.parse(data.responseText);
+              errors = JSON.parse(data.responseText);
               element.save({
                 status: 'Failed Validation',
                 errors: errors
               });
             }
             element.trigger('processed');
-            callback();
+            innerCallback();
           };
         };
-        /*jslint unparam: false*/
 
-        _.each(this.where({status: "Pending"}), function (element) {
+        _.each(this.where({status: 'Pending'}), function (element) {
           promises.push(new Promise(function (resolve, reject) {
             API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).then(
               callback(element, resolve),
