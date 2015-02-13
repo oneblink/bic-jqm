@@ -1,8 +1,7 @@
-/*jslint sub:true*/ // we need to use obj['prop'] instead of obj.prop for IE8
 define(
   [],
   function () {
-    "use strict";
+    'use strict';
 
     var Data = function () {
       this.data = {};

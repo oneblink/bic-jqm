@@ -1,7 +1,7 @@
 define(
   ['model-star', 'feature!data'],
   function (Star, Data) {
-    "use strict";
+    'use strict';
     var FormCollection = Backbone.Collection.extend({
       model: Star,
 

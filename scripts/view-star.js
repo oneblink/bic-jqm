@@ -1,14 +1,14 @@
 define(
   [],
   function () {
-    "use strict";
+    'use strict';
     var StarView = Backbone.View.extend({
       events: {
-        "click": "toggle"
+        'click': 'toggle'
       },
 
       initialize: function () {
-        this.listenTo(this.model, "change:state", this.render);
+        this.listenTo(this.model, 'change:state', this.render);
       },
 
       toggle: function (e) {

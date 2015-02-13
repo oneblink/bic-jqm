@@ -1,9 +1,9 @@
 define(
   ['feature!api'],
   function (API) {
-    "use strict";
+    'use strict';
     var Form = Backbone.Model.extend({
-      idAttribute: "_id",
+      idAttribute: '_id',
 
       populate: function () {
         var model = this;

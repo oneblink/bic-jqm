@@ -1,7 +1,7 @@
 define(
   ['model-application', 'view-interaction'],
   function (app, InteractionView) {
-    "use strict";
+    'use strict';
     var Router = Backbone.Router.extend({
       initialize: function () {
         BMP.FileInput.initialize();
@@ -88,13 +88,13 @@ define(
 
             app.router.parseArgs(path.search.substr(1), model);
 
-            model.prepareForView(data).then(function (model) {
+            model.prepareForView(data).then(function (innerModel) {
               new InteractionView({
                 tagName: 'div',
-                model: model
-              }).once("render", function () {
-                this.$el.attr("data-url", data.dataUrl);
-                this.$el.attr("data-external-page", true);
+                model: innerModel
+              }).once('render', function () {
+                this.$el.attr('data-url', data.dataUrl);
+                this.$el.attr('data-external-page', true);
                 this.$el.one('pagecreate', $.mobile._bindPageRemove);
                 data.deferred.resolve(data.absUrl, data.options, this.$el);
               }).render(data);
@@ -113,7 +113,7 @@ define(
         parent = path[path.length - 1];
         usedPathItems = [];
 
-        if (path[0] === "") {
+        if (path[0] === '') {
           path.shift();
         }
 
@@ -124,17 +124,17 @@ define(
 
         _.each(path, function (element, index) {
           if (!_.find(usedPathItems, function (id) {return id === element; })) {
-            parentModel = app.interactions.get(element) || app.interactions.where({dbid: "i" + element})[0] || null;
+            parentModel = app.interactions.get(element) || app.interactions.where({dbid: 'i' + element})[0] || null;
             if (parent && parentModel) {
               if (index !== path.length - 1) {
                 parentModel.set({parent: parent});
                 parent = parentModel.id;
               } else {
-                parentModel.set({parent: "app"});
-                parent = "app";
+                parentModel.set({parent: 'app'});
+                parent = 'app';
               }
             } else {
-              throw "Invalid Model Name";
+              throw 'Invalid Model Name';
             }
             usedPathItems.push(element);
           }
@@ -150,8 +150,8 @@ define(
 
         _.each(args, function (element) {
           tempargs = element.split('=');
-          if (tempargs[0].substr(0, 4) !== "args") {
-            tempargs[0] = "args[" + tempargs[0] + "]";
+          if (tempargs[0].substr(0, 4) !== 'args') {
+            tempargs[0] = 'args[' + tempargs[0] + ']';
           }
           finalargs[tempargs[0]] = tempargs[1];
         });

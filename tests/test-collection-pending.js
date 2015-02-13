@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Collection - Pending', function () {
     var injector, Collection, collection, apiStub;
 
@@ -27,7 +26,7 @@ define(['Squire'], function (Squire) {
       done();
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(Collection);
     });
 
@@ -52,11 +51,11 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(collection.load()).to.be.instanceOf(Promise);
       });
 
-      it("should populate the datastore from cache", function (done) {
+      it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
         });
@@ -69,9 +68,9 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should do nothing when offline");
+      it('should do nothing when offline');
 
-      it("should send pending items to the server when online", function () {
+      it('should send pending items to the server when online', function () {
         expect(apiStub.called).to.equal(false);
         collection.add({
           status: 'Pending',
@@ -84,7 +83,7 @@ define(['Squire'], function (Squire) {
         expect(apiStub.called).to.equal(true);
       });
 
-      it("should change an items status to submitted after successful submission", function (done) {
+      it('should change an items status to submitted after successful submission', function (done) {
         expect(apiStub.called).to.equal(false);
         collection.add({
           status: 'Pending',
@@ -102,7 +101,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should keep items in the queue (as pending) after failed submission", function (done) {
+      it('should keep items in the queue (as pending) after failed submission', function (done) {
         expect(apiStub.called).to.equal(false);
         collection.add({
           status: 'Pending',
@@ -125,9 +124,9 @@ define(['Squire'], function (Squire) {
         );
       });
 
-      it("should keep items in the queue if they fail server side validation");
+      it('should keep items in the queue if they fail server side validation');
 
-      it("should retain draft items");
+      it('should retain draft items');
     });
   });
 });

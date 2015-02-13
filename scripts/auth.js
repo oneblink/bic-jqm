@@ -4,7 +4,6 @@ define(['facade'], function (facade) {
   var auth = window.BMP.Authentication;
 
   facade.subscribe('offlineAuthentication', 'storeAuth', function (authentication) {
-    //console.log('offlineAuthentication', 'storeOfflineAuthentication', data);
     auth.setCurrent(authentication, function () {
       facade.publish('storeAuthSuccess');
     }, function () {

@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('Collection - Interactions', function () {
     var injector, Collection, collection;
 
@@ -21,7 +20,7 @@ define(['Squire'], function (Squire) {
       done();
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(Collection);
     });
 
@@ -46,11 +45,11 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(collection.load()).to.be.instanceOf(Promise);
       });
 
-      it("should populate the datastore from cache", function (done) {
+      it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
         });
@@ -58,7 +57,7 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#save', function () {
-      it("should persist any models to the data store");
+      it('should persist any models to the data store');
     });
   });
 });

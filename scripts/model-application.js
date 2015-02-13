@@ -1,11 +1,10 @@
-/*globals pollUntil*/
 define(
   ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (facade, InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
-    "use strict";
+    'use strict';
     var Application = Backbone.Model.extend({
 
-      idAttribute: "_id",
+      idAttribute: '_id',
 
       defaults: {
         _id: window.BMP.BIC.siteVars.answerSpace,
@@ -262,7 +261,7 @@ define(
 
       initialRender: function () {
         var app = this;
-        $.mobile.defaultPageTransition = app.get("defaultTransition");
+        $.mobile.defaultPageTransition = app.get('defaultTransition');
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().href, {
             changeHash: false,

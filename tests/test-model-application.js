@@ -1,15 +1,11 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
 
   describe('Model - Application', function () {
     var injector, model, siteMap, loginStatus;
 
 
     before(function (done) {
-      siteMap = {};
-      loginStatus = {};
-
       var CollectionMock = Backbone.Collection.extend({
         model: Backbone.Model.extend({
           idAttribute: '_id',
@@ -28,6 +24,8 @@ define(['Squire'], function (Squire) {
         }
       });
 
+      siteMap = {};
+      loginStatus = {};
       injector = new Squire();
 
       injector.mock('collection-interactions', CollectionMock);
@@ -50,19 +48,19 @@ define(['Squire'], function (Squire) {
     });
 
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(model);
     });
 
-    it("should be an instance of backbone model", function () {
+    it('should be an instance of backbone model', function () {
       model.should.be.an.instanceOf(Backbone.Model);
     });
 
-    it("should have an id property", function () {
+    it('should have an id property', function () {
       expect(model).to.have.property('id');
     });
 
-    it("should have a loginStatus attribute", function () {
+    it('should have a loginStatus attribute', function () {
       expect(model.attributes).to.have.property('loginStatus');
     });
 
@@ -78,7 +76,7 @@ define(['Squire'], function (Squire) {
         expect(model.datastore()).to.be.equal(model);
       });
 
-      it("should set up a data store", function () {
+      it('should set up a data store', function () {
         model.datastore();
         expect(model).to.have.property('data');
       });
@@ -101,11 +99,11 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(model.collections()).to.be.instanceOf(Promise);
       });
 
-      it("should create a collection for interactions", function (done) {
+      it('should create a collection for interactions', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('interactions');
           expect(model.interactions).to.be.an.instanceOf(Backbone.Collection);
@@ -113,7 +111,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should create a collection for data suitcases", function (done) {
+      it('should create a collection for data suitcases', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('datasuitcases');
           expect(model.datasuitcases).to.be.an.instanceOf(Backbone.Collection);
@@ -122,7 +120,7 @@ define(['Squire'], function (Squire) {
         model.collections();
       });
 
-      it("should create a collection for forms", function (done) {
+      it('should create a collection for forms', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('forms');
           expect(model.forms).to.be.an.instanceOf(Backbone.Collection);
@@ -131,7 +129,7 @@ define(['Squire'], function (Squire) {
         model.collections();
       });
 
-      it("should create a collection for pending items", function (done) {
+      it('should create a collection for pending items', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('pending');
           expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
@@ -140,7 +138,7 @@ define(['Squire'], function (Squire) {
         model.collections();
       });
 
-      it("should create a collection for stars", function (done) {
+      it('should create a collection for stars', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('stars');
           expect(model.stars).to.be.an.instanceOf(Backbone.Collection);
@@ -149,7 +147,7 @@ define(['Squire'], function (Squire) {
         model.collections();
       });
 
-      it("should create a collection for form records", function (done) {
+      it('should create a collection for form records', function (done) {
         model.collections().then(function () {
           expect(model).to.have.property('formRecords');
           expect(model.formRecords).to.be.an.instanceOf(Backbone.Collection);
@@ -158,7 +156,7 @@ define(['Squire'], function (Squire) {
         model.collections();
       });
 
-      it("should resolve when the collections are all ready", function (done) {
+      it('should resolve when the collections are all ready', function (done) {
         model.collections().then(function () {
           done();
         });
@@ -179,12 +177,12 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(model.setup()).to.be.instanceOf(Promise);
       });
 
 
-      it("should read from it's data store", function (done) {
+      it('should read from it\'s data store', function (done) {
         model.setup().then(function () {
           done();
         });
@@ -203,15 +201,15 @@ define(['Squire'], function (Squire) {
         done();
       });
 
-      it("should do nothing if offline");
+      it('should do nothing if offline');
 
-      it("should fetch the answerSpaceMap from API");//, function (done) {
+      it('should fetch the answerSpaceMap from API');//, function (done) {
         //model.populate().then(function () {
           //done();
         //});
       //});
 
-      it("should fill the interaction collection from map", function (done) {
+      it('should fill the interaction collection from map', function (done) {
         siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one"}}}');
         model.populate().then(function () {
           expect(model.interactions.length).to.equal(1);
@@ -219,7 +217,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should fill the answerSpace config from map", function (done) {
+      it('should fill the answerSpace config from map', function (done) {
         siteMap = JSON.parse('{"a1":{"pertinent":{"cat":"hat"}}}');
         model.populate().then(function () {
           expect(model.get('cat')).to.equal('hat');
@@ -227,7 +225,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should parse interactions for data suitcases", function (done) {
+      it('should parse interactions for data suitcases', function (done) {
         siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one","xml":"test"}}}');
         model.populate().then(function () {
           expect(model.datasuitcases.length).to.equal(1);
@@ -235,7 +233,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should delete items from the DB when they are removed from the sitemap", function (done) {
+      it('should delete items from the DB when they are removed from the sitemap', function (done) {
         siteMap = JSON.parse('{"map":{"interactions":[1,2,3]},"i1":{"pertinent":{"name":"one"}},"i2":{"pertinent":{"name":"two"}},"i3":{"pertinent":{"name":"three"}}}');
         model.populate().then(function () {
           expect(model.interactions.length).to.equal(3);
@@ -247,7 +245,7 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         expect(model.populate()).to.be.instanceOf(Promise);
       });
     });
@@ -259,13 +257,13 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it("should return a promise", function () {
+      it('should return a promise', function () {
         model.set('loginStatus', 'cats!');
         loginStatus = 'cats!';
         expect(model.checkLoginStatus()).to.be.instanceOf(Promise);
       });
 
-      it("should destroy all the collections if login status differs from the saved state", function (done) {
+      it('should destroy all the collections if login status differs from the saved state', function (done) {
         siteMap = JSON.parse('{"map":{"interactions":[1]},"i1":{"pertinent":{"name":"one"}}}');
         model.populate().then(function () {
           expect(model.interactions.length).to.equal(1);
@@ -280,7 +278,7 @@ define(['Squire'], function (Squire) {
     });
 
     describe('#initialRender', function () {
-      it("should do things, wonderous things");
+      it('should do things, wonderous things');
     });
   });
 });

@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
 
   describe('View - Star - jQuery Mobile Implementation', function () {
     var injector, View;
@@ -14,11 +13,11 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    it("should exist", function () {
+    it('should exist', function () {
       should.exist(View);
     });
 
-    it("should be a Backbone.View object constructor", function () {
+    it('should be a Backbone.View object constructor', function () {
       View.should.be.an.instanceOf(Function);
     });
 

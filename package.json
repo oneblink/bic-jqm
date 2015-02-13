@@ -20,7 +20,6 @@
     "grunt-contrib-watch": "~0.6",
     "grunt-eslint": "^6.0.0",
     "grunt-hapi": "^0.8.0",
-    "grunt-jslint": "~1.1",
     "grunt-mocha": "~0.4",
     "grunt-mustache-render": "^1.6.0",
     "grunt-saucelabs": "~5.1",

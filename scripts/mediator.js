@@ -10,18 +10,22 @@ define([], function () {
   mediator.channels = {};
 
   log = function (type, channel, args) {
+    /*eslint-disable no-console*/
     console.log(Date.now() + ': ' + type + ' ' + channel, args);
+    /*eslint-enable no-console*/
   };
 
   publish = function (channel) {
     var args;
+    var i;
+    var subscription;
 
     if (!mediator.channels[channel]) {
       return false;
     }
     args = Array.prototype.slice.call(arguments, 1);
-    for (var i = 0; i < mediator.channels[channel].length; i++) {
-      var subscription = mediator.channels[channel][i];
+    for (i = 0; i < mediator.channels[channel].length; i++) {
+      subscription = mediator.channels[channel][i];
       subscription.callback.apply(subscription.context, args);
     }
 

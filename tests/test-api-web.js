@@ -1,6 +1,5 @@
-/*global chai:true, describe:true, it:true, before: true, beforeEach:true, after:true, afterEach:true, expect:true, should:true, sinon:true */
 define(['Squire'], function (Squire) {
-  "use strict";
+  'use strict';
   describe('API Facade', function () {
     var server, handler, api;
 
@@ -10,21 +9,19 @@ define(['Squire'], function (Squire) {
         api = required;
 
         server = sinon.fakeServer.create();
-        server.respondWith('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace, [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false&0=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 3}']);
-        server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 2}']);
-        server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId, [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
-        server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { "Content-Type": "application/json", "Content-Length": 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace, [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false&0=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 3}']);
+        server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 2}']);
+        server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId, [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
 
         server.autoRespond = true;
 
-        /*jslint unparam: true */
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
           jqXHR.setRequestHeader('X-Blink-Config', JSON.stringify(window.BMP.BIC.siteVars));
         });
-        /*jslint unparam: false */
 
         handler = function (data, status, xhr) {
           expect(data).to.not.equal(null).and.not.equal(undefined);
@@ -67,13 +64,12 @@ define(['Squire'], function (Squire) {
           });
       });
 
-      /*jslint unparam: true */
       it('should handle GET data passed in via args', function (done) {
         api.getInteractionResult('Exists', {
-          0: "Exists"
+          0: 'Exists'
         })
           .done(handler)
-          .done(function (data, status, xhr) {
+          .done(function (data) {
             data._id.should.equal(3);
           })
           .done(function () {
@@ -83,20 +79,19 @@ define(['Squire'], function (Squire) {
 
       it('should handle POST data passed in via options param', function (done) {
         api.getInteractionResult('Exists', null, {
-          type: "POST",
+          type: 'POST',
           data: {
-            Exists: "Exists"
+            Exists: 'Exists'
           }
         })
           .done(handler)
-          .done(function (data, status, xhr) {
+          .done(function (data) {
             data._id.should.equal(2);
           })
           .done(function () {
             done();
           });
       });
-      /*jslint unparam: false */
     });
 
     describe('getDataSuitcase(suitcase, time)', function () {
@@ -121,7 +116,7 @@ define(['Squire'], function (Squire) {
 
     describe('setPendingItem(form, action, data)', function () {
       it('should POST data to the server', function (done) {
-        api.setPendingItem('Exists', 'Exists', {Exists: "Exists"})
+        api.setPendingItem('Exists', 'Exists', {Exists: 'Exists'})
           .done(handler)
           .done(function () {
             done();

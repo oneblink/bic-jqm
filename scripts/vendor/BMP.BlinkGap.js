@@ -1,10 +1,3 @@
-/*jslint browser:true, indent:2*/
-/*global $, cordova*/ // 3rd-party globals
-/*global pollUntil*/
-
-/**
- *
- */
 (function () {
   'use strict';
   var BMP;
