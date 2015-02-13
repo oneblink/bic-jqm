@@ -40,6 +40,204 @@ define(
         return config;
       },
 
+      prepareForView: function (data) {
+        // Handle MADL updates here
+        // Check for other updates needed here?
+        var model = this;
+
+        return new Promise(function (resolve, reject) {
+          if (model.id === window.BMP.BIC.siteVars.answerSpace) {
+            model.prepareAnswerSpace(resolve, reject, data);
+          }
+
+          if (model.get('type') === 'madl code') {
+            model.prepareMADL(resolve, reject, data);
+          }
+
+          if (model.get('type') === 'xslt' && model.get('xml').indexOf('stars:') === 0) {
+            model.set({
+              mojoType: 'stars',
+              xml: model.get('xml').replace(/^stars:/, '')
+            });
+          }
+
+          if (model.get('type') === 'xslt' && model.get('mojoType') === 'stars') {
+            model.prepareStars(resolve);
+          }
+
+          if (model.get('type') !== 'madl code' && model.id !== window.BMP.BIC.siteVars.answerSpace) {
+            resolve(model);
+          }
+
+        });
+      },
+
+      prepareAnswerSpace: function (resolve, reject, data) {
+        var model = this;
+        require(['model-application'], function (app) {
+          var homeInteraction;
+          var loginInteraction;
+          var path;
+
+          if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+            homeInteraction = app.interactions.findWhere({dbid: 'i' + app.get('homeInteraction')});
+            if (homeInteraction) {
+              homeInteraction.set({parent: model.get('parent')});
+              homeInteraction.prepareForView(data).then(function () {
+                resolve(homeInteraction);
+              });
+            } else {
+              reject();
+            }
+          } else {
+            model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
+              return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
+                return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
+              }, this).length > 0);
+            }, this), function (value) {
+              return value.attributes;
+            })});
+
+            if (model.get('interactionList').length === 0 && app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
+              loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
+
+              path = $.mobile.path.parseLocation().pathname;
+              if (path.slice(-1) === '/') {
+                path = path.slice(0, path.length - 1);
+              }
+
+              resolve(model);
+              $.mobile.changePage(path + '/' + loginInteraction.id);
+            } else {
+              resolve(model);
+            }
+          }
+        });
+      },
+
+      prepareMADL: function (resolve, reject, data) {
+        var model = this;
+        require(['model-application'], function (app) {
+          API.getInteractionResult(model.id, model.get('args'), data.options).then(
+            // Online
+            function (result) {
+              model.save({
+                content: result,
+                contentTime: Date.now()
+              }, {
+                success: function () {
+                  var credentials;
+                  resolve(model);
+
+                  if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
+                    app.checkLoginStatus().then(function () {
+                      if (app.get('loginStatus') === 'LOGGED IN' && data.options.data) {
+                        credentials = model.parseAuthString(data.options.data);
+                        facade.publish('storeAuth', credentials);
+                        model.save({
+                          'content-principal': result
+                        });
+                      } else if (!model.get('args')['args[logout]']) {
+                        // Logged Out
+                        model.save({
+                          'content-anonymous': result
+                        });
+                      }
+                    });
+                  }
+                },
+                error: function () {
+                  resolve(model);
+                }
+              });
+            },
+            function (jqXHR, textStatus, errorThrown) {
+              // Offline
+              var credentials;
+
+              if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
+                if (data.options.data) {
+                  // Offline login attempt;
+                  credentials = model.parseAuthString(data.options.data);
+                  model.listenToOnce(app, 'loginProcessed', function () {
+                    if (app.get('loginStatus') === 'LOGGED IN') {
+                      model.set('content', model.get('content-principal'));
+                    } else {
+                      model.set('content', model.get('content-anonymous'));
+                    }
+                    resolve(model);
+                  });
+                  facade.publish('authenticateAuth', credentials);
+                } else {
+                  model.set('content', model.get('content-anonymous'));
+                  resolve(model);
+                }
+              } else {
+                reject(errorThrown);
+              }
+            }
+          );
+        });
+      },
+
+      prepareStars: function (resolve) {
+        var model = this;
+        require(['model-application'], function (app) {
+          var xml;
+          var attrs;
+
+          _.each(app.stars.where({type: model.get('xml')}), function (value) {
+            xml += '<' + value.get('type') + ' id=' + value.get('_id') + '>';
+
+            attrs = _.clone(value.attributes);
+            delete attrs._id;
+            delete attrs._rev;
+            delete attrs.type;
+            delete attrs.state;
+
+            _.each(attrs, function (innerValue, key) {
+              xml += '<' + key + '>' + innerValue + '</' + key + '>';
+            });
+
+            xml += '</' + value.get('type') + '>';
+          });
+          xml = '<stars>' + xml + '</stars>';
+          model.set({
+            starXml: xml
+          });
+          resolve(model);
+        });
+      },
+
+      parseAuthString: function (authString) {
+        var credentials = {};
+        var i;
+        var split;
+        authString = authString.split('&');
+
+        for (i = 0; i < authString.length; i++) {
+          split = authString[i].split('=');
+          switch (split[0]) {
+            case 'username':
+              credentials.principal = split[1];
+              break;
+            case 'password':
+              credentials.credential = split[1];
+              break;
+            case 'submit':
+              break;
+            default:
+              credentials[split[0]] = split[1];
+          }
+          if (!credentials.expiry) {
+            // 3 day default expiry
+            credentials.expiry = 86400000 * 3;
+          }
+        }
+
+        return credentials;
+      },
+
       performXSLT: function () {
         var xsl,
           xmlString,
@@ -78,11 +276,11 @@ define(
           require(['model-application'], function (app) {
             var constructCondition;
 
-            constructCondition = function (starType) {
+            constructCondition = function (innerStarType) {
               condition = '';
-              variable = starType[1];
-              starType = starType[2];
-              _.each(app.stars.where({type: starType}), function (innerValue) {
+              variable = innerStarType[1];
+              innerStarType = innerStarType[2];
+              _.each(app.stars.where({type: innerStarType}), function (innerValue) {
                 condition += ' or ' + variable + '=\'' + innerValue.get('_id') + '\'';
               });
               condition = condition.substr(4);
@@ -132,193 +330,6 @@ define(
             model.set('content', html);
           }
         });
-      },
-
-      prepareForView: function (data) {
-        // Handle MADL updates here
-        // Check for other updates needed here?
-        var model = this,
-          homeInteraction,
-          loginInteraction,
-          xml = '',
-          attrs,
-          path;
-
-        return new Promise(function (resolve, reject) {
-          if (model.id === window.BMP.BIC.siteVars.answerSpace) {
-            require(['model-application'], function (app) {
-              if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
-                homeInteraction = app.interactions.findWhere({dbid: 'i' + app.get('homeInteraction')});
-                if (homeInteraction) {
-                  homeInteraction.set({parent: model.get('parent')});
-                  homeInteraction.prepareForView(data).then(function () {
-                    resolve(homeInteraction);
-                  });
-                } else {
-                  reject();
-                }
-              } else {
-                model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
-                  return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
-                    return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
-                  }, this).length > 0);
-                }, this), function (value) {
-                  return value.attributes;
-                })});
-
-                if (model.get('interactionList').length === 0 && app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
-                  loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
-
-                  path = $.mobile.path.parseLocation().pathname;
-                  if (path.slice(-1) === '/') {
-                    path = path.slice(0, path.length - 1);
-                  }
-
-                  resolve(model);
-                  $.mobile.changePage(path + '/' + loginInteraction.id);
-                  //if (loginInteraction) {
-                    //loginInteraction.set({parent: model.get('parent')});
-                    //loginInteraction.prepareForView(data).then(function () {
-                      //resolve(loginInteraction);
-                    //});
-                  //}
-                } else {
-                  resolve(model);
-                }
-              }
-            });
-          }
-
-          if (model.get('type') === 'madl code') {
-            require(['model-application'], function (app) {
-              API.getInteractionResult(model.id, model.get('args'), data.options).then(
-                // Online
-                function (result) {
-                  model.save({
-                    content: result,
-                    contentTime: Date.now()
-                  }, {
-                    success: function () {
-                      var credentials;
-                      resolve(model);
-
-                      if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
-                        app.checkLoginStatus().then(function () {
-                          if (app.get('loginStatus') === 'LOGGED IN' && data.options.data) {
-                            credentials = model.parseAuthString(data.options.data);
-                            facade.publish('storeAuth', credentials);
-                            model.save({
-                              'content-principal': result
-                            });
-                          } else if (!model.get('args')['args[logout]']) {
-                            // Logged Out
-                            model.save({
-                              'content-anonymous': result
-                            });
-                          }
-                        });
-                      }
-                    },
-                    error: function () {
-                      resolve(model);
-                    }
-                  });
-                },
-                function (jqXHR, textStatus, errorThrown) {
-                  // Offline
-                  var credentials;
-
-                  if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
-                    if (data.options.data) {
-                      // Offline login attempt;
-                      credentials = model.parseAuthString(data.options.data);
-                      model.listenToOnce(app, 'loginProcessed', function () {
-                        if (app.get('loginStatus') === 'LOGGED IN') {
-                          model.set('content', model.get('content-principal'));
-                        } else {
-                          model.set('content', model.get('content-anonymous'));
-                        }
-                        resolve(model);
-                      });
-                      facade.publish('authenticateAuth', credentials);
-                    } else {
-                      model.set('content', model.get('content-anonymous'));
-                      resolve(model);
-                    }
-                  } else {
-                    reject(errorThrown);
-                  }
-                }
-              );
-            });
-          }
-
-          if (model.get('type') === 'xslt' && model.get('xml').indexOf('stars:') === 0) {
-            model.set({
-              mojoType: 'stars',
-              xml: model.get('xml').replace(/^stars:/, '')
-            });
-          }
-
-          if (model.get('type') === 'xslt' && model.get('mojoType') === 'stars') {
-            require(['model-application'], function (app) {
-              _.each(app.stars.where({type: model.get('xml')}), function (value) {
-                xml += '<' + value.get('type') + ' id=' + value.get('_id') + '>';
-
-                attrs = _.clone(value.attributes);
-                delete attrs._id;
-                delete attrs._rev;
-                delete attrs.type;
-                delete attrs.state;
-
-                _.each(attrs, function (innerValue, key) {
-                  xml += '<' + key + '>' + innerValue + '</' + key + '>';
-                });
-
-                xml += '</' + value.get('type') + '>';
-              });
-              xml = '<stars>' + xml + '</stars>';
-              model.set({
-                starXml: xml
-              });
-              resolve(model);
-            });
-          }
-
-          if (model.get('type') !== 'madl code' && model.id !== window.BMP.BIC.siteVars.answerSpace) {
-            resolve(model);
-          }
-
-        });
-      },
-
-      parseAuthString: function (authString) {
-        var credentials = {};
-        var i;
-        var split;
-        authString = authString.split('&');
-
-        for (i = 0; i < authString.length; i++) {
-          split = authString[i].split('=');
-          switch (split[0]) {
-            case 'username':
-              credentials.principal = split[1];
-              break;
-            case 'password':
-              credentials.credential = split[1];
-              break;
-            case 'submit':
-              break;
-            default:
-              credentials[split[0]] = split[1];
-          }
-          if (!credentials.expiry) {
-            // 3 day default expiry
-            credentials.expiry = 86400000 * 3;
-          }
-        }
-
-        return credentials;
       }
     });
 
