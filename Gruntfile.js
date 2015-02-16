@@ -58,10 +58,7 @@ module.exports = function (grunt) {
       target: [
           'scripts/**/*.js',
           'tests/**/*.js',
-          'buildtests/**/*.js',
-          '!scripts/frag/05-implementations.js',
-          '!tests/implementations.js',
-          '!**/vendor/**/*'
+          'buildtests/**/*.js'
       ],
       options: {
         configFile: '.eslintrc'

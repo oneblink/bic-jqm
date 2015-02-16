@@ -1,0 +1,22 @@
+.DS_Store
+/node_modules
+/bower_components
+/server/key.pem
+/server/cert.pem
+
+# JetBrains files
+/*.iml
+/.idea
+
+# output files
+js/bic.js
+js/bic.js.map
+js/bic.min.js
+js
+versions
+bic.js
+formsdeps.min.js
+
+scripts/frag/05-implementations.js
+tests/implementations.js
+scripts/vendor
