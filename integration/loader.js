@@ -25,7 +25,7 @@ require.config({
     pouchdb: '/bower_components/pouchdb/dist/pouchdb',
     implementations: '/tests/implementations',
     'es5-shim': '//d1c6dfkb81l78v.cloudfront.net/es5-shim/2.3.0/es5-shim.min',
-    authentication: '../offlineLogin/authentication',
+    authentication: '../node_modules/offlineLogin/authentication',
     sjcl: '../offlineLogin/node_modules/sjcl/sjcl'
   },
   shim: {

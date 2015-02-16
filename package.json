@@ -24,6 +24,7 @@
     "grunt-mustache-render": "^1.6.0",
     "grunt-saucelabs": "~5.1",
     "grunt-text-replace": "^0.3.12",
-    "hapi": "^5.1.0"
+    "hapi": "^5.1.0",
+    "offlineLogin": "blinkmobile/offlineLogin"
   }
 }

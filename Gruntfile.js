@@ -127,7 +127,7 @@ module.exports = function (grunt) {
             feature: '../bower_components/amd-feature/feature',
             'es5-shim': 'empty:',
             uuid: '../bower_components/node-uuid/uuid',
-            authentication: '../../offlineLogin/authentication',
+            authentication: '../node_modules/offlineLogin/authentication',
             sjcl: '../node_modules/sjcl/sjcl'
           },
           wrap: {
