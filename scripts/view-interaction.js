@@ -1,8 +1,9 @@
-/*global google: true */
+/*globals google:false, geolocation:false */
 define(
   ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache'],
   function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate) {
     'use strict';
+
     var InteractionView = Backbone.View.extend({
 
       initialize: function () {
@@ -536,45 +537,9 @@ define(
       },
 
       directionsMap: function () {
-        var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, getGeoLocation, mapDiv;
+        var options, map, directionsDisplay, directionsService, origin, destination, locationPromise, request, mapDiv;
 
         mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
-
-        getGeoLocation = function (geoOptions) {
-          var defaultOptions = {
-              enableHighAccuracy: true,
-              maximumAge: 5 * 60 * 1000, // 5 minutes
-              timeout: 5 * 1000 // 5 seconds
-            };
-          geoOptions = $.extend({}, defaultOptions, $.isPlainObject(geoOptions) ? geoOptions : {});
-
-          return new Promise(function (resolve, reject) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-              var coords = position.coords;
-              if ($.type(coords) === 'object') {
-                resolve(coords);
-              } else {
-                reject('GeoLocation error: blank location from browser / device');
-              }
-            }, function (error) {
-              var string;
-              switch (error.code) {
-              case error.PERMISSION_DENIED:
-                string = 'user has not granted permission';
-                break;
-              case error.PERMISSION_DENIED_TIMEOUT:
-                string = 'user did not grant permission in time';
-                break;
-              case error.POSITION_UNAVAILABLE:
-                string = 'unable to determine position';
-                break;
-              default:
-                string = 'unknown error';
-              }
-              reject('GeoLocation error: ' + string);
-            }, geoOptions);
-          });
-        };
 
         directionsDisplay = new google.maps.DirectionsRenderer();
         directionsService = new google.maps.DirectionsService();
@@ -596,7 +561,7 @@ define(
 
         if (mapDiv.attr('data-destination-address') === undefined || mapDiv.attr('data-origin-address') === undefined) {
           // Set the origin from attributes or GPS
-          locationPromise = getGeoLocation();
+          locationPromise = window.BMP.BIC.getCurrentPosition();
           locationPromise.then(function (location) {
             if (mapDiv.attr('data-origin-address') === undefined) {
               origin = new google.maps.LatLng(location.latitude, location.longitude);
@@ -633,6 +598,37 @@ define(
 
       }
     });
+
+    window.BMP.geolocation = geolocation;
+
+    window.BMP.BIC.getCurrentPosition = function (options) {
+      return new Promise(function (resolve, reject) {
+        window.BMP.geolocation.getCurrentPosition()
+        .then(function (position) {
+          if ($.type(position.coords) === 'object') {
+            resolve(position.coords);
+          } else {
+            reject('GeoLocation error: blank location from browser / device');
+          }
+        }, function (error) {
+          var string;
+          switch (error.code) {
+          case error.PERMISSION_DENIED:
+            string = 'user has not granted permission';
+            break;
+          case error.PERMISSION_DENIED_TIMEOUT:
+            string = 'user did not grant permission in time';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            string = 'unable to determine position';
+            break;
+          default:
+            string = 'unknown error';
+          }
+          reject('GeoLocation error: ' + string);
+        }, options);
+      });
+    };
 
     return InteractionView;
   }

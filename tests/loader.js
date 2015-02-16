@@ -8,12 +8,15 @@ require.config({
   paths: {
     feature: '/bower_components/amd-feature/feature',
     implementations: 'implementations',
+    geolocation: '/node_modules/geolocation/geolocation',
     Squire: '/bower_components/squire/src/Squire',
     pouchdb: '/bower_components/pouchdb/dist/pouchdb',
     uuid: '/bower_components/node-uuid/uuid',
     pollUntil: '/node_modules/poll-until/poll-until',
     BlinkGap: '/scripts/vendor/BMP.BlinkGap',
-    text: '../bower_components/requirejs-text/text'
+    text: '../bower_components/requirejs-text/text',
+    facade: '/scripts/facade',
+    mediator: '/scripts/mediator'
   },
   shim: {
     BlinkGap: {
@@ -84,6 +87,7 @@ $.mobile = {
 require([
   'feature!promises',
   'pollUntil',
+  'geolocation',
   'BlinkGap',
   'test-api-web.js',
   'test-collection-datasuitcases.js',
@@ -101,16 +105,13 @@ require([
   'test-router.js',
   'test-view-interaction.js',
   'test-view-star.js'
-], function (Promise, pollUntil) {
+], function (Promise, pollUntil, geolocation) {
   'use strict';
   var runner, failedTests, logFailure;
 
-  if (!window.Promise) {
-    window.Promise = Promise;
-  }
+  window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;
-
-
+  window.geolocation = window.geolocation || geolocation;
 
   runner = mocha.run();
   failedTests = [];

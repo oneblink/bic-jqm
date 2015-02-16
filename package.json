@@ -4,6 +4,8 @@
   "version": "3.1.22",
   "main": "Gruntfile.js",
   "dependencies": {
+    "geolocation": "git://github.com/blinkmobile/geolocation#v1.0.0",
+    "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "^1.0.0",
     "sjcl": "^1.0.2"
   },
@@ -24,7 +26,6 @@
     "grunt-mustache-render": "^1.6.0",
     "grunt-saucelabs": "~5.1",
     "grunt-text-replace": "^0.3.12",
-    "hapi": "^5.1.0",
-    "offlineLogin": "blinkmobile/offlineLogin"
+    "hapi": "^5.1.0"
   }
 }

@@ -1,5 +1,6 @@
 define(['Squire'], function (Squire) {
   'use strict';
+
   describe('View - Interaction - jQuery Mobile Implementation', function () {
     var injector, View;
 
@@ -138,4 +139,21 @@ define(['Squire'], function (Squire) {
       it('should create a view for each star model');
     });
   });
+
+  describe('BMP.geolocation', function () {
+
+    it('should exist', function () {
+      should.exist(BMP.geolocation);
+    });
+
+  });
+
+  describe('BMP.BIC.getCurrentPosition', function () {
+
+    it('should exist', function () {
+      should.exist(BMP.BIC.getCurrentPosition);
+    });
+
+  });
+
 });

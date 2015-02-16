@@ -118,6 +118,7 @@ module.exports = function (grunt) {
           out: 'build/bic.js',
           optimize: "none",
           paths: {
+            geolocation: '../node_modules/geolocation/geolocation',
             pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
             text: '../bower_components/requirejs-text/text',
             domReady: '../bower_components/requirejs-domready/domReady',
