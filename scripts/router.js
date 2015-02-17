@@ -44,6 +44,23 @@ define(
             return;
           })
           .then(function () {
+            // Need to hang around until native offline is ready
+            return new Promise(function (resolve, reject) {
+              if (BMP.BlinkGap.isHere()) {
+                BMP.BlinkGap.waitForOffline(
+                  function () {
+                    resolve();
+                  },
+                  function () {
+                    reject();
+                  }
+                );
+              } else {
+                resolve();
+              }
+            });
+          })
+          .then(function () {
             return app.populate();
           })
           .then(null, function () {

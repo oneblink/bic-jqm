@@ -16,7 +16,7 @@ define(
         return new Promise(function (resolve, reject) {
           collection.fetch({
             success: resolve,
-            error: reject
+            error: resolve
           });
         });
       },
