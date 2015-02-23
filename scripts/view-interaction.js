@@ -1,7 +1,7 @@
 /*globals google:false, geolocation:false */
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache'],
-  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate) {
+  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache', 'geolocation'],
+  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate, geolocation) {
     'use strict';
 
     var InteractionView = Backbone.View.extend({

@@ -13,11 +13,10 @@
             'modernizr',
             'pouchdb',
             'pollUntil',
-            'geolocation',
             'feature!es5',
             'BlinkGap'
         ], factory);
     } else {
         root.bic = factory();
     }
-}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch, pollUntil, geolocation) {
+}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch, pollUntil) {

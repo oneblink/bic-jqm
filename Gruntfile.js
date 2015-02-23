@@ -114,7 +114,7 @@ module.exports = function (grunt) {
         options: {
           baseUrl: 'scripts',
           name: '../bower_components/almond/almond',
-          include: ['main', 'router', 'auth'],
+          include: ['main', 'router', 'auth', 'geolocation'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
