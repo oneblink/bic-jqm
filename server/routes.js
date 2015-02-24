@@ -27,14 +27,6 @@ module.exports = function (server) {
   });
 
   server.route({
-    path: '/integration/formsdeps.min.js',
-    method: 'GET',
-    handler: {
-      file: './integration/formsdeps.min.js'
-    }
-  });
-
-  server.route({
     path: '/scripts/uuid.js',
     method: 'GET',
     handler: {
