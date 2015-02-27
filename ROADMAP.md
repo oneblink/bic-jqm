@@ -12,6 +12,8 @@ Short Term Objectives
 Medium Term Objectives
 ---
 - deprecate RequireJS for either ES6 modules or Browserify
+- manifest file to describe operating dependencies and environment, etc (i.e. stuff that ends up in versions.json)
+- jQuery Mobile 1.4.x
 
 Long Term Objectives
 ---
