@@ -55,28 +55,9 @@
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     q: getPaths('q/0.9.7/q.min'),
     underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
-    formsdeps: rootPath + '/formsdeps.min',
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
     pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
   };
-
-  // check if we are using a pre-bundles Require.JS
-  supportsBundles = true;
-  if (require.version < '2.2') {
-    supportsBundles = false;
-    if (require.version >= '2.1') {
-      versionMatches = require.version.match(/(\d+)\.(\d+)\.(\d+)/);
-      if (versionMatches && versionMatches[3] >= 10) {
-        supportsBundles = true; // introduced in Require.JS 2.1.10
-      }
-    }
-  }
-  if (!supportsBundles) {
-    paths.moment = rootPath + '/formsdeps.min';
-    paths.picker = rootPath + '/formsdeps.min';
-    paths['picker.date'] = rootPath + '/formsdeps.min';
-    paths['picker.time'] = rootPath + '/formsdeps.min';
-  }
 
   require.config({ paths: paths });
 }());
@@ -104,8 +85,5 @@ require.config({
     sjcl: {
       exports: 'sjcl'
     }
-  },
-  bundles: {
-    'formsdeps': ['picker', 'picker.date', 'picker.time', 'moment']
   }
 });
