@@ -22,25 +22,18 @@ module.exports = function (grunt) {
     hapi: {
       test: {
         options: {
-          server: require('path').resolve('server/http.js'),
+          server: require('path').resolve('server/server.js'),
           bases: {},
           noasync: false
         }
       },
       http: {
         options: {
-          server: require('path').resolve('server/http.js'),
+          server: require('path').resolve('server/server.js'),
           bases: {},
           noasync: true
         }
-      }//,
-      // https: {
-      //   options: {
-      //     server: require('path').resolve('server/https.js'),
-      //     bases: {},
-      //     noasync: true
-      //   }
-      // }
+      }
     },
 
     watch: {
