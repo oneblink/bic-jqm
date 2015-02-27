@@ -15,7 +15,6 @@ js/bic.min.js
 js
 versions
 bic.js
-formsdeps.min.js
 
 scripts/frag/05-implementations.js
 tests/implementations.js
