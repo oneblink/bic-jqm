@@ -20,3 +20,4 @@
         root.bic = factory();
     }
 }(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch, pollUntil) {
+  window.pollUntil = pollUntil;
