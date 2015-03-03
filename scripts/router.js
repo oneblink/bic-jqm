@@ -44,6 +44,23 @@ define(
             return;
           })
           .then(function () {
+            // Need to hang around until native offline is ready
+            return new Promise(function (resolve, reject) {
+              if (BMP.BlinkGap.isHere()) {
+                BMP.BlinkGap.waitForOffline(
+                  function () {
+                    resolve();
+                  },
+                  function () {
+                    reject();
+                  }
+                );
+              } else {
+                resolve();
+              }
+            });
+          })
+          .then(function () {
             return app.populate();
           })
           .then(null, function () {
@@ -69,11 +86,11 @@ define(
 
         if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
           // Remove file path
-          path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
+          path.pathname = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
           // Remove domain info
-          path.hrefNoSearch = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf('/'));
+          path.pathname = path.pathname.substr(path.pathname.indexOf('/'));
           // Remove file suffix
-          path.hrefNoSearch = path.hrefNoSearch.substr(0, path.hrefNoSearch.indexOf('.'));
+          path.pathname = path.pathname.substr(0, path.pathname.indexOf('.'));
         }
 
         app.whenPopulated()
