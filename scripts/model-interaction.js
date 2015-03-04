@@ -46,7 +46,7 @@ define(
         var model = this;
 
         return new Promise(function (resolve, reject) {
-          if (model.id === window.BMP.BIC.siteVars.answerSpace) {
+          if (model.id === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
             model.prepareAnswerSpace(resolve, reject, data);
           }
 
@@ -65,7 +65,7 @@ define(
             model.prepareStars(resolve);
           }
 
-          if (model.get('type') !== 'madl code' && model.id !== window.BMP.BIC.siteVars.answerSpace) {
+          if (model.get('type') !== 'madl code' && model.id !== window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
             resolve(model);
           }
 
@@ -91,7 +91,7 @@ define(
             }
           } else {
             model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
-              return value.id !== window.BMP.BIC.siteVars.answerSpace && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
+              return value.id !== window.BMP.BIC.siteVars.answerSpace.toLowerCase() && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
                 return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
               }, this).length > 0);
             }, this), function (value) {

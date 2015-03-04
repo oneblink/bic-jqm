@@ -6,7 +6,7 @@ define(
       model: PendingItem,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Pending');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending');
         return this;
       },
 
