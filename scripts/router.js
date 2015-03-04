@@ -135,7 +135,7 @@ define(
         }
 
         if (path[0] === window.initialURLHashed && path[path.length - 1] === 'offlinedata') {
-          path[0] = window.BMP.BIC.siteVars.answerSpace;
+          path[0] = window.BMP.BIC.siteVars.answerSpace.toLowerCase();
           path.pop();
         }
 

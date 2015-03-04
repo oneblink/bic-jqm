@@ -29,7 +29,7 @@ define(
       },
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Form');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Form');
         return this;
       },
 

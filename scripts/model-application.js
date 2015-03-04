@@ -7,12 +7,12 @@ define(
       idAttribute: '_id',
 
       defaults: {
-        _id: window.BMP.BIC.siteVars.answerSpace,
+        _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
         loginStatus: false
       },
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-AnswerSpace');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-AnswerSpace');
         return this;
       },
 
@@ -32,7 +32,7 @@ define(
             // now data is safe to use, so we can get started
 
             if (BMP.Authentication) {
-              app.meta = new Data(window.BMP.BIC.siteVars.answerSpace + '-Meta');
+              app.meta = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Meta');
               BMP.Authentication.getRecord = function (callback) {
                 app.meta.read({
                   id: 'offlineLogin'

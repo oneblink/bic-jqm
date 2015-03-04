@@ -6,7 +6,7 @@ define(
       model: FormRecord,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-FormRecord');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-FormRecord');
         return this;
       },
 

@@ -6,7 +6,7 @@ define(
       model: Star,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Star');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Star');
         return this;
       },
 

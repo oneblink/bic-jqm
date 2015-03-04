@@ -7,7 +7,7 @@ define(
       model: Interaction,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-Interaction');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Interaction');
         return this;
       },
 

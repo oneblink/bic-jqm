@@ -6,7 +6,7 @@ define(
       model: DataSuitcase,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace + '-DataSuitcase');
+        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-DataSuitcase');
         return this;
       },
 
