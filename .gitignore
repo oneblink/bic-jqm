@@ -7,9 +7,4 @@
 /.idea
 
 # output files
-js/bic.js
-js/bic.js.map
-js/bic.min.js
-js
-versions
-bic.js
+dist

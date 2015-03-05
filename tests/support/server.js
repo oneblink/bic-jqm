@@ -11,8 +11,8 @@ server.connection({
 server.connection({
   port: 9997,
   tls: {
-    key: fs.readFileSync('server/key.pem'),
-    cert: fs.readFileSync('server/cert.pem')
+    key: fs.readFileSync('tests/support/key.pem'),
+    cert: fs.readFileSync('tests/support/cert.pem')
   }
 });
 
@@ -31,7 +31,7 @@ server.route({
   path: '/integration/{param*}',
   method: 'GET',
   handler: {
-    file: './integration/index.html'
+    file: 'tests/support/index.html'
   }
 });
 
@@ -39,15 +39,7 @@ server.route({
   path: '/integration/bic.js',
   method: 'GET',
   handler: {
-    file: './integration/bic.js'
-  }
-});
-
-server.route({
-  path: '/scripts/uuid.js',
-  method: 'GET',
-  handler: {
-    file: './bower_components/node-uuid/uuid.js'
+    file: 'tests/support/bic.js'
   }
 });
 

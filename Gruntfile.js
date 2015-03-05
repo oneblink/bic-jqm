@@ -6,7 +6,7 @@ var now = new Date();
 var uglifyConfig = {
   files: {}
 };
-uglifyConfig.files['versions/' + now.valueOf() + '/bic.min.js'] = ['versions/' + now.valueOf() + '/bic.js'];
+uglifyConfig.files['dist/' + now.valueOf() + '/bic.min.js'] = ['dist/' + now.valueOf() + '/bic.js'];
 
 module.exports = function (grunt) {
   "use strict";
@@ -22,14 +22,14 @@ module.exports = function (grunt) {
     hapi: {
       test: {
         options: {
-          server: require('path').resolve('server/server.js'),
+          server: require('path').resolve('tests/support/server.js'),
           bases: {},
           noasync: false
         }
       },
       http: {
         options: {
-          server: require('path').resolve('server/server.js'),
+          server: require('path').resolve('tests/support/server.js'),
           bases: {},
           noasync: true
         }
@@ -37,21 +37,16 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      scripts: {
-        files: ['scripts/**', 'tests/**'],
+      src: {
+        files: ['src/**', 'tests/**'],
         tasks: ['build-dev', 'eslint', 'mocha:tests']
-      },
-      build: {
-        files: ['buildtests/**'],
-        tasks: ['eslint', 'build', 'mocha:build']
       }
     },
 
     eslint: {
       target: [
-          'scripts/**/*.js',
-          'tests/**/*.js',
-          'buildtests/**/*.js'
+          'src/**/*.js',
+          'tests/**/*.js'
       ],
       options: {
         configFile: '.eslintrc'
@@ -66,13 +61,6 @@ module.exports = function (grunt) {
           ]
         }
       },
-      build: {
-        options: {
-          urls: [
-            'http://localhost:9998/buildtests/index.html'
-          ]
-        }
-      },
       options: {
         bail: true,
         log: true
@@ -84,7 +72,7 @@ module.exports = function (grunt) {
     requirejs: {
       outside: {
         options: {
-          baseUrl: 'scripts',
+          baseUrl: 'src',
           name: 'feature',
           include: ['feature', 'pollUntil', 'BlinkGap'],
           exclude: ['implementations'],
@@ -105,7 +93,7 @@ module.exports = function (grunt) {
       },
       compile: {
         options: {
-          baseUrl: 'scripts',
+          baseUrl: 'src',
           name: '../bower_components/almond/almond',
           include: ['main', 'router', 'auth', 'geolocation'],
           out: 'build/bic.js',
@@ -123,12 +111,12 @@ module.exports = function (grunt) {
           },
           wrap: {
             startFile: [
-              'scripts/frag/00-config.js',
-              'scripts/frag/05-implementations.js',
+              'src/frag/00-config.js',
+              'src/frag/05-implementations.js',
               'build/outside.js',
-              'scripts/frag/10-start.frag'
+              'src/frag/10-start.frag'
             ],
-            endFile: 'scripts/frag/99-end.frag'
+            endFile: 'src/frag/99-end.frag'
           }//,
           // wrap: true,
           //insertRequire: ["main"]
@@ -156,11 +144,11 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'versions/' + now.valueOf() + '/bic.js'
+            dest: 'dist/' + now.valueOf() + '/bic.js'
           },
           {
             src: 'buildFiles/files/*',
-            dest: 'versions/' + now.valueOf() + '/',
+            dest: 'dist/' + now.valueOf() + '/',
             filter: 'isFile',
             expand: true,
             flatten: true
@@ -171,7 +159,7 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'integration/bic.js'
+            dest: 'tests/support/bic.js'
           }
         ]
       }
@@ -202,7 +190,7 @@ module.exports = function (grunt) {
         files : [
           {
             template: 'buildFiles/templates/versions.json',
-            dest: 'versions/' + now.valueOf() + '/versions.json',
+            dest: 'dist/' + now.valueOf() + '/versions.json',
             data: {
               timestamp: now.valueOf(),
               datestamp: now.toISOString(),
@@ -211,7 +199,7 @@ module.exports = function (grunt) {
           },
           {
             template: 'buildFiles/templates/appcache.mustache',
-            dest: 'versions/' + now.valueOf() + '/appcache.mustache',
+            dest: 'dist/' + now.valueOf() + '/appcache.mustache',
             data: {
               forms: forms
             }
@@ -235,7 +223,7 @@ module.exports = function (grunt) {
     replace: {
       bicVersion: {
         src: [
-          'scripts/model-application.js'
+          'src/model-application.js'
         ],
         overwrite: true,
         replacements: [
@@ -247,7 +235,7 @@ module.exports = function (grunt) {
       },
       formsVersion: {
         src: [
-          'scripts/frag/00-config.js'
+          'src/frag/00-config.js'
         ],
         overwrite: true,
         replacements: [
