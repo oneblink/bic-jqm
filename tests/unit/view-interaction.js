@@ -19,7 +19,7 @@ define(['Squire'], function (Squire) {
       injector.mock('text!template-popup.mustache', 'string');
       injector.mock('text!template-clear-confirmation-popup.mustache', 'string');
 
-      injector.require(['../scripts/view-interaction'], function (required) {
+      injector.require(['../src/view-interaction'], function (required) {
         View = required;
         done();
       });

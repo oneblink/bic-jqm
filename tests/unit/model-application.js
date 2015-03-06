@@ -41,7 +41,12 @@ define(['Squire'], function (Squire) {
         getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
 
-      injector.require(['../scripts/model-application.js'], function (required) {
+      injector.mock('facade', {
+        publish: function () {console.log('#publish');},
+        subscribe: function () {console.log('#subscribe');}
+      });
+
+      injector.require(['../src/model-application.js'], function (required) {
         model = required;
         done();
       });

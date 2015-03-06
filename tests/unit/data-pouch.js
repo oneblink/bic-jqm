@@ -17,7 +17,7 @@ define(['Squire'], function (Squire) {
 
         require(['pouchdb'], function (Pouch) {
           window.Pouch = Pouch;
-          injector.require(['../scripts/data-pouch'], function (required) {
+          injector.require(['../src/data-pouch'], function (required) {
             Data = required;
             done();
           });
@@ -122,7 +122,9 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return an XHR compatible promise', function () {
-          expect(data.create({})).to.be.instanceOf(Promise);
+          var promise = data.create({});
+          promise.then(null, function () {return;});
+          expect(promise).to.be.instanceOf(Promise);
         });
 
         it('should resolve with the newly created object', function (done) {
@@ -160,7 +162,9 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return an XHR compatible promise', function () {
-          expect(data.update({})).to.be.instanceOf(Promise);
+          var promise = data.update({});
+          promise.then(null, function () {return;});
+          expect(promise).to.be.instanceOf(Promise);
         });
 
         it('should resolve with the updated object', function (done) {
@@ -241,7 +245,9 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return an XHR compatible promise', function () {
-          expect(data.read({})).to.be.instanceOf(Promise);
+          var promise = data.read({});
+          promise.then(null, function () {return;});
+          expect(promise).to.be.instanceOf(Promise);
         });
 
         it('should resolve with the object from the db', function (done) {
@@ -305,7 +311,9 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return an XHR compatible promise', function () {
-          expect(data.delete({})).to.be.instanceOf(Promise);
+          var promise = data.delete({});
+          promise.then(null, function () {return;});
+          expect(promise).to.be.instanceOf(Promise);
         });
 
         it('should resolve with deletion confirmation', function (done) {

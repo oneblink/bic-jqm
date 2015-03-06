@@ -1,18 +1,22 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'sinon'], function (Squire, sinon) {
   'use strict';
   describe('API Facade', function () {
     var server, handler, api;
 
     before(function (done) {
       var injector = new Squire();
-      injector.require(['../scripts/api-web'], function (required) {
+      injector.mock('uuid', {
+        v4: function () {return 12345;}
+      });
+
+      injector.require(['../src/api-web'], function (required) {
         api = required;
 
         server = sinon.fakeServer.create();
-        server.respondWith('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace, [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
-        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
-        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false&0=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 3}']);
-        server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 2}']);
+        server.respondWith('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase(), [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('get', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '&iact=Exists&ajax=false&0=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 3}']);
+        server.respondWith('post', '/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '&iact=Exists&ajax=false', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 2}']);
         server.respondWith('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=Exists&_lc=1', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
         server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId, [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
         server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);

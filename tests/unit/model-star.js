@@ -9,7 +9,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-application', Backbone.Model.extend({
       }));
 
-      injector.require(['../scripts/model-star'], function (rModel) {
+      injector.require(['../src/model-star'], function (rModel) {
         Model = rModel;
         done();
       });

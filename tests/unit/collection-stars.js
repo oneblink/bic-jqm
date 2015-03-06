@@ -10,7 +10,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-star', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
 
-      injector.require(['../scripts/collection-stars'], function (required) {
+      injector.require(['../src/collection-stars'], function (required) {
         Collection = required;
         done();
       });

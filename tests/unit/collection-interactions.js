@@ -9,7 +9,7 @@ define(['Squire'], function (Squire) {
       injector.mock('model-interaction', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
 
-      injector.require(['../scripts/collection-interactions'], function (required) {
+      injector.require(['../src/collection-interactions'], function (required) {
         Collection = required;
         done();
       });

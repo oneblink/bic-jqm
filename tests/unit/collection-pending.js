@@ -15,7 +15,7 @@ define(['Squire'], function (Squire) {
         setPendingItem: apiStub
       });
 
-      injector.require(['../scripts/collection-pending'], function (required) {
+      injector.require(['../src/collection-pending'], function (required) {
         Collection = required;
         done();
       });

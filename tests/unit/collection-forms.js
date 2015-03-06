@@ -12,7 +12,7 @@ define(['Squire'], function (Squire) {
       injector.mock('data-inMemory', function () { return null; });
       injector.mock('feature!api', {});
 
-      injector.require(['../scripts/collection-forms'], function (rCol) {
+      injector.require(['../src/collection-forms'], function (rCol) {
         Collection = rCol;
         done();
       });
