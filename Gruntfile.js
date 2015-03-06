@@ -79,7 +79,7 @@ module.exports = function (grunt) {
           out: 'build/outside.js',
           optimize: "none",
           paths: {
-            feature: '../bower_components/amd-feature/feature',
+            feature: '../node_modules/amd-feature/feature',
             pollUntil: '../node_modules/poll-until/poll-until',
             BlinkGap: 'vendor/BMP.BlinkGap'
           },
@@ -94,18 +94,17 @@ module.exports = function (grunt) {
       compile: {
         options: {
           baseUrl: 'src',
-          name: '../bower_components/almond/almond',
+          name: '../node_modules/almond/almond',
           include: ['main', 'router', 'auth', 'geolocation'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
             geolocation: '../node_modules/geolocation/geolocation',
-            pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
-            text: '../bower_components/requirejs-text/text',
-            domReady: '../bower_components/requirejs-domready/domReady',
-            feature: '../bower_components/amd-feature/feature',
+            text: '../node_modules/text/text',
+            domReady: '../node_modules/domReady/domReady',
+            feature: '../node_modules/amd-feature/feature',
             'es5-shim': 'empty:',
-            uuid: '../bower_components/node-uuid/uuid',
+            uuid: '../node_modules/node-uuid/uuid',
             authentication: '../node_modules/offlineLogin/authentication',
             sjcl: '../node_modules/sjcl/sjcl'
           },

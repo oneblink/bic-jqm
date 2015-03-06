@@ -1,6 +1,5 @@
 .DS_Store
 /node_modules
-/bower_components
 /server/key.pem
 /server/cert.pem
 
@@ -9,13 +8,9 @@
 /.idea
 
 # output files
-js/bic.js
-js/bic.js.map
-js/bic.min.js
-js
 versions
-bic.js
+tests/support/bic.js
 
-scripts/frag/05-implementations.js
+src/frag/05-implementations.js
 tests/implementations.js
-scripts/vendor
+src/vendor

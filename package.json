@@ -4,14 +4,19 @@
   "version": "3.1.22",
   "main": "Gruntfile.js",
   "dependencies": {
+    "almond": "^0.2.9",
     "geolocation": "git://github.com/blinkmobile/geolocation#v1.0.0",
+    "node-uuid": "^1.4.1",
     "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "^1.0.0",
-    "sjcl": "^1.0.2"
+    "sjcl": "^1.0.2",
+    "requirejs-text": "requirejs/text#0260977d6d",
+    "AMD-feature": "jensarps/AMD-feature#295cb395fe",
+    "requirejs-domready": "requirejs/domReady"
   },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {
-    "backbone": "^1.1.2",
+    "chai": "^1.9.1",
     "grunt": "~0.4",
     "grunt-bumpup": "^0.6.1",
     "grunt-concurrent": "~0.5",
@@ -26,6 +31,10 @@
     "grunt-mustache-render": "^1.6.0",
     "grunt-saucelabs": "~5.1",
     "grunt-text-replace": "^0.3.12",
-    "hapi": "^8.1.0"
+    "hapi": "^8.1.0",
+    "mocha": "^1.19.0",
+    "requirejs": "^2.1.16",
+    "sinon": "^1.12.2",
+    "squirejs": "^0.2.0"
   }
 }

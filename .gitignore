@@ -1,6 +1,5 @@
 .DS_Store
 /node_modules
-/bower_components
 
 # JetBrains files
 /*.iml
@@ -8,3 +7,4 @@
 
 # output files
 dist
+tests/support/bic.js
