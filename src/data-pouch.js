@@ -51,6 +51,9 @@ define(
       create: function (model) {
         var that = this;
         return new Promise(function (resolve, reject) {
+          if (!model.toJSON) {
+            return reject('Invalid model');
+          }
           that.getDB().then(function (db) {
             db.post(model.toJSON(), function (err, response) {
               if (err) {
@@ -68,6 +71,9 @@ define(
       update: function (model) {
         var that = this;
         return new Promise(function (resolve, reject) {
+          if (!model.toJSON) {
+            return reject('Invalid model');
+          }
           that.getDB().then(function (db) {
             db.put(model.toJSON(), function (err) {
               if (err) {
@@ -85,6 +91,9 @@ define(
       read: function (model) {
         var that = this;
         return new Promise(function (resolve, reject) {
+          if (!model.id) {
+            return reject('Invalid model');
+          }
           that.getDB().then(function (db) {
             db.get(model.id, function (err, doc) {
               if (err) {
@@ -119,6 +128,9 @@ define(
       'delete': function (model) {
         var that = this;
         return new Promise(function (resolve, reject) {
+          if (!model.id) {
+            return reject('Invalid model');
+          }
           that.getDB().then(function (db) {
             db.get(model.id, function (err, doc) {
               if (err) {
