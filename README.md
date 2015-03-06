@@ -19,7 +19,6 @@ Project Setup
 2. Switch to develop branch
 3. Set up git-flow
 4. npm install
-5. bower install
 
 Developing
 ----------------

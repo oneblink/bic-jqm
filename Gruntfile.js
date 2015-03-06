@@ -81,7 +81,7 @@ module.exports = function (grunt) {
           paths: {
             feature: '../node_modules/amd-feature/feature',
             pollUntil: '../node_modules/poll-until/poll-until',
-            BlinkGap: 'vendor/BMP.BlinkGap'
+            BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap'
           },
           shim: {
             BlinkGap: {

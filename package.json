@@ -12,7 +12,8 @@
     "sjcl": "^1.0.2",
     "requirejs-text": "requirejs/text#0260977d6d",
     "AMD-feature": "jensarps/AMD-feature#295cb395fe",
-    "requirejs-domready": "requirejs/domReady"
+    "requirejs-domready": "requirejs/domReady",
+    "blinkgap-utils": "blinkmobile/blinkgap-utils"
   },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {

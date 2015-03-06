@@ -10,7 +10,7 @@ require.config({
     geolocation: '/node_modules/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
     pollUntil: '/node_modules/poll-until/poll-until',
-    BlinkGap: '/src/vendor/BMP.BlinkGap',
+    BlinkGap: '/node_modules/blinkgap-utils/BMP.BlinkGap',
     sinon: '/node_modules/sinon/pkg/sinon',
     text: '/node_modules/text/text'
   },
