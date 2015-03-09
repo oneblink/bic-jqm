@@ -1,16 +1,15 @@
 define(['Squire'], function (Squire) {
   'use strict';
-
-  describe('Collection - Stars', function () {
+  describe('Collection - Interactions', function () {
     var injector, Collection, collection;
 
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-star', Backbone.Model);
+      injector.mock('model-interaction', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
 
-      injector.require(['../scripts/collection-stars'], function (required) {
+      injector.require(['../src/collection-interactions'], function (required) {
         Collection = required;
         done();
       });
@@ -57,25 +56,8 @@ define(['Squire'], function (Squire) {
       });
     });
 
-    describe('clear(type)', function () {
-      it('should do things');
-      // it('should trigger model.destroy() on all models of given type', function (done) {
-      //   require(['wrapper-backbone'], function (Backbone) {
-      //     Backbone.sync.reset();
-      //     collection.add({type: 'test'}).clear('test');
-      //     collection.length.should.equal(0);
-      //     done();
-      //   });
-      // });
-
-      // it('should ignore model not of given type', function (done) {
-      //   require(['wrapper-backbone'], function (Backbone) {
-      //     Backbone.sync.reset();
-      //     collection.add({type: 'nottest'}).clear('test');
-      //     collection.length.should.equal(1);
-      //     done();
-      //   });
-      // });
+    describe('#save', function () {
+      it('should persist any models to the data store');
     });
   });
 });

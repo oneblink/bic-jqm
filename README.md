@@ -19,7 +19,6 @@ Project Setup
 2. Switch to develop branch
 3. Set up git-flow
 4. npm install
-5. bower install
 
 Developing
 ----------------
@@ -44,9 +43,9 @@ Release Process
 
 General Notes on BIC structure
 ---------------
-The entry point for the application is scripts/main.js
+The entry point for the application is src/main.js
 
-Main bootstraps the application and requires the router (scripts/router.js), which co-ordinates the rest of the application initialisation.
+Main bootstraps the application and requires the router (src/router.js), which co-ordinates the rest of the application initialisation.
 
 ## Contribution
 

@@ -13,7 +13,7 @@ define(['Squire'], function (Squire) {
         getDataSuitcase: apiStub
       });
 
-      injector.require(['../scripts/model-datasuitcase'], function (model) {
+      injector.require(['../src/model-datasuitcase'], function (model) {
         Model = model;
         done();
       }, function () {

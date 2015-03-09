@@ -6,17 +6,13 @@ var expect = chai.expect;
 require.config({
   baseUrl: '/tests/',
   paths: {
-    feature: '/bower_components/amd-feature/feature',
-    implementations: 'implementations',
+    feature: '/node_modules/amd-feature/feature',
     geolocation: '/node_modules/geolocation/geolocation',
-    Squire: '/bower_components/squire/src/Squire',
-    pouchdb: '/bower_components/pouchdb/dist/pouchdb',
-    uuid: '/bower_components/node-uuid/uuid',
+    Squire: '/node_modules/squirejs/src/Squire',
     pollUntil: '/node_modules/poll-until/poll-until',
-    BlinkGap: '/scripts/vendor/BMP.BlinkGap',
-    text: '../bower_components/requirejs-text/text',
-    facade: '/scripts/facade',
-    mediator: '/scripts/mediator'
+    BlinkGap: '/node_modules/blinkgap-utils/BMP.BlinkGap',
+    sinon: '/node_modules/sinon/pkg/sinon',
+    text: '/node_modules/text/text'
   },
   shim: {
     BlinkGap: {
@@ -45,69 +41,69 @@ window.BMP = {
 window.Modernizr = {indexeddb: false};
 window.BlinkForms = {};
 
-Backbone.sync = function (method, model, options) {
-  'use strict';
-  var promise = Promise.resolve({});
-
-  promise.then(function (response) {
-    if (options.success) {
-      options.success(response);
-    }
-  }, function (response) {
-    if (options.error) {
-      options.error(response);
-    }
-  });
-
-  return promise;
-};
-
-$.mobile = {
-  loading: function () {
-    'use strict';
-    return null;
-  },
-  path: {
-    parseUrl: function () {
-      'use strict';
-      return {
-        hrefNoSearch: '/test',
-        search: ''
-      };
-    }
-  },
-  showPageLoadingMsg: function () {
-    'use strict';
-    return null;
-  },
-  pageLoadErrorMessageTheme: {},
-  pageLoadErrorMessage: {}
-};
-
 require([
   'feature!promises',
   'pollUntil',
   'geolocation',
+  'backbone',
+  'jquery',
   'BlinkGap',
-  'test-api-web.js',
-  'test-collection-datasuitcases.js',
-  'test-collection-forms.js',
-  'test-collection-interactions.js',
-  'test-collection-pending.js',
-  'test-collection-stars.js',
-  'test-data-pouch.js',
-  'test-model-application.js',
-  'test-model-datasuitcase.js',
-  'test-model-form.js',
-  'test-model-interaction.js',
-  'test-model-pending.js',
-  'test-model-star.js',
-  'test-router.js',
-  'test-view-interaction.js',
-  'test-view-star.js'
-], function (Promise, pollUntil, geolocation) {
+  'unit/api-web.js',
+  'unit/collection-datasuitcases.js',
+  'unit/collection-forms.js',
+  'unit/collection-interactions.js',
+  'unit/collection-pending.js',
+  'unit/collection-stars.js',
+  'unit/data-pouch.js',
+  'unit/model-application.js',
+  'unit/model-datasuitcase.js',
+  'unit/model-form.js',
+  'unit/model-interaction.js',
+  'unit/model-pending.js',
+  'unit/model-star.js',
+  'unit/router.js',
+  'unit/view-interaction.js',
+  'unit/view-star.js'
+], function (Promise, pollUntil, geolocation, Backbone, $) {
   'use strict';
   var runner, failedTests, logFailure;
+
+  Backbone.sync = function (method, model, options) {
+    var promise = Promise.resolve({});
+
+    promise.then(function (response) {
+      if (options.success) {
+        options.success(response);
+      }
+    }, function (response) {
+      if (options.error) {
+        options.error(response);
+      }
+    });
+
+    return promise;
+  };
+
+  $.mobile = {
+    loading: function () {
+      return null;
+    },
+    path: {
+      parseUrl: function () {
+        return {
+          hrefNoSearch: '/test',
+          path: '/test',
+          search: ''
+        };
+      }
+    },
+    showPageLoadingMsg: function () {
+      return null;
+    },
+    pageLoadErrorMessageTheme: {},
+    pageLoadErrorMessage: {}
+  };
+
 
   window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;

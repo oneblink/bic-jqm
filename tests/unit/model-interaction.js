@@ -8,7 +8,12 @@ define(['Squire'], function (Squire) {
 
       injector.mock('feature!api', function () { return null; });
 
-      injector.require(['../scripts/model-interaction'], function (required) {
+      injector.mock('facade', {
+        publish: function () {console.log('#publish');},
+        subscribe: function () {console.log('#subscribe');}
+      });
+
+      injector.require(['../src/model-interaction'], function (required) {
         Model = required;
         done();
       });

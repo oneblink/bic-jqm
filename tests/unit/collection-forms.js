@@ -1,16 +1,19 @@
 define(['Squire'], function (Squire) {
   'use strict';
-  describe('Collection - Interactions', function () {
+
+  describe('Collection - Forms', function () {
     var injector, Collection, collection;
 
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-interaction', Backbone.Model);
+      injector.mock('model-application', Backbone.Model);
+      injector.mock('model-form', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
+      injector.mock('feature!api', {});
 
-      injector.require(['../scripts/collection-interactions'], function (required) {
-        Collection = required;
+      injector.require(['../src/collection-forms'], function (rCol) {
+        Collection = rCol;
         done();
       });
     });
@@ -52,12 +55,14 @@ define(['Squire'], function (Squire) {
       it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
+        }).catch(function () {
+          done();
         });
       });
     });
+  });
 
-    describe('#save', function () {
-      it('should persist any models to the data store');
-    });
+  describe('BlinkForms.getDefinition(name, action)', function () {
+    it('should create a valid form definition');
   });
 });

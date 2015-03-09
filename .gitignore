@@ -1,15 +1,10 @@
 .DS_Store
 /node_modules
-/bower_components
 
 # JetBrains files
 /*.iml
 /.idea
 
 # output files
-js/bic.js
-js/bic.js.map
-js/bic.min.js
-js
-versions
-bic.js
+dist
+tests/support/bic.js

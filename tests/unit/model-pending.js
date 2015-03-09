@@ -7,7 +7,7 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.require(['../scripts/model-pending'], function (required) {
+      injector.require(['../src/model-pending'], function (required) {
         Model = required;
         done();
       });

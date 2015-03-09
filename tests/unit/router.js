@@ -50,7 +50,7 @@ define(['Squire'], function (Squire) {
       var router, testmodel;
 
       beforeEach(function (done) {
-        injector.require(['../scripts/router'], function (module) {
+        injector.require(['../src/router'], function (module) {
           testmodel = model(1);
           sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
           sinon.stub(module, 'parseArgs', function () { return null; });
@@ -103,7 +103,7 @@ define(['Squire'], function (Squire) {
       var router;
 
       beforeEach(function (done) {
-        injector.require(['../scripts/router'], function (module) {
+        injector.require(['../src/router'], function (module) {
           router = module;
           done();
         });

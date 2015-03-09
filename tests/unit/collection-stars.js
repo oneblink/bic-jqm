@@ -1,19 +1,17 @@
 define(['Squire'], function (Squire) {
   'use strict';
 
-  describe('Collection - Forms', function () {
+  describe('Collection - Stars', function () {
     var injector, Collection, collection;
 
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-application', Backbone.Model);
-      injector.mock('model-form', Backbone.Model);
+      injector.mock('model-star', Backbone.Model);
       injector.mock('data-inMemory', function () { return null; });
-      injector.mock('feature!api', {});
 
-      injector.require(['../scripts/collection-forms'], function (rCol) {
-        Collection = rCol;
+      injector.require(['../src/collection-stars'], function (required) {
+        Collection = required;
         done();
       });
     });
@@ -55,14 +53,29 @@ define(['Squire'], function (Squire) {
       it('should populate the datastore from cache', function (done) {
         collection.load().then(function () {
           done();
-        }).catch(function () {
-          done();
         });
       });
     });
-  });
 
-  describe('BlinkForms.getDefinition(name, action)', function () {
-    it('should create a valid form definition');
+    describe('clear(type)', function () {
+      it('should do things');
+      // it('should trigger model.destroy() on all models of given type', function (done) {
+      //   require(['wrapper-backbone'], function (Backbone) {
+      //     Backbone.sync.reset();
+      //     collection.add({type: 'test'}).clear('test');
+      //     collection.length.should.equal(0);
+      //     done();
+      //   });
+      // });
+
+      // it('should ignore model not of given type', function (done) {
+      //   require(['wrapper-backbone'], function (Backbone) {
+      //     Backbone.sync.reset();
+      //     collection.add({type: 'nottest'}).clear('test');
+      //     collection.length.should.equal(1);
+      //     done();
+      //   });
+      // });
+    });
   });
 });
