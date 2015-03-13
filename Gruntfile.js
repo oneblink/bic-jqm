@@ -1,7 +1,9 @@
-var versions = require('./version.json');
-var version = versions.bic;
-var forms = versions.forms;
+var pkg = require('./package.json');
+var version = pkg.version;
+var forms = pkg.formsversion;
 var now = new Date();
+
+console.log(version, forms);
 
 var uglifyConfig = {
   files: {}
@@ -146,7 +148,7 @@ module.exports = function (grunt) {
             dest: 'dist/' + now.valueOf() + '/bic.js'
           },
           {
-            src: 'buildFiles/files/*',
+            src: 'src/buildFiles/files/*',
             dest: 'dist/' + now.valueOf() + '/',
             filter: 'isFile',
             expand: true,
@@ -188,7 +190,7 @@ module.exports = function (grunt) {
       versions: {
         files : [
           {
-            template: 'buildFiles/templates/versions.json',
+            template: 'src/buildFiles/templates/versions.json',
             dest: 'dist/' + now.valueOf() + '/versions.json',
             data: {
               timestamp: now.valueOf(),
@@ -197,25 +199,13 @@ module.exports = function (grunt) {
             }
           },
           {
-            template: 'buildFiles/templates/appcache.mustache',
+            template: 'src/buildFiles/templates/appcache.mustache',
             dest: 'dist/' + now.valueOf() + '/appcache.mustache',
             data: {
               forms: forms
             }
           },
         ]
-      }
-    },
-
-    bumpup: {
-      files: [
-        'package.json',
-        'bower.json'
-      ],
-      setters: {
-        version: function (oldValue, releaseType, options, buildMeta) {
-          return version;
-        }
       }
     },
 
@@ -259,13 +249,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-hapi');
   grunt.loadNpmTasks('grunt-mustache-render');
-  grunt.loadNpmTasks('grunt-bumpup');
   grunt.loadNpmTasks('grunt-text-replace');
 
   grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render']);
   grunt.registerTask('build-dev', ['clean', 'requirejs', 'copy:dev', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
