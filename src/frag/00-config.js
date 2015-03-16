@@ -1,7 +1,6 @@
 (function () {
   'use strict';
-  var cloudfront, filesystem, rootPath, paths, getPaths, scripts, s, script,
-    supportsBundles, versionMatches;
+  var cloudfront, filesystem, paths, getPaths, scripts, s, script;
 
   cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
   filesystem = '/_c_/';
@@ -10,12 +9,6 @@
     scripts = document.getElementsByTagName('script');
     document.currentScript = scripts[scripts.length - 1];
   }
-  if (window.BICURL) {
-    rootPath = window.BICURL.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
-  } else {
-    rootPath = document.currentScript.src.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
-  }
-
   // determine our current CDN based on how we referenced Require.JS
   scripts = document.getElementsByTagName('script');
   s = scripts.length;

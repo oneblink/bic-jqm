@@ -13,7 +13,7 @@ define(
       load: function () {
         var collection = this;
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
           collection.fetch({
             success: resolve,
             error: resolve

@@ -41,10 +41,12 @@ define(['Squire'], function (Squire) {
         getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
 
+      /*eslint-disable no-console*/ // just for testing
       injector.mock('facade', {
-        publish: function () {console.log('#publish');},
-        subscribe: function () {console.log('#subscribe');}
+        publish: function () { console.log('#publish'); },
+        subscribe: function () { console.log('#subscribe'); }
       });
+      /*eslint-enable no-console*/
 
       injector.require(['../src/model-application.js'], function (required) {
         model = required;

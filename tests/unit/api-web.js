@@ -6,7 +6,7 @@ define(['Squire', 'sinon'], function (Squire, sinon) {
     before(function (done) {
       var injector = new Squire();
       injector.mock('uuid', {
-        v4: function () {return 12345;}
+        v4: function () { return 12345; }
       });
 
       injector.require(['../src/api-web'], function (required) {

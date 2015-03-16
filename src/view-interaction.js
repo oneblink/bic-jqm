@@ -1,4 +1,4 @@
-/*globals google:false, geolocation:false */
+/*globals google:false*/
 define(
   ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache', 'geolocation'],
   function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate, geolocation) {
@@ -612,6 +612,8 @@ define(
           }
         }, function (error) {
           var string;
+          // ESLint bug: https://github.com/eslint/eslint/issues/2038
+          /*eslint-disable no-duplicate-case*/
           switch (error.code) {
           case error.PERMISSION_DENIED:
             string = 'user has not granted permission';
@@ -625,6 +627,7 @@ define(
           default:
             string = 'unknown error';
           }
+          /*eslint-enable no-duplicate-case*/
           reject('GeoLocation error: ' + string);
         }, options);
       });

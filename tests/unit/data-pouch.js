@@ -123,7 +123,7 @@ define(['Squire'], function (Squire) {
 
         it('should return an XHR compatible promise', function () {
           var promise = data.create({});
-          promise.then(null, function () {return;});
+          promise.then(null, function () { return; });
           expect(promise).to.be.instanceOf(Promise);
         });
 
@@ -163,7 +163,7 @@ define(['Squire'], function (Squire) {
 
         it('should return an XHR compatible promise', function () {
           var promise = data.update({});
-          promise.then(null, function () {return;});
+          promise.then(null, function () { return; });
           expect(promise).to.be.instanceOf(Promise);
         });
 
@@ -246,7 +246,7 @@ define(['Squire'], function (Squire) {
 
         it('should return an XHR compatible promise', function () {
           var promise = data.read({});
-          promise.then(null, function () {return;});
+          promise.then(null, function () { return; });
           expect(promise).to.be.instanceOf(Promise);
         });
 
@@ -312,7 +312,7 @@ define(['Squire'], function (Squire) {
 
         it('should return an XHR compatible promise', function () {
           var promise = data.delete({});
-          promise.then(null, function () {return;});
+          promise.then(null, function () { return; });
           expect(promise).to.be.instanceOf(Promise);
         });
 

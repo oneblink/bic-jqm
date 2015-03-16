@@ -8,10 +8,12 @@ define(['Squire'], function (Squire) {
 
       injector.mock('feature!api', function () { return null; });
 
+      /*eslint-disable no-console*/ // just for testing
       injector.mock('facade', {
-        publish: function () {console.log('#publish');},
-        subscribe: function () {console.log('#subscribe');}
+        publish: function () { console.log('#publish'); },
+        subscribe: function () { console.log('#subscribe'); }
       });
+      /*eslint-enable no-console*/
 
       injector.require(['../src/model-interaction'], function (required) {
         Model = required;

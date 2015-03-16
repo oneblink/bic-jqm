@@ -1,4 +1,5 @@
 /*eslint-env node*/
+'use strict';
 var Hapi = require('hapi');
 var fs = require('fs');
 
