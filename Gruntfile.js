@@ -1,17 +1,19 @@
+/*eslint-env node*/
+'use strict';
 var pkg = require('./package.json');
 var version = pkg.version;
 var forms = pkg.formsversion;
 var now = new Date();
 
-console.log(version, forms);
-
 var uglifyConfig = {
   files: {}
 };
+
+console.log(version, forms);
+
 uglifyConfig.files['dist/' + now.valueOf() + '/bic.min.js'] = ['dist/' + now.valueOf() + '/bic.js'];
 
 module.exports = function (grunt) {
-  "use strict";
   grunt.initConfig({
 
     concurrent: {
@@ -125,11 +127,11 @@ module.exports = function (grunt) {
       },
       options: {
         uglify: {
-          max_line_length: 80
+          'max_line_length': 80
         },
         uglify2: {
           output: {
-            max_line_len: 80
+            'max_line_len': 80
           },
           warnings: false
         }
@@ -173,22 +175,22 @@ module.exports = function (grunt) {
         sourceMapIncludeSources: true,
         preserveComments: 'some',
         beautify: {
-          ascii_only: true,
-          max_line_len: 80
+          'ascii_only': true,
+          'max_line_len': 80
         },
         compress: {
-          screw_ie8: false,
+          'screw_ie8': false,
           properties: false
         },
         mangle: {
-          screw_ie8: false
+          'screw_ie8': false
         }
       }
     },
 
-    mustache_render: {
+    'mustache_render': {
       versions: {
-        files : [
+        files: [
           {
             template: 'src/buildFiles/templates/versions.json',
             dest: 'dist/' + now.valueOf() + '/versions.json',
@@ -204,7 +206,7 @@ module.exports = function (grunt) {
             data: {
               forms: forms
             }
-          },
+          }
         ]
       }
     },
