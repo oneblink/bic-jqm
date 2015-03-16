@@ -1,95 +1,59 @@
-/*jslint indent:2, node:true*/
-var versions = require('./version.json');
-var version = versions.bic;
-var forms = versions.forms;
+/*eslint-env node*/
+'use strict';
+var pkg = require('./package.json');
+var version = pkg.version;
+var forms = pkg.formsversion;
 var now = new Date();
 
 var uglifyConfig = {
   files: {}
 };
-uglifyConfig.files['versions/' + now.valueOf() + '/bic.min.js'] = ['versions/' + now.valueOf() + '/bic.js'];
+
+console.log(version, forms);
+
+uglifyConfig.files['dist/' + now.valueOf() + '/bic.min.js'] = ['dist/' + now.valueOf() + '/bic.js'];
 
 module.exports = function (grunt) {
-  "use strict";
   grunt.initConfig({
 
     concurrent: {
-      background: ['hapi', 'watch'],
+      background: ['hapi:http', 'watch'],
       options: {
         logConcurrentOutput: true
       }
     },
 
-    connect: {
-      server: {
-        options: {
-          port: 9999
-        }
-      }
-    },
-
     hapi: {
+      test: {
+        options: {
+          server: require('path').resolve('tests/support/server.js'),
+          bases: {},
+          noasync: false
+        }
+      },
       http: {
         options: {
-          server: require('path').resolve('server/http.js'),
+          server: require('path').resolve('tests/support/server.js'),
           bases: {},
           noasync: true
         }
-      }//,
-      // https: {
-      //   options: {
-      //     server: require('path').resolve('server/https.js'),
-      //     bases: {},
-      //     noasync: true
-      //   }
-      // }
-    },
-
-    watch: {
-      scripts: {
-        files: ['scripts/**', 'tests/**'],
-        tasks: ['build-dev', 'jslint', 'connect:server', 'mocha:tests'],
-      },
-      build: {
-        files: ['buildtests/**'],
-        tasks: ['jslint', 'build', 'connect:server', 'mocha:build'],
       }
     },
 
-    jslint: {
-      all: {
-        src: [
-          'scripts/**/*.js',
-          'tests/**/*.js',
-          'buildtests/**/*.js',
-          '!scripts/frag/05-implementations.js',
-          '!tests/implementations.js',
-          '!**/vendor/**/*'
-        ],
-        directives: {
-          "browser": true,
-          "es5": true,
-          "nomen": true,
-          "indent": 2,
-          "stupid": true,
-          "predef" : [
-            "define",
-            "require",
-            "requirejs",
-            "$",
-            "_",
-            "Backbone",
-            "Mustache",
-            "Pouch",
-            "BlinkForms",
-            "jquerymobile",
-            "BMP",
-            "Modernizr"
-          ]
-        },
-        options: {
-          errorsOnly: true
-        }
+    watch: {
+      src: {
+        files: ['src/**', 'tests/**'],
+        tasks: ['build-dev', 'eslint', 'mocha:tests']
+      }
+    },
+
+    eslint: {
+      target: [
+          'src/**/*.js',
+          'tests/**/*.js'
+      ],
+      options: {
+        configFile: '.eslintrc'
       }
     },
 
@@ -97,14 +61,7 @@ module.exports = function (grunt) {
       tests: {
         options: {
           urls: [
-            'http://localhost:9999/tests/index.html',
-          ]
-        }
-      },
-      build: {
-        options: {
-          urls: [
-            'http://localhost:9999/buildtests/index.html'
+            'http://localhost:9998/tests/index.html'
           ]
         }
       },
@@ -119,16 +76,16 @@ module.exports = function (grunt) {
     requirejs: {
       outside: {
         options: {
-          baseUrl: 'scripts',
+          baseUrl: 'src',
           name: 'feature',
           include: ['feature', 'pollUntil', 'BlinkGap'],
           exclude: ['implementations'],
           out: 'build/outside.js',
           optimize: "none",
           paths: {
-            feature: '../bower_components/amd-feature/feature',
+            feature: '../node_modules/amd-feature/feature',
             pollUntil: '../node_modules/poll-until/poll-until',
-            BlinkGap: 'vendor/BMP.BlinkGap'
+            BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap'
           },
           shim: {
             BlinkGap: {
@@ -140,53 +97,41 @@ module.exports = function (grunt) {
       },
       compile: {
         options: {
-          baseUrl: 'scripts',
-          name: '../bower_components/almond/almond',
-          include: ['main', 'router'],
+          baseUrl: 'src',
+          name: '../node_modules/almond/almond',
+          include: ['main', 'router', 'auth', 'geolocation'],
           out: 'build/bic.js',
           optimize: "none",
           paths: {
-            pouchdb: '../bower_components/pouchdb/dist/pouchdb-nightly',
-            text: '../bower_components/requirejs-text/text',
-            domReady: '../bower_components/requirejs-domready/domReady',
-            feature: '../bower_components/amd-feature/feature',
+            geolocation: '../node_modules/geolocation/geolocation',
+            text: '../node_modules/text/text',
+            domReady: '../node_modules/domReady/domReady',
+            feature: '../node_modules/amd-feature/feature',
             'es5-shim': 'empty:',
-            uuid: '../bower_components/node-uuid/uuid'
+            uuid: '../node_modules/node-uuid/uuid',
+            authentication: '../node_modules/offlineLogin/authentication',
+            sjcl: '../node_modules/sjcl/sjcl'
           },
           wrap: {
             startFile: [
-              'scripts/frag/00-config.js',
-              'scripts/frag/05-implementations.js',
+              'src/frag/00-config.js',
+              'src/frag/05-implementations.js',
               'build/outside.js',
-              'scripts/frag/10-start.frag'
+              'src/frag/10-start.frag'
             ],
-            endFile: 'scripts/frag/99-end.frag'
+            endFile: 'src/frag/99-end.frag'
           }//,
           // wrap: true,
           //insertRequire: ["main"]
         }
       },
-      formsdeps: {
-        options: {
-          baseUrl: "bower_components",
-          include: ['picker.date', 'picker.time', 'moment'],
-          out: 'versions/' + now.valueOf() + '/formsdeps.min.js',
-          paths: {
-            jquery: 'empty:',
-            "picker": 'pickadate/lib/picker',
-            "picker.date": 'pickadate/lib/picker.date',
-            "picker.time": 'pickadate/lib/picker.time',
-            "moment": 'momentjs/min/moment.min'
-          }
-        }
-      },
       options: {
         uglify: {
-          max_line_length: 80
+          'max_line_length': 80
         },
         uglify2: {
           output: {
-            max_line_len: 80
+            'max_line_len': 80
           },
           warnings: false
         }
@@ -202,11 +147,11 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'versions/' + now.valueOf() + '/bic.js'
+            dest: 'dist/' + now.valueOf() + '/bic.js'
           },
           {
-            src: 'buildFiles/files/*',
-            dest: 'versions/' + now.valueOf() + '/',
+            src: 'src/buildFiles/files/*',
+            dest: 'dist/' + now.valueOf() + '/',
             filter: 'isFile',
             expand: true,
             flatten: true
@@ -217,7 +162,7 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'build/bic.js',
-            dest: 'integration/bic.js'
+            dest: 'tests/support/bic.js'
           }
         ]
       }
@@ -230,25 +175,25 @@ module.exports = function (grunt) {
         sourceMapIncludeSources: true,
         preserveComments: 'some',
         beautify: {
-          ascii_only: true,
-          max_line_len: 80
+          'ascii_only': true,
+          'max_line_len': 80
         },
         compress: {
-          screw_ie8: false,
+          'screw_ie8': false,
           properties: false
         },
         mangle: {
-          screw_ie8: false
+          'screw_ie8': false
         }
       }
     },
 
-    mustache_render: {
+    'mustache_render': {
       versions: {
-        files : [
+        files: [
           {
-            template: 'buildFiles/templates/versions.json',
-            dest: 'versions/' + now.valueOf() + '/versions.json',
+            template: 'src/buildFiles/templates/versions.json',
+            dest: 'dist/' + now.valueOf() + '/versions.json',
             data: {
               timestamp: now.valueOf(),
               datestamp: now.toISOString(),
@@ -256,32 +201,20 @@ module.exports = function (grunt) {
             }
           },
           {
-            template: 'buildFiles/templates/appcache.mustache',
-            dest: 'versions/' + now.valueOf() + '/appcache.mustache',
+            template: 'src/buildFiles/templates/appcache.mustache',
+            dest: 'dist/' + now.valueOf() + '/appcache.mustache',
             data: {
               forms: forms
             }
-          },
+          }
         ]
-      }
-    },
-
-    bumpup: {
-      files: [
-        'package.json',
-        'bower.json'
-      ],
-      setters: {
-        version: function (oldValue, releaseType, options, buildMeta) {
-          return version;
-        }
       }
     },
 
     replace: {
       bicVersion: {
         src: [
-          'scripts/model-application.js'
+          'src/model-application.js'
         ],
         overwrite: true,
         replacements: [
@@ -293,13 +226,13 @@ module.exports = function (grunt) {
       },
       formsVersion: {
         src: [
-          'scripts/frag/00-config.js'
+          'src/frag/00-config.js'
         ],
         overwrite: true,
         replacements: [
           {
             from: /blink\/forms\/3\/.*\/forms3jqm\.min/,
-            to: 'blink/forms/3/' + forms + '/forms3jqm.min',
+            to: 'blink/forms/3/' + forms + '/forms3jqm.min'
           }
         ]
       }
@@ -307,10 +240,9 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -319,13 +251,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-hapi');
   grunt.loadNpmTasks('grunt-mustache-render');
-  grunt.loadNpmTasks('grunt-bumpup');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'jslint', 'connect:server', 'mocha']);
+  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render', 'bumpup']);
+  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render']);
   grunt.registerTask('build-dev', ['clean', 'requirejs', 'copy:dev', 'clean']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);

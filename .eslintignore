@@ -1,4 +1,6 @@
 .DS_Store
+/server/key.pem
+/server/cert.pem
 
 # JetBrains files
 /*.iml
@@ -13,3 +15,6 @@ tests/support/bic.js
 # 3rd-party files
 bower_components
 node_modules
+
+src/frag/05-implementations.js
+tests/implementations.js
