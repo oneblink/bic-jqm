@@ -5,7 +5,7 @@ define('implementations', [], function () {
       {
         isAvailable: function () {
           // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/es5/array.js
-          return !(Array.prototype &&
+          return !!(Array.prototype &&
             Array.prototype.every &&
             Array.prototype.filter &&
             Array.prototype.forEach &&
