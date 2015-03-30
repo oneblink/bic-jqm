@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.2.2 - 2015-03-31
+
+### Changed
+
+- update to Forms v3.2.0
+
 ## v3.2.1 - 2015-03-31
 
 ### Fixed
