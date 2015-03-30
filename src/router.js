@@ -46,7 +46,7 @@ define(
           .then(function () {
             // Need to hang around until native offline is ready
             return new Promise(function (resolve, reject) {
-              if (BMP.BlinkGap.isHere()) {
+              if (BMP.BlinkGap.isHere() && BMP.BlinkGap.hasOffline()) {
                 BMP.BlinkGap.waitForOffline(
                   function () {
                     resolve();
