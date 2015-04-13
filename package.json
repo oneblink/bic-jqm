@@ -1,8 +1,8 @@
 {
   "name": "bic-jqm",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.2.3",
-  "formsversion": "3.2.0",
+  "version": "3.2.4",
+  "formsversion": "3.2.1",
   "main": "Gruntfile.js",
   "dependencies": {
     "almond": "0.3.1",

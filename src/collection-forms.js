@@ -26,6 +26,13 @@ define(
             });
           });
         };
+
+        setTimeout(function () {
+          BlinkForms.blobUploader.setXHR();
+          BlinkForms.blobUploader.setEndpoint('/_R_/common/3/xhr/SaveFormBlob.php');
+        }, 197);
+
+
       },
 
       datastore: function () {

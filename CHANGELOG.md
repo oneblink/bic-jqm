@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+## v3.2.4 - 2015-04-13
+
+### Changed
+
+- update to Forms v3.2.1 and activate the blobUploader
+
+
 ## v3.2.3 - 2015-04-13
 
 ### Fixed
