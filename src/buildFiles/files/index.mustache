@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html {{#answerSpace.offlineMode}}manifest="{{answerSpace.manifestURL}}"{{/answerSpace.offlineMode}}>
+<html {{#answerSpace.language}}lang="{{answerSpace.language}}"{{/answerSpace.language}} {{#answerSpace.appCache}}manifest="{{&answerSpace.appCache}}"{{/answerSpace.appCache}} data-manifest-url="{{&answerSpace.appCachePermalink}}">
 <head>
   <title>{{answerSpace.displayName}}</title>
-  <meta name="viewport" content="initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   {{&answerSpace.styleSheets_html}}
 

@@ -182,6 +182,8 @@ define(
         return this;
       },
 
+      /*eslint-disable no-console*/
+
       suspendApplication: function () {
         var url = $.mobile.path.parseLocation();
         // Store current URL
@@ -189,18 +191,46 @@ define(
         // Store form data, if applicable
         if (BMP.BIC.currentInteraction.get('type') === 'form') {
           if (app.currentInteraction.get('args')['args[pid]']) {
+            // saving over existing draft
             app.view.subView.subView.subView.addToQueue('Draft', true);
           } else {
+            // saving a new draft
             app.view.subView.subView.subView.addToQueue('Draft', true)
               .then(function (model) {
-                localStorage.setItem('pauseURL', url.hrefNoHash + '/?args[pid]=' + model.id);
+                var search = url.search;
+                search += search.substring(0, 1) !== '?' ? '?' : '&';
+                search += 'args[pid]=' + model.id;
+                localStorage.setItem('pauseURL', url.hrefNoSearch + search);
               });
           }
         }
       },
 
       resumeApplication: function () {
-        $.mobile.changePage(localStorage.getItem('pauseURL'));
+        var pauseURL = localStorage.getItem('pauseURL');
+        var url;
+        var isFormOpen;
+        var isPendingURL;
+        if (!pauseURL) {
+          return;
+        }
+        url = $.mobile.path.parseUrl(pauseURL);
+        if (location.href !== pauseURL) {
+          isPendingURL = url.search.indexOf('args[pid]=') !== -1;
+          isFormOpen = !!BMP.Forms.current.get('_view').$el.closest('body').length;
+          if (isPendingURL && isFormOpen) {
+            // already at open pending form
+            $.noop();
+            // note: this probably isn't good enough for solutions where the
+            // default screen is a form, as it will not open the pending record
+          } else {
+            // navigating...
+            $.mobile.changePage(pauseURL);
+          }
+        } else {
+          // already here
+          $.noop();
+        }
         localStorage.removeItem('pauseURL');
       }
     });
