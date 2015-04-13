@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- BIC-140: switching tabs away from a form should no longer cause a reload
+
+
 ## v3.2.2 - 2015-03-31
 
 ### Changed
