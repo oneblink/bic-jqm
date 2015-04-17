@@ -3,6 +3,8 @@ define(
   function (uuid) {
     'use strict';
     var API = {
+      GET_MOJO: '/_R_/common/3/xhr/GetMoJO.php',
+
       getAnswerSpaceMap: function (user) {
         var userString = '';
         if (user) {
@@ -28,7 +30,13 @@ define(
       },
 
       getDataSuitcase: function (suitcase, time) {
-        return $.ajax('/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time, {dataType: 'text'});
+        var url = this.GET_MOJO + '?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase;
+        return $.ajax(url, {
+          dataType: 'text',
+          headers: {
+            'If-Modified-Since': (new Date(time)).toUTCString()
+          }
+        });
       },
 
       setPendingItem: function (formname, formaction, formdata) {
