@@ -1,28 +1,39 @@
+/*eslint-env browser, node*/
 (function () {
   'use strict';
   var cloudfront, filesystem, paths, getPaths, scripts, s, script;
 
+  var setConfig = function (cfg) {
+    if (typeof require !== 'undefined' && typeof require.config !== 'undefined') {
+      require.config(cfg);
+    } else if (typeof process !== 'undefined' && typeof module !== 'undefined') {
+      module.exports = cfg;
+    }
+  };
+
   cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
   filesystem = '/_c_/';
 
-  if (!document.currentScript) {
-    scripts = document.getElementsByTagName('script');
-    document.currentScript = scripts[scripts.length - 1];
-  }
-  // determine our current CDN based on how we referenced Require.JS
-  scripts = document.getElementsByTagName('script');
-  s = scripts.length;
-  while (s > 0) {
-    s -= 1;
-    script = scripts[s];
-    if (script.src && /\/blink\/require\/\d+\/require\.min\.js/.test(script.src)) {
-      cloudfront = script.src.replace(/blink\/require\/\d+\/require\.min\.js[\w\.]*$/, '');
-      break; // exit early
+  if (typeof document !== 'undefined' && typeof location !== 'undefined') {
+    if (!document.currentScript) {
+      scripts = document.getElementsByTagName('script');
+      document.currentScript = scripts[scripts.length - 1];
     }
-  }
+    // determine our current CDN based on how we referenced Require.JS
+    scripts = document.getElementsByTagName('script');
+    s = scripts.length;
+    while (s > 0) {
+      s -= 1;
+      script = scripts[s];
+      if (script.src && /\/blink\/require\/\d+\/require\.min\.js/.test(script.src)) {
+        cloudfront = script.src.replace(/blink\/require\/\d+\/require\.min\.js[\w\.]*$/, '');
+        break; // exit early
+      }
+    }
 
-  if (location.protocol === 'file:') {
-    cloudfront = cloudfront.replace(/^\/\//, 'https://');
+    if (location.protocol === 'file:') {
+      cloudfront = cloudfront.replace(/^\/\//, 'https://');
+    }
   }
 
   getPaths = function (path) {
@@ -52,31 +63,30 @@
     pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
   };
 
-  require.config({ paths: paths });
-}());
-
-require.config({
-  shim: {
-    'BMP.Blobs': {
-      deps: ['underscore', 'jquery'],
-      exports: 'BMP'
-    },
-    'signaturepad': {
-      deps: ['jquery'],
-      exports: '$'
-    },
-    backbone: {
-      deps: ['underscore', 'jquery'],
-      exports: 'Backbone'
-    },
-    modernizr: {
-      exports: 'Modernizr'
-    },
-    underscore: {
-      exports: '_'
-    },
-    sjcl: {
-      exports: 'sjcl'
+  setConfig({
+    paths: paths,
+    shim: {
+      'BMP.Blobs': {
+        deps: ['underscore', 'jquery'],
+        exports: 'BMP'
+      },
+      'signaturepad': {
+        deps: ['jquery'],
+        exports: '$'
+      },
+      backbone: {
+        deps: ['underscore', 'jquery'],
+        exports: 'Backbone'
+      },
+      modernizr: {
+        exports: 'Modernizr'
+      },
+      underscore: {
+        exports: '_'
+      },
+      sjcl: {
+        exports: 'sjcl'
+      }
     }
-  }
-});
+  });
+}());
