@@ -49,6 +49,8 @@ server.route({
     });
     contents = contents.replace('/_c_/blink/bic/{{id}}/bic.min.js\n', '');
     contents = contents.replace('/_c_/blink/bic/{{id}}/bic.js', '/bic.js');
+    contents = contents.replace(/^\/_c_\//mg, '//d1c6dfkb81l78v.cloudfront.net/');
+    contents += '\nCACHE:\n/_R_/common/3/xhr/GetConfig.php?_asn=integration\n';
     reply(contents).header('Content-Type', 'text/cache-manifest');
   }
 });
