@@ -37,6 +37,7 @@
     "hapi": "^8.1.0",
     "mocha": "^2.2.1",
     "mustache": "^2.0.0",
+    "request": "^2.55.0",
     "requirejs": "^2.1.16",
     "sinon": "^1.12.2",
     "squirejs": "^0.2.0",
