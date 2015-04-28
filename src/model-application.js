@@ -148,6 +148,16 @@ define(
           })
           .then(
             function (data) {
+              if (data && typeof data === 'string') {
+                try {
+                  data = JSON.parse(data);
+                } catch (err) {
+                  /*eslint-disable no-console*/
+                  console.error('unable to parse answerSpace map');
+                  console.error(err);
+                  /*eslint-enable no-console*/
+                }
+              }
               return Promise.all(_.compact(_.map(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
@@ -261,6 +271,7 @@ define(
 
       initialRender: function () {
         var app = this;
+
         $.mobile.defaultPageTransition = app.get('defaultTransition');
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().href, {

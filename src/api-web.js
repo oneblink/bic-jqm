@@ -3,14 +3,18 @@ define(
   function (uuid) {
     'use strict';
     var API = {
+      GET_CONFIG: '/_R_/common/3/xhr/GetConfig.php',
       GET_MOJO: '/_R_/common/3/xhr/GetMoJO.php',
+      SAVE_FORM_RECORD: '/_R_/common/3/xhr/SaveFormRecord.php',
 
       getAnswerSpaceMap: function (user) {
         var userString = '';
+        var url;
         if (user) {
           userString = '&_username=' + user;
         }
-        return $.ajax('/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + userString);
+        url = this.GET_CONFIG + '?_asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + userString;
+        return $.ajax(url);
       },
 
       getInteractionResult: function (iact, args, options) {
@@ -40,11 +44,16 @@ define(
       },
 
       setPendingItem: function (formname, formaction, formdata) {
+        var url = this.SAVE_FORM_RECORD + '?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction;
         formdata._uuid = uuid.v4();
         formdata._submittedTime = $.now();
         formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
         formdata._submittedTimezoneOffset /= -60;
-        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
+        return $.ajax({
+          type: "POST",
+          url: url,
+          data: formdata
+        });
       },
 
       getLoginStatus: function () {
