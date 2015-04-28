@@ -8,6 +8,16 @@ define(
 
         app.router = this;
 
+        this.isOfflineFirst = (function () {
+          var isLocalProtocol = location.protocol === 'file:' || location.protocol === 'ms-appx:';
+          return isLocalProtocol &&
+            /\/www\/index\.html$/.test(location.pathname);
+        }());
+
+        this.offlineDirectory = (function (me) {
+          return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
+        }(this));
+
         if (BMP.isBlinkGap) {
           $(document).on('pause', this.suspendApplication);
           $(document).on('resume', this.resumeApplication);
@@ -99,7 +109,7 @@ define(
           })
           .then(function () {
 
-            model = app.router.inheritanceChain(path.pathname);
+            model = app.router.inheritanceChain(path);
 
             app.currentInteraction = model;
 
@@ -126,17 +136,20 @@ define(
 
       inheritanceChain: function (data) {
         var path, parentModel, parent, usedPathItems;
-        path = data.substr(1).toLowerCase().split('/').reverse();
+
+        path = data.pathname.substr(1).toLowerCase().split('/').reverse();
         parent = path[path.length - 1];
         usedPathItems = [];
 
+        // account for file:/// with triple slash, or leading slashes
         if (path[0] === '') {
           path.shift();
         }
 
-        if (path[0] === window.initialURLHashed && path[path.length - 1] === 'offlinedata') {
-          path[0] = window.BMP.BIC.siteVars.answerSpace.toLowerCase();
-          path.pop();
+        if (this.isOfflineFirst) {
+          if (path[0] === 'index.html' && path[1] === 'www') {
+            path = [ window.BMP.BIC.siteVars.answerSpace.toLowerCase() ];
+          }
         }
 
         _.each(path, function (element, index) {
@@ -151,7 +164,7 @@ define(
                 parent = 'app';
               }
             } else {
-              throw 'Invalid Model Name';
+              throw new Error('Invalid Model Name:' + parent);
             }
             usedPathItems.push(element);
           }
@@ -181,8 +194,6 @@ define(
 
         return this;
       },
-
-      /*eslint-disable no-console*/
 
       suspendApplication: function () {
         var url = $.mobile.path.parseLocation();
@@ -232,6 +243,15 @@ define(
           $.noop();
         }
         localStorage.removeItem('pauseURL');
+      },
+
+      getRootRelativePath: function (path) {
+        var parsed;
+        if (!this.isOfflineFirst) {
+          return path;
+        }
+        parsed = $.mobile.path.parseUrl(this.offlineDirectory);
+        return path.replace(parsed.pathname, '/');
       }
     });
 
