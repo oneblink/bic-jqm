@@ -21,6 +21,7 @@
     "appcache": "jokeyrhyme/appcache.js.git#3bcbe17",
     "chai": "~2.2",
     "grunt": "~0.4",
+    "grunt-cli": "^0.1.13",
     "grunt-concurrent": "~1.0",
     "grunt-contrib-clean": "~0.6",
     "grunt-contrib-copy": "~0.8",
