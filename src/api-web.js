@@ -4,6 +4,7 @@ define(
     'use strict';
     var API = {
       GET_CONFIG: '/_R_/common/3/xhr/GetConfig.php',
+      GET_FORM: '/_R_/common/3/xhr/GetForm.php',
       GET_MOJO: '/_R_/common/3/xhr/GetMoJO.php',
       SAVE_FORM_RECORD: '/_R_/common/3/xhr/SaveFormRecord.php',
 
@@ -30,7 +31,8 @@ define(
       },
 
       getForm: function () {
-        return $.ajax('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId);
+        var url = this.GET_FORM + '?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId;
+        return Promise.resolve($.ajax(url));
       },
 
       getDataSuitcase: function (suitcase, time) {

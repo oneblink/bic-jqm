@@ -1,6 +1,6 @@
 define(
-  ['./api-web', 'uuid'],
-  function (apiWeb, uuid) {
+  ['./api-web'],
+  function (apiWeb) {
     'use strict';
     var API = {
       getAnswerSpaceMap: function (user) {

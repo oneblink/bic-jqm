@@ -47,6 +47,7 @@ require([
   'geolocation',
   'backbone',
   'jquery',
+  'jquerymobile',
   'BlinkGap',
   'unit/api-web.js',
   'unit/collection-datasuitcases.js',
@@ -64,7 +65,7 @@ require([
   'unit/router.js',
   'unit/view-interaction.js',
   'unit/view-star.js'
-], function (Promise, pollUntil, geolocation, Backbone, $) {
+], function (Promise, pollUntil, geolocation, Backbone) {
   'use strict';
   var runner, failedTests, logFailure;
 
@@ -83,27 +84,6 @@ require([
 
     return promise;
   };
-
-  $.mobile = {
-    loading: function () {
-      return null;
-    },
-    path: {
-      parseUrl: function () {
-        return {
-          hrefNoSearch: '/test',
-          path: '/test',
-          search: ''
-        };
-      }
-    },
-    showPageLoadingMsg: function () {
-      return null;
-    },
-    pageLoadErrorMessageTheme: {},
-    pageLoadErrorMessage: {}
-  };
-
 
   window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;

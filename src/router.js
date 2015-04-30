@@ -77,12 +77,6 @@ define(
             return;
           })
           .then(function () {
-            return app.forms.download();
-          })
-          .then(null, function () {
-            return;
-          })
-          .then(function () {
             return app.initialRender();
           })
           .then(null, function (err) {
@@ -137,7 +131,7 @@ define(
       inheritanceChain: function (data) {
         var path, parentModel, parent, usedPathItems;
 
-        path = data.pathname.substr(1).toLowerCase().split('/').reverse();
+        path = (data.pathname || data.path || '').substr(1).toLowerCase().split('/').reverse();
         parent = path[path.length - 1];
         usedPathItems = [];
 
