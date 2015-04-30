@@ -12,14 +12,14 @@ module.exports = {
   build: process.env.TRAVIS_BUILD_NUMBER,
   concurrency: 3,
   browsers: [
-    {
-      browserName: "internet explorer",
-      version: "11"
-    },
-    {
-      browserName: "firefox",
-      version: "37"
-    },
+    // {
+    //   browserName: "internet explorer",
+    //   version: "11"
+    // },
+    // {
+    //   browserName: "firefox",
+    //   version: "37"
+    // },
     {
       browserName: "googlechrome",
       version: "41"
@@ -28,16 +28,16 @@ module.exports = {
       browserName: "android",
       version: "4.3",
       "device-orientation": "portrait"
-    },
-    {
-      browserName: "iphone",
-      version: "8.2",
-      "device-orientation": "portrait"
-    },
-    {
-      browserName: "safari",
-      version: "7"
     }
+    // {
+    //   browserName: "iphone",
+    //   version: "8.2",
+    //   "device-orientation": "portrait"
+    // },
+    // {
+    //   browserName: "safari",
+    //   version: "7"
+    // }
   ],
   testname: 'bic-v3',
   tags: [
