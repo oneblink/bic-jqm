@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-- '0.10'
+- 'stable'
 
-script: grunt travis
+script: npm run test-travis
 
 env:
   global:
