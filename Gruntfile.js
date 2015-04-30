@@ -61,7 +61,7 @@ module.exports = function (grunt) {
       tests: {
         options: {
           urls: [
-            'http://localhost:9998/tests/index.html'
+            'http://localhost:9876/tests/index.html'
           ]
         }
       },

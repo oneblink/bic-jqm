@@ -19,11 +19,11 @@ var pkg = require(path.join(__dirname, '..', '..', 'package.json'));
 var server = new Hapi.Server();
 
 server.connection({
-  port: 9998
+  port: 9876
 });
 
 server.connection({
-  port: 9997,
+  port: 9877,
   tls: {
     key: fs.readFileSync('tests/support/key.pem'),
     cert: fs.readFileSync('tests/support/cert.pem')

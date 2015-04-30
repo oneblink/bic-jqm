@@ -6,7 +6,7 @@
 
 module.exports = {
   urls: [
-    'http://localhost:9998/tests/index.html'
+    'http://localhost:9876/tests/index.html'
   ],
   tunnelTimeout: 5,
   build: process.env.TRAVIS_BUILD_NUMBER,
