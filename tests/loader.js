@@ -48,6 +48,7 @@ require([
   'backbone',
   'jquery',
   'jquerymobile',
+  'feature!es5',
   'BlinkGap',
   'unit/api-web.js',
   'unit/collection-datasuitcases.js',

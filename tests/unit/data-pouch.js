@@ -98,15 +98,17 @@ define(['Squire'], function (Squire) {
         });
 
         it('should return an indexeddb connection string when available', function () {
-          if (window.indexedDB) {
+          if (Pouch.adapters.idb) {
             expect(data.dbAdapter()).to.match(/idb/);
           }
         });
 
         it('should return a websql connection string when inside isBlinkGap', function () {
-          window.BMP.BIC.isBlinkGap = true;
-          expect(data.dbAdapter()).to.match(/websql/);
-          window.BMP.BIC.isBlinkGap = false;
+          if (Pouch.adapters.websql) {
+            window.BMP.BIC.isBlinkGap = true;
+            expect(data.dbAdapter()).to.match(/websql/);
+            window.BMP.BIC.isBlinkGap = false;
+          }
         });
 
         it('should return false when indexeddb is not supported and not inside phonegap', function () {
