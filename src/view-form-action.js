@@ -37,6 +37,8 @@ define(
             }
           })
           .then(null, function (err) {
+            view.$el.append('<p>Error: unable to display this form. Try again later.</p>');
+            view.trigger('render');
             window.console.log(err);
           });
 

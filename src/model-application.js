@@ -148,6 +148,16 @@ define(
           })
           .then(
             function (data) {
+              if (data && typeof data === 'string') {
+                try {
+                  data = JSON.parse(data);
+                } catch (err) {
+                  /*eslint-disable no-console*/
+                  console.error('unable to parse answerSpace map');
+                  console.error(err);
+                  /*eslint-enable no-console*/
+                }
+              }
               return Promise.all(_.compact(_.map(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
@@ -194,28 +204,31 @@ define(
           )
           .then(
             function () {
-              return Promise.all(_.map(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-                return new Promise(function (resolve) { // args.[1] 'reject'
-                  if (!app.datasuitcases.get(element)) {
-                    app.datasuitcases.add({_id: element});
-                    app.datasuitcases.get(element).populate().then(resolve, resolve);
-                  } else {
-                    app.datasuitcases.get(element).populate().then(resolve, resolve);
-                  }
-                });
-              }));
-            }
-          )
-          .then(
-            function () {
-              return app.datasuitcases.save();
-            }
-          )
-          .then(
-            function () {
+              app.forms.whenUpdated();
+              app.retrieveDataSuitcasesForInteractions();
               return app.interactions.save();
             }
           );
+      },
+
+      retrieveDataSuitcasesForInteractions: function () {
+        var app = this;
+        return Promise.all(
+          _.map(_.compact(_.uniq(app.interactions.pluck('xml'))),
+          function (element) {
+            return new Promise(function (resolve) { // args.[1] 'reject'
+              if (!app.datasuitcases.get(element)) {
+                app.datasuitcases.add({_id: element});
+                app.datasuitcases.get(element).populate().then(resolve, resolve);
+              } else {
+                app.datasuitcases.get(element).populate().then(resolve, resolve);
+              }
+            });
+          })
+        )
+        .then(function () {
+          return app.datasuitcases.save();
+        });
       },
 
       whenPopulated: function () {
@@ -261,6 +274,7 @@ define(
 
       initialRender: function () {
         var app = this;
+
         $.mobile.defaultPageTransition = app.get('defaultTransition');
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().href, {
