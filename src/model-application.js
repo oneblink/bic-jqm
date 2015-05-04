@@ -289,7 +289,26 @@ define(
             $('#temp').remove();
           });
         });
+      },
+
+      hasStorage: function () {
+        if (typeof Pouch === 'undefined') {
+          return false;
+        }
+        if (window.BMP.BIC.isBlinkGap === true && Pouch.adapters.websql) {
+          return true;
+        }
+        if (Pouch.adapters.idb) {
+          try {
+            return Modernizr.indexeddb && window.indexedDB.open('idbTest', 1).onupgradeneeded === null && navigator.userAgent.indexOf('iPhone') === -1 && navigator.userAgent.indexOf('iPad') === -1;
+          } catch (ignore) {
+            return false;
+          }
+          return false;
+        }
+        return false;
       }
+
     });
 
     window.BMP.BIC3 = new Application();

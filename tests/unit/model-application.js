@@ -298,6 +298,17 @@ define(['Squire'], function (Squire) {
       it('should do things, wonderous things');
     });
 
+    describe('#hasStorage()', function () {
+      it('is a function', function () {
+        assert.isFunction(model.hasStorage);
+      });
+
+      it('returns a Boolean', function () {
+        var result = model.hasStorage();
+        assert.isBoolean(result);
+      });
+    });
+
     after(function () {
       BMP.BlinkGap.isHere = oldIsHere; // fix for PhantomJS
     });

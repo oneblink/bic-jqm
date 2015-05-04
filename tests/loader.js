@@ -1,4 +1,5 @@
 /*eslint-disable no-unused-vars*/
+var assert = chai.assert;
 var should = chai.should();
 var expect = chai.expect;
 /*eslint-enable no-unused-vars*/
