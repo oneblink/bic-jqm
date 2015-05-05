@@ -15,15 +15,6 @@ define(
       require(['router', 'auth']);
     }
 
-    // Delay the app for Cordova
-    function init() {
-      if (window.BMP.BlinkGap.isHere()) {
-        window.BMP.BlinkGap.whenReady().then(start, start);
-      } else {
-        start();
-      }
-    }
-
     // Save traditional sync method as ajaxSync
     Backbone.ajaxSync = Backbone.sync;
 
@@ -75,12 +66,21 @@ define(
       return Backbone.ajaxSync;
     };
 
-    // Hook Backbone.sync up to the data layer
-    Backbone.sync = function (method, model, options) {
-      return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
-    };
+    if (app.hasStorage()) {
+      // Hook Backbone.sync up to the data layer
+      Backbone.sync = function (method, model, options) {
+        return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
+      };
+    } else {
+      Backbone.sync = function (method, model, options) { options.success(); };
+    }
 
-    init();
+    if (window.BMP.BlinkGap.isHere()) {
+      // Delay the app for Cordova
+      window.BMP.BlinkGap.whenReady().then(start, start);
+    } else {
+      start();
+    }
 
     return app; // export BMP.BIC
   }
