@@ -148,11 +148,14 @@ define(['Squire'], function (Squire) {
 
       it('should create a collection for pending items', function (done) {
         model.collections().then(function () {
-          expect(model).to.have.property('pending');
-          expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          if (model.hasStorage()) {
+            expect(model).to.have.property('pending');
+            expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          } else {
+            expect(model).to.not.have.property('pending');
+          }
           done();
         });
-        model.collections();
       });
 
       it('should create a collection for stars', function (done) {

@@ -93,18 +93,27 @@ define(
             app.interactions = app.interactions || new InteractionCollection();
             app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
             app.forms = app.forms || new FormCollection();
-            app.pending = app.pending || new PendingCollection();
             app.stars = app.stars || new StarsCollection();
             app.formRecords = app.formRecords || new FormRecordsCollection();
 
-            Promise.all([
-              app.interactions.datastore().load(),
-              app.datasuitcases.datastore().load(),
-              app.forms.datastore().load(),
-              app.pending.datastore().load(),
-              app.stars.datastore().load(),
-              app.formRecords.datastore().load()
-            ]).then(resolve, reject);
+            if (app.hasStorage()) {
+              // enable the pending queue
+              app.pending = app.pending || new PendingCollection();
+
+              // prime models / collections with previous persisted data
+              Promise.all([
+                app.interactions.datastore().load(),
+                app.datasuitcases.datastore().load(),
+                app.forms.datastore().load(),
+                app.pending.datastore().load(),
+                app.stars.datastore().load(),
+                app.formRecords.datastore().load()
+              ]).then(resolve, reject);
+
+            } else {
+              resolve();
+            }
+
           });
         });
 
