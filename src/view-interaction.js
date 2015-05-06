@@ -438,11 +438,13 @@ define(
       },
 
       popup: function (data) {
+        var popup$;
         this.$el.append(Mustache.render(popupTemplate, {
           contents: data
         }));
-        this.$el.trigger('pagecreate');
-        $('#popup').popup('open');
+        popup$ = $('#popup').popup().popup('open').one('popupafterclose', function () {
+          popup$.remove();
+        });
       },
 
       destroy: function () {

@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'BlinkGap'], function (Squire) {
   'use strict';
 
   describe('Model - Application', function () {
@@ -148,11 +148,14 @@ define(['Squire'], function (Squire) {
 
       it('should create a collection for pending items', function (done) {
         model.collections().then(function () {
-          expect(model).to.have.property('pending');
-          expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          if (model.hasStorage()) {
+            expect(model).to.have.property('pending');
+            expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          } else {
+            expect(model).to.not.have.property('pending');
+          }
           done();
         });
-        model.collections();
       });
 
       it('should create a collection for stars', function (done) {
@@ -296,6 +299,17 @@ define(['Squire'], function (Squire) {
 
     describe('#initialRender', function () {
       it('should do things, wonderous things');
+    });
+
+    describe('#hasStorage()', function () {
+      it('is a function', function () {
+        assert.isFunction(model.hasStorage);
+      });
+
+      it('returns a Boolean', function () {
+        var result = model.hasStorage();
+        assert.isBoolean(result);
+      });
     });
 
     after(function () {
