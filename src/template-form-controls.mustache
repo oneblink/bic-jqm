@@ -17,10 +17,17 @@
   </div>
   <div data-role="content">
     <h3>Are you sure you want to close this form?</h3>
+    {{#hasStorage}}
     <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
       <a href="#" id="save" data-role="button" data-rel="save" style="width: 49%;">Save</a>
       <a href="#" id="discard" data-role="button" data-rel="delete" style="width: 49%;">Discard</a>
     </div>
+    {{/hasStorage}}
+    {{^hasStorage}}
+    <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
+      <a href="#" id="discard" data-role="button" data-rel="delete" style="width: 100%;">Discard</a>
+    </div>
+    {{/hasStorage}}
     <a data-role="button" data-rel="back">Cancel</a>
   </div>
 </div>

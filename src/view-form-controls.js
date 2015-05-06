@@ -30,7 +30,9 @@ define(
         var view, options;
 
         view = this;
-        options = {};
+        options = {
+          hasStorage: app.hasStorage()
+        };
 
 
         if (BlinkForms.current.get('pages').length > 1) {
@@ -109,7 +111,6 @@ define(
             }
             app.view.popup(data);
             $('#popup').one('popupafterclose', function () {
-              window.console.log('popupafterclose');
               me.formLeave();
             });
           }, function (jqXHR) {
@@ -147,8 +148,8 @@ define(
         var that = this;
         $('#closePopup').popup({
           afteropen: function (event) {
-            $(event.target).on('click', '#save', {view: that}, that.formSave);
-            $(event.target).on('click', '#discard', {view: that}, that.formDiscard);
+            $(event.target).on('click', '#save', {view: that}, that.formSave.bind(that));
+            $(event.target).on('click', '#discard', {view: that}, that.formDiscard.bind(that));
           },
           afterclose: function (event) {
             $(event.target).off('click', '#save');
