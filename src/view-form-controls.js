@@ -65,6 +65,14 @@ define(
         view.render();
       },
 
+      formLeave: function () {
+        if (window.BMP.BIC3.history.length === 0) {
+          window.BMP.BIC3.view.home();
+        } else {
+          history.back();
+        }
+      },
+
       formSubmit: function () {
         this.addToQueue('Pending');
       },
@@ -85,16 +93,18 @@ define(
       },
 
       formSave: function (e) {
+        var me = this;
         e.data.view.addToQueue('Draft');
         $('#closePopup').one('popupafterclose', function () {
-          history.back();
+          me.formLeave();
         });
         $('#closePopup').popup('close');
       },
 
       formDiscard: function () {
+        var me = this;
         $('#closePopup').one('popupafterclose', function () {
-          history.back();
+          me.formLeave();
         });
         $('#closePopup').popup('close');
       },
@@ -127,11 +137,7 @@ define(
                   }
                 });
 
-                if (window.BMP.BIC3.history.length === 0) {
-                  window.BMP.BIC3.view.home();
-                } else {
-                  history.back();
-                }
+                view.formLeave();
               }
               resolve(updatedModel);
             };
