@@ -9,9 +9,12 @@ define(
         if (!BlinkForms) {
           window.BlinkForms = {};
         }
+
         BlinkForms.getDefinition = function (name, action) {
-          return new Promise(function (resolve, reject) {
-            require(['model-application'], function (app) {
+          var app = require('model-application');
+          return app.forms.whenUpdated()
+          .then(function () {
+            return new Promise(function (resolve, reject) {
               var def = app.forms.get(name);
 
               if (!def) {
@@ -28,8 +31,10 @@ define(
         };
 
         setTimeout(function () {
-          BlinkForms.blobUploader.setXHR();
-          BlinkForms.blobUploader.setEndpoint('/_R_/common/3/xhr/SaveFormBlob.php');
+          if (BlinkForms.blobUploader) {
+            BlinkForms.blobUploader.setXHR();
+            BlinkForms.blobUploader.setEndpoint('/_R_/common/3/xhr/SaveFormBlob.php');
+          }
         }, 197);
 
 
@@ -51,6 +56,17 @@ define(
         });
       },
 
+      whenUpdated: function () {
+        if (this.whenUpdated._promise) {
+          return this.whenUpdated._promise;
+        }
+
+        this.whenUpdated._promise = this.download()
+        .then(null, function () { return Promise.resolve(); });
+
+        return this.whenUpdated._promise;
+      },
+
       download: function () {
         var collection = this;
 
@@ -58,7 +74,7 @@ define(
           return Promise.resolve();
         }
 
-        API.getForm().then(function (data) {
+        return API.getForm().then(function (data) {
           _.each(data, function (recordData) {
             var record = JSON.parse(recordData),
               preExisting = collection.findWhere({_id: record.default.name});

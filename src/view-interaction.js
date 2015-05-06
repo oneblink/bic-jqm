@@ -91,23 +91,20 @@ define(
 
         path = '';
         pathParts = $.mobile.path.parseLocation().pathname;
-        if (window.cordova && window.cordova.offline && window.cordova.offline.available && pathParts.indexOf(window.cordova.offline.filePathPrex) !== -1) {
+        if (app.router.isOfflineFirst) {
           // Remove file path
-          pathParts = pathParts.substr(pathParts.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
-          // Remove domain info
-          pathParts = pathParts.substr(pathParts.indexOf('/'));
-          // Remove file suffix
-          pathParts = pathParts.substr(0, pathParts.indexOf('.'));
+          pathParts = app.router.getRootRelativePath(pathParts);
         }
         pathParts = pathParts.split('/');
         pathParts.shift();
+
+        // account for file:/// with triple slash, or leading slashes
         if (pathParts[pathParts.length - 1] === '') {
           pathParts.pop();
         }
 
-        if (pathParts[0] === 'offlineData' && pathParts[1] === window.initialURLHashed) {
-          pathParts.pop();
-          pathParts[0] = window.BMP.BIC.siteVars.answerSpace.toLowerCase();
+        if (app.router.isOfflineFirst && pathParts[0] === 'index.html') {
+          pathParts = [ window.BMP.BIC.siteVars.answerSpace.toLowerCase() ];
         }
 
         for (count = pathParts.length - 1; count !== -1; count = count - 1) {
@@ -441,11 +438,13 @@ define(
       },
 
       popup: function (data) {
+        var popup$;
         this.$el.append(Mustache.render(popupTemplate, {
           contents: data
         }));
-        this.$el.trigger('pagecreate');
-        $('#popup').popup('open');
+        popup$ = $('#popup').popup().popup('open').one('popupafterclose', function () {
+          popup$.remove();
+        });
       },
 
       destroy: function () {

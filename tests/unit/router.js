@@ -99,7 +99,7 @@ define(['Squire'], function (Squire) {
       //it('should remove old views from the DOM');
     });
 
-    describe('inheritanceChain(urlString)', function () {
+    describe('inheritanceChain(parsedUrl)', function () {
       var router;
 
       beforeEach(function (done) {
@@ -111,6 +111,7 @@ define(['Squire'], function (Squire) {
 
       it('should parse the path given to find the current interaction', function () {
         var data = '/councils/traffic';
+        data = $.mobile.path.parseUrl(data);
         router.inheritanceChain(data).id.should.equal('traffic');
       });
 
@@ -119,6 +120,7 @@ define(['Squire'], function (Squire) {
       it('should use the path to determine the inheritance chain', function () {
         var data, chainedModel;
         data = '/councils/traffic';
+        data = $.mobile.path.parseUrl(data);
         chainedModel = router.inheritanceChain(data);
         chainedModel.set.called.should.equal(true);
         chainedModel.set.calledWith({parent: 'councils'}).should.equal(true);
@@ -139,11 +141,13 @@ define(['Squire'], function (Squire) {
 
       it('should handle the same interaction being listed twice (last winning out)', function () {
         var data = '/councils/traffic/trafficcams/traffic';
+        data = $.mobile.path.parseUrl(data);
         router.inheritanceChain(data).id.should.equal('traffic');
       });
 
       it('should drop blank trailing values from the array', function () {
         var data = '/councils/traffic/';
+        data = $.mobile.path.parseUrl(data);
         router.inheritanceChain(data).id.should.equal('traffic');
       });
     });

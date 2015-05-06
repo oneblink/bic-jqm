@@ -1,9 +1,9 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'BlinkGap'], function (Squire) {
   'use strict';
 
   describe('Model - Application', function () {
     var injector, model, siteMap, loginStatus;
-
+    var oldIsHere = BMP.BlinkGap.isHere; // fix for PhantomJS
 
     before(function (done) {
       var CollectionMock = Backbone.Collection.extend({
@@ -23,6 +23,16 @@ define(['Squire'], function (Squire) {
           return Promise.resolve();
         }
       });
+      var FormsCollectionMock = CollectionMock.extend({
+        whenUpdated: function () {
+          return Promise.resolve();
+        },
+        download: function () {
+          return Promise.resolve();
+        }
+      });
+
+      BMP.BlinkGap.isHere = function () { return true; }; // fix for PhantomJS
 
       siteMap = {};
       loginStatus = {};
@@ -30,7 +40,7 @@ define(['Squire'], function (Squire) {
 
       injector.mock('collection-interactions', CollectionMock);
       injector.mock('collection-datasuitcases', CollectionMock);
-      injector.mock('collection-forms', CollectionMock);
+      injector.mock('collection-forms', FormsCollectionMock);
       injector.mock('collection-pending', CollectionMock);
       injector.mock('collection-stars', CollectionMock);
       injector.mock('collection-form-records', CollectionMock);
@@ -138,11 +148,14 @@ define(['Squire'], function (Squire) {
 
       it('should create a collection for pending items', function (done) {
         model.collections().then(function () {
-          expect(model).to.have.property('pending');
-          expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          if (model.hasStorage()) {
+            expect(model).to.have.property('pending');
+            expect(model.pending).to.be.an.instanceOf(Backbone.Collection);
+          } else {
+            expect(model).to.not.have.property('pending');
+          }
           done();
         });
-        model.collections();
       });
 
       it('should create a collection for stars', function (done) {
@@ -221,7 +234,7 @@ define(['Squire'], function (Squire) {
         model.populate().then(function () {
           expect(model.interactions.length).to.equal(1);
           done();
-        });
+        }, done);
       });
 
       it('should fill the answerSpace config from map', function (done) {
@@ -229,7 +242,7 @@ define(['Squire'], function (Squire) {
         model.populate().then(function () {
           expect(model.get('cat')).to.equal('hat');
           done();
-        });
+        }, done);
       });
 
       it('should parse interactions for data suitcases', function (done) {
@@ -237,7 +250,7 @@ define(['Squire'], function (Squire) {
         model.populate().then(function () {
           expect(model.datasuitcases.length).to.equal(1);
           done();
-        });
+        }, done);
       });
 
       it('should delete items from the DB when they are removed from the sitemap', function (done) {
@@ -248,8 +261,8 @@ define(['Squire'], function (Squire) {
           model.populate().then(function () {
             expect(model.interactions.length).to.equal(1);
             done();
-          });
-        });
+          }, done);
+        }, done);
       });
 
       it('should return a promise', function () {
@@ -261,7 +274,7 @@ define(['Squire'], function (Squire) {
       before(function (done) {
         model.collections().then(function () {
           done();
-        });
+        }, done);
       });
 
       it('should return a promise', function () {
@@ -279,13 +292,28 @@ define(['Squire'], function (Squire) {
           model.checkLoginStatus().then(function () {
             expect(model.interactions.length).to.equal(0);
             done();
-          });
-        });
+          }, done);
+        }, done);
       });
     });
 
     describe('#initialRender', function () {
       it('should do things, wonderous things');
+    });
+
+    describe('#hasStorage()', function () {
+      it('is a function', function () {
+        assert.isFunction(model.hasStorage);
+      });
+
+      it('returns a Boolean', function () {
+        var result = model.hasStorage();
+        assert.isBoolean(result);
+      });
+    });
+
+    after(function () {
+      BMP.BlinkGap.isHere = oldIsHere; // fix for PhantomJS
     });
   });
 });

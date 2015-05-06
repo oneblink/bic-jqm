@@ -93,18 +93,27 @@ define(
             app.interactions = app.interactions || new InteractionCollection();
             app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
             app.forms = app.forms || new FormCollection();
-            app.pending = app.pending || new PendingCollection();
             app.stars = app.stars || new StarsCollection();
             app.formRecords = app.formRecords || new FormRecordsCollection();
 
-            Promise.all([
-              app.interactions.datastore().load(),
-              app.datasuitcases.datastore().load(),
-              app.forms.datastore().load(),
-              app.pending.datastore().load(),
-              app.stars.datastore().load(),
-              app.formRecords.datastore().load()
-            ]).then(resolve, reject);
+            if (app.hasStorage()) {
+              // enable the pending queue
+              app.pending = app.pending || new PendingCollection();
+
+              // prime models / collections with previous persisted data
+              Promise.all([
+                app.interactions.datastore().load(),
+                app.datasuitcases.datastore().load(),
+                app.forms.datastore().load(),
+                app.pending.datastore().load(),
+                app.stars.datastore().load(),
+                app.formRecords.datastore().load()
+              ]).then(resolve, reject);
+
+            } else {
+              resolve();
+            }
+
           });
         });
 
@@ -148,6 +157,16 @@ define(
           })
           .then(
             function (data) {
+              if (data && typeof data === 'string') {
+                try {
+                  data = JSON.parse(data);
+                } catch (err) {
+                  /*eslint-disable no-console*/
+                  console.error('unable to parse answerSpace map');
+                  console.error(err);
+                  /*eslint-enable no-console*/
+                }
+              }
               return Promise.all(_.compact(_.map(data, function (value, key) {
                 var model;
                 if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
@@ -194,28 +213,31 @@ define(
           )
           .then(
             function () {
-              return Promise.all(_.map(_.compact(_.uniq(app.interactions.pluck('xml'))), function (element) {
-                return new Promise(function (resolve) { // args.[1] 'reject'
-                  if (!app.datasuitcases.get(element)) {
-                    app.datasuitcases.add({_id: element});
-                    app.datasuitcases.get(element).populate().then(resolve, resolve);
-                  } else {
-                    app.datasuitcases.get(element).populate().then(resolve, resolve);
-                  }
-                });
-              }));
-            }
-          )
-          .then(
-            function () {
-              return app.datasuitcases.save();
-            }
-          )
-          .then(
-            function () {
+              app.forms.whenUpdated();
+              app.retrieveDataSuitcasesForInteractions();
               return app.interactions.save();
             }
           );
+      },
+
+      retrieveDataSuitcasesForInteractions: function () {
+        var app = this;
+        return Promise.all(
+          _.map(_.compact(_.uniq(app.interactions.pluck('xml'))),
+          function (element) {
+            return new Promise(function (resolve) { // args.[1] 'reject'
+              if (!app.datasuitcases.get(element)) {
+                app.datasuitcases.add({_id: element});
+                app.datasuitcases.get(element).populate().then(resolve, resolve);
+              } else {
+                app.datasuitcases.get(element).populate().then(resolve, resolve);
+              }
+            });
+          })
+        )
+        .then(function () {
+          return app.datasuitcases.save();
+        });
       },
 
       whenPopulated: function () {
@@ -261,6 +283,7 @@ define(
 
       initialRender: function () {
         var app = this;
+
         $.mobile.defaultPageTransition = app.get('defaultTransition');
         domReady(function () {
           $.mobile.changePage($.mobile.path.parseLocation().href, {
@@ -275,7 +298,26 @@ define(
             $('#temp').remove();
           });
         });
+      },
+
+      hasStorage: function () {
+        if (typeof Pouch === 'undefined') {
+          return false;
+        }
+        if (window.BMP.BIC.isBlinkGap === true && Pouch.adapters.websql) {
+          return true;
+        }
+        if (Pouch.adapters.idb) {
+          try {
+            return Modernizr.indexeddb && window.indexedDB.open('idbTest', 1).onupgradeneeded === null && navigator.userAgent.indexOf('iPhone') === -1 && navigator.userAgent.indexOf('iPad') === -1;
+          } catch (ignore) {
+            return false;
+          }
+          return false;
+        }
+        return false;
       }
+
     });
 
     window.BMP.BIC3 = new Application();
@@ -286,7 +328,7 @@ define(
       window.BMP.BIC3.history.length += 1;
     };
 
-    window.BMP.BIC3.version = '3.2.4';
+    window.BMP.BIC3.version = '3.3.0';
 
     // keep BMP.BIC and BMP.BIC3 the same
     $.extend(window.BMP.BIC3, window.BMP.BIC);

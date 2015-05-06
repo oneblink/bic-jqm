@@ -1,6 +1,6 @@
 define(
-  ['uuid'],
-  function (uuid) {
+  ['./api-web'],
+  function (apiWeb) {
     'use strict';
     var API = {
       getAnswerSpaceMap: function (user) {
@@ -47,25 +47,19 @@ define(
         });
       },
 
-      getDataSuitcase: function (suitcase, time) {
+      getDataSuitcase: function (suitcase) {
         return new Promise(function (resolve, reject) {
           cordova.offline.retrieveContent(
             resolve,
             reject,
             {
-              url: '/_R_/common/3/xhr/GetMoJO.php?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase + '&_lc=' + time
+              url: apiWeb.GET_MOJO + '?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase
             }
           );
         });
       },
 
-      setPendingItem: function (formname, formaction, formdata) {
-        formdata._uuid = uuid.v4();
-        formdata._submittedTime = $.now();
-        formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
-        formdata._submittedTimezoneOffset /= -60;
-        return $.post('/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction, formdata);
-      },
+      setPendingItem: apiWeb.setPendingItem,
 
       getLoginStatus: function () {
         return $.ajax('/_R_/common/3/xhr/GetLogin.php');
