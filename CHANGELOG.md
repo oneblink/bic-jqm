@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+
+## v3.3.1 - 2015-05-06
+
+### Changed
+
+- update to Forms v3.3.0 and drop blobUploader functionality
+
+
+## v3.3.0 - 2015-05-06
+
 ### Changed
 
 - BIC-129: use If-Modified-Since HTTP header when requesting server-side
@@ -15,7 +25,7 @@
     - see https://github.com/blinkmobile/bic-v3/pull/3 for details
 
     - `BMP.BIC.pending` is not available in this situtation
-   
+
     - form submissions bypass the queue and go directly to the server
 
 ### Fixed
