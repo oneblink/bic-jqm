@@ -1,6 +1,6 @@
 define(
-  ['text!template-form-controls.mustache', 'model-application'],
-  function (Template, app) {
+  ['text!template-form-controls.mustache', 'model-application', 'feature!api'],
+  function (Template, app, API) {
     'use strict';
 
     var isHTML = function (string) {
@@ -89,7 +89,58 @@ define(
       },
 
       formSubmit: function () {
-        this.addToQueue('Pending');
+        var me = this;
+        var model = this.model;
+        if (app.hasStorage()) {
+          this.addToQueue('Pending');
+        } else {
+          $.mobile.loading('show');
+          BlinkForms.current.data()
+          .then(function (data) {
+            return API.setPendingItem(
+              model.get('blinkFormObjectName'),
+              model.get('blinkFormAction'),
+              data
+            );
+          })
+          .then(function (data) {
+            if (!isHTML(data)) {
+              data = '<p>' + data + '</p>';
+            }
+            app.view.popup(data);
+            $('#popup').one('popupafterclose', function () {
+              window.console.log('popupafterclose');
+              me.formLeave();
+            });
+          }, function (jqXHR) {
+            var status = jqXHR.status;
+            var json;
+            var html = '';
+            try {
+              json = JSON.parse(jqXHR.responseText);
+            } catch (ignore) {
+              json = { message: 'error ' + status };
+            }
+            if (json.message) {
+              html += json.message;
+            }
+            if (status === 470 || status === 471 || json.errors) {
+              if (typeof json.errors === 'object') {
+                html += '<ul>';
+                Object.keys(json.errors).forEach(function (key) {
+                  html += '<li>' + key + ': ' + json.errors[key] + '</li>';
+                });
+                html += '</ul>';
+              }
+            }
+            if (!isHTML(html)) {
+              html = '<p>' + html + '</p>';
+            }
+            app.view.popup(html);
+          }).then(function () {
+            $.mobile.loading('hide');
+          });
+        }
       },
 
       formClose: function () {
