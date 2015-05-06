@@ -30,14 +30,6 @@ define(
           });
         };
 
-        setTimeout(function () {
-          if (BlinkForms.blobUploader) {
-            BlinkForms.blobUploader.setXHR();
-            BlinkForms.blobUploader.setEndpoint('/_R_/common/3/xhr/SaveFormBlob.php');
-          }
-        }, 197);
-
-
       },
 
       datastore: function () {
