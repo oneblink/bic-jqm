@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Changed
+
+- BIC-129: use If-Modified-Since HTTP header when requesting server-side
+  Data Suitcases, instead of using a query string argument
+
+    - improves compatibility with our upcoming Windows native app
+
+- BIC-147: disable pending queue and all related behaviour when no persistent
+  storage mechanism is available
+
+    - see https://github.com/blinkmobile/bic-v3/pull/3 for details
+
+    - `BMP.BIC.pending` is not available in this situtation
+   
+    - form submissions bypass the queue and go directly to the server
+
+### Fixed
+
+- BIC-142: improve URL routing when running from file:///, etc
+
+    - improves compatibility with our upcoming Windows native app
+
+    - includes slight streamlining of boot sequence so that Data Suitcases and
+      Forms Definitions do not block the boot process
+
 
 ## v3.2.4 - 2015-04-13
 
