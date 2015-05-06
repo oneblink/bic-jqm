@@ -2,6 +2,21 @@ define(
   ['text!template-form-controls.mustache', 'model-application'],
   function (Template, app) {
     'use strict';
+
+    var isHTML = function (string) {
+      var html$;
+      if (!string || typeof string !== 'string' || !string.trim()) {
+        return false;
+      }
+      if (typeof Node === 'undefined' || !Node.TEXT_NODE) {
+        return true; // the string _might_ be HTML, we just can't tell
+      }
+      html$ = $.parseHTML(string);
+      return !html$.every(function (el) {
+        return el.nodeType === Node.TEXT_NODE;
+      });
+    };
+
     var FormControlView = Backbone.View.extend({
 
       events: {
@@ -126,8 +141,12 @@ define(
                     app.view.pendingQueue();
                   } else {
                     model.once('processed', function () {
+                      var result = model.get('result');
                       if (model.get('status') === 'Submitted') {
-                        app.view.popup(model.get('result'));
+                        if (!isHTML(result)) {
+                          data = '<p>' + result + '</p>';
+                        }
+                        app.view.popup(result);
                         model.destroy();
                       } else {
                         app.view.pendingQueue();
