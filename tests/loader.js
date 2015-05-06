@@ -5,12 +5,14 @@ var expect = chai.expect;
 /*eslint-enable no-unused-vars*/
 
 require.config({
-  baseUrl: '/tests/',
+  baseUrl: '/src',
   paths: {
+    implementations: '/tests/implementations',
     feature: '/node_modules/amd-feature/feature',
     geolocation: '/node_modules/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
     pollUntil: '/node_modules/poll-until/poll-until',
+    mustache: '/node_modules/mustache/mustache',
     BlinkGap: '/node_modules/blinkgap-utils/BMP.BlinkGap',
     sinon: '/node_modules/sinon/pkg/sinon',
     text: '/node_modules/text/text'
@@ -47,27 +49,28 @@ require([
   'pollUntil',
   'geolocation',
   'backbone',
+  'mustache',
   'jquery',
   'jquerymobile',
   'feature!es5',
   'BlinkGap',
-  'unit/api-web.js',
-  'unit/collection-datasuitcases.js',
-  'unit/collection-forms.js',
-  'unit/collection-interactions.js',
-  'unit/collection-pending.js',
-  'unit/collection-stars.js',
-  'unit/data-pouch.js',
-  'unit/model-application.js',
-  'unit/model-datasuitcase.js',
-  'unit/model-form.js',
-  'unit/model-interaction.js',
-  'unit/model-pending.js',
-  'unit/model-star.js',
-  'unit/router.js',
-  'unit/view-interaction.js',
-  'unit/view-star.js'
-], function (Promise, pollUntil, geolocation, Backbone) {
+  '/tests/unit/api-web.js',
+  '/tests/unit/collection-datasuitcases.js',
+  '/tests/unit/collection-forms.js',
+  '/tests/unit/collection-interactions.js',
+  '/tests/unit/collection-pending.js',
+  '/tests/unit/collection-stars.js',
+  '/tests/unit/data-pouch.js',
+  '/tests/unit/model-application.js',
+  '/tests/unit/model-datasuitcase.js',
+  '/tests/unit/model-form.js',
+  '/tests/unit/model-interaction.js',
+  '/tests/unit/model-pending.js',
+  '/tests/unit/model-star.js',
+  '/tests/unit/router.js',
+  '/tests/unit/view-interaction.js',
+  '/tests/unit/view-star.js'
+], function (Promise, pollUntil, geolocation, Backbone, Mustache) {
   'use strict';
   var runner, failedTests, logFailure;
 
@@ -87,6 +90,7 @@ require([
     return promise;
   };
 
+  window.Mustache = Mustache;
   window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;
   window.geolocation = window.geolocation || geolocation;

@@ -16,10 +16,9 @@ define(['Squire'], function (Squire) {
       injector.mock('text!template-form.mustache', 'string');
       injector.mock('text!template-category-list.mustache', 'string');
       injector.mock('text!template-pending.mustache', 'string');
-      injector.mock('text!template-popup.mustache', 'string');
       injector.mock('text!template-clear-confirmation-popup.mustache', 'string');
 
-      injector.require(['../src/view-interaction'], function (required) {
+      injector.require(['view-interaction'], function (required) {
         View = required;
         done();
       });
@@ -49,6 +48,33 @@ define(['Squire'], function (Squire) {
         should.exist(BMP.BIC);
         should.exist(BMP.BIC.view);
         expect(BMP.BIC.view).to.equal(view);
+      });
+
+      describe('view.popup()', function () {
+
+        it('is a function', function () {
+          assert.isFunction(view.popup);
+        });
+
+        it('creates a #popup element', function () {
+          var popup$;
+          var text = 'hello, popup!';
+          view.popup(text);
+          popup$ = $('#popup');
+          assert.lengthOf(popup$, 1);
+          assert.equal(popup$.text().trim(), text);
+        });
+
+        it('#popup element is gone after close', function (done) {
+          var popup$;
+          popup$ = $('#popup');
+          popup$.popup('close');
+          setTimeout(function () {
+            popup$ = $('#popup');
+            assert.lengthOf(popup$, 0);
+            done();
+          }, 1e3);
+        });
       });
     });
 

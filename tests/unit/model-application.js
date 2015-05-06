@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'BlinkGap'], function (Squire) {
   'use strict';
 
   describe('Model - Application', function () {
