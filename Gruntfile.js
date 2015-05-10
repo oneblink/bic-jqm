@@ -118,7 +118,10 @@ module.exports = function (grunt) {
               'build/outside.js',
               'src/frag/10-start.frag'
             ],
-            endFile: 'src/frag/99-end.frag'
+            endFile: [
+              'src/frag/99-end.frag',
+              'src/frag/99-form_extensions.js'
+            ]
           }//,
           // wrap: true,
           //insertRequire: ["main"]

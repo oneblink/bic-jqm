@@ -7,8 +7,7 @@ var expect = chai.expect;
 require.config({
   baseUrl: '/src',
   paths: {
-    implementations: '/tests/implementations',
-    'is-indexeddb-reliable': '/node_modules/is-indexeddb-reliable/dist/index',
+    implementations: '../tests/implementations',
     feature: '/node_modules/amd-feature/feature',
     geolocation: '/node_modules/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
@@ -18,15 +17,14 @@ require.config({
     sinon: '/node_modules/sinon/pkg/sinon',
     text: '/node_modules/text/text',
     uuid: '/node_modules/node-uuid/uuid',
-    domReady: '/node_modules/domReady/domReady'
+    "form-dependencies": "frag/99-form_extensions",
+    domReady: '../bower_components/requirejs-domready/domReady',
+    bic: '/tests/support/bic'
   },
   shim: {
     BlinkGap: {
       deps: ['pollUntil'],
       exports: 'BMP.BlinkGap'
-    },
-    pouchdb: {
-      deps: ['feature!es5']
     }
   }
 });
@@ -56,30 +54,13 @@ require([
   'geolocation',
   'backbone',
   'mustache',
-  'pouchdb',
   'jquery',
   'jquerymobile',
   'feature!es5',
   'BlinkGap',
-  '/tests/unit/api-web.js',
-  '/tests/unit/collection-datasuitcases.js',
-  '/tests/unit/collection-forms.js',
-  '/tests/unit/collection-interactions.js',
-  '/tests/unit/collection-pending.js',
-  '/tests/unit/collection-stars.js',
-  '/tests/unit/data-pouch.js',
-  '/tests/unit/model-application.js',
-  '/tests/unit/model-datasuitcase.js',
-  '/tests/unit/model-form.js',
-  '/tests/unit/model-interaction.js',
-  '/tests/unit/model-pending.js',
-  '/tests/unit/model-star.js',
-  '/tests/unit/promise-blinkgap.js',
-  '/tests/unit/router.js',
-  '/tests/unit/view-interaction.js',
-  '/tests/unit/view-star.js',
-  '/tests/unit/view-form-controls.js'
-], function (Promise, pollUntil, geolocation, Backbone, Mustache, Pouch) {
+  '/tests/cascadeSelect/test.js'
+
+], function (Promise, pollUntil, geolocation, Backbone, Mustache) {
   'use strict';
   var runner, failedTests, logFailure;
 
@@ -100,7 +81,6 @@ require([
   };
 
   window.Mustache = Mustache;
-  window.Pouch = Pouch;
   window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;
   window.geolocation = window.geolocation || geolocation;
