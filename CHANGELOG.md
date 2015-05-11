@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+## v3.3.2 - 2015-05-11
+
+### Changed
+
+- update to Forms v3.3.1
+
+
 ## v3.3.1 - 2015-05-06
 
 ### Changed
