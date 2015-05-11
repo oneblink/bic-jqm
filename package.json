@@ -23,7 +23,6 @@
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",
     "grunt-concurrent": "~1.0",
-    "grunt-contrib-clean": "~0.6",
     "grunt-contrib-copy": "~0.8",
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-uglify": "~0.8",

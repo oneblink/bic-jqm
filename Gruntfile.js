@@ -43,7 +43,7 @@ module.exports = function (grunt) {
     watch: {
       src: {
         files: ['src/**', 'tests/**'],
-        tasks: ['build-dev', 'eslint', 'mocha:tests']
+        tasks: ['build', 'eslint', 'mocha:tests']
       }
     },
 
@@ -70,8 +70,6 @@ module.exports = function (grunt) {
         log: true
       }
     },
-
-    clean: ['build'],
 
     requirejs: {
       outside: {
@@ -244,7 +242,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mocha');
-  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
@@ -256,8 +253,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'mocha']);
   grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
 
-  grunt.registerTask('build', ['clean', 'replace', 'requirejs', 'copy:main', 'clean', 'uglify', 'mustache_render']);
-  grunt.registerTask('build-dev', ['clean', 'requirejs', 'copy:dev', 'clean']);
+  grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 
