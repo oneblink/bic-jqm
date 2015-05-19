@@ -2,7 +2,10 @@ define(
   ['model-application', 'view-interaction'],
   function (app, InteractionView) {
     'use strict';
-    var Router = Backbone.Router.extend({
+    var Router
+      , $document = $(document);
+
+    Router = Backbone.Router.extend({
       initialize: function () {
         BMP.FileInput.initialize();
 
@@ -18,26 +21,28 @@ define(
           return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
         }(this));
 
-        if (BMP.isBlinkGap) {
-          $(document).on('pause', this.suspendApplication);
-          $(document).on('resume', this.resumeApplication);
+        if ( Modernizr.localstorage){
+          if (BMP.isBlinkGap) {
+            $document.on('pause', this.suspendApplication);
+            $document.on('resume', this.resumeApplication);
+          }
+
+          if (document.hidden !== undefined) {
+            $document.on('visibilitychange', function () {
+              if (document.hidden) {
+                app.router.suspendApplication();
+              } else {
+                app.router.resumeApplication();
+              }
+            });
+          }
         }
 
-        if (document.hidden !== undefined) {
-          $(document).on('visibilitychange', function () {
-            if (document.hidden) {
-              app.router.suspendApplication();
-            } else {
-              app.router.resumeApplication();
-            }
-          });
-        }
-
-        $(document).on('pagebeforeload', function (e, data) {
+        $document.on('pagebeforeload', function (e, data) {
           e.preventDefault();
 
           // keep track of history depth for forms post-submission behaviour
-          window.BMP.BIC3.history.length += 1;
+          app.history.length += 1;
 
           $.mobile.loading('show');
           app.router.routeRequest(data);
@@ -84,6 +89,12 @@ define(
           });
       },
 
+      /*
+        @method routeRequest
+        @decription Loads a model based on the url. Will redirect to the
+        answerSpace if no model can be found
+
+      */
       routeRequest: function (data) {
         var path = $.mobile.path.parseUrl(data.absUrl),
           model;
@@ -98,11 +109,7 @@ define(
         }
 
         app.whenPopulated()
-          .then(null, function () {
-            return null;
-          })
           .then(function () {
-
             model = app.router.inheritanceChain(path);
 
             app.currentInteraction = model;
@@ -119,19 +126,31 @@ define(
                 this.$el.one('pagecreate', $.mobile._bindPageRemove);
                 data.deferred.resolve(data.absUrl, data.options, this.$el);
               }).render(data);
-            }, function () {
-              data.deferred.reject(data.absUrl, data.options);
-              $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
-              setTimeout($.mobile.hidePageLoadingMsg, 1500);
             });
-          });
 
+          })
+          //catch the error thrown when a model cant be found
+          .then(undefined, function(){
+            data.deferred.reject(data.absUrl, data.options);
+            $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
+
+            setTimeout(function(){
+              $.mobile.hidePageLoadingMsg();
+              if ( app.view ){
+                return app.view.home();
+              }
+              // if we've gotten here it means that the user has typed in an invalid url
+              // and we've not fully initialized, so go to the root answerSpace.
+              window.location.pathname = window.location.pathname.split('/')[1];
+            }, 2500);
+          });
       },
 
       inheritanceChain: function (data) {
         var path, parentModel, parent, usedPathItems;
 
         path = (data.pathname || data.path || '').substr(1).toLowerCase().split('/').reverse();
+
         parent = path[path.length - 1];
         usedPathItems = [];
 
@@ -142,7 +161,7 @@ define(
 
         if (this.isOfflineFirst) {
           if (path[0] === 'index.html' && path[1] === 'www') {
-            path = [ window.BMP.BIC.siteVars.answerSpace.toLowerCase() ];
+            path = [ app.siteVars.answerSpace.toLowerCase() ];
           }
         }
 
@@ -189,54 +208,90 @@ define(
         return this;
       },
 
+      /**
+        @method suspendApplication
+        @description Triggered when the device suspends the application
+        or when the browser tab loses focus.
+
+        Saves any 'add' or 'edit' interactions to the pending queue
+
+        @fires global#app:pause
+      */
       suspendApplication: function () {
-        var url = $.mobile.path.parseLocation();
+        var url = $.mobile.path.parseLocation()
+          , type
+          , action;
+
+        if ( !app.currentInteraction ){
+          return;
+        }
         // Store current URL
         localStorage.setItem('pauseURL', url.hrefNoHash);
+
+        /**
+          Application pause event. Any unsaved form interactions
+          will be automatically saved to the pending queue by blink, but if you need more
+          use this event if you need to do some housekeeping before the application
+          is paused by the device or if the user switches tabs on a browser.
+
+          @event global#app:pause
+        */
+        Backbone.trigger('app:pause');
+
+        type = app.currentInteraction.get('type') + '';
+        //dont save if the current interaction isnt savable.
+        if ( type.toLowerCase() !== 'form'){
+          return;
+        }
+
+        action = (app.currentInteraction.get('blinkFormAction') + '').toLowerCase();
+
+        if (action !== 'add' && action !== 'edit'){
+          return;
+        }
+
         // Store form data, if applicable
-        if (BMP.BIC.currentInteraction.get('type') === 'form') {
-          if (app.currentInteraction.get('args')['args[pid]']) {
-            // saving over existing draft
-            app.view.subView.subView.subView.addToQueue('Draft', true);
-          } else {
-            // saving a new draft
-            app.view.subView.subView.subView.addToQueue('Draft', true)
-              .then(function (model) {
-                var search = url.search;
-                search += search.substring(0, 1) !== '?' ? '?' : '&';
-                search += 'args[pid]=' + model.id;
-                localStorage.setItem('pauseURL', url.hrefNoSearch + search);
-              });
-          }
+        if (app.currentInteraction.get('args')['args[pid]']) {
+          // saving over existing draft
+          app.view.subView.subView.subView.addToQueue('Draft', true);
+        } else {
+          // saving a new draft
+          app.view.subView.subView.subView.addToQueue('Draft', true)
+            .then(function (model) {
+              var search = url.search;
+              search += search.substring(0, 1) !== '?' ? '?' : '&';
+              search += 'args[pid]=' + model.id;
+              localStorage.setItem('pauseURL', url.hrefNoSearch + search);
+            });
         }
       },
 
+      /**
+        @method resumeApplication
+        @description Triggered when the device resumes the application
+        or when the browser tab gets focus.
+
+        @fires global#app:resume
+      */
       resumeApplication: function () {
         var pauseURL = localStorage.getItem('pauseURL');
-        var url;
-        var isFormOpen;
-        var isPendingURL;
+
         if (!pauseURL) {
           return;
         }
-        url = $.mobile.path.parseUrl(pauseURL);
-        if (location.href !== pauseURL) {
-          isPendingURL = url.search.indexOf('args[pid]=') !== -1;
-          isFormOpen = !!BMP.Forms.current.get('_view').$el.closest('body').length;
-          if (isPendingURL && isFormOpen) {
-            // already at open pending form
-            $.noop();
-            // note: this probably isn't good enough for solutions where the
-            // default screen is a form, as it will not open the pending record
-          } else {
-            // navigating...
-            $.mobile.changePage(pauseURL);
-          }
-        } else {
-          // already here
-          $.noop();
+
+        if ($.mobile.path.parseLocation().href !== pauseURL) {
+          $.mobile.changePage(pauseURL, {showLoadMsg: false, transition: 'none', reloadPage: false});
         }
         localStorage.removeItem('pauseURL');
+
+        /**
+          Application resume event. Listen for this event if you need to restart any
+          thing that was paused on when the user put the app in the background
+
+          @event global#app:resume
+        */
+        Backbone.trigger('app:resume');
       },
 
       getRootRelativePath: function (path) {

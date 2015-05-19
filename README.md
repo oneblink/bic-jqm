@@ -22,7 +22,9 @@ Project Setup
 
 Developing
 ----------------
-1. `grunt develop`
+1. `grunt develop` for continuously running tests
+2. open browser
+3. go to http://localhost:9876/integration
 
 Release Process
 ---------------

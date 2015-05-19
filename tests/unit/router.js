@@ -37,12 +37,132 @@ define(['Squire'], function (Squire) {
         initialRender: function () { return null; },
         forms: {
           download: function () { return null; }
+        },
+        currentInteraction: {
+          get: function(){}
         }
       });
       injector.mock('view-interaction', {
         render: function () { return null; }
       });
       done();
+
+    });
+
+    describe('suspendApplication', function(){
+      var router
+        , app;
+
+      beforeEach(function(done){
+        injector.require(['../src/router', 'model-application'], function(r, a){
+
+          router = r;
+          app = a;
+          done();
+        });
+      });
+
+      afterEach(function(){
+        router = undefined;
+        app = undefined;
+      });
+
+      it('should not throw an error', function(){
+
+        var stub = sinon.stub(app.currentInteraction, 'get');
+        stub.withArgs('type').returns('not a form');
+        stub.withArgs('blinkFormAction').throws('Error');
+
+        assert.doesNotThrow(router.suspendApplication);
+        stub.restore();
+      });
+
+      it('should not throw an error', function(){
+
+        var stub = sinon.stub(app.currentInteraction, 'get');
+        stub.withArgs('type').returns('form');
+        stub.withArgs('blinkFormAction').returns('not savable');
+        stub.withArgs('args').throws('Error');
+
+        assert.doesNotThrow(router.suspendApplication);
+        stub.restore();
+      });
+
+      it('should throw an error', function(){
+
+        var stub = sinon.stub(app.currentInteraction, 'get');
+        stub.withArgs('type').returns('form');
+        stub.withArgs('blinkFormAction').returns('add');
+        stub.withArgs('args').throws('Error');
+
+        assert.throws(router.suspendApplication);
+        stub.restore();
+      });
+    });
+
+    describe('resumeApplication', function(){
+      var router
+        , changeMock
+        , expectation
+        , parseLocationStub
+        , testUrl = 'http://test';
+
+      beforeEach(function(done){
+        injector.require(['../src/router'], function(r){
+
+          router = r;
+          parseLocationStub = sinon.stub($.mobile.path, 'parseLocation');
+          changeMock = sinon.mock($.mobile);
+          expectation = changeMock.expects('changePage');
+
+
+          done();
+        });
+      });
+
+      afterEach(function(){
+        router = undefined;
+        expectation = undefined;
+        localStorage.clear();
+        parseLocationStub.restore();
+        changeMock.restore();
+        localStorage.removeItem('pauseURL');
+      });
+
+      it('should not call $.mobile.changePage', function(){
+        localStorage.setItem('pauseURL', testUrl);
+        parseLocationStub.returns({href: testUrl});
+        expectation.never();
+
+        router.resumeApplication();
+
+        expectation.verify();
+
+      });
+
+
+      it('should not call $.mobile.changePage', function(){
+        localStorage.removeItem('pauseURL');
+        parseLocationStub.returns({href: testUrl});
+        expectation.never();
+
+        router.resumeApplication();
+
+        expectation.verify();
+
+      });
+
+      it('should call $.mobile.changePage', function(){
+
+        parseLocationStub.returns({href: testUrl + '1234'});
+        localStorage.setItem('pauseURL', testUrl);
+        expectation.once();
+
+        router.resumeApplication();
+
+        expectation.verify();
+
+      });
 
     });
 
@@ -98,6 +218,24 @@ define(['Squire'], function (Squire) {
 
       //it('should remove old views from the DOM');
     });
+
+    // describe('routeRequest', function(){
+    //   var router;
+
+    //   beforeEach(function (done) {
+    //     injector.require(['../src/router'], function (module) {
+    //       router = module;
+    //       done();
+    //     });
+    //   });
+
+    //   afterEach(function(){
+
+    //   });
+
+    //   it('should ');
+
+    //})
 
     describe('inheritanceChain(parsedUrl)', function () {
       var router;

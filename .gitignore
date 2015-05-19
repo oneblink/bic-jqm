@@ -6,6 +6,7 @@
 
 # output files
 dist
+build/
 /js
 versions
 tests/support/bic.js
