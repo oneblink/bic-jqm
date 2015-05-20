@@ -22,6 +22,7 @@ define(
       events: {
         'click #FormControls #submit': 'formSubmit',
         'click #FormControls #close': 'formClose',
+        'click #FormControls #save': 'formSave2',
         'click #nextFormPage': 'nextFormPage',
         'click #previousFormPage': 'previousFormPage'
       },
@@ -166,6 +167,10 @@ define(
           me.formLeave();
         });
         $('#closePopup').popup('close');
+      },
+
+      formSave2: function () {
+        this.addToQueue("Draft");
       },
 
       formDiscard: function () {
