@@ -95,7 +95,11 @@ define(
         var me = this;
         var model = this.model;
         if (app.hasStorage()) {
-          this.addToQueue('Pending');
+          if (_.isEmpty(BlinkForms.current.getErrors())) {
+            this.addToQueue('Pending');
+          } else {
+            this.addToQueue('Draft');
+          }
         } else {
           $.mobile.loading('show');
           BlinkForms.current.data()
@@ -212,8 +216,11 @@ define(
                     app.pending.processQueue();
                   }
                 });
-
-                view.formLeave();
+                if (_.isEmpty(BlinkForms.current.getErrors())) {
+                  view.formLeave();
+                } else {
+                  $(window).trigger('pagechange');
+                }
               }
               resolve(updatedModel);
             };
@@ -227,7 +234,7 @@ define(
               name: view.model.get('blinkFormObjectName'),
               label: view.model.get('displayName'),
               action: view.model.get('blinkFormAction'),
-              answerspaceid: app.get('dbid'),
+              answerspaceid: view.model.get('dbid'),
               data: data
             };
             if (view.model.get('args')['args[pid]']) {
