@@ -1,6 +1,13 @@
 # Changelog
 
 
+## v3.3.4 - 2015-05-22
+
+### Changed
+
+- update to Forms v3.3.2
+
+
 ## v3.3.3 - 2015-05-22
 
 ### Changed
