@@ -1,7 +1,11 @@
 BIC
 =====
-[![Join the chat at https://gitter.im/blinkmobile/bic-v3](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/blinkmobile/bic-v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![Build Status](https://travis-ci.org/blinkmobile/bic-v3.png)](https://travis-ci.org/blinkmobile/bic-v3)
-The third generation Blink Intelligent Client.
+
+The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.
+
+[![Join the chat at https://gitter.im/blinkmobile/bic-v3](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/blinkmobile/bic-v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Build Status](https://travis-ci.org/blinkmobile/bic-v3.png)](https://travis-ci.org/blinkmobile/bic-v3)
 
 Core Technologies
 -----------------
