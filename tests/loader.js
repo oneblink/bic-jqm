@@ -15,7 +15,9 @@ require.config({
     mustache: '/node_modules/mustache/mustache',
     BlinkGap: '/node_modules/blinkgap-utils/BMP.BlinkGap',
     sinon: '/node_modules/sinon/pkg/sinon',
-    text: '/node_modules/text/text'
+    text: '/node_modules/text/text',
+    uuid: '/node_modules/node-uuid/uuid',
+    domReady: '/node_modules/domReady/domReady'
   },
   shim: {
     BlinkGap: {
@@ -69,7 +71,8 @@ require([
   '/tests/unit/model-star.js',
   '/tests/unit/router.js',
   '/tests/unit/view-interaction.js',
-  '/tests/unit/view-star.js'
+  '/tests/unit/view-star.js',
+  '/tests/unit/view-form-controls.js'
 ], function (Promise, pollUntil, geolocation, Backbone, Mustache) {
   'use strict';
   var runner, failedTests, logFailure;

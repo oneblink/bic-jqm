@@ -1,6 +1,23 @@
 # Changelog
 
-## Unreleased
+
+## v3.3.3 - 2015-05-22
+
+### Changed
+
+- update to [jQuery 1.11.3](http://blog.jquery.com/2015/04/28/jquery-1-11-3-and-2-1-4-released-ios-fail-safe-edition/)
+  from 1.9.1 for fixes and improvements
+
+- BIC-143: make the forms Save draft button directly visible, not in a pop-up
+
+
+### Fixed
+
+- BIC-144: when the current form has validation errors, prevent submissions
+
+    - saves a draft with the current record data will instead
+
+- BIC-148: clean up console errors triggered when switching browser tabs
 
 
 ## v3.3.2 - 2015-05-11
