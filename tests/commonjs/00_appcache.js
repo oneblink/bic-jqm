@@ -38,7 +38,7 @@ test('AppCache', function (t) {
 
   t.test('has correct number of CACHE items', function (tt) {
     tt.isArray(appCache.cache);
-    tt.equal(appCache.cache.length, 35);
+    tt.equal(appCache.cache.length, 34);
     tt.end();
   });
 
