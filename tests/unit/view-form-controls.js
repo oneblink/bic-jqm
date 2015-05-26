@@ -55,7 +55,7 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       injector.mock('model-application', mockApp);
       injector.mock('model-pending', Backbone.Model);
       injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('feature!api', function () { return null; });
+      injector.mock('api', function () { return null; });
       injector.require(['view-form-controls'], function (required) {
         View = required;
         done();

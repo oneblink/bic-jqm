@@ -6,7 +6,6 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
       injector.mock('model-datasuitcase', Backbone.Model);
-      injector.mock('data-inMemory', function () { return null; });
       injector.require(['../src/collection-datasuitcases'], function (required) {
         Collection = required;
         done();

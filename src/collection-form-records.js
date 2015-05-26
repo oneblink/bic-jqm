@@ -1,5 +1,5 @@
 define(
-  ['model-form-record', 'feature!data', 'api'],
+  ['model-form-record', 'data', 'api'],
   function (FormRecord, Data, API) {
     'use strict';
     var FormRecordCollection = Backbone.Collection.extend({

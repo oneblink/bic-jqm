@@ -1,5 +1,5 @@
 define(
-  ['model-interaction', 'feature!data'],
+  ['model-interaction', 'data'],
   function (Interaction, Data) {
     'use strict';
     var InteractionCollection = Backbone.Collection.extend({

@@ -1,5 +1,5 @@
 define(
-  ['model-datasuitcase', 'feature!data'],
+  ['model-datasuitcase', 'data'],
   function (DataSuitcase, Data) {
     'use strict';
     var DataSuitcaseCollection = Backbone.Collection.extend({

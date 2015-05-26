@@ -1,5 +1,5 @@
 define(
-  ['model-form', 'feature!data', 'api'],
+  ['model-form', 'data', 'api'],
   function (Form, Data, API) {
     'use strict';
     var FormCollection = Backbone.Collection.extend({

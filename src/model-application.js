@@ -6,7 +6,7 @@
   @module BIC
 */
 define(
-  ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'api', 'collection-stars', 'domReady', 'collection-form-records'],
+  ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'data', 'api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (facade, InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     'use strict';
 
