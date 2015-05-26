@@ -1,6 +1,8 @@
-define(
-  ['text!template-form-controls.mustache', 'model-application', 'feature!api'],
-  function (Template, app, API) {
+define(['text!template-form-controls.mustache',
+  'model-application',
+  'feature!api',
+  'enum-user-actions'],
+  function (Template, app, API, USER_ACTIONS) {
     'use strict';
 
     var isHTML = function (string) {
@@ -83,12 +85,18 @@ define(
         view.render();
       },
 
-      formLeave: function () {
-        if (window.BMP.BIC3.history.length === 0) {
-          window.BMP.BIC3.view.home();
-        } else {
-          history.back();
+      formLeave: function (userAction) {
+        var onLeave = BlinkForms.current.get('onFormLeaveInteraction');
+
+        if ( onLeave && onLeave[this.model.get('blinkFormAction')] ){
+          return onLeave[this.model.get('blinkFormAction')]({ model: BlinkForms.current, userAction: userAction});
         }
+
+        if (window.BMP.BIC3.history.length === 0) {
+          return window.BMP.BIC3.view.home();
+        }
+
+        history.back();
       },
 
       formSubmit: function () {
@@ -116,7 +124,7 @@ define(
             }
             app.view.popup(data);
             $('#popup').one('popupafterclose', function () {
-              me.formLeave();
+              me.formLeave(USER_ACTIONS.SUBMIT);
             });
           }, function (jqXHR) {
             var status = jqXHR.status;
@@ -168,7 +176,7 @@ define(
         var me = this;
         e.data.view.addToQueue('Draft');
         $('#closePopup').one('popupafterclose', function () {
-          me.formLeave();
+          me.formLeave(USER_ACTIONS.SAVE);
         });
         $('#closePopup').popup('close');
       },
@@ -180,7 +188,7 @@ define(
       formDiscard: function () {
         var me = this;
         $('#closePopup').one('popupafterclose', function () {
-          me.formLeave();
+          me.formLeave(USER_ACTIONS.DISCARD);
         });
         $('#closePopup').popup('close');
       },

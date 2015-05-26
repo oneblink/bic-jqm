@@ -18,7 +18,7 @@ var request = require('request');
 var bicVersion = (function () {
   var templatePath = path.join(__dirname, '..', '..', 'src', 'buildFiles', 'templates', 'versions.json');
   var contents = fs.readFileSync(templatePath, { encoding: 'utf8' });
-  contents = contents.split('\n\n\n').filter(function (section) {
+  contents = contents.replace(/\r/g, '').split('\n\n\n').filter(function (section) {
     return !!section;
   });
   return JSON.parse(contents[1].trim());

@@ -25,5 +25,55 @@ define(['Squire'], function (Squire) {
 
       it('should save the form definition the the data store');
     });
+
+    describe('setActionDestination', function(){
+      var formModel
+        , origActions
+        , newActions;
+
+      beforeEach(function(done){
+        injector.require(['../src/model-form'], function(FormModel){
+          formModel = new FormModel();
+
+          origActions = {
+            add: function(){
+              return 'add-orig';
+            }
+          };
+
+          newActions = {
+            add: function(){
+              return 'add-new';
+            },
+            list: function(){
+              return 'list-new';
+            }
+          };
+
+          done();
+        });
+      });
+
+      afterEach(function(){
+        formModel = null;
+        origActions = null;
+        newActions = null;
+      });
+
+      it('should set the "onFormLeaveInteraction" attribute', function(){
+        var mergedActions;
+
+        formModel.setActionDestination(origActions);
+        assert.deepEqual(formModel.get('onFormLeaveInteraction'), origActions);
+
+        formModel.setActionDestination(newActions);
+        assert.deepEqual(formModel.get('onFormLeaveInteraction'), newActions);
+
+        mergedActions = _.extend({}, newActions, {run: 'blah'});
+        formModel.setActionDestination({run: 'blah'});
+        assert.equal(formModel.get('onFormLeaveInteraction').run, 'blah');
+        assert.deepEqual(formModel.get('onFormLeaveInteraction'), mergedActions);
+      });
+    });
   });
 });
