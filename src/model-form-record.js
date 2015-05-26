@@ -1,5 +1,5 @@
 define(
-  ['feature!api'],
+  ['api'],
   function (API) {
     'use strict';
     var FormRecord = Backbone.Model.extend({

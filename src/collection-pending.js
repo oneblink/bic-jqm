@@ -1,5 +1,5 @@
 define(
-  ['model-pending', 'feature!data', 'feature!api'],
+  ['model-pending', 'feature!data', 'api'],
   function (PendingItem, Data, API) {
     'use strict';
     var PendingCollection = Backbone.Collection.extend({

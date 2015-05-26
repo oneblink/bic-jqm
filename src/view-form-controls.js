@@ -1,6 +1,6 @@
 define(['text!template-form-controls.mustache',
   'model-application',
-  'feature!api',
+  'api',
   'enum-user-actions'],
   function (Template, app, API, USER_ACTIONS) {
     'use strict';
