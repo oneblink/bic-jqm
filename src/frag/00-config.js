@@ -54,7 +54,6 @@
     jquery: getPaths('jquery/1.11.3/jquery-1.11.3.min'),
     bluebird: getPaths('bluebird/1.2.4/bluebird.min'),
     backbone: getPaths('backbonejs/1.1.2/backbone-min'),
-    lodash: getPaths('lodash/2.4.1/lodash.compat.min'),
     modernizr: getPaths('modernizr/2.7.1/modernizr.custom.26204.min'),
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     q: getPaths('q/0.9.7/q.min'),
