@@ -1,6 +1,6 @@
 define(
-  ['model-application', 'authentication', 'backbone-fix'],
-  function (app, Auth, fixBackbone) {
+  ['model-application', 'authentication', 'backbone-fix', 'promise-blinkgap'],
+  function (app, Auth, fixBackbone, whenBlinkGapReady) {
     'use strict';
 
     function start () {
@@ -17,12 +17,10 @@ define(
 
     fixBackbone(app);
 
-    if (window.BMP.BlinkGap.isHere()) {
-      // Delay the app for Cordova
-      window.BMP.BlinkGap.whenReady().then(start, start);
-    } else {
+    // delay the app for Cordova if present
+    whenBlinkGapReady.then(function () {
       start();
-    }
+    });
 
     return app; // export BMP.BIC
   }
