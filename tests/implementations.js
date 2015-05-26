@@ -52,37 +52,6 @@ define('implementations', [], function () {
         isAvailable: function () { return true; },
         implementation: 'bluebird'
       }
-    ],
-    data: [
-      {
-        isAvailable: function () {
-          return Modernizr.indexeddb || window.BMP.BIC.isBlinkGap;
-        },
-
-        implementation: 'data-pouch'
-      },
-
-      {
-        isAvailable: function () {
-          return true;
-        },
-
-        implementation: '../src/data-inMemory'
-      }
-    ],
-    'api': [
-      {
-        isAvailable: function () {
-          return window.cordova && window.cordova.offline;
-        },
-        implementation: 'api-native'
-      },
-      {
-        isAvailable: function () {
-          return true;
-        },
-        implementation: 'api-web'
-      }
     ]
   };
 });

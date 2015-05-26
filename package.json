@@ -6,15 +6,16 @@
   "main": "Gruntfile.js",
   "dependencies": {
     "almond": "0.3.1",
+    "amd-feature": "jensarps/AMD-feature#295cb395fe",
+    "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
+    "domReady": "requirejs/domReady#449478e133",
     "geolocation": "git://github.com/blinkmobile/geolocation#v1.0.0",
+    "is-indexeddb-reliable": "blinkmobile/is-indexeddb-reliable#v1.0.0",
     "node-uuid": "1.4.3",
     "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "1.0.0",
     "sjcl": "1.0.3",
-    "text": "requirejs/text#0260977d6d",
-    "amd-feature": "jensarps/AMD-feature#295cb395fe",
-    "domReady": "requirejs/domReady#449478e133",
-    "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d"
+    "text": "requirejs/text#0260977d6d"
   },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {

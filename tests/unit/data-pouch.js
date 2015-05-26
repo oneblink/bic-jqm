@@ -3,7 +3,7 @@ define(['Squire'], function (Squire) {
 
   if (window.indexedDB && window.indexedDB.open('idbTest', 1).onupgradeneeded === null) {
     describe('Data Abstraction Layer - PouchDB', function () {
-      var Data, data, model, dbAdapter;
+      var Data, data, model;
 
       before(function (done) {
         var injector = new Squire();
@@ -26,7 +26,6 @@ define(['Squire'], function (Squire) {
 
       beforeEach(function (done) {
         data = new Data('unitTests');
-        dbAdapter = data.dbAdapter;
         done();
       });
 
@@ -38,7 +37,6 @@ define(['Squire'], function (Squire) {
         // Where wilderbeats roam free
         // And the dread lord DOM walks the land
 
-        data.dbAdapter = dbAdapter;
         data.create(model).then(function () {
           data.deleteAll().then(
             function () {
@@ -82,40 +80,36 @@ define(['Squire'], function (Squire) {
           });
         });
 
-        //it('should reject if a db cannot be created');
-        it('should reject if a db cannot be created', function (done) {
-          data.dbAdapter = function () { return 'iwgiapugpi://'; };
-          data.getDB().then(null, function (err) {
-            expect(err).to.not.equal(undefined).and.not.equal(null);
+      });
+
+      describe('promise-pick-storage', function () {
+        var promise;
+
+        before(function (done) {
+          require(['promise-pick-storage'], function (mod) {
+            promise = mod;
             done();
           });
         });
-      });
 
-      describe('#dbAdapter', function () {
-        it('should be a function', function () {
-          expect(data.dbAdapter).to.be.a('function');
+        it('should be a Promise', function () {
+          expect(promise).to.be.instanceOf(Promise);
         });
 
-        it('should return an indexeddb connection string when available', function () {
-          if (Pouch.adapters.idb) {
-            expect(data.dbAdapter()).to.match(/idb/);
-          }
+        it('should return a persistent storage type when available', function (done) {
+          promise.then(function (type) {
+            if (window.BMP.BIC.isBlinkGap) {
+              assert.include(['websql', 'idb'], type);
+            } else {
+              assert.equal(type, 'idb');
+            }
+            done();
+          }, function (err) {
+            assert.notOk(err);
+            done();
+          });
         });
 
-        it('should return a websql connection string when inside isBlinkGap', function () {
-          if (Pouch.adapters.websql) {
-            window.BMP.BIC.isBlinkGap = true;
-            expect(data.dbAdapter()).to.match(/websql/);
-            window.BMP.BIC.isBlinkGap = false;
-          }
-        });
-
-        it('should return false when indexeddb is not supported and not inside phonegap', function () {
-          if (!window.indexedDB || window.indexedDB.open('idbTest', 1).onupgradeneeded !== null) {
-            expect(data.dbAdapter()).to.equal(false);
-          }
-        });
       });
 
       describe('#create', function () {

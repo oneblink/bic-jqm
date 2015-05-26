@@ -103,6 +103,7 @@ module.exports = function (grunt) {
           optimize: "none",
           paths: {
             geolocation: '../node_modules/geolocation/geolocation',
+            'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
             text: '../node_modules/text/text',
             domReady: '../node_modules/domReady/domReady',
             'es5-shim': 'empty:',

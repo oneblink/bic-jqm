@@ -1,3 +1,4 @@
+/*globals Modernizr:false*/
 define(function (require) {
   'use strict';
 

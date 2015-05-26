@@ -8,6 +8,7 @@ require.config({
   baseUrl: '/src',
   paths: {
     implementations: '/tests/implementations',
+    'is-indexeddb-reliable': '/node_modules/is-indexeddb-reliable/dist/index',
     feature: '/node_modules/amd-feature/feature',
     geolocation: '/node_modules/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
@@ -52,6 +53,7 @@ require([
   'geolocation',
   'backbone',
   'mustache',
+  'pouchdb',
   'jquery',
   'jquerymobile',
   'feature!es5',
@@ -73,7 +75,7 @@ require([
   '/tests/unit/view-interaction.js',
   '/tests/unit/view-star.js',
   '/tests/unit/view-form-controls.js'
-], function (Promise, pollUntil, geolocation, Backbone, Mustache) {
+], function (Promise, pollUntil, geolocation, Backbone, Mustache, Pouch) {
   'use strict';
   var runner, failedTests, logFailure;
 
@@ -94,6 +96,7 @@ require([
   };
 
   window.Mustache = Mustache;
+  window.Pouch = Pouch;
   window.Promise = window.Promise || Promise;
   window.pollUntil = window.pollUntil || pollUntil;
   window.geolocation = window.geolocation || geolocation;
