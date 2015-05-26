@@ -23,31 +23,31 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       };
 
       errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
-        return {"text_box": [{"code": "MAXLENGTH", "MAX": "5"}]};
+        return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
       apiStub = sinon.stub(BlinkForms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
-              "text_box": "123456789",
-              "number": 90,
-              "_action": "add",
-              "subform": []
+              'text_box': '123456789',
+              'number': 90,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(1).returns(
           Promise.resolve({
-              "text_box": "Devyani",
-              "number": 99,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Devyani',
+              'number': 99,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(2).returns(
           Promise.resolve({
-              "text_box": "Anandita",
-              "number": 109,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Anandita',
+              'number': 109,
+              '_action': 'add',
+              'subform': []
           })
       );
       mockApp = new Backbone.Model();

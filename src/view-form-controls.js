@@ -196,7 +196,7 @@ define(['text!template-form-controls.mustache',
       },
 
       formSave2: function () {
-        this.addToQueue("Draft")
+        this.addToQueue('Draft')
             .then(checkForFormErrors(this, USER_ACTIONS.SAVE));
       },
 
