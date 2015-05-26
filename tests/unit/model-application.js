@@ -327,8 +327,6 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
       });
 
       it('should go to the same url', function(){
-        changePageStub.withArgs('simons-answerspace/one/two/three');
-
         model.goToInteraction('one/two/three');
         model.goToInteraction('/one/two/three');
 
@@ -336,10 +334,14 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
         assert.strictEqual(changePageStub.withArgs('/simons-answerspace/one/two/three').calledThrice, false);
       });
 
-      it('should go to the answerSpace home', function(){
-        changePageStub.withArgs('simons-answerspace');
-
+      it('should go to the answerSpace home on falsy parameter', function(){
         model.goToInteraction();
+
+        assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);
+      });
+
+      it('should go to the answerSpace home', function(){
+        model.goToInteraction('simons-answerspace');
 
         assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);
       });

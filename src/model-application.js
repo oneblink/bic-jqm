@@ -41,10 +41,10 @@ define(
 
         interactionPath = _.compact((interactionPath || '').split('/'));
         if ( !interactionPath.length || interactionPath[0].toLowerCase() !== answerSpace.toLowerCase()){
-          interactionPath.unshift('', answerSpace);
+          interactionPath.unshift(answerSpace);
         }
 
-        $.mobile.changePage(interactionPath.join('/'));
+        $.mobile.changePage('/' + interactionPath.join('/'));
       },
 
       datastore: function () {
