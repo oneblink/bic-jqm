@@ -19,6 +19,18 @@ define(['text!template-form-controls.mustache',
       });
     };
 
+    var checkForFormErrors = function(view, userAction){
+      // helper function for better control over what happens when
+      // an item is added to the queue
+      return function(){
+        if (_.isEmpty(BlinkForms.current.getErrors())) {
+          view.formLeave(userAction);
+        } else {
+          $(window).trigger('pagechange');
+        }
+      };
+    };
+
     var FormControlView = Backbone.View.extend({
 
       events: {
@@ -104,56 +116,58 @@ define(['text!template-form-controls.mustache',
         var model = this.model;
         if (app.hasStorage()) {
           if (_.isEmpty(BlinkForms.current.getErrors())) {
-            this.addToQueue('Pending');
+            this.addToQueue('Pending')
+                .then(checkForFormErrors(this, USER_ACTIONS.SUBMIT));
           } else {
-            this.addToQueue('Draft');
+            this.addToQueue('Draft')
+                .then(checkForFormErrors(this, USER_ACTIONS.SUBMIT));
           }
         } else {
           $.mobile.loading('show');
           BlinkForms.current.data()
-          .then(function (data) {
-            return API.setPendingItem(
-              model.get('blinkFormObjectName'),
-              model.get('blinkFormAction'),
-              data
-            );
-          })
-          .then(function (data) {
-            if (!isHTML(data)) {
-              data = '<p>' + data + '</p>';
-            }
-            app.view.popup(data);
-            $('#popup').one('popupafterclose', function () {
-              me.formLeave(USER_ACTIONS.SUBMIT);
-            });
-          }, function (jqXHR) {
-            var status = jqXHR.status;
-            var json;
-            var html = '';
-            try {
-              json = JSON.parse(jqXHR.responseText);
-            } catch (ignore) {
-              json = { message: 'error ' + status };
-            }
-            if (json.message) {
-              html += json.message;
-            }
-            if (status === 470 || status === 471 || json.errors) {
-              if (typeof json.errors === 'object') {
-                html += '<ul>';
-                Object.keys(json.errors).forEach(function (key) {
-                  html += '<li>' + key + ': ' + json.errors[key] + '</li>';
-                });
-                html += '</ul>';
+            .then(function (data) {
+              return API.setPendingItem(
+                model.get('blinkFormObjectName'),
+                model.get('blinkFormAction'),
+                data
+              );
+            })
+            .then(function (data) {
+              if (!isHTML(data)) {
+                data = '<p>' + data + '</p>';
               }
-            }
-            if (!isHTML(html)) {
-              html = '<p>' + html + '</p>';
-            }
-            app.view.popup(html);
-          }).then(function () {
-            $.mobile.loading('hide');
-          });
+              app.view.popup(data);
+              $('#popup').one('popupafterclose', function () {
+                me.formLeave(USER_ACTIONS.SUBMIT);
+              });
+            }, function (jqXHR) {
+              var status = jqXHR.status;
+              var json;
+              var html = '';
+              try {
+                json = JSON.parse(jqXHR.responseText);
+              } catch (ignore) {
+                json = { message: 'error ' + status };
+              }
+              if (json.message) {
+                html += json.message;
+              }
+              if (status === 470 || status === 471 || json.errors) {
+                if (typeof json.errors === 'object') {
+                  html += '<ul>';
+                  Object.keys(json.errors).forEach(function (key) {
+                    html += '<li>' + key + ': ' + json.errors[key] + '</li>';
+                  });
+                  html += '</ul>';
+                }
+              }
+              if (!isHTML(html)) {
+                html = '<p>' + html + '</p>';
+              }
+              app.view.popup(html);
+            }).then(function () {
+              $.mobile.loading('hide');
+            });
         }
       },
 
@@ -174,15 +188,16 @@ define(['text!template-form-controls.mustache',
 
       formSave: function (e) {
         var me = this;
-        e.data.view.addToQueue('Draft');
-        $('#closePopup').one('popupafterclose', function () {
-          me.formLeave(USER_ACTIONS.SAVE);
-        });
-        $('#closePopup').popup('close');
+        e.data.view.addToQueue('Draft')
+         .then(function(){
+          $('#closePopup').one('popupafterclose', function () { me.formLeave(USER_ACTIONS.SAVE); });
+          $('#closePopup').popup('close');
+         });
       },
 
       formSave2: function () {
-        this.addToQueue("Draft");
+        this.addToQueue("Draft")
+            .then(checkForFormErrors(this, USER_ACTIONS.SAVE));
       },
 
       formDiscard: function () {
@@ -224,11 +239,6 @@ define(['text!template-form-controls.mustache',
                     app.pending.processQueue();
                   }
                 });
-                if (_.isEmpty(BlinkForms.current.getErrors())) {
-                  view.formLeave();
-                } else {
-                  $(window).trigger('pagechange');
-                }
               }
               resolve(updatedModel);
             };
