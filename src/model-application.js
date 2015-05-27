@@ -16,8 +16,8 @@ define(function (require) {
   var StarsCollection = require('collection-stars');
 
   var facade = require('facade');
-  var Data = require('data');
   var API = require('api');
+  var metaStore = require('store-meta');
 
   var domReady = require('domReady');
 
@@ -67,64 +67,6 @@ define(function (require) {
       }
 
       this.collections._promise = new Promise(function (resolve, reject) {
-        if (BMP.Authentication) {
-          app.meta = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Meta');
-          BMP.Authentication.getRecord = function (callback) {
-            app.meta.read({
-              id: 'offlineLogin'
-            }).then(
-              function (data) {
-                callback(null, data.attributes);
-              },
-              function (err) {
-                callback(err);
-              }
-            );
-          };
-          BMP.Authentication.setRecord = function (data, callback) {
-            var model = {};
-            model.id = 'offlineLogin';
-            model.toJSON = function () {
-              return model.attributes;
-            };
-            model.attributes = data;
-            model.attributes._id = model.id;
-
-            app.meta.read({
-              id: model.id
-            }).then(
-              function () {
-                app.meta.delete({
-                  id: model.id
-                }).then(
-                  function () {
-                    app.meta.create(model).then(
-                      function (document) {
-                        callback(null, document);
-                      },
-                      function (err) {
-                        callback(err);
-                      }
-                    );
-                  },
-                  function (err) {
-                    callback(err);
-                  }
-                );
-              },
-              function () {
-                app.meta.create(model).then(
-                  function (document) {
-                    callback(null, document);
-                  },
-                  function (err) {
-                    callback(err);
-                  }
-                );
-              }
-            );
-          };
-        }
 
         app.interactions = app.interactions || new InteractionCollection();
         app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
@@ -362,6 +304,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same
   $.extend(window.BMP.BIC3, window.BMP.BIC);
   window.BMP.BIC = window.BMP.BIC3;
+  window.BMP.BIC.meta = metaStore;
 
   return window.BMP.BIC3;
 });
