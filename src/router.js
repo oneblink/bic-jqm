@@ -48,10 +48,7 @@ define(
           app.router.routeRequest(data);
         });
 
-        Promise.resolve(app.datastore())
-          .then(function () {
-            return app.collections();
-          })
+        app.collections()
           .then(function () {
             return app.setup();
           })

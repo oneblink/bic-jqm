@@ -81,31 +81,9 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
       expect(model.attributes).to.have.property('loginStatus');
     });
 
-    describe('#datastore', function () {
-      afterEach(function (done) {
-        if (model.data) {
-          delete model.data;
-        }
-        done();
-      });
-
-      it('should return itself', function () {
-        expect(model.datastore()).to.be.equal(model);
-      });
-
-      it('should set up a data store', function () {
-        model.datastore();
-        expect(model).to.have.property('data');
-      });
-    });
-
     describe('#collections', function () {
-      beforeEach(function () {
-        model.datastore();
-      });
 
       afterEach(function (done) {
-        delete model.data;
         delete model.interactions;
         delete model.datasuitcases;
         delete model.forms;
@@ -184,29 +162,11 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
     });
 
     describe('#setup', function () {
-      before(function (done) {
-        model.datastore();
-        sinon.stub(model.data, 'read', function () {
-          return Promise.resolve();
-        });
-        done();
-      });
-
-      after(function (done) {
-        model.data.read.restore();
-        done();
-      });
 
       it('should return a promise', function () {
         expect(model.setup()).to.be.instanceOf(Promise);
       });
 
-
-      it('should read from it\'s data store', function (done) {
-        model.setup().then(function () {
-          done();
-        });
-      });
     });
 
     describe('#populate', function () {

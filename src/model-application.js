@@ -47,11 +47,6 @@ define(
         $.mobile.changePage('/' + interactionPath.join('/'));
       },
 
-      datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-AnswerSpace');
-        return this;
-      },
-
       collections: function () {
         var app = this;
 
@@ -61,96 +56,88 @@ define(
         }
 
         this.collections._promise = new Promise(function (resolve, reject) {
-          pollUntil(function () {
-            // need to wait for the data layer to be configured RE: cordova
-            return !!app.data;
-          }, null, function () {
-            // now data is safe to use, so we can get started
-
-            if (BMP.Authentication) {
-              app.meta = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Meta');
-              BMP.Authentication.getRecord = function (callback) {
-                app.meta.read({
-                  id: 'offlineLogin'
-                }).then(
-                  function (data) {
-                    callback(null, data.attributes);
-                  },
-                  function (err) {
-                    callback(err);
-                  }
-                );
+          if (BMP.Authentication) {
+            app.meta = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Meta');
+            BMP.Authentication.getRecord = function (callback) {
+              app.meta.read({
+                id: 'offlineLogin'
+              }).then(
+                function (data) {
+                  callback(null, data.attributes);
+                },
+                function (err) {
+                  callback(err);
+                }
+              );
+            };
+            BMP.Authentication.setRecord = function (data, callback) {
+              var model = {};
+              model.id = 'offlineLogin';
+              model.toJSON = function () {
+                return model.attributes;
               };
-              BMP.Authentication.setRecord = function (data, callback) {
-                var model = {};
-                model.id = 'offlineLogin';
-                model.toJSON = function () {
-                  return model.attributes;
-                };
-                model.attributes = data;
-                model.attributes._id = model.id;
+              model.attributes = data;
+              model.attributes._id = model.id;
 
-                app.meta.read({
-                  id: model.id
-                }).then(
-                  function () {
-                    app.meta.delete({
-                      id: model.id
-                    }).then(
-                      function () {
-                        app.meta.create(model).then(
-                          function (document) {
-                            callback(null, document);
-                          },
-                          function (err) {
-                            callback(err);
-                          }
-                        );
-                      },
-                      function (err) {
-                        callback(err);
-                      }
-                    );
-                  },
-                  function () {
-                    app.meta.create(model).then(
-                      function (document) {
-                        callback(null, document);
-                      },
-                      function (err) {
-                        callback(err);
-                      }
-                    );
-                  }
-                );
-              };
-            }
+              app.meta.read({
+                id: model.id
+              }).then(
+                function () {
+                  app.meta.delete({
+                    id: model.id
+                  }).then(
+                    function () {
+                      app.meta.create(model).then(
+                        function (document) {
+                          callback(null, document);
+                        },
+                        function (err) {
+                          callback(err);
+                        }
+                      );
+                    },
+                    function (err) {
+                      callback(err);
+                    }
+                  );
+                },
+                function () {
+                  app.meta.create(model).then(
+                    function (document) {
+                      callback(null, document);
+                    },
+                    function (err) {
+                      callback(err);
+                    }
+                  );
+                }
+              );
+            };
+          }
 
-            app.interactions = app.interactions || new InteractionCollection();
-            app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
-            app.forms = app.forms || new FormCollection();
-            app.stars = app.stars || new StarsCollection();
-            app.formRecords = app.formRecords || new FormRecordsCollection();
+          app.interactions = app.interactions || new InteractionCollection();
+          app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
+          app.forms = app.forms || new FormCollection();
+          app.stars = app.stars || new StarsCollection();
+          app.formRecords = app.formRecords || new FormRecordsCollection();
 
-            if (app.hasStorage()) {
-              // enable the pending queue
-              app.pending = app.pending || new PendingCollection();
+          if (app.hasStorage()) {
+            // enable the pending queue
+            app.pending = app.pending || new PendingCollection();
 
-              // prime models / collections with previous persisted data
-              Promise.all([
-                app.interactions.datastore().load(),
-                app.datasuitcases.datastore().load(),
-                app.forms.datastore().load(),
-                app.pending.datastore().load(),
-                app.stars.datastore().load(),
-                app.formRecords.datastore().load()
-              ]).then(resolve, reject);
+            // prime models / collections with previous persisted data
+            Promise.all([
+              app.interactions.datastore().load(),
+              app.datasuitcases.datastore().load(),
+              app.forms.datastore().load(),
+              app.pending.datastore().load(),
+              app.stars.datastore().load(),
+              app.formRecords.datastore().load()
+            ]).then(resolve, reject);
 
-            } else {
-              resolve();
-            }
-
-          });
+          } else {
+            resolve();
+          }
         });
 
         return this.collections._promise;
@@ -169,12 +156,7 @@ define(
           app.trigger('loginProcessed');
         });
 
-        return new Promise(function (resolve, reject) {
-          app.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Promise.resolve();
       },
 
       populate: function () {
