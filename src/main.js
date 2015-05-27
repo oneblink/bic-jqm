@@ -15,8 +15,6 @@ define(
       require(['router', 'auth']);
     }
 
-    fixBackbone(app);
-
     // delay the app for Cordova if present
     whenBlinkGapReady.then(function () {
       start();
