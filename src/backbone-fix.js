@@ -59,14 +59,13 @@ define(function () {
       return Backbone.ajaxSync;
     };
 
-    if (app.hasStorage()) {
+    Backbone.sync = function (method, model, options) {
       // Hook Backbone.sync up to the data layer
-      Backbone.sync = function (method, model, options) {
-        return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
-      };
-    } else {
-      Backbone.sync = function (method, model, options) { options.success(); };
-    }
+      if (app.hasStorage()) {
+        return Backbone.getSyncMethod(model).apply(this, arguments);
+      }
+      return options.success();
+    };
 
   };
 
