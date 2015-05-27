@@ -1,24 +1,15 @@
 define(
-  ['model-pending', 'data', 'api'],
-  function (PendingItem, Data, API) {
+  ['model-pending', 'collection', 'api'],
+  function (PendingItem, Collection, API) {
     'use strict';
-    var PendingCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending';
+
+    var PendingCollection = Collection.extend({
       model: PendingItem,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       processQueue: function () {
