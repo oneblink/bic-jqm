@@ -1,4 +1,4 @@
-define(['Squire', 'BlinkGap'], function (Squire) {
+define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
   'use strict';
 
   describe('Model - Application', function () {
@@ -309,6 +309,41 @@ define(['Squire', 'BlinkGap'], function (Squire) {
       it('returns a Boolean', function () {
         var result = model.hasStorage();
         assert.isBoolean(result);
+      });
+    });
+
+    describe("#goToInteraction()", function(){
+      var changePageStub;
+
+      beforeEach(function(done){
+        model.set('siteName', 'simons-answerspace');
+        changePageStub = sinon.stub($.mobile, 'changePage');
+        done();
+      });
+
+      afterEach(function(){
+        model.set('siteName', '');
+        $.mobile.changePage.restore();
+      });
+
+      it('should go to the same url', function(){
+        model.goToInteraction('one/two/three');
+        model.goToInteraction('/one/two/three');
+
+        assert.strictEqual(changePageStub.withArgs('/simons-answerspace/one/two/three').calledTwice, true);
+        assert.strictEqual(changePageStub.withArgs('/simons-answerspace/one/two/three').calledThrice, false);
+      });
+
+      it('should go to the answerSpace home on falsy parameter', function(){
+        model.goToInteraction();
+
+        assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);
+      });
+
+      it('should go to the answerSpace home', function(){
+        model.goToInteraction('simons-answerspace');
+
+        assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);
       });
     });
 

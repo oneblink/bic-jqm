@@ -139,6 +139,89 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
 
     });
 
+    describe('formLeave', function(){
+      var origGet
+        , viewInstance
+        , modelGetStub
+        , interactionGetStub;
+
+      beforeEach(function(done){
+        var mockModel;
+
+        origGet = BlinkForms.current.get;
+        BlinkForms.current.get = function(){};
+
+        interactionGetStub = sinon.stub(BlinkForms.current, 'get');
+
+        mockModel = {
+          get: function(){}
+        };
+
+        modelGetStub = sinon.stub(mockModel, 'get')
+                            .returns('add');
+
+        viewInstance = new View();
+        viewInstance.model = mockModel;
+        done();
+      });
+
+      afterEach(function(){
+        BlinkForms.current.get = origGet;
+        modelGetStub.restore();
+        interactionGetStub.restore();
+      });
+
+      it('should go home', function(){
+        var originalBMP = window.BMP
+          , viewMock
+          , expectation;
+
+        window.BMP = {
+          BIC3: {
+            history: [],
+            view: {
+              home: function(){}
+            }
+          }
+        };
+
+        viewMock = sinon.mock(window.BMP.BIC3.view);
+        expectation = viewMock.expects('home');
+        expectation.once();
+
+        interactionGetStub.returns(undefined);
+
+        viewInstance.formLeave();
+
+        expectation.verify();
+
+        window.BMP = originalBMP;
+      });
+
+      it('should execute the onLeave action', function(){
+        var afterInteraction
+          , afterInteractionMock
+          , afterInteractionExpectation;
+
+
+        afterInteraction = {
+          add: function(){}
+        };
+
+        afterInteractionMock = sinon.mock(afterInteraction);
+        afterInteractionExpectation = afterInteractionMock.expects('add');
+        afterInteractionExpectation.once();
+
+        interactionGetStub.returns(afterInteraction);
+
+        viewInstance.formLeave();
+
+        afterInteractionExpectation.verify();
+
+        afterInteractionMock.restore();
+      });
+    });
+
   });
 
 });

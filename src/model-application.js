@@ -1,7 +1,21 @@
+/**
+  window.BMP.BIC
+
+  The Blink Intelligent Client
+
+  @module BIC
+*/
 define(
   ['facade', 'collection-interactions', 'collection-datasuitcases', 'collection-forms', 'collection-pending', 'feature!data', 'feature!api', 'collection-stars', 'domReady', 'collection-form-records'],
   function (facade, InteractionCollection, DataSuitcaseCollection, FormCollection, PendingCollection, Data, API, StarsCollection, domReady, FormRecordsCollection) {
     'use strict';
+
+    /**
+      The Blink Intelligent Client
+
+      @class
+      @alias window.BMP.BIC
+    */
     var Application = Backbone.Model.extend({
 
       idAttribute: '_id',
@@ -9,6 +23,28 @@ define(
       defaults: {
         _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
         loginStatus: false
+      },
+
+/**
+  Takes a user to an interaction.
+
+  @param {string} interactionPath The url path to the interaction,
+  relative to the answer space. A falsy value will take you to home.
+  A preceeding slash can be ommitted
+
+  @example <caption>Both of these will take you to the same place.</caption>
+  window.BMP.BIC.goToInteraction('shops/review/add_review');
+  window.BMP.BIC.goToInteraction('/shops/review/add_review');
+*/
+      goToInteraction: function(interactionPath){
+        var answerSpace = this.get('siteName') || '';
+
+        interactionPath = _.compact((interactionPath || '').split('/'));
+        if ( !interactionPath.length || interactionPath[0].toLowerCase() !== answerSpace.toLowerCase()){
+          interactionPath.unshift(answerSpace);
+        }
+
+        $.mobile.changePage('/' + interactionPath.join('/'));
       },
 
       datastore: function () {
