@@ -1,8 +1,9 @@
 define(['text!template-form-controls.mustache',
   'model-application',
   'api',
-  'enum-user-actions'],
-  function (Template, app, API, USER_ACTIONS) {
+  'enum-user-actions',
+  'lib/ui-tools'],
+  function (Template, app, API, USER_ACTIONS, uiTools) {
     'use strict';
 
     var isHTML = function (string) {
@@ -31,10 +32,18 @@ define(['text!template-form-controls.mustache',
       };
     };
 
+    var enableSubmit = function(){
+      return uiTools.enableElement('#submit');
+    };
+
+    var enableSave = function(){
+      return uiTools.enableElement('#save');
+    };
+
     var FormControlView = Backbone.View.extend({
 
       events: {
-        'click #FormControls #submit': 'formSubmit',
+        'click #FormControls #submit:not([disabled])': 'formSubmit',
         'click #FormControls #close': 'formClose',
         'click #FormControls #save': 'formSave2',
         'click #nextFormPage': 'nextFormPage',
@@ -43,12 +52,10 @@ define(['text!template-form-controls.mustache',
 
       render: function () {
         var view, options;
-
         view = this;
         options = {
           hasStorage: app.hasStorage()
         };
-
 
         if (BlinkForms.current.get('pages').length > 1) {
           options.pages = {
@@ -112,18 +119,22 @@ define(['text!template-form-controls.mustache',
       },
 
       formSubmit: function () {
-        var me = this;
-        var model = this.model;
+        var me = this
+          , model = this.model;
+
+        if ($('#submit').attr('disabled')){
+          return;
+        }
+
+        uiTools.disableElement('#submit');
+
         if (app.hasStorage()) {
-          if (_.isEmpty(BlinkForms.current.getErrors())) {
-            this.addToQueue('Pending')
-                .then(checkForFormErrors(this, USER_ACTIONS.SUBMIT));
-          } else {
-            this.addToQueue('Draft')
-                .then(checkForFormErrors(this, USER_ACTIONS.SUBMIT));
-          }
+          this.addToQueue( _.isEmpty(BlinkForms.current.getErrors()) ? 'Pending' : 'Draft' )
+              .then(checkForFormErrors(this, USER_ACTIONS.SUBMIT))
+              //CATCH - enable save if there has been an error
+              .then(undefined, enableSubmit);
         } else {
-          $.mobile.loading('show');
+          uiTools.showLoadingAnimation();
           BlinkForms.current.data()
             .then(function (data) {
               return API.setPendingItem(
@@ -165,9 +176,9 @@ define(['text!template-form-controls.mustache',
                 html = '<p>' + html + '</p>';
               }
               app.view.popup(html);
-            }).then(function () {
-              $.mobile.loading('hide');
-            });
+            }).then(uiTools.hideLoadingAnimation)
+            //CATCH - enable save if there has been an error
+            .then(undefined, enableSubmit);
         }
       },
 
@@ -197,7 +208,8 @@ define(['text!template-form-controls.mustache',
 
       formSave2: function () {
         this.addToQueue('Draft')
-            .then(checkForFormErrors(this, USER_ACTIONS.SAVE));
+            .then(checkForFormErrors(this, USER_ACTIONS.SAVE))
+            .then(undefined, enableSave);
       },
 
       formDiscard: function () {
@@ -214,7 +226,7 @@ define(['text!template-form-controls.mustache',
         supressQueue = supressQueue || false;
 
         return new Promise(function (resolve, reject) {
-          BlinkForms.current.data().then(function (data) {
+          return BlinkForms.current.data().then(function (data) {
             var modelAttrs;
             var options = {};
 

@@ -145,7 +145,7 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         , modelGetStub
         , interactionGetStub;
 
-      beforeEach(function(done){
+      beforeEach(function(){
         var mockModel;
 
         origGet = BlinkForms.current.get;
@@ -162,7 +162,6 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
 
         viewInstance = new View();
         viewInstance.model = mockModel;
-        done();
       });
 
       afterEach(function(){
@@ -176,13 +175,9 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
           , viewMock
           , expectation;
 
-        window.BMP = {
-          BIC3: {
-            history: [],
-            view: {
-              home: function(){}
-            }
-          }
+        mockApp.history = [];
+        mockApp.view = {
+          home: function(){}
         };
 
         viewMock = sinon.mock(window.BMP.BIC3.view);
@@ -221,6 +216,55 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         afterInteractionMock.restore();
       });
     });
+
+    // describe('disableElement', function(){
+    //   var viewInstance
+    //     , aTag;
+
+    //   beforeEach(function(){
+    //     viewInstance = new View({});
+    //     aTag = document.createElement('a');
+    //     aTag.id = 'submit';
+    //     document.body.appendChild(aTag);
+    //   });
+
+    //   afterEach(function(){
+    //     viewInstance = undefined;
+    //     document.body.removeChild(aTag);
+    //     aTag = undefined;
+    //   });
+
+
+
+    //   it('should disable and then re-enable the submit button', function(){
+    //     var enable;
+
+    //     assert.strictEqual($('#submit').attr('disabled'), undefined);
+
+    //     enable = viewInstance.disableElement('#submit');
+
+    //     assert.strictEqual($('#submit').attr('disabled'), 'disabled');
+
+    //     enable();
+
+    //     assert.strictEqual($('#submit').attr('disabled'), undefined);
+
+    //   });
+
+    //   it('should add and then remove the "ui-disabled" class to the element', function(){
+    //     var enable;
+
+    //     assert.strictEqual($('#submit').hasClass('ui-disabled'), false);
+
+    //     enable = viewInstance.disableElement('#submit');
+
+    //     assert.strictEqual($('#submit').hasClass('ui-disabled'), true);
+
+    //     enable();
+
+    //     assert.strictEqual($('#submit').hasClass('ui-disabled'), false);
+    //   });
+    // });
 
   });
 
