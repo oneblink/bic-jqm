@@ -13,6 +13,8 @@ define(function (require) {
 
     datastore: function (name) {
       this.data = new Data(name);
+
+      // this method is chained in a few places, so explicitly return `this`
       return this;
     },
 

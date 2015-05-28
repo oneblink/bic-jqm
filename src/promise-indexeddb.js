@@ -5,7 +5,18 @@ define(function (require) {
 
   return whenBlinkGapReady.then(function () {
     return new Promise(function (resolve) {
-      isIndexedDBReliable.quick(resolve);
+      var timer = setTimeout(function () {
+        // timer never necessary for actual usage
+        // but timer _is_ mysteriously necessary for running the tests in Safari
+        if (window.console && window.console.warn) {
+          window.console.warn('timeout: IndexedDB tests too slow');
+        }
+        resolve(false);
+      }, 500);
+      isIndexedDBReliable.quick(function (result) {
+        clearTimeout(timer);
+        resolve(result);
+      });
     });
   });
 });
