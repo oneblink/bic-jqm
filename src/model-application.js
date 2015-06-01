@@ -275,19 +275,12 @@ define(function (require) {
     },
 
     hasStorage: function () {
-      if (typeof Pouch === 'undefined') {
-        return false;
+      var col = this.interactions;
+      if (col && col.data && col.data.ready && col.data.hasStorage) {
+        return col.data.hasStorage();
       }
-      if (window.BMP.BIC.isBlinkGap === true && Pouch.adapters.websql) {
-        return true;
-      }
-      if (Pouch.adapters.idb) {
-        try {
-          return Modernizr.indexeddb && window.indexedDB.open('idbTest', 1).onupgradeneeded === null && navigator.userAgent.indexOf('iPhone') === -1 && navigator.userAgent.indexOf('iPad') === -1;
-        } catch (ignore) {
-          return false;
-        }
-        return false;
+      if (window.console && window.console.warn) {
+        window.console.warn('hasStorage() called before detection complete');
       }
       return false;
     }
