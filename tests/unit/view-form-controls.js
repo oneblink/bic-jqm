@@ -23,31 +23,31 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       };
 
       errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
-        return {"text_box": [{"code": "MAXLENGTH", "MAX": "5"}]};
+        return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
       apiStub = sinon.stub(BlinkForms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
-              "text_box": "123456789",
-              "number": 90,
-              "_action": "add",
-              "subform": []
+              'text_box': '123456789',
+              'number': 90,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(1).returns(
           Promise.resolve({
-              "text_box": "Devyani",
-              "number": 99,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Devyani',
+              'number': 99,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(2).returns(
           Promise.resolve({
-              "text_box": "Anandita",
-              "number": 109,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Anandita',
+              'number': 109,
+              '_action': 'add',
+              'subform': []
           })
       );
       mockApp = new Backbone.Model();
@@ -55,7 +55,7 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       injector.mock('model-application', mockApp);
       injector.mock('model-pending', Backbone.Model);
       injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('feature!api', function () { return null; });
+      injector.mock('api', function () { return null; });
       injector.require(['view-form-controls'], function (required) {
         View = required;
         done();

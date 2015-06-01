@@ -52,7 +52,7 @@ define(
         formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
         formdata._submittedTimezoneOffset /= -60;
         return $.ajax({
-          type: "POST",
+          type: 'POST',
           url: url,
           data: formdata
         });

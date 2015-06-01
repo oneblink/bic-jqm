@@ -4,7 +4,7 @@
   @module Form
 */
 define(
-  ['feature!api'],
+  ['api'],
   function (API) {
     'use strict';
 

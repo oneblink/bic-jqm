@@ -1,36 +1,24 @@
 define(
-  ['model-datasuitcase', 'feature!data'],
-  function (DataSuitcase, Data) {
+  ['model-datasuitcase', 'collection'],
+  function (DataSuitcase, Collection) {
     'use strict';
-    var DataSuitcaseCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-DataSuitcase';
+
+    var DataSuitcaseCollection = Collection.extend({
       model: DataSuitcase,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-DataSuitcase');
-        return this;
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve) {
-          collection.fetch({
-            success: resolve,
-            error: resolve
-          });
+        // always resolve, never reject
+        return Collection.prototype.load.call(this).then(null, function () {
+          return Promise.resolve();
         });
-      },
-
-      save: function () {
-        return Promise.all(_.map(this.models, function (model) {
-          return new Promise(function (resolve, reject) {
-            model.save({}, {
-              success: resolve,
-              error: reject
-            });
-          });
-        }));
       }
+
     });
     return DataSuitcaseCollection;
   }

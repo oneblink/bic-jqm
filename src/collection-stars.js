@@ -1,24 +1,15 @@
 define(
-  ['model-star', 'feature!data'],
-  function (Star, Data) {
+  ['model-star', 'collection'],
+  function (Star, Collection) {
     'use strict';
-    var FormCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Star';
+
+    var FormCollection = Collection.extend({
       model: Star,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Star');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       clear: function (type) {

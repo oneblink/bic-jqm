@@ -1,5 +1,5 @@
 define(
-  ['facade', 'feature!api'],
+  ['facade', 'api'],
   function (facade, API) {
     'use strict';
     var Interaction = Backbone.Model.extend({

@@ -1,6 +1,6 @@
 define(['text!template-form-controls.mustache',
   'model-application',
-  'feature!api',
+  'api',
   'enum-user-actions'],
   function (Template, app, API, USER_ACTIONS) {
     'use strict';
@@ -196,7 +196,7 @@ define(['text!template-form-controls.mustache',
       },
 
       formSave2: function () {
-        this.addToQueue("Draft")
+        this.addToQueue('Draft')
             .then(checkForFormErrors(this, USER_ACTIONS.SAVE));
       },
 

@@ -10,7 +10,6 @@ define(['Squire'], function (Squire) {
       apiStub.returns(Promise.resolve());
 
       injector.mock('model-pending', Backbone.Model);
-      injector.mock('data-inMemory', function () { return null; });
       injector.mock('api-web', {
         setPendingItem: apiStub
       });

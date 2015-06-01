@@ -1,8 +1,11 @@
 define(
-  ['model-form', 'feature!data', 'feature!api'],
-  function (Form, Data, API) {
+  ['model-form', 'collection', 'api'],
+  function (Form, Collection, API) {
     'use strict';
-    var FormCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Form';
+
+    var FormCollection = Collection.extend({
       model: Form,
 
       initialize: function () {
@@ -43,19 +46,7 @@ define(
       },
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Form');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       whenUpdated: function () {

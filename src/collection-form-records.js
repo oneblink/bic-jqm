@@ -1,24 +1,15 @@
 define(
-  ['model-form-record', 'feature!data', 'feature!api'],
-  function (FormRecord, Data, API) {
+  ['model-form-record', 'collection', 'api'],
+  function (FormRecord, Collection, API) {
     'use strict';
-    var FormRecordCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-FormRecord';
+
+    var FormRecordCollection = Collection.extend({
       model: FormRecord,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-FormRecord');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       pull: function (formName) {

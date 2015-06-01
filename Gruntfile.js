@@ -82,6 +82,7 @@ module.exports = function (grunt) {
           optimize: "none",
           paths: {
             feature: '../node_modules/amd-feature/feature',
+            implementations: 'empty:', // stop outer build from looking in inner
             pollUntil: '../node_modules/poll-until/poll-until',
             BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap'
           },
@@ -102,9 +103,9 @@ module.exports = function (grunt) {
           optimize: "none",
           paths: {
             geolocation: '../node_modules/geolocation/geolocation',
+            'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
             text: '../node_modules/text/text',
             domReady: '../node_modules/domReady/domReady',
-            feature: '../node_modules/amd-feature/feature',
             'es5-shim': 'empty:',
             uuid: '../node_modules/node-uuid/uuid',
             authentication: '../node_modules/offlineLogin/authentication',

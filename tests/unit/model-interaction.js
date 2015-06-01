@@ -6,7 +6,7 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('feature!api', function () { return null; });
+      injector.mock('api', function () { return null; });
 
       /*eslint-disable no-console*/ // just for testing
       injector.mock('facade', {
