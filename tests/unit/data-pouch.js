@@ -15,12 +15,9 @@ define(['Squire'], function (Squire) {
           }
         };
 
-        require(['pouchdb'], function (Pouch) {
-          window.Pouch = Pouch;
-          injector.require(['../src/data-pouch'], function (required) {
-            Data = required;
-            done();
-          });
+        injector.require(['../src/data'], function (required) {
+          Data = required;
+          done();
         });
       });
 
@@ -37,16 +34,14 @@ define(['Squire'], function (Squire) {
         // Where wilderbeats roam free
         // And the dread lord DOM walks the land
 
-        data.create(model).then(function () {
-          data.deleteAll().then(
-            function () {
-              done();
-            },
-            function () {
-              done();
-            }
-          );
-        }, function () {
+        data.create(model)
+        .then(function () {
+          return data.deleteAll();
+        })
+        .then(function () {
+          done();
+        })
+        .then(null, function () {
           done();
         });
       });
@@ -56,6 +51,17 @@ define(['Squire'], function (Squire) {
         // Just assume that beforeEach has handled this
         // Or you are in a world of pain
         expect(data).to.be.an('object');
+      });
+
+      describe('#hasStorage', function () {
+        it('should be a function', function () {
+          expect(data.hasStorage).to.be.a('function');
+        });
+
+        it('should return a boolean', function () {
+          assert.isBoolean(data.hasStorage());
+        });
+
       });
 
       describe('#getDB', function () {
@@ -100,7 +106,7 @@ define(['Squire'], function (Squire) {
           promise.then(function (type) {
             if (window.BMP.BIC.isBlinkGap) {
               assert.include(['websql', 'idb'], type);
-            } else {
+            } else if (type) {
               assert.equal(type, 'idb');
             }
             done();
@@ -124,15 +130,29 @@ define(['Squire'], function (Squire) {
         });
 
         it('should resolve with the newly created object', function (done) {
-          data.create(model).then(function (doc) {
-            expect(doc).to.not.equal(undefined).and.not.equal(null);
-            expect(doc._id).to.not.equal(undefined).and.not.equal(null);
-            expect(doc.cat).to.equal('hat');
+          if (!data.hasStorage()) {
             done();
+            return;
+          }
+          data.create(model).then(function (doc) {
+            try {
+              expect(doc).to.not.equal(undefined).and.not.equal(null);
+              expect(doc._id).to.not.equal(undefined).and.not.equal(null);
+              if (data.hasStorage()) {
+                expect(doc.cat).to.equal('hat');
+              }
+              done();
+            } catch (err) {
+              window.console.error(err);
+            }
           });
         });
 
         it('should create an object in the database', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.getDB().then(function (db) {
             db.allDocs(function (err, response) {
               expect(err).to.not.equal(undefined);
@@ -164,6 +184,10 @@ define(['Squire'], function (Squire) {
         });
 
         it('should resolve with the updated object', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.create(model).then(function (createdModel) {
             expect(createdModel).to.have.property('_id');
             expect(createdModel).to.have.property('_rev');
@@ -185,6 +209,10 @@ define(['Squire'], function (Squire) {
         });
 
         it('should update the object in the database', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.create(model).then(function (createdModel) {
             expect(createdModel).to.have.property('_id');
             expect(createdModel).to.have.property('_rev');
@@ -217,6 +245,10 @@ define(['Squire'], function (Squire) {
         });
 
         it('should reject if the item could not be updated', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.create(model).then(function (createdModel) {
             createdModel.id = createdModel._id;
             createdModel.toJSON = function () {
@@ -247,6 +279,10 @@ define(['Squire'], function (Squire) {
         });
 
         it('should resolve with the object from the db', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.create(model).then(function (createdModel) {
             data.read({id: createdModel._id}).then(function (doc) {
               expect(doc).to.not.equal(undefined).and.not.equal(null);
@@ -274,6 +310,15 @@ define(['Squire'], function (Squire) {
         });
 
         it('should resolve with all the objects stored in the db', function (done) {
+          if (!data.hasStorage()) {
+            data.readAll().then(function (docs) {
+              expect(docs).to.not.equal(undefined).and.not.equal(null);
+              expect(docs).to.be.an('array');
+              expect(docs).to.have.property('length', 0);
+              done();
+            });
+            return;
+          }
           data.readAll().then(function (docs) {
             expect(docs).to.not.equal(undefined).and.not.equal(null);
             expect(docs).to.be.an('array');
@@ -313,6 +358,10 @@ define(['Squire'], function (Squire) {
         });
 
         it('should resolve with deletion confirmation', function (done) {
+          if (!data.hasStorage()) {
+            done();
+            return;
+          }
           data.create(model).then(function (createdModel) {
             data.delete({id: createdModel._id}).then(function (doc) {
               expect(doc).to.not.equal(undefined).and.not.equal(null);

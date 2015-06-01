@@ -74,23 +74,26 @@ define(function (require) {
         app.stars = app.stars || new StarsCollection();
         app.formRecords = app.formRecords || new FormRecordsCollection();
 
-        if (app.hasStorage()) {
-          // enable the pending queue
-          app.pending = app.pending || new PendingCollection();
+        // prime models / collections with previous persisted data
+        Promise.all([
+          // loading these causes storage detection results to be finalised
+          app.interactions.datastore().load(),
+          app.datasuitcases.datastore().load(),
+          app.forms.datastore().load(),
+          app.stars.datastore().load(),
+          app.formRecords.datastore().load()
+        ])
+        .then(function () {
+          // now it is safe to use .hasStorage()
+          if (app.hasStorage()) {
+            // enable the pending queue
+            app.pending = app.pending || new PendingCollection();
+            return app.pending.datastore().load();
+          }
+          return Promise.resolve();
+        })
+        .then(resolve, reject);
 
-          // prime models / collections with previous persisted data
-          Promise.all([
-            app.interactions.datastore().load(),
-            app.datasuitcases.datastore().load(),
-            app.forms.datastore().load(),
-            app.pending.datastore().load(),
-            app.stars.datastore().load(),
-            app.formRecords.datastore().load()
-          ]).then(resolve, reject);
-
-        } else {
-          resolve();
-        }
       });
 
       return this.collections._promise;
