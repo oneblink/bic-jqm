@@ -104,7 +104,7 @@ define(['text!template-form-controls.mustache',
           return onLeave[this.model.get('blinkFormAction')]({ model: BlinkForms.current, userAction: userAction});
         }
 
-        if (window.BMP.BIC3.history.length === 0) {
+        if (window.BMP.BIC3.history.length <= 1) {
           return window.BMP.BIC3.view.home();
         }
 
