@@ -28,9 +28,9 @@ but it doesn't pass our reliability tests so we don't touch it.
 
 ## Checklist: before you use our persistent collections
 
-1. check to see if the BIC has loaded
+1. wait until the BIC has loaded
 
-2. check to see whether the collections exist
+2. wait until the collections exist
 
 3. check to see whether we have detected reliable persistent storage (per-above)
 

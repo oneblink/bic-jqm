@@ -1,0 +1,109 @@
+<article style="margin: 0 auto; max-width: 30em;">
+  <section id="bic-example-login">
+    <label>
+      email
+      <input type="email" name="email" placeholder="harry@hogwarts.edu" />
+    </label>
+    <label>
+      password
+      <input type="password" name="password" />
+    </label>
+    <label>
+      online
+      <input type="checkbox" name="online" disabled="disabled" />
+    </label>
+    <button data-action="signin">sign-in</button>
+    <p>Hint: harry@hogwarts.edu hedwig</p>
+  </section>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var FIVE_MINUTES = 1000 * 60 * 5;
+
+      var section$ = $('#bic-example-login');
+      var email$ = section$.find('input[name=email]');
+      var password$ = section$.find('input[name=password]');
+      var online$ = section$.find('input[name=online]');
+      var signin$ = section$.find('button[data-action=signin]');
+
+      if (navigator.onLine) {
+        online$.prop('checked', true);
+      }
+
+      signin$.on('click', function () {
+        var email = email$.val();
+        var password = password$.val();
+
+        if (!email || !password) {
+          BMP.BIC.view.popup('<p>both email and password are required</p>');
+          return;
+        }
+
+        if (navigator.onLine) { // online
+
+          $.mobile.loader().show();
+
+          setTimeout(function () { // TODO: replace this with AJAX or something
+            $.mobile.loader().hide();
+
+            // TODO: replace this with a network success condition or something
+            if (email === 'harry@hogwarts.edu' && password === 'hedwig') {
+
+              // TODO: replace expiry per policy or server-provided value
+              BMP.Authentication.setCurrent({
+                principal:  email,
+                credential: password,
+                expiry: (new Date()).valueOf() + FIVE_MINUTES
+              }, function () { // onSuccess
+                if (window.console && window.console && window.console.info) {
+                  window.console.info('credential hashed and stored');
+                }
+
+              }, function (err) { // onError
+                if (window.console && window.console && window.console.error) {
+                  window.console.error('setCurrent() error');
+                  window.console.error(err);
+                }
+              });
+
+              BMP.BIC.view.popup('<p>sign-in successful! :D</p>');
+
+            } else {
+              BMP.BIC.view.popup('<p>sign-in failed! :(</p>');
+            }
+
+          }, 2e3);
+
+        } else if (!BMP.BIC.hasStorage()) {
+          BMP.BIC.view.popup('<p>sign-in failed! no network :(</p>');
+
+        } else { // offline
+
+          BMP.Authentication.authenticate({
+            principal:  email,
+            credential: password
+          }, function (result) { // onSuccess
+            if (result) {
+              BMP.BIC.view.popup('<p>offline sign-in successful! :D</p>');
+
+            } else {
+              BMP.BIC.view.popup('<p>offline sign-in failed! :(</p>');
+            }
+
+          }, function (err) { // onError
+            BMP.BIC.view.popup('<p>offline sign-in failed! :(</p>');
+            if (window.console && window.console && window.console.error) {
+              window.console.error('authenticate() error');
+              window.console.error(err);
+            }
+          });
+
+
+        }
+
+      });
+    }());
+  </script>
+</article>
