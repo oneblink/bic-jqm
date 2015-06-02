@@ -287,12 +287,20 @@ define(['text!template-form-controls.mustache',
               answerspaceid: view.model.get('dbid'),
               data: data
             };
-            if (view.model.get('args')['args[pid]']) {
-              model = app.pending.get(view.model.get('args')['args[pid]']);
-              model.save(modelAttrs, options);
-            } else {
-              model = app.pending.create(modelAttrs, options);
+            //if (view.model.get('args')['args[pid]']) {
+            if (view.model.getArgument('pid')){
+              model = app.pending.get(view.model.getArgument('pid'));
+
+              if ( model ){
+                return model.save(modelAttrs, options);
+              }
+
+              //if we got here then args[pid] shouldn't be set as the model is not
+              //in the process queue
+              view.model.setArgument('pid', null);
             }
+
+            model = app.pending.create(modelAttrs, options);
           });
         });
       }

@@ -29,6 +29,115 @@ define(['Squire'], function (Squire) {
       Model.should.be.an.instanceOf(Function);
     });
 
+//////////////////////////////////////////////////////////
+
+    describe('setArgument()', function(){
+      var interaction;
+      beforeEach(function(){
+        interaction = new Model();
+      });
+
+      afterEach(function(){
+        interaction = undefined;
+      });
+
+      it('should set the same argument', function(){
+        interaction.setArgument('test', 10);
+        assert.equal(interaction.get('args')['args[test]'], 10);
+
+        interaction.setArgument('args[test]', 20);
+        assert.equal(interaction.get('args')['args[test]'], 20);
+
+        assert.equal(Object.keys(interaction.get('args')).length, 1);
+      });
+    });
+
+//////////////////////////////////////////////////////////
+
+    describe('getArgument()', function(){
+      var interaction;
+      beforeEach(function(){
+        interaction = new Model();
+      });
+
+      afterEach(function(){
+        interaction = undefined;
+      });
+
+      it('should set and get the same argument', function(){
+        interaction.setArgument('test', 10);
+        assert.equal(interaction.getArgument('test'), 10);
+
+        interaction.setArgument('args[test]', 20);
+        assert.equal(interaction.getArgument('args[test]'), 20);
+
+        assert.equal(Object.keys(interaction.get('args')).length, 1);
+      });
+    });
+
+//////////////////////////////////////////////////////////
+
+    describe('setArgsFromQueryString()', function(){
+      var interaction;
+      beforeEach(function(){
+        interaction = new Model();
+      });
+
+      afterEach(function(){
+        interaction = undefined;
+      });
+
+      it('should set attributes.args to null', function(){
+        interaction.setArgsFromQueryString('');
+
+        assert.isNull(interaction.get('args'));
+      });
+
+      it('should set the atrributes.args values correctly', function(){
+        var expected = {};
+
+        expected['args[pid]'] = 123;
+        interaction.setArgsFromQueryString('?args[pid]=123');
+
+        assert.equal(interaction.get('args')['args[pid]'], expected['args[pid]']);
+      });
+
+      it('should convert multiple arguments of the same name to arrays', function(){
+        interaction.setArgsFromQueryString('?args[pid]=123&arr[]=0&arr[]=1&arr[]=2');
+
+        assert.isArray(interaction.get('args')['args[arr]']);
+        assert.equal(interaction.get('args')['args[arr]'].length, 3);
+
+        interaction.get('args')['args[arr]'].forEach(function(val, index){
+          assert.equal(val, index);
+        });
+      });
+
+      it('should convert multiple arguments of the same name to arrays, using the getters', function(){
+        interaction.setArgsFromQueryString('?args[pid]=123&arr[]=0&arr[]=1&arr[]=2');
+
+        assert.isArray(interaction.getArgument('arr'));
+        assert.equal(interaction.getArgument('arr').length, 3);
+
+        interaction.getArgument('arr').forEach(function(val, index){
+          assert.equal(val, index);
+        });
+      });
+
+      it('should convert multiple arguments of the same name to arrays, even when wrapped in "args[]"', function(){
+        interaction.setArgsFromQueryString('?args[pid]=123&args[arr[]]=0&args[arr[]]=1&args[arr[]]=2');
+
+        assert.isArray(interaction.get('args')['args[arr]']);
+        assert.equal(interaction.get('args')['args[arr]'].length, 3);
+
+        interaction.get('args')['args[arr]'].forEach(function(val, index){
+          assert.equal(val, index);
+        });
+      });
+    });
+
+//////////////////////////////////////////////////////////
+
     describe('inherit(config)', function () {
       it('should set the parent of this item for the inheritance chain');
     });

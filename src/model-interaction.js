@@ -2,6 +2,11 @@ define(
   ['facade', 'api'],
   function (facade, API) {
     'use strict';
+
+    /**
+    A model of an interaction
+    @class Backbone.Model InteractionModel
+    */
     var Interaction = Backbone.Model.extend({
 
       idAttribute: '_id',
@@ -38,6 +43,96 @@ define(
           }
         }
         return config;
+      },
+
+/**
+  sets the values of the attributes.args hash based on the passed in query string
+  if the key appears more than once in the string its parameters are aggregated
+  into an array. Note that specifying a property name in the key (eg
+  *args[pid]* and *args[id]*) is considered to make the keys different, for
+  backward compatability reasons.
+
+  @example
+  setArgsFromQueryString(?args[pid]=23&args[id]=1&arr=1&arr=2&arr=3)
+  // -or-
+  setArgsFromQueryString(?args[pid]=23&args[id]=1&args[arr]=1&args[arr]=2&args[arr]=3)
+  //  model.attributes.args =
+  //  {
+  //    args[pid]: 23,
+  //    args[id]: 1,
+  //    args[arr]: [1, 2, 3]
+  //  }
+  @param {string} arguments in query string format, eg key=value&key2=value2
+*/
+      setArgsFromQueryString: function(queryString){
+        var args
+          , flattenQueryStringMap;
+
+        flattenQueryStringMap = function(arg, key){
+          if (_.isArray(arg)){
+            return [key.replace(/\[\]/g, ''), _.reduce(arg, function(memo, keyValuePair){
+              var val;
+              try{
+                val = JSON.parse(keyValuePair[1]);
+              } catch(e) {
+                val = keyValuePair[1];
+              }
+
+              memo.push(val);
+              return memo;
+            }, [])];
+          }
+
+          return arg;
+        };
+
+        args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).split('&'))
+                .compact()
+                .map(function(qsParam){ return qsParam.split('='); })
+                .groupBy(function(arg){ return arg[0]; })
+                .map(flattenQueryStringMap)
+                .value();
+
+        if (!args.length){
+          this.set('args', null);
+          return;
+        }
+
+        _.each(args, function(arg){ this.setArgument.apply(this, arg); }, this );
+      },
+
+/**
+  Gets an argument from attributes.args
+
+  @param {string} argName - The argument name, with or without the 'args[]' wrapping.
+
+  @returns {*} - The value of the argument or **null** if not found
+*/
+      getArgument: function(argName){
+        var args = this.get('args');
+
+        if ( !/^args\[.+\]$/.test(argName) ){
+          argName = 'args[' + argName + ']';
+        }
+
+        return args ? args[argName] : null;
+      },
+
+/**
+  Sets an argument to attributes.args. Ensures that it conforms to the format the BMP expects.
+
+  @param {string} argName - The name of the argument, with or without the 'args[]' wrapping.
+  @param {*} value - The value of the argument
+*/
+      setArgument: function(argName, value){
+        var args = this.get('args') || {};
+
+        if ( !/^args\[.+\]$/.test(argName) ){
+          argName = 'args[' + argName + ']';
+        }
+
+        args[argName] = value;
+        this.set('args', args);
       },
 
       prepareForView: function (data) {

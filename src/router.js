@@ -108,11 +108,9 @@ define(
         app.whenPopulated()
           .then(function () {
             model = app.router.inheritanceChain(path);
-
+            model.setArgsFromQueryString(path.search);
             app.currentInteraction = model;
-
-            app.router.parseArgs(path.search.substr(1), model);
-
+            //app.router.parseArgs(path.search.substr(1), model);
             model.prepareForView(data).then(function (innerModel) {
               new InteractionView({
                 tagName: 'div',
@@ -124,10 +122,10 @@ define(
                 data.deferred.resolve(data.absUrl, data.options, this.$el);
               }).render(data);
             });
-
           })
           //catch the error thrown when a model cant be found
           .then(undefined, function(){
+            window.console.log(JSON.stringify(data));
             data.deferred.reject(data.absUrl, data.options);
             $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
@@ -183,25 +181,31 @@ define(
         return app.interactions.get(path[0]);
       },
 
+/**
+delegates to {@link Interaction.setArgsFromQueryString model.setArgsFromQueryString()}
+
+@deprecated
+*/
       parseArgs: function (argString, model) {
-        var args = argString.split('&'),
-          tempargs,
-          finalargs = {};
+        // var args = argString.split('&'),
+        //   tempargs,
+        //   finalargs = {};
 
-        _.each(args, function (element) {
-          tempargs = element.split('=');
-          if (tempargs[0].substr(0, 4) !== 'args') {
-            tempargs[0] = 'args[' + tempargs[0] + ']';
-          }
-          finalargs[tempargs[0]] = tempargs[1];
-        });
+        // _.each(args, function (element) {
+        //   tempargs = element.split('=');
+        //   if (tempargs[0].substr(0, 4) !== 'args') {
+        //     tempargs[0] = 'args[' + tempargs[0] + ']';
+        //   }
+        //   finalargs[tempargs[0]] = tempargs[1];
+        // });
 
-        if (finalargs) {
-          model.set({args: finalargs});
-        } else {
-          model.set({args: null});
-        }
+        // if (finalargs) {
+        //   model.set({args: finalargs});
+        // } else {
+        //   model.set({args: null});
+        // }
 
+        model.setArgsFromQueryString( argString );
         return this;
       },
 
@@ -248,7 +252,8 @@ define(
         }
 
         // Store form data, if applicable
-        if (app.currentInteraction.get('args')['args[pid]']) {
+//        if (app.currentInteraction.get('args')['args[pid]']) {
+        if (app.currentInteraction.getArgument('pid')){
           // saving over existing draft
           app.view.subView.subView.subView.addToQueue('Draft', true);
         } else {
