@@ -53,9 +53,9 @@ define(
   backward compatability reasons.
 
   @example
-  setArgsFromQueryString(?args[pid]=23&args[id]=1&arr=1&arr=2&arr=3)
+  setArgsFromQueryString('?args[pid]=23&args[id]=1&arr=1&arr=2&arr=3')
   // -or-
-  setArgsFromQueryString(?args[pid]=23&args[id]=1&args[arr]=1&args[arr]=2&args[arr]=3)
+  setArgsFromQueryString('?args[pid]=23&args[id]=1&args[arr]=1&args[arr]=2&args[arr]=3')
   //  model.attributes.args =
   //  {
   //    args[pid]: 23,
@@ -73,7 +73,7 @@ define(
             return [key.replace(/\[\]/g, ''), _.reduce(arg, function(memo, keyValuePair){
               var val;
               try{
-                val = JSON.parse(keyValuePair[1]);
+                val = decodeURIComponent(keyValuePair[1]);
               } catch(e) {
                 val = keyValuePair[1];
               }
