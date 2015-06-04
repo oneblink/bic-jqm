@@ -50,6 +50,16 @@ define(['Squire'], function (Squire) {
 
         assert.equal(Object.keys(interaction.get('args')).length, 1);
       });
+
+      it('should trigger the "change:args" event with an object hacing at least name and value members', function(){
+        var listener = function(changed){
+          assert.equal('test', changed.name);
+          assert.equal(10, changed.value);
+        };
+
+        interaction.on('change:args', listener);
+        interaction.setArgument('test', 10);
+      });
     });
 
 //////////////////////////////////////////////////////////
@@ -102,19 +112,19 @@ define(['Squire'], function (Squire) {
         assert.equal(interaction.get('args')['args[pid]'], expected['args[pid]']);
       });
 
-      it('should convert multiple arguments of the same name to arrays', function(){
+      it('should convert arguments using "key[]"" array notation to arrays', function(){
         interaction.setArgsFromQueryString('?args[pid]=123&arr[]=0&arr[]=1&arr[]=2');
 
         assert.isArray(interaction.get('args')['args[arr]']);
         assert.equal(interaction.get('args')['args[arr]'].length, 3);
 
-        interaction.get('args')['args[arr]'].forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function(val, index){
           assert.equal(val, index);
         });
       });
 
-      it('should convert multiple arguments of the same name to arrays, using the getters', function(){
-        interaction.setArgsFromQueryString('?args[pid]=123&arr[]=0&arr[]=1&arr[]=2');
+      it('should convert arguments using "key" array notation to arrays', function(){
+        interaction.setArgsFromQueryString('?args[pid]=123&arr=0&arr=1&arr=2');
 
         assert.isArray(interaction.getArgument('arr'));
         assert.equal(interaction.getArgument('arr').length, 3);
@@ -124,13 +134,24 @@ define(['Squire'], function (Squire) {
         });
       });
 
-      it('should convert multiple arguments of the same name to arrays, even when wrapped in "args[]"', function(){
+      it('should convert arguments using "key[]" array notation to arrays, even when wrapped in "args[]"', function(){
         interaction.setArgsFromQueryString('?args[pid]=123&args[arr[]]=0&args[arr[]]=1&args[arr[]]=2');
 
         assert.isArray(interaction.get('args')['args[arr]']);
         assert.equal(interaction.get('args')['args[arr]'].length, 3);
 
-        interaction.get('args')['args[arr]'].forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function(val, index){
+          assert.equal(val, index);
+        });
+      });
+
+      it('should convert arguments using "key" array notation to arrays, even when wrapped in "args[]"', function(){
+        interaction.setArgsFromQueryString('?args[pid]=123&args[arr]=0&args[arr]=1&args[arr]=2');
+
+        assert.isArray(interaction.get('args')['args[arr]']);
+        assert.equal(interaction.get('args')['args[arr]'].length, 3);
+
+        interaction.getArgument('arr').forEach(function(val, index){
           assert.equal(val, index);
         });
       });

@@ -3,11 +3,60 @@ define(
   function (facade, API) {
     'use strict';
 
-    /**
-    A model of an interaction
-    @class Backbone.Model InteractionModel
-    */
-    var Interaction = Backbone.Model.extend({
+    var Interaction
+      , makeArgId
+      , extractArgProp
+      , convertQueryStringArrays
+      , convertHtmlEntities;
+
+/// private to this module. for now.
+    convertHtmlEntities = function(entity){
+      switch(entity){
+        case '&apos;':
+          return "'";
+        case '&quot;':
+          return '"';
+        default:
+          return entity;
+      }
+    };
+
+    //helper for flattening the processed query string
+    convertQueryStringArrays = function(args, key){
+      var values = _.chain(args)
+                    .flatten()
+                    .uniq()
+                    .tail()
+                    .map(decodeURIComponent)
+                    .value();
+
+      //normalize the keys if they are in name[] format and set
+      return [key.replace(/\[\]/g, ''), values.length > 1 ? values : values[0] ];
+    };
+
+    //ensures that the passed in property name is in the form 'args[argName]'
+    makeArgId = function(argName){
+      if ( !/^args\[.+\]$/.test(argName) ){
+        argName = 'args[' + argName + ']';
+      }
+
+      return argName;
+    };
+
+    //gets the property name out of a name run through makeArgId
+    extractArgProp = function(keyName){
+      var match = keyName.match(/^args\[(.+)\]$/);
+
+      return match ? match[1] : keyName;
+    };
+
+// end private
+
+/**
+A model of an interaction
+@class Backbone.Model InteractionModel
+*/
+    Interaction = Backbone.Model.extend({
 
       idAttribute: '_id',
 
@@ -48,9 +97,7 @@ define(
 /**
   sets the values of the attributes.args hash based on the passed in query string
   if the key appears more than once in the string its parameters are aggregated
-  into an array. Note that specifying a property name in the key (eg
-  *args[pid]* and *args[id]*) is considered to make the keys different, for
-  backward compatability reasons.
+  into an array.
 
   @example
   setArgsFromQueryString('?args[pid]=23&args[id]=1&arr=1&arr=2&arr=3')
@@ -65,32 +112,13 @@ define(
   @param {string} arguments in query string format, eg key=value&key2=value2
 */
       setArgsFromQueryString: function(queryString){
-        var args
-          , flattenQueryStringMap;
+        var args;
 
-        flattenQueryStringMap = function(arg, key){
-          if (_.isArray(arg)){
-            return [key.replace(/\[\]/g, ''), _.reduce(arg, function(memo, keyValuePair){
-              var val;
-              try{
-                val = decodeURIComponent(keyValuePair[1]);
-              } catch(e) {
-                val = keyValuePair[1];
-              }
-
-              memo.push(val);
-              return memo;
-            }, [])];
-          }
-
-          return arg;
-        };
-
-        args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).split('&'))
+        args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).replace(/&apos;|&quot;/gi, convertHtmlEntities).split('&'))
                 .compact()
                 .map(function(qsParam){ return qsParam.split('='); })
                 .groupBy(function(arg){ return arg[0]; })
-                .map(flattenQueryStringMap)
+                .map(convertQueryStringArrays)
                 .value();
 
         if (!args.length){
@@ -110,10 +138,7 @@ define(
 */
       getArgument: function(argName){
         var args = this.get('args');
-
-        if ( !/^args\[.+\]$/.test(argName) ){
-          argName = 'args[' + argName + ']';
-        }
+        argName = makeArgId(argName);
 
         return args ? args[argName] : null;
       },
@@ -121,18 +146,34 @@ define(
 /**
   Sets an argument to attributes.args. Ensures that it conforms to the format the BMP expects.
 
+  @emits Interaction#change:args
+
   @param {string} argName - The name of the argument, with or without the 'args[]' wrapping.
   @param {*} value - The value of the argument
 */
       setArgument: function(argName, value){
-        var args = this.get('args') || {};
+        var args = {};
 
-        if ( !/^args\[.+\]$/.test(argName) ){
-          argName = 'args[' + argName + ']';
+        if ( !this.get('args')){
+          this.set('args', args, {silent: true});
+        } else {
+          args = this.get('args');
         }
 
-        args[argName] = value;
-        this.set('args', args);
+        argName = makeArgId(argName);
+
+        args[ argName ] = value;
+
+/**
+  The argument change event.
+
+  @event Interaction#change:args
+
+  @type {object}
+  @property {string} name - The name of the argument that was changed, without the args[] wrapping
+  @property {string} value - The value of the argument that was changed
+*/
+        this.trigger('change:args', {name: extractArgProp(argName), value: value});
       },
 
       prepareForView: function (data) {

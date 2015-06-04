@@ -287,7 +287,7 @@ define(['text!template-form-controls.mustache',
               answerspaceid: view.model.get('dbid'),
               data: data
             };
-            //if (view.model.get('args')['args[pid]']) {
+
             if (view.model.getArgument('pid')){
               model = app.pending.get(view.model.getArgument('pid'));
 

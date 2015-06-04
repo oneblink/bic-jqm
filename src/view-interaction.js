@@ -15,16 +15,25 @@ define(
   function (Template, inputPromptTemplate, categoryTemplate, pendingTemplate, popupTemplate, clearConfirmationPopupTemplate, FormView, app, StarModel, StarView, geolocation, uiTools) {
     'use strict';
 
-    var InteractionView = Backbone.View.extend({
+    var InteractionView
+      , convertIllegalUrlChars;
+
+    convertIllegalUrlChars = function(chr){
+      switch( chr ){
+        case '"':
+          return "&quot;";
+        case "'":
+          return "&apos;";
+        default:
+          return chr;
+      }
+    };
+
+    InteractionView = Backbone.View.extend({
 
       initialize: function () {
         $('body').append(this.$el);
         window.BMP.BIC.view = this;
-
-        // this.$el.once('pageremove', function () {
-        //   console.log('Backbone view cleanup');
-
-        // })
       },
 
       events: {
@@ -92,10 +101,10 @@ define(
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {
-              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
+              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
             } else {
               first = false;
-              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
+              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
             }
           }
         }
