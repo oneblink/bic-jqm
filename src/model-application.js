@@ -143,26 +143,22 @@ define(function (require) {
             }
             return Promise.all(_.compact(_.map(data, function (value, key) {
               var model;
+              model = value.pertinent;
+              if (!model) {
+                return null; // e.g. "map" property of GetConfig XHR JSON
+              }
+              model.dbid = key;
               if (key.substr(0, 1) === 'c' || key.substr(0, 1) === 'i') {
-                model = value.pertinent;
                 model._id = model.name.toLowerCase();
-                model.dbid = key;
                 app.interactions.add(model, {merge: true});
                 return model._id;
               }
               if (key.substr(0, 1) === 'a') {
-                return new Promise(function (resolve, reject) {
-                  model = {
-                    _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-                    dbid: key
-                  };
+                model._id = window.BMP.BIC.siteVars.answerSpace.toLowerCase();
+                return new Promise(function (resolve) {
                   app.interactions.add(model, {merge: true});
-                  app.save(value.pertinent, {
-                    success: function () {
-                      resolve(window.BMP.BIC.siteVars.answerSpace.toLowerCase());
-                    },
-                    error: reject
-                  });
+                  app.set(model);
+                  resolve(window.BMP.BIC.siteVars.answerSpace.toLowerCase());
                 });
               }
             })));
@@ -170,10 +166,12 @@ define(function (require) {
         )
         .then(
           function (interactions) {
-            return Promise.all(_.map(
-              _.reject(app.interactions.models, function (model) {
-                return _.contains(interactions, model.id);
-              }),
+            return Promise.all(
+              _.map(
+                _.reject(app.interactions.models, function (model) {
+                  return _.contains(interactions, model.id);
+                }
+              ),
               function (model) {
                 return new Promise(function (resolve, reject) {
                   model.destroy({
