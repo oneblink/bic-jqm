@@ -208,6 +208,24 @@ define(['text!template-form-controls.mustache',
         $('#closePopup').popup('close');
       },
 
+      scrollToError: function () {
+        var firstElement, pageIndex;
+        var currentIndex = BlinkForms.current.get('pages').current.index();
+        var firstError = _.keys(BlinkForms.current.getErrors())[0];
+
+        if (firstError) {
+          firstElement = BlinkForms.current.getElement(firstError);
+          pageIndex = firstElement.attributes.page.index();
+        }
+        if (currentIndex !== pageIndex) {
+          BlinkForms.current.get('pages').goto(pageIndex);
+        }
+
+        $('body').animate({
+          scrollTop: firstElement.attributes._view.$el.offset().top
+        }, 100);
+      },
+
       addToQueue: function (status, supressQueue) {
         var view = this;
         var model;
@@ -221,8 +239,10 @@ define(['text!template-form-controls.mustache',
             options.success = function (updatedModel) {
               if (!supressQueue) {
                 $(window).one('pagechange', function () {
-                  if (!navigator.onLine || model.get('status') === 'Draft') {
-                    app.view.pendingQueue();
+                  if (model.get('status') === 'Draft') {
+                    if (!_.isEmpty(BlinkForms.current.getErrors())) {
+                      view.scrollToError();
+                    }
                   } else {
                     model.once('processed', function () {
                       var result = model.get('result');
