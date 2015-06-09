@@ -1,7 +1,18 @@
 /*globals google:false*/
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache', 'geolocation'],
-  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate, geolocation) {
+  ['text!template-interaction.mustache',
+   'text!template-inputPrompt.mustache',
+   'text!template-category-list.mustache',
+   'text!template-pending.mustache',
+   'text!template-popup.mustache',
+   'text!template-clear-confirmation-popup.mustache',
+   'view-form',
+   'model-application',
+   'model-star',
+   'view-star',
+   'geolocation',
+   'lib/ui-tools'],
+  function (Template, inputPromptTemplate, categoryTemplate, pendingTemplate, popupTemplate, clearConfirmationPopupTemplate, FormView, app, StarModel, StarView, geolocation, uiTools) {
     'use strict';
 
     var InteractionView = Backbone.View.extend({
@@ -393,15 +404,13 @@ define(
 
       submitPendingItems: function () {
         var popup = $('#pendingPopup');
-        $.mobile.loading('show');
+        uiTools.showLoadingAnimation();
         app.pending.processQueue()
           .then(null, function () {
             return null;
           })
           .then(function () {
-            popup.one('popupafterclose', function () {
-              $.mobile.loading('hide');
-            });
+            popup.one('popupafterclose', uiTools.hideLoadingAnimation);
             popup.popup('close');
           });
       },

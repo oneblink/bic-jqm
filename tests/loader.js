@@ -24,6 +24,9 @@ require.config({
     BlinkGap: {
       deps: ['pollUntil'],
       exports: 'BMP.BlinkGap'
+    },
+    pouchdb: {
+      deps: ['feature!es5']
     }
   }
 });

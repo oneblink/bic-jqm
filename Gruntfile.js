@@ -42,7 +42,7 @@ module.exports = function (grunt) {
 
     watch: {
       src: {
-        files: ['src/**', 'tests/**'],
+        files: ['src/**/**', 'tests/**/**'],
         tasks: ['build', 'eslint', 'mocha:tests']
       }
     },

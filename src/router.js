@@ -1,6 +1,6 @@
 define(
-  ['model-application', 'view-interaction'],
-  function (app, InteractionView) {
+  ['model-application', 'view-interaction', 'lib/ui-tools'],
+  function (app, InteractionView, uiTools) {
     'use strict';
     var Router
       , $document = $(document);
@@ -44,7 +44,7 @@ define(
           // keep track of history depth for forms post-submission behaviour
           app.history.length += 1;
 
-          $.mobile.loading('show');
+          uiTools.showLoadingAnimation();
           app.router.routeRequest(data);
         });
 

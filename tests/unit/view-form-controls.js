@@ -145,7 +145,7 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         , modelGetStub
         , interactionGetStub;
 
-      beforeEach(function(done){
+      beforeEach(function(){
         var mockModel;
 
         origGet = BlinkForms.current.get;
@@ -162,7 +162,6 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
 
         viewInstance = new View();
         viewInstance.model = mockModel;
-        done();
       });
 
       afterEach(function(){
@@ -176,13 +175,9 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
           , viewMock
           , expectation;
 
-        window.BMP = {
-          BIC3: {
-            history: [],
-            view: {
-              home: function(){}
-            }
-          }
+        mockApp.history = [];
+        mockApp.view = {
+          home: function(){}
         };
 
         viewMock = sinon.mock(window.BMP.BIC3.view);
@@ -221,7 +216,6 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         afterInteractionMock.restore();
       });
     });
-
   });
 
 });
