@@ -31,6 +31,15 @@ define(['../src/lib/ui-tools'], function (uiTools) {
 
         assert.strictEqual($('#submit').hasClass('ui-disabled'), true);
       });
+
+      it('should not trigger a click event', function(){
+        var onClick = sinon.spy();
+        $('#submit').on('click', onClick);
+
+        uiTools.disableElement('#submit');
+        $('#submit').trigger('click');
+        assert.equal(0, onClick.callCount);
+      });
     });
 
     define('enableElement', function(){
@@ -60,6 +69,18 @@ define(['../src/lib/ui-tools'], function (uiTools) {
         uiTools.disableElement('#submit');
 
         assert.strictEqual($('#submit').hasClass('ui-disabled'), false);
+      });
+
+      it('should trigger a click event when enabled', function(){
+        var onClick = sinon.spy();
+        $('#submit').on('click', onClick);
+
+        $('#submit').trigger('click');
+        assert.equal(0, onClick.callCount);
+
+        uiTools.enableElement('#submit');
+        $('#submit').trigger('click');
+        assert.equal(1, onClick.callCount);
       });
     });
 
