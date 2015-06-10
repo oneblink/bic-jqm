@@ -99,6 +99,7 @@ define(
           }
         }
 
+//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {

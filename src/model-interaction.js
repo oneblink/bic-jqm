@@ -113,7 +113,7 @@ A model of an interaction
 */
       setArgsFromQueryString: function(queryString){
         var args;
-
+//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes
         args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).replace(/&apos;|&quot;/gi, convertHtmlEntities).split('&'))
                 .compact()
                 .map(function(qsParam){ return qsParam.split('='); })
