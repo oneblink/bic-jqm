@@ -1,4 +1,4 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, MODEL_STATUS) {
   'use strict';
 
   describe('View - Form Controls ', function () {
@@ -109,12 +109,12 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         expect(processQueueStub.called).to.equal(false);
 
         mockApp.set('args', []);
-        view.addToQueue('Pending');
+        view.addToQueue(MODEL_STATUS.PENDING);
         expect(apiStub.called).to.equal(true);
 
 
         setTimeout(function () {
-          pendingQueue = mockApp.pending.where({status: 'Pending'});
+          pendingQueue = mockApp.pending.where({status: MODEL_STATUS.PENDING});
           expect(pendingQueue.length).to.equal(1);
           expect(pendingQueue[0].get('data').text_box).to.equal('123456789');
         }, 1e3);
@@ -125,11 +125,11 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         var draftQueue;
 
         mockApp.set('args', []);
-        view.addToQueue('Draft');
-        view.addToQueue('Draft');
+        view.addToQueue(MODEL_STATUS.DRAFT);
+        view.addToQueue(MODEL_STATUS.DRAFT);
 
         setTimeout(function () {
-          draftQueue = mockApp.pending.where({status: 'Draft'});
+          draftQueue = mockApp.pending.where({status: MODEL_STATUS.DRAFT});
           expect(draftQueue.length).to.equal(2);
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
           expect(draftQueue[1].get('data').text_box).to.equal('Anandita');

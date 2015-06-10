@@ -11,8 +11,9 @@ define(
    'model-star',
    'view-star',
    'geolocation',
-   'lib/ui-tools'],
-  function (Template, inputPromptTemplate, categoryTemplate, pendingTemplate, popupTemplate, clearConfirmationPopupTemplate, FormView, app, StarModel, StarView, geolocation, uiTools) {
+   'lib/ui-tools',
+   'enum-model-status'],
+  function (Template, inputPromptTemplate, categoryTemplate, pendingTemplate, popupTemplate, clearConfirmationPopupTemplate, FormView, app, StarModel, StarView, geolocation, uiTools, MODEL_STATUS) {
     'use strict';
 
     var InteractionView
@@ -384,12 +385,12 @@ define(
         };
 
         this.$el.append(Mustache.render(pendingTemplate, {
-          pending: pendingExtractor('Pending'),
-          pendingPresent: pendingExtractor('Pending').length > 0,
-          draft: pendingExtractor('Draft'),
-          draftPresent: pendingExtractor('Draft').length > 0,
-          validation: pendingExtractor('Failed Validation'),
-          validationPresent: pendingExtractor('Failed Validation').length > 0
+          pending: pendingExtractor( MODEL_STATUS.PENDING ),
+          pendingPresent: pendingExtractor( MODEL_STATUS.PENDING ).length > 0,
+          draft: pendingExtractor( MODEL_STATUS.DRAFT ),
+          draftPresent: pendingExtractor( MODEL_STATUS.DRAFT ).length > 0,
+          validation: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ),
+          validationPresent: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ).length > 0
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').one('popupafterclose', function () {
@@ -426,7 +427,7 @@ define(
 
       clearPendingItems: function () {
         var items, popup = $('#clearConfirmationPopup'), i;
-        items = app.pending.where({status: 'Draft'});
+        items = app.pending.where({status: MODEL_STATUS.DRAFT });
         for (i = 0; i < items.length; i = i + 1) {
           items[i].destroy();
         }
