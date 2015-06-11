@@ -10,7 +10,8 @@ define(
 
         BlinkForms.getDefinition(view.model.get('blinkFormObjectName'), view.model.get('blinkFormAction'))
           .then(function (definition) {
-            var formRecord;
+            var formRecord
+              , pendingModel;
 
             BlinkForms.initialize(definition, view.model.get('blinkFormAction'));
             view.$el.append(BlinkForms.current.$form);
@@ -20,14 +21,21 @@ define(
             view.subView.render();
             view.$el.append(view.subView.$el);
 
-            if (view.model.get('args')['args[id]']) {
+            if (view.model.getArgument('id')) {
               formRecord = app.formRecords.get(view.model.get('blinkFormObjectName') + '-' + view.model.get('args')['args[id]']);
               formRecord.populate(view.model.get('blinkFormAction'), function () {
                 BlinkForms.current.setRecord(formRecord.get('record'));
                 view.trigger('render');
               });
-            } else if (view.model.get('args')['args[pid]']) {
-              BlinkForms.current.setRecord(app.pending.get(view.model.get('args')['args[pid]']).get('data'));
+            } else if (view.model.getArgument('pid')) {
+              pendingModel = app.pending.get(view.model.getArgument('pid'));
+
+              if ( !pendingModel ){
+                view.model.setArgument('pid', null);
+                return view.trigger('render');
+              }
+
+              BlinkForms.current.setRecord(pendingModel.get('data'));
               if (BlinkForms.current.getErrors) {
                 BlinkForms.current.getErrors();
               }
