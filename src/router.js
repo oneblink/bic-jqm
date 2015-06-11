@@ -86,7 +86,7 @@ define(
           });
       },
 
-      /*
+      /**
         @method routeRequest
         @decription Loads a model based on the url. Will redirect to the
         answerSpace if no model can be found
@@ -116,7 +116,7 @@ define(
                 tagName: 'div',
                 model: innerModel
               }).once('render', function () {
-                this.$el.attr('data-url', data.dataUrl);
+                this.$el.attr('data-url', data.dataUrl ); //.replace(/['"]/g, convertIllegalUrlChars));
                 this.$el.attr('data-external-page', true);
                 this.$el.one('pagecreate', $.mobile._bindPageRemove);
                 data.deferred.resolve(data.absUrl, data.options, this.$el);

@@ -19,12 +19,13 @@ define(
     var InteractionView
       , convertIllegalUrlChars;
 
+    //due to jQuery mobile's handling of ' and " chars, we need to manually escape this.
     convertIllegalUrlChars = function(chr){
       switch( chr ){
         case '"':
-          return "&quot;";
+          return '%22';
         case "'":
-          return "&apos;";
+          return "%27";
         default:
           return chr;
       }
@@ -99,7 +100,9 @@ define(
           }
         }
 
-//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes
+//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes.
+//jquery mobile will die due to the way it builds the [data-url] attribute, using the html encoded variety could break existing
+//users if they are parsing the query string
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {
@@ -141,7 +144,7 @@ define(
 
         path = '/' + path;
 
-        $.mobile.changePage(path + '/' + location + attributes);
+        $.mobile.changePage(path + '/' + location + attributes );
       },
 
       back: function (e) {

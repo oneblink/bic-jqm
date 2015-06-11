@@ -6,20 +6,7 @@ define(
     var Interaction
       , makeArgId
       , extractArgProp
-      , convertQueryStringArrays
-      , convertHtmlEntities;
-
-/// private to this module. for now.
-    convertHtmlEntities = function(entity){
-      switch(entity){
-        case '&apos;':
-          return "'";
-        case '&quot;':
-          return '"';
-        default:
-          return entity;
-      }
-    };
+      , convertQueryStringArrays;
 
     //helper for flattening the processed query string
     convertQueryStringArrays = function(args, key){
@@ -113,8 +100,7 @@ A model of an interaction
 */
       setArgsFromQueryString: function(queryString){
         var args;
-//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes
-        args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).replace(/&apos;|&quot;/gi, convertHtmlEntities).split('&'))
+        args = _.chain((queryString[0] === '?' ? queryString.substr(1) : queryString).split('&'))
                 .compact()
                 .map(function(qsParam){ return qsParam.split('='); })
                 .groupBy(function(arg){ return arg[0]; })
