@@ -1,24 +1,15 @@
 define(
-  ['model-pending', 'feature!data', 'feature!api'],
-  function (PendingItem, Data, API) {
+  ['model-pending', 'collection', 'api', 'enum-model-status'],
+  function (PendingItem, Collection, API, MODEL_STATUS) {
     'use strict';
-    var PendingCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending';
+
+    var PendingCollection = Collection.extend({
       model: PendingItem,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       processQueue: function () {
@@ -30,13 +21,13 @@ define(
 
             if (data && xhr.status === 200) {
               element.save({
-                status: 'Submitted',
+                status: MODEL_STATUS.SUBMITTED,
                 result: data
               });
             } else if (status === 'error' && data.responseText) {
               errors = JSON.parse(data.responseText);
               element.save({
-                status: 'Failed Validation',
+                status: MODEL_STATUS.FAILED_VALIDATION,
                 errors: errors
               });
             }
@@ -45,7 +36,7 @@ define(
           };
         };
 
-        _.each(this.where({status: 'Pending'}), function (element) {
+        _.each(this.where({status: MODEL_STATUS.PENDING }), function (element) {
           promises.push(new Promise(function (resolve, reject) {
             API.setPendingItem(element.get('name'), element.get('action'), element.get('data')).then(
               callback(element, resolve),

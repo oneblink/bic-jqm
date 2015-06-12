@@ -1,36 +1,16 @@
 define(
-  ['model-interaction', 'feature!data'],
-  function (Interaction, Data) {
+  ['model-interaction', 'collection'],
+  function (Interaction, Collection) {
     'use strict';
-    var InteractionCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Interaction';
+
+    var InteractionCollection = Collection.extend({
 
       model: Interaction,
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Interaction');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
-      },
-
-      save: function () {
-        return Promise.all(_.map(this.models, function (model) {
-          return new Promise(function (resolve, reject) {
-            model.save({}, {
-              success: resolve,
-              error: reject
-            });
-          });
-        }));
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       comparator: 'order'

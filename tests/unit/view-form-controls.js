@@ -1,4 +1,4 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, MODEL_STATUS) {
   'use strict';
 
   describe('View - Form Controls ', function () {
@@ -23,31 +23,31 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       };
 
       errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
-        return {"text_box": [{"code": "MAXLENGTH", "MAX": "5"}]};
+        return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
       apiStub = sinon.stub(BlinkForms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
-              "text_box": "123456789",
-              "number": 90,
-              "_action": "add",
-              "subform": []
+              'text_box': '123456789',
+              'number': 90,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(1).returns(
           Promise.resolve({
-              "text_box": "Devyani",
-              "number": 99,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Devyani',
+              'number': 99,
+              '_action': 'add',
+              'subform': []
           })
       );
       apiStub.onCall(2).returns(
           Promise.resolve({
-              "text_box": "Anandita",
-              "number": 109,
-              "_action": "add",
-              "subform": []
+              'text_box': 'Anandita',
+              'number': 109,
+              '_action': 'add',
+              'subform': []
           })
       );
       mockApp = new Backbone.Model();
@@ -55,7 +55,7 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       injector.mock('model-application', mockApp);
       injector.mock('model-pending', Backbone.Model);
       injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('feature!api', function () { return null; });
+      injector.mock('api', function () { return null; });
       injector.require(['view-form-controls'], function (required) {
         View = required;
         done();
@@ -109,12 +109,12 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         expect(processQueueStub.called).to.equal(false);
 
         mockApp.set('args', []);
-        view.addToQueue('Pending');
+        view.addToQueue(MODEL_STATUS.PENDING);
         expect(apiStub.called).to.equal(true);
 
 
         setTimeout(function () {
-          pendingQueue = mockApp.pending.where({status: 'Pending'});
+          pendingQueue = mockApp.pending.where({status: MODEL_STATUS.PENDING});
           expect(pendingQueue.length).to.equal(1);
           expect(pendingQueue[0].get('data').text_box).to.equal('123456789');
         }, 1e3);
@@ -125,11 +125,11 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         var draftQueue;
 
         mockApp.set('args', []);
-        view.addToQueue('Draft');
-        view.addToQueue('Draft');
+        view.addToQueue(MODEL_STATUS.DRAFT);
+        view.addToQueue(MODEL_STATUS.DRAFT);
 
         setTimeout(function () {
-          draftQueue = mockApp.pending.where({status: 'Draft'});
+          draftQueue = mockApp.pending.where({status: MODEL_STATUS.DRAFT});
           expect(draftQueue.length).to.equal(2);
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
           expect(draftQueue[1].get('data').text_box).to.equal('Anandita');
@@ -139,6 +139,83 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
 
     });
 
+    describe('formLeave', function(){
+      var origGet
+        , viewInstance
+        , modelGetStub
+        , interactionGetStub;
+
+      beforeEach(function(){
+        var mockModel;
+
+        origGet = BlinkForms.current.get;
+        BlinkForms.current.get = function(){};
+
+        interactionGetStub = sinon.stub(BlinkForms.current, 'get');
+
+        mockModel = {
+          get: function(){}
+        };
+
+        modelGetStub = sinon.stub(mockModel, 'get')
+                            .returns('add');
+
+        viewInstance = new View();
+        viewInstance.model = mockModel;
+      });
+
+      afterEach(function(){
+        BlinkForms.current.get = origGet;
+        modelGetStub.restore();
+        interactionGetStub.restore();
+      });
+
+      it('should go home', function(){
+        var originalBMP = window.BMP
+          , viewMock
+          , expectation;
+
+        mockApp.history = [];
+        mockApp.view = {
+          home: function(){}
+        };
+
+        viewMock = sinon.mock(window.BMP.BIC3.view);
+        expectation = viewMock.expects('home');
+        expectation.once();
+
+        interactionGetStub.returns(undefined);
+
+        viewInstance.formLeave();
+
+        expectation.verify();
+
+        window.BMP = originalBMP;
+      });
+
+      it('should execute the onLeave action', function(){
+        var afterInteraction
+          , afterInteractionMock
+          , afterInteractionExpectation;
+
+
+        afterInteraction = {
+          add: function(){}
+        };
+
+        afterInteractionMock = sinon.mock(afterInteraction);
+        afterInteractionExpectation = afterInteractionMock.expects('add');
+        afterInteractionExpectation.once();
+
+        interactionGetStub.returns(afterInteraction);
+
+        viewInstance.formLeave();
+
+        afterInteractionExpectation.verify();
+
+        afterInteractionMock.restore();
+      });
+    });
   });
 
 });

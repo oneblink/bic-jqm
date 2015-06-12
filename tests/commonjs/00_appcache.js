@@ -7,7 +7,7 @@ var path = require('path');
 
 // 3rd-party modules
 
-var AppCache = require('appcache');
+var AppCache = require('@jokeyrhyme/appcache');
 var Mustache = require('mustache');
 
 var test = require('tape');
@@ -38,7 +38,7 @@ test('AppCache', function (t) {
 
   t.test('has correct number of CACHE items', function (tt) {
     tt.isArray(appCache.cache);
-    tt.equal(appCache.cache.length, 36);
+    tt.equal(appCache.cache.length, 34);
     tt.end();
   });
 

@@ -11,7 +11,10 @@ define(['Squire'], function (Squire) {
           prepareForView: sinon.stub().returns({
             then: function () { return null; }
           }),
-          set: sinon.stub().returns({})
+          set: sinon.stub().returns({}),
+          setArgsFromQueryString: function(){ },
+          getArgument: function(){ },
+          setArgument: function(){ }
         };
       };
 
@@ -35,6 +38,9 @@ define(['Squire'], function (Squire) {
         setup: function () { return Promise.resolve(); },
         populate: function () { return Promise.resolve(); },
         initialRender: function () { return null; },
+        setArgsFromQueryString: function(){ },
+        getArgument: function(){ },
+        setArgument: function(){ },
         forms: {
           download: function () { return null; }
         },
@@ -165,6 +171,23 @@ define(['Squire'], function (Squire) {
       });
 
     });
+    // describe('routeRequest', function(){
+    //   var router;
+
+    //   beforeEach(function (done) {
+    //     injector.require(['../src/router'], function (module) {
+    //       router = module;
+    //       done();
+    //     });
+    //   });
+
+    //   afterEach(function(){
+
+    //   });
+
+    //   it('should ');
+
+    //})
 
     describe('routeRequest(data)', function () {
       var router, testmodel;
@@ -173,7 +196,7 @@ define(['Squire'], function (Squire) {
         injector.require(['../src/router'], function (module) {
           testmodel = model(1);
           sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
-          sinon.stub(module, 'parseArgs', function () { return null; });
+         // sinon.stub(module, 'parseArgs', function () { return null; });
           router = module;
           router.routeRequest({
             dataUrl: '/test',
@@ -185,7 +208,7 @@ define(['Squire'], function (Squire) {
 
       afterEach(function () {
         router.inheritanceChain.restore();
-        router.parseArgs.restore();
+        //router.parseArgs.restore();
         testmodel.prepareForView.reset();
       });
 
@@ -194,9 +217,9 @@ define(['Squire'], function (Squire) {
         router.inheritanceChain.called.should.equal(true);
       });
 
-      it('should start the parseArgs function', function () {
-        router.parseArgs.called.should.equal(true);
-      });
+      // it('should start the parseArgs function', function () {
+      //   router.parseArgs.called.should.equal(true);
+      // });
 
       it('should instruct the model to prepareForView', function () {
         router.inheritanceChain.called.should.equal(true);
@@ -218,24 +241,6 @@ define(['Squire'], function (Squire) {
 
       //it('should remove old views from the DOM');
     });
-
-    // describe('routeRequest', function(){
-    //   var router;
-
-    //   beforeEach(function (done) {
-    //     injector.require(['../src/router'], function (module) {
-    //       router = module;
-    //       done();
-    //     });
-    //   });
-
-    //   afterEach(function(){
-
-    //   });
-
-    //   it('should ');
-
-    //})
 
     describe('inheritanceChain(parsedUrl)', function () {
       var router;

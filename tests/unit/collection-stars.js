@@ -8,7 +8,6 @@ define(['Squire'], function (Squire) {
       injector = new Squire();
 
       injector.mock('model-star', Backbone.Model);
-      injector.mock('data-inMemory', function () { return null; });
 
       injector.require(['../src/collection-stars'], function (required) {
         Collection = required;

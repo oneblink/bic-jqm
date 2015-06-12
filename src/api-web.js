@@ -20,12 +20,9 @@ define(
 
       getInteractionResult: function (iact, args, options) {
         var getargs = '';
-        if (args && typeof args === 'object') {
-          _.each(args, function (value, key) {
-            if (value) {
-              getargs += '&' + key + '=' + value;
-            }
-          });
+        if (args && $.isPlainObject(args)) {
+          getargs = $.param(args);
+          getargs = getargs.length ? '&' + getargs : '';
         }
         return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '&iact=' + iact + '&ajax=false' + getargs, options);
       },
@@ -52,7 +49,7 @@ define(
         formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
         formdata._submittedTimezoneOffset /= -60;
         return $.ajax({
-          type: "POST",
+          type: 'POST',
           url: url,
           data: formdata
         });

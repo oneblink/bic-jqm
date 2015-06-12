@@ -1,8 +1,11 @@
 define(
-  ['model-form', 'feature!data', 'feature!api'],
-  function (Form, Data, API) {
+  ['model-form', 'collection', 'api'],
+  function (Form, Collection, API) {
     'use strict';
-    var FormCollection = Backbone.Collection.extend({
+
+    var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Form';
+
+    var FormCollection = Collection.extend({
       model: Form,
 
       initialize: function () {
@@ -10,19 +13,29 @@ define(
           window.BlinkForms = {};
         }
 
+        // BlinkForms expects this function to be defined by whatever is using it.
+        // otherwise, subforms will fall over.
         BlinkForms.getDefinition = function (name, action) {
-          var app = require('model-application');
+          var app = require('model-application')
+            , formDefinition;
+
           return app.forms.whenUpdated()
           .then(function () {
             return new Promise(function (resolve, reject) {
               var def = app.forms.get(name);
-
               if (!def) {
                 return reject(new Error('unable to locate "' + name + '" definition'));
               }
 
               try {
-                resolve(BlinkForms.flattenDefinition(def.attributes, action));
+                formDefinition = BlinkForms.flattenDefinition(def.attributes, action);
+                //BlinkForms.flattenDefinition returns a non backbone object
+                //so lets make sure that the leave interactions defined exist on it, so
+                //BlinkForms will use them when creating the form model.
+                if ( def.get('onFormLeaveInteraction') ){
+                  formDefinition.onFormLeaveInteraction = def.get('onFormLeaveInteraction');
+                }
+                resolve(formDefinition);
               } catch (err) {
                 reject(err);
               }
@@ -33,19 +46,7 @@ define(
       },
 
       datastore: function () {
-        this.data = new Data(window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Form');
-        return this;
-      },
-
-      load: function () {
-        var collection = this;
-
-        return new Promise(function (resolve, reject) {
-          collection.fetch({
-            success: resolve,
-            error: reject
-          });
-        });
+        return Collection.prototype.datastore.call(this, NAME);
       },
 
       whenUpdated: function () {

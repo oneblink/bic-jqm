@@ -1,19 +1,41 @@
 /*globals google:false*/
 define(
-  ['text!template-interaction.mustache', 'text!template-inputPrompt.mustache', 'view-form', 'model-application', 'text!template-category-list.mustache', 'model-star', 'text!template-pending.mustache', 'view-star', 'text!template-popup.mustache', 'text!template-clear-confirmation-popup.mustache', 'geolocation'],
-  function (Template, inputPromptTemplate, FormView, app, categoryTemplate, StarModel, pendingTemplate, StarView, popupTemplate, clearConfirmationPopupTemplate, geolocation) {
+  ['text!template-interaction.mustache',
+   'text!template-inputPrompt.mustache',
+   'text!template-category-list.mustache',
+   'text!template-pending.mustache',
+   'text!template-popup.mustache',
+   'text!template-clear-confirmation-popup.mustache',
+   'view-form',
+   'model-application',
+   'model-star',
+   'view-star',
+   'geolocation',
+   'lib/ui-tools',
+   'enum-model-status'],
+  function (Template, inputPromptTemplate, categoryTemplate, pendingTemplate, popupTemplate, clearConfirmationPopupTemplate, FormView, app, StarModel, StarView, geolocation, uiTools, MODEL_STATUS) {
     'use strict';
 
-    var InteractionView = Backbone.View.extend({
+    var InteractionView
+      , convertIllegalUrlChars;
+
+    //due to jQuery mobile's handling of ' and " chars, we need to manually escape this.
+    convertIllegalUrlChars = function(chr){
+      switch( chr ){
+        case '"':
+          return '%22';
+        case "'":
+          return "%27";
+        default:
+          return chr;
+      }
+    };
+
+    InteractionView = Backbone.View.extend({
 
       initialize: function () {
         $('body').append(this.$el);
         window.BMP.BIC.view = this;
-
-        // this.$el.once('pageremove', function () {
-        //   console.log('Backbone view cleanup');
-
-        // })
       },
 
       events: {
@@ -78,13 +100,16 @@ define(
           }
         }
 
+//see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes.
+//jquery mobile will die due to the way it builds the [data-url] attribute, using the html encoded variety could break existing
+//users if they are parsing the query string
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {
-              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
+              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
             } else {
               first = false;
-              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value;
+              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
             }
           }
         }
@@ -119,7 +144,7 @@ define(
 
         path = '/' + path;
 
-        $.mobile.changePage(path + '/' + location + attributes);
+        $.mobile.changePage(path + '/' + location + attributes );
       },
 
       back: function (e) {
@@ -364,12 +389,12 @@ define(
         };
 
         this.$el.append(Mustache.render(pendingTemplate, {
-          pending: pendingExtractor('Pending'),
-          pendingPresent: pendingExtractor('Pending').length > 0,
-          draft: pendingExtractor('Draft'),
-          draftPresent: pendingExtractor('Draft').length > 0,
-          validation: pendingExtractor('Failed Validation'),
-          validationPresent: pendingExtractor('Failed Validation').length > 0
+          pending: pendingExtractor( MODEL_STATUS.PENDING ),
+          pendingPresent: pendingExtractor( MODEL_STATUS.PENDING ).length > 0,
+          draft: pendingExtractor( MODEL_STATUS.DRAFT ),
+          draftPresent: pendingExtractor( MODEL_STATUS.DRAFT ).length > 0,
+          validation: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ),
+          validationPresent: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ).length > 0
         }));
         this.$el.trigger('pagecreate');
         $('#pendingPopup').one('popupafterclose', function () {
@@ -393,22 +418,20 @@ define(
 
       submitPendingItems: function () {
         var popup = $('#pendingPopup');
-        $.mobile.loading('show');
+        uiTools.showLoadingAnimation();
         app.pending.processQueue()
           .then(null, function () {
             return null;
           })
           .then(function () {
-            popup.one('popupafterclose', function () {
-              $.mobile.loading('hide');
-            });
+            popup.one('popupafterclose', uiTools.hideLoadingAnimation);
             popup.popup('close');
           });
       },
 
       clearPendingItems: function () {
         var items, popup = $('#clearConfirmationPopup'), i;
-        items = app.pending.where({status: 'Draft'});
+        items = app.pending.where({status: MODEL_STATUS.DRAFT });
         for (i = 0; i < items.length; i = i + 1) {
           items[i].destroy();
         }

@@ -21,17 +21,7 @@ define(
         });
       },
 
-      getInteractionResult: function (iact, args, options) {
-        var getargs = '';
-        if (args && typeof args === 'object') {
-          _.each(args, function (value, key) {
-            if (value) {
-              getargs += '&' + key + '=' + value;
-            }
-          });
-        }
-        return $.ajax('/_R_/common/3/xhr/GetAnswer.php?asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '&iact=' + iact + '&ajax=false' + getargs, options);
-      },
+      getInteractionResult: apiWeb.getInteractionResult,
 
       getForm: function () {
         return new Promise(function (resolve, reject) {
@@ -61,9 +51,7 @@ define(
 
       setPendingItem: apiWeb.setPendingItem,
 
-      getLoginStatus: function () {
-        return $.ajax('/_R_/common/3/xhr/GetLogin.php');
-      },
+      getLoginStatus: apiWeb.getLoginStatus,
 
       getFormList: function (formName) {
         return new Promise(function (resolve, reject) {
