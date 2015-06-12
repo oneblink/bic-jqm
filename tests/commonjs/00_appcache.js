@@ -7,7 +7,7 @@ var path = require('path');
 
 // 3rd-party modules
 
-var AppCache = require('appcache');
+var AppCache = require('@jokeyrhyme/appcache');
 var Mustache = require('mustache');
 
 var test = require('tape');

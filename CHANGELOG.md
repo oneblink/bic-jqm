@@ -1,6 +1,39 @@
 # Changelog
 
 
+## v3.4.0 - 2015-06-12
+
+
+### Added
+
+- BIC-146: APIs to control navigation after form submissions
+
+    - see comments in [src/model-form.js](src/model-form.js) for details
+
+
+### Fixed
+
+- BIC-145: prevent forms submissions from navigating backwards too far
+
+    - this would sometimes navigate back beyond the answerSpace
+
+- BIC-154: allow native apps to use IndexedDB when WebSQL is unavailable
+
+    - native apps would try WebSQL then fallback to in-memory (no persistence)
+
+    - this is important for our upcoming Windows apps
+
+- BIC-155: prevent users tapping submit button more than once during submission
+
+- BIC-159: don't display the pending queue upon failed client-side validation
+
+- BIC-160: support apostrophes in URL query string arguments
+
+- BIC-163: for URLs `?args[pid]=xxx` do not assume `xxx` is in the pending queue
+
+    - this would throw exceptions when addressing an entry that no longer exists
+
+
 ## v3.3.4 - 2015-05-22
 
 ### Changed
