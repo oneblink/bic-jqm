@@ -272,7 +272,7 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
       });
     });
 
-    describe("#goToInteraction()", function(){
+    describe('#goToInteraction()', function(){
       var changePageStub;
 
       beforeEach(function(done){

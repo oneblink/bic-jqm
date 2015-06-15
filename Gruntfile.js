@@ -79,7 +79,7 @@ module.exports = function (grunt) {
           include: ['feature', 'pollUntil', 'BlinkGap'],
           exclude: ['implementations'],
           out: 'build/outside.js',
-          optimize: "none",
+          optimize: 'none',
           paths: {
             feature: '../node_modules/amd-feature/feature',
             implementations: 'empty:', // stop outer build from looking in inner
@@ -100,7 +100,7 @@ module.exports = function (grunt) {
           name: '../node_modules/almond/almond',
           include: ['main', 'router', 'auth', 'geolocation'],
           out: 'build/bic.js',
-          optimize: "none",
+          optimize: 'none',
           paths: {
             geolocation: '../node_modules/geolocation/geolocation',
             'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
@@ -122,9 +122,7 @@ module.exports = function (grunt) {
               'src/frag/99-end.frag',
               'src/frag/99-form_extensions.js'
             ]
-          }//,
-          // wrap: true,
-          //insertRequire: ["main"]
+          }
         }
       },
       options: {

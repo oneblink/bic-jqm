@@ -17,7 +17,7 @@ require.config({
     sinon: '/node_modules/sinon/pkg/sinon',
     text: '/node_modules/text/text',
     uuid: '/node_modules/node-uuid/uuid',
-    "form-dependencies": "frag/99-form_extensions",
+    'form-dependencies': 'frag/99-form_extensions',
     domReady: '../bower_components/requirejs-domready/domReady',
     bic: '/tests/support/bic'
   },

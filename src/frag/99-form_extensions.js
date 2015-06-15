@@ -15,17 +15,17 @@
               interactionOptions;
             //if interaction is undefined just reject
             if (!interaction) {
-              reject(new Error("no interaction name"));
+              reject(new Error('no interaction name'));
             }
 
             //if queryString doesn't have question mark at front, add it
-            if (queryString && queryString.substr(0, 1) === "?") {
-              queryString = "?" + queryString;
+            if (queryString && queryString.substr(0, 1) === '?') {
+              queryString = '?' + queryString;
             }
 
             //if interaction doesn't carry slash / in it, add it
-            if (interaction.substr(0, 1) !== "/") {
-              interaction = "/" + interaction;
+            if (interaction.substr(0, 1) !== '/') {
+              interaction = '/' + interaction;
             }
             //this removes very first character for given interaction, so previous process
             nav = $.mobile.path.parseUrl(interaction);
@@ -50,7 +50,7 @@
             var data;
             //if suitcase name is not provided
             if (!suitcase) {
-              reject(new Error("no dataSuitcase name"));
+              reject(new Error('no dataSuitcase name'));
             }
 
             //try to fetch suitcase

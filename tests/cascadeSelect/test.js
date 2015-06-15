@@ -27,7 +27,7 @@ define(['Squire'], function (Squire) {
 
     it('BMP.Expression.fn.interaction should return promise', function () {
       setTimeout(function() {
-        expect(BMP.Expression.fn.interaction("AAA")).to.be.instanceOf(Promise);
+        expect(BMP.Expression.fn.interaction('AAA')).to.be.instanceOf(Promise);
       }, 1000);
     });
 
@@ -41,11 +41,10 @@ define(['Squire'], function (Squire) {
 
     it('BMP.Expression.fn.suitcase should return promise', function () {
       setTimeout(function() {
-        expect(BMP.Expression.fn.suitcase("AAA")).to.be.instanceOf(Promise);
+        expect(BMP.Expression.fn.suitcase('AAA')).to.be.instanceOf(Promise);
       }, 1000);
     });
   });
 
 
 });
-

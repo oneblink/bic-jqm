@@ -25,7 +25,7 @@ define(
         case '"':
           return '%22';
         case "'":
-          return "%27";
+          return '%27';
         default:
           return chr;
       }
