@@ -6,16 +6,16 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('api', function () { return null; });
+      injector.mock('bic/api', function () { return null; });
 
       /*eslint-disable no-console*/ // just for testing
-      injector.mock('facade', {
+      injector.mock('bic/facade', {
         publish: function () { console.log('#publish'); },
         subscribe: function () { console.log('#subscribe'); }
       });
       /*eslint-enable no-console*/
 
-      injector.require(['../src/model-interaction'], function (required) {
+      injector.require(['bic/model-interaction'], function (required) {
         Model = required;
         done();
       });

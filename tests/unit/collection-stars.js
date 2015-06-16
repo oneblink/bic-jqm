@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
 
   describe('Collection - Stars', function () {
@@ -7,9 +7,9 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-star', Backbone.Model);
+      injector.mock('bic/model-star', Backbone.Model);
 
-      injector.require(['../src/collection-stars'], function (required) {
+      injector.require(['bic/collection-stars'], function (required) {
         Collection = required;
         done();
       });

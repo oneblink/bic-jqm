@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'sinon', 'backbone'], function (Squire, sinon, Backbone) {
   'use strict';
   describe('Collection - Pending', function () {
     var injector, Collection, collection, apiStub;
@@ -9,12 +9,12 @@ define(['Squire'], function (Squire) {
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
 
-      injector.mock('model-pending', Backbone.Model);
-      injector.mock('api-web', {
+      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('bic/api-web', {
         setPendingItem: apiStub
       });
 
-      injector.require(['../src/collection-pending'], function (required) {
+      injector.require(['bic/collection-pending'], function (required) {
         Collection = required;
         done();
       });

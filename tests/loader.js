@@ -7,7 +7,6 @@ var expect = chai.expect;
 require.config({
   baseUrl: '/src',
   paths: {
-    implementations: '/tests/implementations',
     'is-indexeddb-reliable': '/node_modules/is-indexeddb-reliable/dist/index',
     feature: '/node_modules/amd-feature/feature',
     geolocation: '/node_modules/geolocation/geolocation',
@@ -51,16 +50,9 @@ window.Modernizr = {indexeddb: false};
 window.BlinkForms = {};
 
 require([
-  'feature!promises',
-  'pollUntil',
-  'geolocation',
   'backbone',
-  'mustache',
-  'pouchdb',
-  'jquery',
-  'jquerymobile',
+  'feature!promises',
   'feature!es5',
-  'BlinkGap',
   '/tests/unit/api-web.js',
   '/tests/unit/collection-datasuitcases.js',
   '/tests/unit/collection-forms.js',
@@ -79,9 +71,11 @@ require([
   '/tests/unit/view-interaction.js',
   '/tests/unit/view-star.js',
   '/tests/unit/view-form-controls.js'
-], function (Promise, pollUntil, geolocation, Backbone, Mustache, Pouch) {
+], function (Backbone, Promise) {
   'use strict';
   var runner, failedTests, logFailure;
+
+  window.Promise = window.Promise || Promise;
 
   Backbone.sync = function (method, model, options) {
     var promise = Promise.resolve({});
@@ -99,11 +93,6 @@ require([
     return promise;
   };
 
-  window.Mustache = Mustache;
-  window.Pouch = Pouch;
-  window.Promise = window.Promise || Promise;
-  window.pollUntil = window.pollUntil || pollUntil;
-  window.geolocation = window.geolocation || geolocation;
   BMP.Expression = {
     fn: {}
   };

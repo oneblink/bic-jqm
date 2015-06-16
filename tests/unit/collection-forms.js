@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
 
   describe('Collection - Forms', function () {
@@ -7,11 +7,11 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-application', Backbone.Model);
-      injector.mock('model-form', Backbone.Model);
-      injector.mock('api', {});
+      injector.mock('bic/model-application', Backbone.Model);
+      injector.mock('bic/model-form', Backbone.Model);
+      injector.mock('bic/api', {});
 
-      injector.require(['../src/collection-forms'], function (rCol) {
+      injector.require(['bic/collection-forms'], function (rCol) {
         Collection = rCol;
         done();
       });

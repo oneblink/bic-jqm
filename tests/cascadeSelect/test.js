@@ -7,7 +7,7 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.require(['form-dependencies'], function () {
+      injector.require(['bic/form-dependencies'], function () {
         setTimeout(function() {
           done();
         }, 1000);

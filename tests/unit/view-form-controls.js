@@ -1,4 +1,4 @@
-define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, MODEL_STATUS) {
+define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squire, Backbone, MODEL_STATUS, sinon) {
   'use strict';
 
   describe('View - Form Controls ', function () {
@@ -8,8 +8,8 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
     before(function (done) {
       injector = new Squire();
 
-      // window.BMP.BIC3.history = { length: 0 };
-      window.BMP.BIC3 = {
+      // window.BMP.BIC.history = { length: 0 };
+      window.BMP.BIC = {
         history: {
           length: 0
         },
@@ -52,11 +52,11 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       );
       mockApp = new Backbone.Model();
 
-      injector.mock('model-application', mockApp);
-      injector.mock('model-pending', Backbone.Model);
-      injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('api', function () { return null; });
-      injector.require(['view-form-controls'], function (required) {
+      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('text!bic/template-form-controls.mustache', 'string');
+      injector.mock('bic/api', function () { return null; });
+      injector.require(['bic/view-form-controls'], function (required) {
         View = required;
         done();
       });
@@ -74,13 +74,13 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       var view, processQueueStub;
 
       before(function (done) {
-        injector.require(['model-application'], function (app) {
+        injector.require(['bic/model-application'], function (app) {
           view = new View({ model: app});
           app.view = {
             pendingQueue: sinon.stub()
           };
 
-          injector.require(['model-pending'], function (PendingItem){
+          injector.require(['bic/model-pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };
@@ -180,7 +180,7 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
           home: function(){}
         };
 
-        viewMock = sinon.mock(window.BMP.BIC3.view);
+        viewMock = sinon.mock(window.BMP.BIC.view);
         expectation = viewMock.expects('home');
         expectation.once();
 

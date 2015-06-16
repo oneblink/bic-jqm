@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
   'use strict';
   describe('Collection - Interactions', function () {
     var injector, Collection, collection;
@@ -6,9 +6,9 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-interaction', Backbone.Model);
+      injector.mock('bic/model-interaction', Backbone.Model);
 
-      injector.require(['../src/collection-interactions'], function (required) {
+      injector.require(['bic/collection-interactions'], function (required) {
         Collection = required;
         done();
       });

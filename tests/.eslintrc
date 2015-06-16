@@ -1,5 +1,8 @@
 {
   "globals": {
-    "assert": true
+    "$": false,
+    "_": false,
+    "assert": true,
+    "Backbone": false
   }
 }

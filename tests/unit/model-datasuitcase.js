@@ -9,11 +9,11 @@ define(['Squire'], function (Squire) {
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
 
-      injector.mock('api-web', {
+      injector.mock('bic/api-web', {
         getDataSuitcase: apiStub
       });
 
-      injector.require(['../src/model-datasuitcase'], function (model) {
+      injector.require(['bic/model-datasuitcase'], function (model) {
         Model = model;
         done();
       }, function () {

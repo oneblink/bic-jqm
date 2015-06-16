@@ -6,10 +6,10 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('model-application', Backbone.Model.extend({
+      injector.mock('bic/model-application', Backbone.Model.extend({
       }));
 
-      injector.require(['../src/model-star'], function (rModel) {
+      injector.require(['bic/model-star'], function (rModel) {
         Model = rModel;
         done();
       });

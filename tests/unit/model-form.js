@@ -6,9 +6,9 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('api', function () { return null; });
+      injector.mock('bic/api', function () { return null; });
 
-      injector.require(['../src/model-form'], function (required) {
+      injector.require(['bic/model-form'], function (required) {
         Model = required;
         done();
       });
@@ -32,7 +32,7 @@ define(['Squire'], function (Squire) {
         , newActions;
 
       beforeEach(function(done){
-        injector.require(['../src/model-form'], function(FormModel){
+        injector.require(['bic/model-form'], function(FormModel){
           formModel = new FormModel();
 
           origActions = {

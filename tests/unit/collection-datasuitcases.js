@@ -1,12 +1,12 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
   'use strict';
   describe('Collection - DataSuitcases', function () {
     var injector, Collection, collection;
 
     before(function (done) {
       injector = new Squire();
-      injector.mock('model-datasuitcase', Backbone.Model);
-      injector.require(['../src/collection-datasuitcases'], function (required) {
+      injector.mock('bic/model-datasuitcase', Backbone.Model);
+      injector.require(['bic/collection-datasuitcases'], function (required) {
         Collection = required;
         done();
       });
