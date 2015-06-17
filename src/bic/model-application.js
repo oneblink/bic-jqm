@@ -31,13 +31,17 @@ define(function (require) {
 
   // this module
 
+  var singleton, Application;
+
+  require('jquerymobile');
+
   /**
     The Blink Intelligent Client
 
     @class
     @alias window.BMP.BIC
   */
-  var Application = Backbone.Model.extend({
+  Application = Backbone.Model.extend({
 
     idAttribute: '_id',
 
@@ -295,20 +299,19 @@ define(function (require) {
 
   });
 
-  window.BMP.BIC3 = new Application();
+  singleton = new Application();
 
-  window.BMP.BIC3.history = { length: 0 };
+  if (window.BMP.BIC) {
+    $.extend(singleton, window.BMP.BIC);
+  }
+
+  singleton.history = { length: 0 };
 
   window.onpopstate = function () {
-    window.BMP.BIC3.history.length += 1;
+    singleton.history.length += 1;
   };
 
-  window.BMP.BIC3.version = '3.4.2';
+  singleton.meta = metaStore;
 
-  // keep BMP.BIC and BMP.BIC3 the same
-  $.extend(window.BMP.BIC3, window.BMP.BIC);
-  window.BMP.BIC = window.BMP.BIC3;
-  window.BMP.BIC.meta = metaStore;
-
-  return window.BMP.BIC3;
+  return singleton;
 });

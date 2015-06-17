@@ -31,6 +31,8 @@ define(function (require) {
     var InteractionView;
     var convertIllegalUrlChars;
 
+    require('jquerymobile');
+
     // due to jQuery mobile's handling of ' and " chars, we need to manually escape this.
     convertIllegalUrlChars = function (chr) {
       switch (chr){

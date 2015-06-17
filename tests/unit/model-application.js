@@ -1,5 +1,6 @@
-/*globals define:false, require:false, requirejs:false*/ // Require.js
-define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
+define([
+  'Squire', 'sinon', 'backbone', 'jquery', 'jquerymobile', 'BlinkGap'
+], function (Squire, sinon, Backbone, $, $mobile) {
   'use strict';
 
   var CONTEXT = 'tests/unit/model-application.js';
@@ -44,7 +45,11 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
 
       siteMap = {};
       loginStatus = {};
-      injector = new Squire();
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
 
       injector.mock('bic/collection-interactions', CollectionMock);
       injector.mock('bic/collection-datasuitcases', CollectionMock);
@@ -72,7 +77,6 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
         done();
       });
     });
-
 
     it('should exist', function () {
       should.exist(model);

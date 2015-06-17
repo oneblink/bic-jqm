@@ -125,8 +125,8 @@ define(function (require) {
         return onLeave[this.model.get('blinkFormAction')]({ model: Forms.current, userAction: userAction});
       }
 
-      if (window.BMP.BIC3.history.length <= 1) {
-        return window.BMP.BIC3.view.home();
+      if (app.history.length <= 1) {
+        return app.view.home();
       }
 
       history.back();

@@ -1,10 +1,19 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/collection-forms.js';
+
   describe('Model - DataSuitcase', function () {
-    var Model, apiStub;
+    var injector, Model, apiStub;
 
     before(function (done) {
-      var injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
 
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
@@ -19,6 +28,10 @@ define(['Squire'], function (Squire) {
       }, function () {
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     it('should exist', function () {

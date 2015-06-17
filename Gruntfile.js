@@ -216,13 +216,13 @@ module.exports = function (grunt) {
     replace: {
       bicVersion: {
         src: [
-          'src/model-application.js'
+          'src/bic.js'
         ],
         overwrite: true,
         replacements: [
           {
-            from: /window\.BMP\.BIC3\.version = '.+?'/,
-            to: 'window.BMP.BIC3.version = \'' + version + '\''
+            from: /window\.BMP\.BIC\.version = '.+?'/,
+            to: 'window.BMP.BIC.version = \'' + version + '\''
           }
         ]
       },

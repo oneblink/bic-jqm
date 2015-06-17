@@ -1,5 +1,4 @@
-/*globals define:false, require:false, requirejs:false*/ // Require.js
-define(['Squire', 'jquery'], function (Squire, $) {
+define(['Squire', 'jquery', 'jquerymobile'], function (Squire, $, $mobile) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-interaction.js';
@@ -12,6 +11,10 @@ define(['Squire', 'jquery'], function (Squire, $) {
       cfg.context = CONTEXT;
       require.config(cfg);
       injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
 
       injector.mock('bic/model-application', function () { return null; });
       injector.mock('bic/model-star', function () { return null; });

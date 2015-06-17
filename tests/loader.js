@@ -46,13 +46,15 @@ window.BMP = {
     }
   }
 };
-window.Modernizr = {indexeddb: false};
-window.BlinkForms = {};
+window.Modernizr = { indexeddb: false };
 
 require([
   'backbone',
   'feature!promises',
   'feature!es5',
+  'jquery',
+  'jquerymobile',
+  'BlinkGap',
   '/tests/unit/api-web.js',
   '/tests/unit/collection-datasuitcases.js',
   '/tests/unit/collection-forms.js',
@@ -93,9 +95,6 @@ require([
     return promise;
   };
 
-  BMP.Expression = {
-    fn: {}
-  };
   runner = mocha.run();
   failedTests = [];
   logFailure = function (test, err) {

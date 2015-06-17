@@ -38,5 +38,11 @@ define(function (require) {
     start();
   });
 
+  window.BMP.BIC = app;
+  // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
+  window.BMP.BIC3 = app;
+
+  window.BMP.BIC.version = '3.4.2';
+
   return app; // export BMP.BIC
 });

@@ -1,31 +1,27 @@
-define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squire, Backbone, MODEL_STATUS, sinon) {
+define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], function (Squire, Backbone, MODEL_STATUS, sinon, Forms) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/view-form-controls.js';
 
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;
     var mockApp;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      // window.BMP.BIC.history = { length: 0 };
-      window.BMP.BIC = {
-        history: {
-          length: 0
-        },
-        view: {
-          home: function(){}
-        }
-      };
-      BlinkForms.current = {
+      Forms.current = {
         data: function() { return; },
         getErrors: function() { return; }
       };
 
-      errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
+      errorStub = sinon.stub(Forms.current, 'getErrors', function () {
         return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
-      apiStub = sinon.stub(BlinkForms.current, 'data');
+      apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
               'text_box': '123456789',
@@ -60,6 +56,10 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squir
         View = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     it('should exist', function () {
@@ -148,10 +148,10 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squir
       beforeEach(function(){
         var mockModel;
 
-        origGet = BlinkForms.current.get;
-        BlinkForms.current.get = function(){};
+        origGet = Forms.current.get;
+        Forms.current.get = function(){};
 
-        interactionGetStub = sinon.stub(BlinkForms.current, 'get');
+        interactionGetStub = sinon.stub(Forms.current, 'get');
 
         mockModel = {
           get: function(){}
@@ -165,22 +165,21 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squir
       });
 
       afterEach(function(){
-        BlinkForms.current.get = origGet;
+        Forms.current.get = origGet;
         modelGetStub.restore();
         interactionGetStub.restore();
       });
 
       it('should go home', function(){
-        var originalBMP = window.BMP
-          , viewMock
-          , expectation;
+        var viewMock;
+        var expectation;
 
         mockApp.history = [];
         mockApp.view = {
           home: function(){}
         };
 
-        viewMock = sinon.mock(window.BMP.BIC.view);
+        viewMock = sinon.mock(mockApp.view);
         expectation = viewMock.expects('home');
         expectation.once();
 
@@ -189,8 +188,6 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon'], function (Squir
         viewInstance.formLeave();
 
         expectation.verify();
-
-        window.BMP = originalBMP;
       });
 
       it('should execute the onLeave action', function(){

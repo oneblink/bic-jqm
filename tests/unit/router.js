@@ -1,5 +1,4 @@
-/*globals define:false, require:false, requirejs:false*/ // Require.js
-define(['Squire', 'sinon'], function (Squire, sinon) {
+define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $, $mobile) {
   'use strict';
 
   var CONTEXT = 'tests/unit/router.js';
@@ -13,6 +12,10 @@ define(['Squire', 'sinon'], function (Squire, sinon) {
       cfg.context = CONTEXT;
       require.config(cfg);
       injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
 
       model = function (id) {
         return {

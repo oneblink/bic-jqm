@@ -1,8 +1,10 @@
 {
+  "env": {
+    "amd": true,
+    "mocha": true
+  },
   "globals": {
-    "$": false,
-    "_": false,
     "assert": true,
-    "Backbone": false
+    "requirejs": false
   }
 }

@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
   describe('Model - Star', function () {
     var injector, Model;

@@ -1,11 +1,19 @@
 define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
 
+  var CONTEXT = 'tests/unit/collection-forms.js';
+
   describe('Collection - Forms', function () {
     var injector, Collection, collection;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
 
       injector.mock('bic/model-application', Backbone.Model);
       injector.mock('bic/model-form', Backbone.Model);
@@ -15,6 +23,10 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         Collection = rCol;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     beforeEach(function (done) {

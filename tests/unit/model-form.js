@@ -1,4 +1,4 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'underscore'], function (Squire, _) {
   'use strict';
   describe('Model - Form', function () {
     var injector, Model;
