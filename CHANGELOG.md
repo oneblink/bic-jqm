@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v3.4.2 - 2015-06-17
+
+
+### Fixed
+
+- BIC-154: further clean-up, `BMP.BIC` is still a `Backbone.Model` but is no
+  longer persisted to storage
+
+- BIC-175: fix BlinkGap detection so that BIC can boot in native iOS / Android
+
+
 ## v3.4.1 - 2015-06-12
 
 

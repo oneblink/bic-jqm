@@ -293,7 +293,7 @@ define(function (require) {
     window.BMP.BIC3.history.length += 1;
   };
 
-  window.BMP.BIC3.version = '3.4.1';
+  window.BMP.BIC3.version = '3.4.2';
 
   // keep BMP.BIC and BMP.BIC3 the same
   $.extend(window.BMP.BIC3, window.BMP.BIC);
