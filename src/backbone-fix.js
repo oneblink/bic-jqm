@@ -4,7 +4,19 @@ define(function () {
   'use strict';
 
   // Save traditional sync method as ajaxSync
-  Backbone.ajaxSync = Backbone.sync;
+  Backbone.oldSync = Backbone.sync;
+  Backbone.ajaxSync = function (method, model, options) {
+    if (!model || !model.url || options && !options.url) {
+      if (window.console && window.console.warn) {
+        window.console.warn(new TypeError('Backbone.sync() (via AJAX) was called, but model has no URL'));
+      }
+      if (options && typeof options.success === 'function') {
+        options.success();
+      }
+      return null;
+    }
+    return Backbone.oldSync(method, model, options);
+  };
 
   // New sync method
   Backbone.dataSync = function (method, model, options) {

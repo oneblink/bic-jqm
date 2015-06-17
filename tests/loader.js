@@ -74,6 +74,7 @@ require([
   '/tests/unit/model-interaction.js',
   '/tests/unit/model-pending.js',
   '/tests/unit/model-star.js',
+  '/tests/unit/promise-blinkgap.js',
   '/tests/unit/router.js',
   '/tests/unit/view-interaction.js',
   '/tests/unit/view-star.js',
