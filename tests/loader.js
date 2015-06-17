@@ -62,6 +62,7 @@ require([
   '/tests/unit/collection-pending.js',
   '/tests/unit/collection-stars.js',
   '/tests/unit/data-pouch.js',
+  '/tests/unit/form-expressions.js',
   '/tests/unit/model-application.js',
   '/tests/unit/model-datasuitcase.js',
   '/tests/unit/model-form.js',
