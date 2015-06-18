@@ -1,27 +1,40 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'jquery', 'jquerymobile'], function (Squire, $, $mobile) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/view-interaction.js';
 
   describe('View - Interaction - jQuery Mobile Implementation', function () {
     var injector, View;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      injector.mock('model-application', function () { return null; });
-      injector.mock('model-star', function () { return null; });
-      injector.mock('view-star', function () { return null; });
-      injector.mock('view-form', function () { return null; });
-      injector.mock('text!template-interaction.mustache', 'string');
-      injector.mock('text!template-inputPrompt.mustache', 'string');
-      injector.mock('text!template-form.mustache', 'string');
-      injector.mock('text!template-category-list.mustache', 'string');
-      injector.mock('text!template-pending.mustache', 'string');
-      injector.mock('text!template-clear-confirmation-popup.mustache', 'string');
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
 
-      injector.require(['view-interaction'], function (required) {
+      injector.mock('bic/model-application', function () { return null; });
+      injector.mock('bic/model-star', function () { return null; });
+      injector.mock('bic/view-star', function () { return null; });
+      injector.mock('bic/view-form', function () { return null; });
+      injector.mock('text!bic/template-interaction.mustache', 'string');
+      injector.mock('text!bic/template-inputPrompt.mustache', 'string');
+      injector.mock('text!bic/template-form.mustache', 'string');
+      injector.mock('text!bic/template-category-list.mustache', 'string');
+      injector.mock('text!bic/template-pending.mustache', 'string');
+      injector.mock('text!bic/template-clear-confirmation-popup.mustache', 'string');
+
+      injector.require(['bic/view-interaction'], function (required) {
         View = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     it('should exist', function () {

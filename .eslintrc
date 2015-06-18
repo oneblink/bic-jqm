@@ -9,15 +9,6 @@
     /* Blink */
     "BMP": true,
     "BlinkForms": true,
-    /* Libraries */
-    "pollUntil": true,
-    "cordova": true,
-    "Pouch": true,
-    "Modernizr": true,
-    "Backbone": true,
-    "$": true,
-    "_": true,
-    "Mustache": true,
     /* Testing */
     "mocha": true,
     "sinon": true,

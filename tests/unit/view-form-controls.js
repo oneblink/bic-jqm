@@ -1,31 +1,27 @@
-define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, MODEL_STATUS) {
+define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], function (Squire, Backbone, MODEL_STATUS, sinon, Forms) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/view-form-controls.js';
 
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;
     var mockApp;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      // window.BMP.BIC3.history = { length: 0 };
-      window.BMP.BIC3 = {
-        history: {
-          length: 0
-        },
-        view: {
-          home: function(){}
-        }
-      };
-      BlinkForms.current = {
+      Forms.current = {
         data: function() { return; },
         getErrors: function() { return; }
       };
 
-      errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
+      errorStub = sinon.stub(Forms.current, 'getErrors', function () {
         return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
-      apiStub = sinon.stub(BlinkForms.current, 'data');
+      apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
               'text_box': '123456789',
@@ -52,14 +48,18 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       );
       mockApp = new Backbone.Model();
 
-      injector.mock('model-application', mockApp);
-      injector.mock('model-pending', Backbone.Model);
-      injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('api', function () { return null; });
-      injector.require(['view-form-controls'], function (required) {
+      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('text!bic/template-form-controls.mustache', 'string');
+      injector.mock('bic/api', function () { return null; });
+      injector.require(['bic/view-form-controls'], function (required) {
         View = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     it('should exist', function () {
@@ -74,13 +74,13 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       var view, processQueueStub;
 
       before(function (done) {
-        injector.require(['model-application'], function (app) {
+        injector.require(['bic/model-application'], function (app) {
           view = new View({ model: app});
           app.view = {
             pendingQueue: sinon.stub()
           };
 
-          injector.require(['model-pending'], function (PendingItem){
+          injector.require(['bic/model-pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };
@@ -148,10 +148,10 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       beforeEach(function(){
         var mockModel;
 
-        origGet = BlinkForms.current.get;
-        BlinkForms.current.get = function(){};
+        origGet = Forms.current.get;
+        Forms.current.get = function(){};
 
-        interactionGetStub = sinon.stub(BlinkForms.current, 'get');
+        interactionGetStub = sinon.stub(Forms.current, 'get');
 
         mockModel = {
           get: function(){}
@@ -165,22 +165,21 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       });
 
       afterEach(function(){
-        BlinkForms.current.get = origGet;
+        Forms.current.get = origGet;
         modelGetStub.restore();
         interactionGetStub.restore();
       });
 
       it('should go home', function(){
-        var originalBMP = window.BMP
-          , viewMock
-          , expectation;
+        var viewMock;
+        var expectation;
 
         mockApp.history = [];
         mockApp.view = {
           home: function(){}
         };
 
-        viewMock = sinon.mock(window.BMP.BIC3.view);
+        viewMock = sinon.mock(mockApp.view);
         expectation = viewMock.expects('home');
         expectation.once();
 
@@ -189,8 +188,6 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
         viewInstance.formLeave();
 
         expectation.verify();
-
-        window.BMP = originalBMP;
       });
 
       it('should execute the onLeave action', function(){

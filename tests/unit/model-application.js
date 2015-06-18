@@ -1,5 +1,9 @@
-define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
+define([
+  'Squire', 'sinon', 'backbone', 'jquery', 'jquerymobile', 'BlinkGap'
+], function (Squire, sinon, Backbone, $, $mobile) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/model-application.js';
 
   describe('Model - Application', function () {
     var injector, model, siteMap, loginStatus;
@@ -32,38 +36,47 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
         }
       });
 
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
       BMP.BlinkGap.isHere = function () { return true; }; // fix for PhantomJS
 
       siteMap = {};
       loginStatus = {};
-      injector = new Squire();
 
-      injector.mock('collection-interactions', CollectionMock);
-      injector.mock('collection-datasuitcases', CollectionMock);
-      injector.mock('collection-forms', FormsCollectionMock);
-      injector.mock('collection-pending', CollectionMock);
-      injector.mock('collection-stars', CollectionMock);
-      injector.mock('collection-form-records', CollectionMock);
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
+
+      injector.mock('bic/collection-interactions', CollectionMock);
+      injector.mock('bic/collection-datasuitcases', CollectionMock);
+      injector.mock('bic/collection-forms', FormsCollectionMock);
+      injector.mock('bic/collection-pending', CollectionMock);
+      injector.mock('bic/collection-stars', CollectionMock);
+      injector.mock('bic/collection-form-records', CollectionMock);
+      injector.mock('bic/store-meta', {});
       injector.mock('domReady', function () { return null; });
 
-      injector.mock('api-web', {
+      injector.mock('bic/api-web', {
         getAnswerSpaceMap: function () { return Promise.resolve(siteMap); },
         getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
 
       /*eslint-disable no-console*/ // just for testing
-      injector.mock('facade', {
+      injector.mock('bic/facade', {
         publish: function () { console.log('#publish'); },
         subscribe: function () { console.log('#subscribe'); }
       });
       /*eslint-enable no-console*/
 
-      injector.require(['../src/model-application.js'], function (required) {
+      injector.require(['bic/model-application'], function (required) {
         model = required;
         done();
       });
     });
-
 
     it('should exist', function () {
       should.exist(model);
@@ -272,7 +285,7 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
       });
     });
 
-    describe("#goToInteraction()", function(){
+    describe('#goToInteraction()', function(){
       var changePageStub;
 
       beforeEach(function(done){
@@ -309,6 +322,7 @@ define(['Squire', 'sinon', 'BlinkGap'], function (Squire, sinon) {
 
     after(function () {
       BMP.BlinkGap.isHere = oldIsHere; // fix for PhantomJS
+      injector.remove();
     });
   });
 });

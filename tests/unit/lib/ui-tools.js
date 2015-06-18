@@ -1,4 +1,4 @@
-define(['../src/lib/ui-tools'], function (uiTools) {
+define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
   'use strict';
 
   define('lib/ui-tools', function(){

@@ -1,9 +1,21 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $, $mobile) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/router.js';
+
   describe('Router - jQuery Mobile Implementation', function () {
     var injector, model, collection;
 
     before(function (done) {
+
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('jquery', $);
+      injector.mock('jquerymobile', $mobile);
 
       model = function (id) {
         return {
@@ -20,8 +32,7 @@ define(['Squire'], function (Squire) {
 
       collection = {};
 
-      injector = new Squire();
-      injector.mock('model-application', {
+      injector.mock('bic/model-application', {
         set: function () { return null; },
         interactions: {
           get: function (id) {
@@ -48,11 +59,15 @@ define(['Squire'], function (Squire) {
           get: function(){}
         }
       });
-      injector.mock('view-interaction', {
+      injector.mock('bic/view-interaction', {
         render: function () { return null; }
       });
       done();
 
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     describe('suspendApplication', function(){
@@ -60,7 +75,7 @@ define(['Squire'], function (Squire) {
         , app;
 
       beforeEach(function(done){
-        injector.require(['../src/router', 'model-application'], function(r, a){
+        injector.require(['bic/router', 'bic/model-application'], function(r, a){
 
           router = r;
           app = a;
@@ -114,7 +129,7 @@ define(['Squire'], function (Squire) {
         , testUrl = 'http://test';
 
       beforeEach(function(done){
-        injector.require(['../src/router'], function(r){
+        injector.require(['bic/router'], function(r){
 
           router = r;
           parseLocationStub = sinon.stub($.mobile.path, 'parseLocation');
@@ -175,7 +190,7 @@ define(['Squire'], function (Squire) {
     //   var router;
 
     //   beforeEach(function (done) {
-    //     injector.require(['../src/router'], function (module) {
+    //     injector.require(['bic/router'], function (module) {
     //       router = module;
     //       done();
     //     });
@@ -193,7 +208,7 @@ define(['Squire'], function (Squire) {
       var router, testmodel;
 
       beforeEach(function (done) {
-        injector.require(['../src/router'], function (module) {
+        injector.require(['bic/router'], function (module) {
           testmodel = model(1);
           sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
          // sinon.stub(module, 'parseArgs', function () { return null; });
@@ -246,7 +261,7 @@ define(['Squire'], function (Squire) {
       var router;
 
       beforeEach(function (done) {
-        injector.require(['../src/router'], function (module) {
+        injector.require(['bic/router'], function (module) {
           router = module;
           done();
         });

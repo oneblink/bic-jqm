@@ -1,4 +1,3 @@
-/*globals define:false, require:false, requirejs:false*/ // Require.js
 /*globals describe:false, it:false, before:false, after:false*/ // Mocha
 /*globals assert:false*/ // Chai
 define(['Squire'], function (Squire) {
@@ -20,7 +19,7 @@ define(['Squire'], function (Squire) {
       window.isBlinkGap = true;
       window.cordova = { available: true };
 
-      injector.require(['promise-blinkgap'], function (p) {
+      injector.require(['bic/promise-blinkgap'], function (p) {
         promise = p;
         done();
       });

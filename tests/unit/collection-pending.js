@@ -1,23 +1,36 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'sinon', 'backbone'], function (Squire, sinon, Backbone) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/collection-pending.js';
+
   describe('Collection - Pending', function () {
     var injector, Collection, collection, apiStub;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
 
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
 
-      injector.mock('model-pending', Backbone.Model);
-      injector.mock('api-web', {
+      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('bic/api-web', {
         setPendingItem: apiStub
       });
 
-      injector.require(['../src/collection-pending'], function (required) {
+      injector.require(['bic/collection-pending'], function (required) {
         Collection = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     beforeEach(function (done) {

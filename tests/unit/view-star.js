@@ -7,7 +7,7 @@ define(['Squire'], function (Squire) {
     before(function (done) {
       injector = new Squire();
 
-      injector.require(['../src/view-star'], function (rView) {
+      injector.require(['bic/view-star'], function (rView) {
         View = rView;
         done();
       });

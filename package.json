@@ -1,5 +1,5 @@
 {
-  "name": "bic-jqm",
+  "name": "@blinkmobile/bic-jqm",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
   "version": "3.4.2",
   "formsversion": "3.3.3",
@@ -21,14 +21,15 @@
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.0",
+    "glob": "^5.0.10",
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",
     "grunt-concurrent": "~1.0",
     "grunt-contrib-copy": "~0.8",
     "grunt-contrib-requirejs": "~0.4",
-    "grunt-contrib-uglify": "~0.9",
+    "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "~0.6",
-    "grunt-eslint": "^14.0",
+    "grunt-eslint": "^15.0",
     "grunt-hapi": "^0.9.1",
     "grunt-mocha": "~0.4",
     "grunt-mustache-render": "^1.7",
@@ -48,5 +49,6 @@
   "scripts": {
     "test": "gulp test && grunt test",
     "test-travis": "gulp test && grunt travis"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

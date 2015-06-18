@@ -1,17 +1,30 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/collection-interactions.js';
+
   describe('Collection - Interactions', function () {
     var injector, Collection, collection;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      injector.mock('model-interaction', Backbone.Model);
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
 
-      injector.require(['../src/collection-interactions'], function (required) {
+      injector.mock('bic/model-interaction', Backbone.Model);
+
+      injector.require(['bic/collection-interactions'], function (required) {
         Collection = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     beforeEach(function (done) {
