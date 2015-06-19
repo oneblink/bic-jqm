@@ -23,10 +23,13 @@ define(function (require) {
         .then(function (definition) {
           var formRecord;
           var pendingModel;
+          var SubView;
+
+          SubView = view.constructor.prepareSubView();
 
           Forms.initialize(definition, view.model.get('blinkFormAction'));
           view.$el.append(Forms.current.$form);
-          view.subView = new FormControls({
+          view.subView = new SubView({
             model: view.model
           });
           view.subView.render();
@@ -62,6 +65,15 @@ define(function (require) {
         });
 
       return view;
+    }
+  }, {
+    prepareSubView: function () {
+      var SubView = FormControls;
+
+      if (app.views.FormControls) {
+        SubView = app.views.FormControls;
+      }
+      return SubView;
     }
   });
 

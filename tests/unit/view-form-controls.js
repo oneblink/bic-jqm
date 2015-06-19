@@ -6,6 +6,14 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;
     var mockApp;
+    var pageid = 0,
+      pageObject = {
+        length: 4,
+        current: {
+          "index": function() { return pageid; }
+        },
+        "goto": function (num) { pageid = num; }
+      };
 
     before(function (done) {
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
@@ -15,7 +23,10 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
 
       Forms.current = {
         data: function() { return; },
-        getErrors: function() { return; }
+        getErrors: function() { return; },
+        get: function() {
+          return pageObject;
+        }
       };
 
       errorStub = sinon.stub(Forms.current, 'getErrors', function () {
@@ -50,7 +61,7 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
 
       injector.mock('bic/model-application', mockApp);
       injector.mock('bic/model-pending', Backbone.Model);
-      injector.mock('text!bic/template-form-controls.mustache', 'string');
+      injector.mock('text!bic/template/form/controls.mustache', 'string');
       injector.mock('bic/api', function () { return null; });
       injector.require(['bic/view-form-controls'], function (required) {
         View = required;
@@ -95,9 +106,131 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
         expect(view.formClose).to.be.an.instanceOf(Function);
         expect(view.previousFormPage).to.be.an.instanceOf(Function);
         expect(view.nextFormPage).to.be.an.instanceOf(Function);
+        expect(view.firstFormPage).to.be.an.instanceOf(Function);
+        expect(view.lastFormPage).to.be.an.instanceOf(Function);
         expect(view.formSave).to.be.an.instanceOf(Function);
         expect(view.formDiscard).to.be.an.instanceOf(Function);
         expect(view.addToQueue).to.be.an.instanceOf(Function);
+      });
+
+      it('nextFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to next page
+        view.nextFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('firstFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, 0);
+
+        //should not re-render the page because already on first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('lastFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 1);
+
+        //should not re-render the page because already on last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('previousFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to second last page
+        view.previousFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 2);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
       });
 
       it('should add item with status Pending in pending queue', function (done) {

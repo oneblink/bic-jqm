@@ -12,7 +12,7 @@ define(function (require) {
 
   // local modules
 
-  var Template = require('text!bic/template-form-controls.mustache');
+  var Template = require('text!bic/template/form/controls.mustache');
   var app = require('bic/model-application');
   var API = require('bic/api');
   var USER_ACTIONS = require('bic/enum-user-actions');
@@ -60,36 +60,67 @@ define(function (require) {
       'click #FormControls #close': 'formClose',
       'click #FormControls #save': 'formSave2',
       'click #nextFormPage': 'nextFormPage',
-      'click #previousFormPage': 'previousFormPage'
+      'click #previousFormPage': 'previousFormPage',
+      'click #firstFormPage': 'firstFormPage',
+      'click #lastFormPage': 'lastFormPage'
     },
 
     render: function () {
       var view, options;
-
+      var pages, index;
       view = this;
       options = {
         hasStorage: app.hasStorage()
       };
 
       if (Forms.current.get('pages').length > 1) {
+        pages = Forms.current.get('pages');
+        index = pages.current.index();
         options.pages = {
-          current: Forms.current.get('pages').current.index() + 1,
-          total: Forms.current.get('pages').length
+          current: index + 1,
+          total: pages.length,
+          greaterThanTwo: pages.length > 2
         };
 
-        if (Forms.current.get('pages').current.index() !== 0) {
+        if (pages.current.index() !== 0) {
           options.pages.previous = true;
         }
 
-        if (Forms.current.get('pages').current.index() !== Forms.current.get('pages').length - 1) {
+        if (pages.current.index() !== pages.length - 1) {
           options.pages.next = true;
         }
       }
 
-      view.$el.html(Mustache.render(Template, options));
+      view.$el.html(Mustache.render(view.constructor.template, options));
       $.mobile.activePage.trigger('pagecreate');
 
       return view;
+    },
+
+    firstFormPage: function () {
+      var view, index;
+
+      view = this;
+      index = Forms.current.get('pages').current.index();
+
+      if (index > 0) {
+        Forms.current.get('pages').goto(0);
+        view.render();
+      }
+    },
+
+    lastFormPage: function () {
+      var view, index, len;
+
+      view = this;
+      len = Forms.current.get('pages').length;
+      index = Forms.current.get('pages').current.index();
+
+      //only move and render if required
+      if (index < len - 1) {
+        Forms.current.get('pages').goto(len - 1);
+        view.render();
+      }
     },
 
     nextFormPage: function () {
@@ -345,6 +376,8 @@ define(function (require) {
         });
       });
     }
+  }, {
+    template: Template
   });
 
   return FormControlView;
