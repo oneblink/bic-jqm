@@ -1,9 +1,25 @@
 {{#pages}}
-<div id="FormPageCount" data-role="controlgroup" data-type="horizontal">
-  <a id="previousFormPage" data-role="button" data-icon="arrow-l" {{^previous}}class="ui-disable"{{/previous}} style="width: 32%" data-iconpos="left">&nbsp;</a>
-  <a data-role="button" style="width: 33%"><span id="currentPage">{{current}}</span> of <span id="totalPages">{{total}}</span></a>
-  <a id="nextFormPage" data-role="button" data-icon="arrow-r" {{^next}}class="ui-disable"{{/next}} style="width: 32%" data-iconpos="right">&nbsp;</a>
-</div>
+  {{^greaterThanTwo}}
+      <div id="FormPageCount" data-role="controlgroup" data-type="horizontal">
+          <a id="previousFormPage" data-role="button" data-icon="arrow-l" {{^previous}}class="ui-disable"{{/previous}} style="width: 32%" data-iconpos="left">&nbsp;</a>
+          <a data-role="button" style="width: 33%"><span id="currentPage">{{current}}</span> of <span id="totalPages">{{total}}</span></a>
+          <a id="nextFormPage" data-role="button" data-icon="arrow-r" {{^next}}class="ui-disable"{{/next}} style="width: 32%" data-iconpos="right">&nbsp;</a>
+      </div>
+  {{/greaterThanTwo}}
+  {{#greaterThanTwo}}
+      <div data-role="controlgroup">
+          <progress min="0" max="{{total}}" value="{{current}}" style="width:100%;">
+            {{current}} / {{total}}
+          </progress>
+      </div>
+      <div id="FormPageCount" data-role="controlgroup" data-type="horizontal">
+          <a id="firstFormPage" data-role="button" {{^previous}}class="ui-disable"{{/previous}} style="width: 16%">&#8676;</a>
+          <a id="previousFormPage" data-role="button" {{^previous}}class="ui-disable"{{/previous}} style="width: 16%">&#8592;</a>
+          <a data-role="button" style="width: 33%"><span id="currentPage">{{current}}</span> of <span id="totalPages">{{total}}</span></a>
+          <a id="nextFormPage" data-role="button" {{^next}}class="ui-disable"{{/next}} style="width: 16%">&#8594;</a>
+          <a id="lastFormPage" data-role="button" {{^next}}class="ui-disable"{{/next}} style="width: 16%">&#8677;</a>
+      </div>
+  {{/greaterThanTwo}}
 {{/pages}}
 
 {{^hasStorage}}
