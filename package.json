@@ -5,11 +5,11 @@
   "formsversion": "3.3.3",
   "main": "Gruntfile.js",
   "dependencies": {
+    "@blinkmobile/geolocation": "1.0.0",
     "almond": "0.3.1",
     "amd-feature": "jensarps/AMD-feature#295cb395fe",
     "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
     "domReady": "requirejs/domReady#449478e133",
-    "geolocation": "git://github.com/blinkmobile/geolocation#v1.0.0",
     "is-indexeddb-reliable": "blinkmobile/is-indexeddb-reliable#v1.0.1",
     "node-uuid": "1.4.3",
     "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
