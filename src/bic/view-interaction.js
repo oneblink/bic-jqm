@@ -7,7 +7,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    var geolocation = require('geolocation');
+    var geolocation = require('@blinkmobile/geolocation');
     var Mustache = require('mustache');
     var Promise = require('feature!promises');
 

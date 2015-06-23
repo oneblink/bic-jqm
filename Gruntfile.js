@@ -90,7 +90,7 @@ module.exports = function (grunt) {
             feature: '../node_modules/amd-feature/feature',
             pollUntil: '../node_modules/poll-until/poll-until',
             BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap',
-            geolocation: '../node_modules/geolocation/geolocation',
+            '@blinkmobile/geolocation': '../node_modules/@blinkmobile/geolocation/geolocation',
             'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
             text: '../node_modules/text/text',
             domReady: '../node_modules/domReady/domReady',

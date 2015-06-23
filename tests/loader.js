@@ -9,7 +9,7 @@ require.config({
   paths: {
     'is-indexeddb-reliable': '/node_modules/is-indexeddb-reliable/dist/index',
     feature: '/node_modules/amd-feature/feature',
-    geolocation: '/node_modules/geolocation/geolocation',
+    '@blinkmobile/geolocation': '/node_modules/@blinkmobile/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
     pollUntil: '/node_modules/poll-until/poll-until',
     mustache: '/node_modules/mustache/mustache',
