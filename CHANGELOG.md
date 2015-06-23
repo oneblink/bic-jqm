@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v3.5.1 - 2015-06-24
+
+
+### Fixed
+
+- update to Forms v3.3.4 for improvements
+
+
 ## v3.5.0 - 2015-06-24
 
 
