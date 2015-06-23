@@ -1,15 +1,29 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/collection-datasuitcases.js';
+
   describe('Collection - DataSuitcases', function () {
     var injector, Collection, collection;
 
     before(function (done) {
-      injector = new Squire();
-      injector.mock('model-datasuitcase', Backbone.Model);
-      injector.require(['../src/collection-datasuitcases'], function (required) {
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
+
+      injector.mock('bic/model-datasuitcase', Backbone.Model);
+      injector.require(['bic/collection-datasuitcases'], function (required) {
         Collection = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     beforeEach(function (done) {

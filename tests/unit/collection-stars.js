@@ -1,18 +1,30 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'backbone'], function (Squire, Backbone) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/collection-stars.js';
 
   describe('Collection - Stars', function () {
     var injector, Collection, collection;
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      injector.mock('model-star', Backbone.Model);
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
 
-      injector.require(['../src/collection-stars'], function (required) {
+      injector.mock('bic/model-star', Backbone.Model);
+
+      injector.require(['bic/collection-stars'], function (required) {
         Collection = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     beforeEach(function (done) {

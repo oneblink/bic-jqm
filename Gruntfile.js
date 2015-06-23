@@ -1,5 +1,6 @@
 /*eslint-env node*/
 'use strict';
+
 var pkg = require('./package.json');
 var version = pkg.version;
 var forms = pkg.formsversion;
@@ -72,56 +73,58 @@ module.exports = function (grunt) {
     },
 
     requirejs: {
-      outside: {
+      compile: {
         options: {
           baseUrl: 'src',
-          name: 'feature',
-          include: ['feature', 'pollUntil', 'BlinkGap'],
-          exclude: ['implementations'],
-          out: 'build/outside.js',
-          optimize: "none",
+          name: 'bic',
+          include: ['bic/form-expressions', 'bic/router'],
+          insertRequire: ['bic/form-expressions', 'bic'],
+          out: 'build/bic.js',
+          optimize: 'none',
+          map: {
+            '*': {
+              // 'bic': 'main'
+            }
+          },
           paths: {
             feature: '../node_modules/amd-feature/feature',
-            implementations: 'empty:', // stop outer build from looking in inner
             pollUntil: '../node_modules/poll-until/poll-until',
-            BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap'
+            BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap',
+            '@blinkmobile/geolocation': '../node_modules/@blinkmobile/geolocation/geolocation',
+            'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
+            text: '../node_modules/text/text',
+            domReady: '../node_modules/domReady/domReady',
+            uuid: '../node_modules/node-uuid/uuid',
+            authentication: '../node_modules/offlineLogin/authentication',
+            sjcl: '../node_modules/sjcl/sjcl',
+            /* at runtime, retrieve these from the CDN separately (don't bundle them) */
+            BlinkForms: 'empty:',
+            'BMP.Blobs': 'empty:',
+            backbone: 'empty:',
+            bluebird: 'empty:',
+            'es5-shim': 'empty:',
+            jquery: 'empty:',
+            jquerymobile: 'empty:',
+            modernizr: 'empty:',
+            mustache: 'empty:',
+            pouchdb: 'empty:',
+            signaturepad: 'empty:',
+            underscore: 'empty:'
           },
           shim: {
             BlinkGap: {
               deps: ['pollUntil'],
               exports: 'BMP.BlinkGap'
             }
-          }
-        }
-      },
-      compile: {
-        options: {
-          baseUrl: 'src',
-          name: '../node_modules/almond/almond',
-          include: ['main', 'router', 'auth', 'geolocation'],
-          out: 'build/bic.js',
-          optimize: "none",
-          paths: {
-            geolocation: '../node_modules/geolocation/geolocation',
-            'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
-            text: '../node_modules/text/text',
-            domReady: '../node_modules/domReady/domReady',
-            'es5-shim': 'empty:',
-            uuid: '../node_modules/node-uuid/uuid',
-            authentication: '../node_modules/offlineLogin/authentication',
-            sjcl: '../node_modules/sjcl/sjcl'
           },
           wrap: {
             startFile: [
-              'src/frag/00-config.js',
-              'src/frag/05-implementations.js',
-              'build/outside.js',
-              'src/frag/10-start.frag'
+              'src/frag/00-config.js'
             ],
-            endFile: 'src/frag/99-end.frag'
-          }//,
-          // wrap: true,
-          //insertRequire: ["main"]
+            endFile: [
+              // 'src/frag/99-end.js'
+            ]
+          }
         }
       },
       options: {
@@ -168,24 +171,24 @@ module.exports = function (grunt) {
     },
 
     uglify: {
-      bic: uglifyConfig,
-      options: {
-        sourceMap: true,
-        sourceMapIncludeSources: true,
-        preserveComments: 'some',
-        beautify: {
-          'ascii_only': true,
-          'max_line_len': 80
-        },
-        compress: {
-          'screw_ie8': false,
-          properties: false
-        },
-        mangle: {
-          'screw_ie8': false
-        }
-      }
-    },
+       bic: uglifyConfig,
+       options: {
+         sourceMap: true,
+         sourceMapIncludeSources: true,
+         preserveComments: 'some',
+         beautify: {
+           'ascii_only': true,
+           'max_line_len': 80
+         },
+         compress: {
+           'screw_ie8': false,
+           properties: false
+         },
+         mangle: {
+           'screw_ie8': false
+         }
+       }
+     },
 
     'mustache_render': {
       versions: {
@@ -213,13 +216,13 @@ module.exports = function (grunt) {
     replace: {
       bicVersion: {
         src: [
-          'src/model-application.js'
+          'src/bic.js'
         ],
         overwrite: true,
         replacements: [
           {
-            from: /window\.BMP\.BIC3\.version = '.+?'/,
-            to: 'window.BMP.BIC3.version = \'' + version + '\''
+            from: /window\.BMP\.BIC\.version = '.+?'/,
+            to: 'window.BMP.BIC.version = \'' + version + '\''
           }
         ]
       },

@@ -15,7 +15,7 @@ define(['Squire'], function (Squire) {
           }
         };
 
-        injector.require(['../src/data'], function (required) {
+        injector.require(['bic/data'], function (required) {
           Data = required;
           done();
         });
@@ -92,7 +92,7 @@ define(['Squire'], function (Squire) {
         var promise;
 
         before(function (done) {
-          require(['promise-pick-storage'], function (mod) {
+          require(['bic/promise-pick-storage'], function (mod) {
             promise = mod;
             done();
           });

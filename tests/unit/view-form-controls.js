@@ -1,31 +1,38 @@
-define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, MODEL_STATUS) {
+define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], function (Squire, Backbone, MODEL_STATUS, sinon, Forms) {
   'use strict';
+
+  var CONTEXT = 'tests/unit/view-form-controls.js';
 
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;
     var mockApp;
+    var pageid = 0,
+      pageObject = {
+        length: 4,
+        current: {
+          "index": function() { return pageid; }
+        },
+        "goto": function (num) { pageid = num; }
+      };
 
     before(function (done) {
-      injector = new Squire();
+      var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
+      cfg.context = CONTEXT;
+      require.config(cfg);
+      injector = new Squire(CONTEXT);
 
-      // window.BMP.BIC3.history = { length: 0 };
-      window.BMP.BIC3 = {
-        history: {
-          length: 0
-        },
-        view: {
-          home: function(){}
+      Forms.current = {
+        data: function() { return; },
+        getErrors: function() { return; },
+        get: function() {
+          return pageObject;
         }
       };
-      BlinkForms.current = {
-        data: function() { return; },
-        getErrors: function() { return; }
-      };
 
-      errorStub = sinon.stub(BlinkForms.current, 'getErrors', function () {
+      errorStub = sinon.stub(Forms.current, 'getErrors', function () {
         return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
       });
-      apiStub = sinon.stub(BlinkForms.current, 'data');
+      apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
           Promise.resolve({
               'text_box': '123456789',
@@ -52,14 +59,18 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       );
       mockApp = new Backbone.Model();
 
-      injector.mock('model-application', mockApp);
-      injector.mock('model-pending', Backbone.Model);
-      injector.mock('text!template-form-controls.mustache', 'string');
-      injector.mock('api', function () { return null; });
-      injector.require(['view-form-controls'], function (required) {
+      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('text!bic/template/form/controls.mustache', 'string');
+      injector.mock('bic/api', function () { return null; });
+      injector.require(['bic/view-form-controls'], function (required) {
         View = required;
         done();
       });
+    });
+
+    after(function () {
+      injector.remove();
     });
 
     it('should exist', function () {
@@ -74,13 +85,18 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       var view, processQueueStub;
 
       before(function (done) {
-        injector.require(['model-application'], function (app) {
+        injector.require(['bic/model-application'], function (app) {
           view = new View({ model: app});
           app.view = {
             pendingQueue: sinon.stub()
           };
 
-          injector.require(['model-pending'], function (PendingItem){
+          app.getArgument = sinon.stub();
+          app.getArgument.withArgs('pid').returns('1');
+          app.setArgument = sinon.stub();
+          app.setArgument.withArgs('pid').returns('1');
+
+          injector.require(['bic/model-pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };
@@ -95,9 +111,131 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
         expect(view.formClose).to.be.an.instanceOf(Function);
         expect(view.previousFormPage).to.be.an.instanceOf(Function);
         expect(view.nextFormPage).to.be.an.instanceOf(Function);
+        expect(view.firstFormPage).to.be.an.instanceOf(Function);
+        expect(view.lastFormPage).to.be.an.instanceOf(Function);
         expect(view.formSave).to.be.an.instanceOf(Function);
         expect(view.formDiscard).to.be.an.instanceOf(Function);
         expect(view.addToQueue).to.be.an.instanceOf(Function);
+      });
+
+      it('nextFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to next page
+        view.nextFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('firstFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, 0);
+
+        //should not re-render the page because already on first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('lastFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 1);
+
+        //should not re-render the page because already on last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
+      });
+
+      it('previousFormPage test', function() {
+        var gotoSpy,
+          indexSpy,
+          renderSpy,
+          oldRender;
+
+        oldRender = view.render;
+        view.render = function() {};
+
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, "index");
+        gotoSpy = sinon.spy(pageObject, "goto");
+        renderSpy = sinon.spy(view, "render");
+
+        //move to second last page
+        view.previousFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(renderSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 2);
+
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+        view.render = oldRender;
       });
 
       it('should add item with status Pending in pending queue', function (done) {
@@ -109,32 +247,28 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
         expect(processQueueStub.called).to.equal(false);
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.PENDING);
-        expect(apiStub.called).to.equal(true);
-
-
-        setTimeout(function () {
+        view.addToQueue(MODEL_STATUS.PENDING, true).then(function(){
+          expect(apiStub.called).to.equal(true);
           pendingQueue = mockApp.pending.where({status: MODEL_STATUS.PENDING});
           expect(pendingQueue.length).to.equal(1);
           expect(pendingQueue[0].get('data').text_box).to.equal('123456789');
-        }, 1e3);
-        done();
+          done();
+        });
       });
 
       it('should add item with status Draft in pending queue', function (done) {
         var draftQueue;
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.DRAFT);
-        view.addToQueue(MODEL_STATUS.DRAFT);
-
-        setTimeout(function () {
+        view.addToQueue(MODEL_STATUS.DRAFT, true).then(function(){
+          return view.addToQueue(MODEL_STATUS.DRAFT, true);
+        }).then(function(){
           draftQueue = mockApp.pending.where({status: MODEL_STATUS.DRAFT});
           expect(draftQueue.length).to.equal(2);
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
           expect(draftQueue[1].get('data').text_box).to.equal('Anandita');
-        }, 1e3);
-        done();
+          done();
+        });
       });
 
     });
@@ -148,10 +282,10 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       beforeEach(function(){
         var mockModel;
 
-        origGet = BlinkForms.current.get;
-        BlinkForms.current.get = function(){};
+        origGet = Forms.current.get;
+        Forms.current.get = function(){};
 
-        interactionGetStub = sinon.stub(BlinkForms.current, 'get');
+        interactionGetStub = sinon.stub(Forms.current, 'get');
 
         mockModel = {
           get: function(){}
@@ -165,22 +299,21 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
       });
 
       afterEach(function(){
-        BlinkForms.current.get = origGet;
+        Forms.current.get = origGet;
         modelGetStub.restore();
         interactionGetStub.restore();
       });
 
       it('should go home', function(){
-        var originalBMP = window.BMP
-          , viewMock
-          , expectation;
+        var viewMock;
+        var expectation;
 
         mockApp.history = [];
         mockApp.view = {
           home: function(){}
         };
 
-        viewMock = sinon.mock(window.BMP.BIC3.view);
+        viewMock = sinon.mock(mockApp.view);
         expectation = viewMock.expects('home');
         expectation.once();
 
@@ -189,8 +322,6 @@ define(['Squire', 'backbone', 'enum-model-status'], function (Squire, Backbone, 
         viewInstance.formLeave();
 
         expectation.verify();
-
-        window.BMP = originalBMP;
       });
 
       it('should execute the onLeave action', function(){

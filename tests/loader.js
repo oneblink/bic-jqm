@@ -7,10 +7,9 @@ var expect = chai.expect;
 require.config({
   baseUrl: '/src',
   paths: {
-    implementations: '/tests/implementations',
     'is-indexeddb-reliable': '/node_modules/is-indexeddb-reliable/dist/index',
     feature: '/node_modules/amd-feature/feature',
-    geolocation: '/node_modules/geolocation/geolocation',
+    '@blinkmobile/geolocation': '/node_modules/@blinkmobile/geolocation/geolocation',
     Squire: '/node_modules/squirejs/src/Squire',
     pollUntil: '/node_modules/poll-until/poll-until',
     mustache: '/node_modules/mustache/mustache',
@@ -47,19 +46,14 @@ window.BMP = {
     }
   }
 };
-window.Modernizr = {indexeddb: false};
-window.BlinkForms = {};
+window.Modernizr = { indexeddb: false };
 
 require([
-  'feature!promises',
-  'pollUntil',
-  'geolocation',
   'backbone',
-  'mustache',
-  'pouchdb',
+  'feature!promises',
+  'feature!es5',
   'jquery',
   'jquerymobile',
-  'feature!es5',
   'BlinkGap',
   '/tests/unit/api-web.js',
   '/tests/unit/collection-datasuitcases.js',
@@ -68,6 +62,7 @@ require([
   '/tests/unit/collection-pending.js',
   '/tests/unit/collection-stars.js',
   '/tests/unit/data-pouch.js',
+  '/tests/unit/form-expressions.js',
   '/tests/unit/model-application.js',
   '/tests/unit/model-datasuitcase.js',
   '/tests/unit/model-form.js',
@@ -78,10 +73,13 @@ require([
   '/tests/unit/router.js',
   '/tests/unit/view-interaction.js',
   '/tests/unit/view-star.js',
+  '/tests/unit/view-form-action.js',
   '/tests/unit/view-form-controls.js'
-], function (Promise, pollUntil, geolocation, Backbone, Mustache, Pouch) {
+], function (Backbone, Promise) {
   'use strict';
   var runner, failedTests, logFailure;
+
+  window.Promise = window.Promise || Promise;
 
   Backbone.sync = function (method, model, options) {
     var promise = Promise.resolve({});
@@ -98,12 +96,6 @@ require([
 
     return promise;
   };
-
-  window.Mustache = Mustache;
-  window.Pouch = Pouch;
-  window.Promise = window.Promise || Promise;
-  window.pollUntil = window.pollUntil || pollUntil;
-  window.geolocation = window.geolocation || geolocation;
 
   runner = mocha.run();
   failedTests = [];

@@ -38,5 +38,40 @@
   <noscript>You currently have JavaScript disabled. This application requires JavaScript to work correctly.</noscript>
   <div data-role="page" id="temp">Loading, please wait.</div>
   {{&answerSpace.scripts_html}}
+  <script>
+  (function () {
+    var CORE_DEPS = ['jquery', 'jquerymobile', 'backbone', 'pouchdb'];
+    var logError = function (err) {
+      if (window.console && window.console.error) {
+        window.console.error(err);
+      }
+    };
+
+    // we don't support IE8, we use `Array#forEach()` and  `Array#indexOf()`
+    if (!Array || !Array.prototype || !Array.prototype.forEach || !Array.prototype.indexOf) {
+      logError(new Error('Array#indexOf() not implemented'));
+      location.assign('http://outdatedbrowser.com/');
+    }
+
+    // double-check that we have Require.js at least
+    if (!window.define || !window.require || !window.requirejs) {
+      logError(new Error('Require.js not loaded'));
+      location.reload();
+    }
+
+    // if we have a module timeout, and it is a core module, reload immediately
+    requirejs.onError = function (err) {
+      if (err.requireType === 'timeout') {
+        CORE_DEPS.forEach(function (dep) {
+          if (err.requireModules.indexOf(dep) !== -1) {
+            logError(new Error('Require.js could not load: ' + dep));
+            location.reload();
+          }
+        });
+      }
+      throw err;
+    };
+  }());
+  </script>
 </body>
 </html>

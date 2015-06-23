@@ -1,5 +1,10 @@
 {
+  "env": {
+    "amd": true,
+    "mocha": true
+  },
   "globals": {
-    "assert": true
+    "assert": true,
+    "requirejs": false
   }
 }
