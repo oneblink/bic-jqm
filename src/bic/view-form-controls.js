@@ -252,7 +252,7 @@ define(function (require) {
       var me = this;
       e.data.view.addToQueue('Draft')
        .then(function(){
-        $('#closePopup').one('popupafterclose', leaveViewBy(me.USER_ACTIONS.SAVE) );
+        $('#closePopup').one('popupafterclose', leaveViewBy(me, USER_ACTIONS.SAVE) );
         $('#closePopup').popup('close');
        })
        .then(undefined, function(){
