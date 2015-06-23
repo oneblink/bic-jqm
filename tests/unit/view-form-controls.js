@@ -91,6 +91,11 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
             pendingQueue: sinon.stub()
           };
 
+          app.getArgument = sinon.stub();
+          app.getArgument.withArgs('pid').returns('1');
+          app.setArgument = sinon.stub();
+          app.setArgument.withArgs('pid').returns('1');
+
           injector.require(['bic/model-pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
@@ -242,32 +247,28 @@ define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], f
         expect(processQueueStub.called).to.equal(false);
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.PENDING);
-        expect(apiStub.called).to.equal(true);
-
-
-        setTimeout(function () {
+        view.addToQueue(MODEL_STATUS.PENDING, true).then(function(){
+          expect(apiStub.called).to.equal(true);
           pendingQueue = mockApp.pending.where({status: MODEL_STATUS.PENDING});
           expect(pendingQueue.length).to.equal(1);
           expect(pendingQueue[0].get('data').text_box).to.equal('123456789');
-        }, 1e3);
-        done();
+          done();
+        });
       });
 
       it('should add item with status Draft in pending queue', function (done) {
         var draftQueue;
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.DRAFT);
-        view.addToQueue(MODEL_STATUS.DRAFT);
-
-        setTimeout(function () {
+        view.addToQueue(MODEL_STATUS.DRAFT, true).then(function(){
+          return view.addToQueue(MODEL_STATUS.DRAFT, true);
+        }).then(function(){
           draftQueue = mockApp.pending.where({status: MODEL_STATUS.DRAFT});
           expect(draftQueue.length).to.equal(2);
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
           expect(draftQueue[1].get('data').text_box).to.equal('Anandita');
-        }, 1e3);
-        done();
+          done();
+        });
       });
 
     });
