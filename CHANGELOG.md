@@ -1,6 +1,52 @@
 # Changelog
 
 
+## v3.5.0 - 2015-06-24
+
+
+### Added
+
+- BIC-152: new Suitcase and Interaction operators for Forms Behaviours
+
+    - combined with FORMS-163 and PLATFORM-1558 (BMP v2.26.0), the Cascading
+      Selects feature from the Form Builder is now supported
+
+- BIC-172: allow replacement of View constructor used for Forms Controls, e.g.
+
+    ```js
+    require([
+      'backbone'
+      'bic',
+      'bic/view-form-controls'
+    ], function (Backbone, BIC, FormControlsView) {
+      // override parts of our implementation
+      BIC.views.FormControls = FormControlsView.extend({ /* ... */ });
+      // OR ... complete replacement (advanced)
+      BIC.views.FormControls = Backbone.View.extend({ /* ... */ });
+      // OR ... return to default
+      BIC.views.FormControls = null;
+    });
+    ```
+
+
+### Changed
+
+- BIC modules are no longer private, all can be `require()`ed globally
+
+    - improves determinism during boot, improves maintainability
+
+    - offers new avenues for extensibility
+
+
+### Fixed
+
+- BIC-161: if Require.js and/or modules timeout during boot, reload
+
+    - and direct unsupported browsers (e.g. IE8) to http://outdatedbrowser.com/
+
+- BIC-177: fixed console error triggered when closing then saving a form
+
+
 ## v3.4.2 - 2015-06-17
 
 
