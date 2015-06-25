@@ -368,6 +368,7 @@ define(function (require) {
           if (view.model.getArgument('pid')){
             pendingModel = app.pending.get(view.model.getArgument('pid'));
             if ( pendingModel ){
+              modelAttrs.id = view.model.getArgument('pid');
               pendingModel.save(modelAttrs, options);
               return;
             }
