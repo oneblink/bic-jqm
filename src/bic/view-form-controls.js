@@ -92,8 +92,7 @@ define(function (require) {
       }
 
       view.$el.html(Mustache.render(view.constructor.template, options));
-      $.mobile.activePage.trigger('pagecreate');
-
+      view.$el.trigger('create');
       return view;
     },
 
