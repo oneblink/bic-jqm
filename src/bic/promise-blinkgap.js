@@ -9,6 +9,8 @@ define(function () {
 
   var realPromise; // not jQuery.Deferred, yuck!
 
+  require('jquery'); // quick fix, .whenReady() need jQuery to be loaded
+
   if (window.BMP && window.BMP.BlinkGap && window.BMP.BlinkGap.isHere && window.BMP.BlinkGap.isHere()) {
 
     // convert jQuery.Deferred to an ES6 Promise so we can safely chain it
