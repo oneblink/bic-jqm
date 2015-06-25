@@ -263,7 +263,9 @@ define(function (require) {
 
     formSave2: function () {
       this.addToQueue('Draft')
-          .then(leaveViewBy(this, USER_ACTIONS.SAVE))
+          .then(function(updatedModel) {
+          this.model.setArgument('pid', updatedModel.id);
+        }.bind(this))
           .then(undefined, function(){
             enableSave();
             this.scrollToError();
