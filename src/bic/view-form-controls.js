@@ -262,9 +262,13 @@ define(function (require) {
     },
 
     formSave2: function () {
+      uiTools.disableElement('#save');
       this.addToQueue('Draft')
           .then(function(updatedModel) {
           this.model.setArgument('pid', updatedModel.id);
+          setTimeout(function() {
+            enableSave();
+          }, 1e3);
         }.bind(this))
           .then(undefined, function(){
             enableSave();
