@@ -92,8 +92,7 @@ define(function (require) {
       }
 
       view.$el.html(Mustache.render(view.constructor.template, options));
-      $.mobile.activePage.trigger('pagecreate');
-
+      view.$el.trigger('create');
       return view;
     },
 
@@ -262,8 +261,14 @@ define(function (require) {
     },
 
     formSave2: function () {
+      uiTools.disableElement('#save');
       this.addToQueue('Draft')
-          .then(leaveViewBy(this, USER_ACTIONS.SAVE))
+          .then(function(updatedModel) {
+          this.model.setArgument('pid', updatedModel.id);
+          setTimeout(function() {
+            enableSave();
+          }, 1e3);
+        }.bind(this))
           .then(undefined, function(){
             enableSave();
             this.scrollToError();
@@ -363,6 +368,7 @@ define(function (require) {
           if (view.model.getArgument('pid')){
             pendingModel = app.pending.get(view.model.getArgument('pid'));
             if ( pendingModel ){
+              modelAttrs.id = view.model.getArgument('pid');
               pendingModel.save(modelAttrs, options);
               return;
             }

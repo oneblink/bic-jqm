@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v3.5.2 - 2015-06-26
+
+
+### Fixed
+
+- BIC-181: access jQuery once available in native apps (instead of too soon)
+
+- BIC-178: Save Draft button on Forms no longer triggers navigation
+
+- BIC-179: render SubForms properly after turning Form Pages
+
+- BIC-157: saving a Draft and submitting does not create duplicate Pending
+  Queue entries
+
+
 ## v3.5.1 - 2015-06-24
 
 
