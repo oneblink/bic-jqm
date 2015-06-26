@@ -1,8 +1,8 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.5.2",
-  "formsversion": "3.3.4",
+  "version": "3.5.3",
+  "formsversion": "3.3.5",
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
