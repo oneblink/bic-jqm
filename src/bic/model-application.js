@@ -314,7 +314,8 @@ define(function (require) {
   singleton.meta = metaStore;
 
   singleton.views = {
-    FormControls: null
+    FormControls: null,
+    FormList: null
   };
 
   return singleton;

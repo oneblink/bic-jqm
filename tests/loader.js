@@ -73,6 +73,7 @@ require([
   '/tests/unit/router.js',
   '/tests/unit/view-interaction.js',
   '/tests/unit/view-star.js',
+  '/tests/unit/view-form.js',
   '/tests/unit/view-form-action.js',
   '/tests/unit/view-form-controls.js'
 ], function (Backbone, Promise) {
