@@ -305,7 +305,7 @@ define(function (require) {
             window.BMP.BIC.mapCallback = this.addressMap;
           } else if (mapDiv.attr('data-kml') !== undefined) {
           // KML Map
-            window.BMP.BIC.MapCallback = this.kmlMap;
+            window.BMP.BIC.mapCallback = this.kmlMap;
           } else if (mapDiv.attr('data-map-action') !== undefined) {
           // Directions Map
             window.BMP.BIC.mapCallback = this.directionsMap;
