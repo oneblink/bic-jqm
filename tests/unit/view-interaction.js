@@ -22,7 +22,6 @@ define(['Squire', 'jquery', 'jquerymobile'], function (Squire, $, $mobile) {
       injector.mock('bic/view-form', function () { return null; });
       injector.mock('text!bic/template-interaction.mustache', 'string');
       injector.mock('text!bic/template-inputPrompt.mustache', 'string');
-      injector.mock('text!bic/template-form.mustache', 'string');
       injector.mock('text!bic/template-category-list.mustache', 'string');
       injector.mock('text!bic/template-pending.mustache', 'string');
       injector.mock('text!bic/template-clear-confirmation-popup.mustache', 'string');

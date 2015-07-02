@@ -32,6 +32,8 @@ define(function (require) {
           function (data) {
             var nodes, node, parsed, parseNodes;
 
+            collection.reset();
+
             nodes = data.evaluate('//' + formName, data);
             node = nodes.iterateNext();
 

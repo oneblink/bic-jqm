@@ -8,6 +8,7 @@ define(function (require) {
 
   // local modules
 
+  var app = require('bic/model-application');
   var FormAction = require('bic/view-form-action');
   var FormList = require('bic/view-form-list');
 
@@ -15,13 +16,14 @@ define(function (require) {
 
   var FormView = Backbone.View.extend({
     render: function () {
-      var view, action;
+      var view, action, SubView;
 
       view = this;
       action = view.model.get('blinkFormAction');
 
       if (action === 'list') {
-        view.subView = new FormList({
+        SubView = view.constructor.prepareSubView();
+        view.subView = new SubView({
           model: view.model
         });
       } else if (action === 'search') {
@@ -43,6 +45,15 @@ define(function (require) {
       view.subView.render();
 
       return view;
+    }
+  }, {
+    prepareSubView: function () {
+      var SubView = FormList;
+
+      if (app.views.FormList) {
+        SubView = app.views.FormList;
+      }
+      return SubView;
     }
   });
 
