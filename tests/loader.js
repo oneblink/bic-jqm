@@ -75,7 +75,8 @@ require([
   '/tests/unit/view-star.js',
   '/tests/unit/view-form.js',
   '/tests/unit/view-form-action.js',
-  '/tests/unit/view-form-controls.js'
+  '/tests/unit/view-form-controls.js',
+  '/tests/unit/view-error-summary-list.js'
 ], function (Backbone, Promise) {
   'use strict';
   var runner, failedTests, logFailure;

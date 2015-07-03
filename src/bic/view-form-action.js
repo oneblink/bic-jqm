@@ -10,11 +10,49 @@ define(function (require) {
 
   var app = require('bic/model-application');
   var FormControls = require('bic/view-form-controls');
+  var FormErrorSummary = require('bic/view-form-error-summary-list-view');
 
   // this module
 
   var FormActionView = Backbone.View.extend({
     id: 'ActiveFormContainer',
+
+    errorSummary: null,
+    subView: null,
+
+    /**
+     * renders the Error summary, if it is turned on.
+     * @return {Backbone.View} The Error summary view that was rendered
+     */
+    renderErrorSummary: function(){
+      var ErrorView;
+      if ( app.get('displayErrorSummary') && Forms.current.getInvalidElements ){
+        if ( !this.errorSummary ){
+          ErrorView = FormActionView.prepareErrorSummary();
+          this.errorSummary = new ErrorView( { model: Forms.current } );
+          this.$el.append( this.errorSummary.render().$el );
+
+          return this.errorSummary;
+        }
+
+        return this.errorSummary.render();
+      }
+    },
+
+    renderControls: function(){
+        var SubView;
+
+        if ( !this.subView){
+          SubView = FormActionView.prepareSubView();
+
+          this.subView = new SubView({
+            model: this.model
+          });
+        }
+
+        this.subView.render();
+        this.$el.append(this.subView.$el);
+    },
 
     render: function () {
       var view = this;
@@ -23,17 +61,12 @@ define(function (require) {
         .then(function (definition) {
           var formRecord;
           var pendingModel;
-          var SubView;
-
-          SubView = view.constructor.prepareSubView();
 
           Forms.initialize(definition, view.model.get('blinkFormAction'));
           view.$el.append(Forms.current.$form);
-          view.subView = new SubView({
-            model: view.model
-          });
-          view.subView.render();
-          view.$el.append(view.subView.$el);
+
+          view.renderErrorSummary();
+          view.renderControls();
 
           if (view.model.getArgument('id')) {
             formRecord = app.formRecords.get(view.model.get('blinkFormObjectName') + '-' + view.model.get('args')['args[id]']);
@@ -50,9 +83,6 @@ define(function (require) {
             }
 
             Forms.current.setRecord(pendingModel.get('data'));
-            if (Forms.current.getErrors) {
-              Forms.current.getErrors();
-            }
             view.trigger('render');
           } else {
             view.trigger('render');
@@ -74,6 +104,10 @@ define(function (require) {
         SubView = app.views.FormControls;
       }
       return SubView;
+    },
+
+    prepareErrorSummary: function(){
+      return app.views.FormErrorSummary ? app.views.FormErrorSummary : FormErrorSummary;
     }
   });
 

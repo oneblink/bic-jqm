@@ -47,7 +47,8 @@ define(function (require) {
 
     defaults: {
       _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-      loginStatus: false
+      loginStatus: false,
+      displayErrorSummary: true
     },
 
     /**
@@ -315,7 +316,8 @@ define(function (require) {
 
   singleton.views = {
     FormControls: null,
-    FormList: null
+    FormList: null,
+    FormErrorSummary: null
   };
 
   return singleton;
