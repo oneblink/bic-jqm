@@ -94,13 +94,15 @@ define(function (require) {
         .then(function () {
           return app.populate();
         })
-        .then(null, function () {
+        .then(null, function (err) {
+          window.console.error(err);
           return;
         })
         .then(function () {
           return app.initialRender();
         })
         .then(null, function (err) {
+          window.console.error(err);
           throw err;
         });
     },
