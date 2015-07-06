@@ -9,6 +9,7 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
+  var Promise = require('feature!promises');
   require('jquerymobile');
   require('BlinkForms');
 
