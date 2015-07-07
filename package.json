@@ -30,14 +30,19 @@
     "grunt-contrib-watch": "~0.6",
     "grunt-eslint": "^15.0",
     "grunt-hapi": "^0.9.1",
-    "grunt-mocha": "~0.4",
+    "grunt-karma": "^0.11.2",
     "grunt-mustache-render": "^1.7",
-    "grunt-saucelabs": "~8.6",
     "grunt-text-replace": "^0.4.0",
     "gulp": "^3.8",
     "hapi": "^8.1",
+    "karma": "^0.12.37",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-requirejs": "^0.2.2",
     "mocha": "^2.2",
     "mustache": "^2.0",
+    "phantomjs": "^1.9.17",
     "request": "^2.55",
     "requirejs": "^2.1",
     "sinon": "^1.12",
@@ -46,8 +51,7 @@
     "tape-chai": "^1.1"
   },
   "scripts": {
-    "test": "gulp test && grunt test",
-    "test-travis": "gulp test && grunt travis"
+    "test": "gulp test && grunt test"
   },
   "license": "BSD-3-Clause"
 }

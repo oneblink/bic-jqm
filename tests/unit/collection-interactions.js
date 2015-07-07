@@ -1,7 +1,8 @@
-define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
+define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sinon, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/collection-interactions.js';
+  var should = chai.should();
 
   describe('Collection - Interactions', function () {
     var injector, Collection, collection;

@@ -1,5 +1,7 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'chai'], function (Squire, chai) {
   'use strict';
+
+  var should = chai.should();
 
   describe('Model - Pending', function () {
     var injector, Model;

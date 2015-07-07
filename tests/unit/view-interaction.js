@@ -1,7 +1,10 @@
-define(['Squire', 'jquery', 'jquerymobile'], function (Squire, $, $mobile) {
+define([
+  'Squire', 'jquery', 'jquerymobile', 'chai'
+], function (Squire, $, $mobile, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-interaction.js';
+  var should = chai.should();
 
   describe('View - Interaction - jQuery Mobile Implementation', function () {
     var injector, View;

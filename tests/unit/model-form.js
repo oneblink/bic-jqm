@@ -1,5 +1,8 @@
-define(['Squire', 'underscore'], function (Squire, _) {
+define(['Squire', 'underscore', 'chai'], function (Squire, _, chai) {
   'use strict';
+
+  var should = chai.should();
+
   describe('Model - Form', function () {
     var injector, Model;
 

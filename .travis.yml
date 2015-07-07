@@ -1,10 +1,7 @@
 language: node_js
 node_js:
-- 'stable'
+  - "stable"
 
-script: npm run test-travis
-
-env:
-  global:
-  - secure: Rfrz3LqOO6RoIit6GLKbP1nloGoAb2FkS58Fr0cElscTwfPaN1/4K1dkVAfwj9Sy9JubyZMfUzJd7zxt8BYA2fiUml4iMchnW0KVdRXxWmMEJeVN4lOrqdZSQHFu3qc9xM8p7Xh4NoRA9KL3m71XnwvTsb7OYA3RjNCoelbSji8=
-  - secure: aK8bIhdUidJKyMMQdhbjt+LLmXo39lwoFV5QjuY5Cie9nyAiLRebbmsYsYlEnsN1tGWbTd/kW2rQKkrhUBQfkxLOnRyVN/tH4m0Rf75FGRz1P2FOWV8vbHUKKl9GdMnYEZmCn/5nveerKdXt0OD8pwbJB7MQ4Om2f5uJb+uAEd8=
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start

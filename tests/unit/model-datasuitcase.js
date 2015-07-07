@@ -1,7 +1,8 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/collection-forms.js';
+  var should = chai.should();
 
   describe('Model - DataSuitcase', function () {
     var injector, Model, apiStub;
