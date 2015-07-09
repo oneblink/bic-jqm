@@ -6,7 +6,7 @@
 module.exports = function (config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    // basePath: './',
+    basePath: './',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -27,11 +27,13 @@ module.exports = function (config) {
       { pattern: 'node_modules/node-uuid/uuid.js', included: false },
       { pattern: 'node_modules/domReady/domReady.js', included: false },
 
+      // wildcards for included:false must not clash with included:true
       { pattern: 'src/bic/**/*.js', included: false },
       { pattern: 'src/**/*.mustache', included: false },
       { pattern: 'src/*.js', included: false },
       'src/frag/00-config.js',
 
+      // wildcards for included:false must not clash with included:true
       { pattern: 'tests/unit/**/*.js', included: false },
       'tests/loader.js'
     ],
