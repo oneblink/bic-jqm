@@ -20,6 +20,7 @@
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.0",
+    "eslint": "^0.24.0",
     "glob": "^5.0.10",
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",

@@ -188,6 +188,10 @@ define(function (require) {
                 }
               ),
               function (model) {
+                if (!app.hasStorage()) {
+                  app.interactions.remove(model);
+                  return Promise.resolve();
+                }
                 return new Promise(function (resolve, reject) {
                   model.destroy({
                     success: resolve,
@@ -202,6 +206,9 @@ define(function (require) {
           function () {
             app.forms.whenUpdated();
             app.retrieveDataSuitcasesForInteractions();
+            if (!app.hasStorage()) {
+              return Promise.resolve();
+            }
             return app.interactions.save();
           }
         );
