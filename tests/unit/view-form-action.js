@@ -7,8 +7,10 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
     var injector, View;
     var mockApp;
     var mockControls;
+    var MockErrorSummaryViewConstructor;
+    var mockForms;
 
-    before(function (done) {
+    beforeEach(function (done) {
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
       cfg.context = CONTEXT;
       require.config(cfg);
@@ -16,6 +18,14 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
 
       mockApp = new Backbone.Model();
       mockControls = new Backbone.Model();
+      MockErrorSummaryViewConstructor = Backbone.View.extend({
+        test: function(){ return 'it worked'; }
+      });
+      mockForms = {
+        current: {
+          getInvalidElements: function(){}
+        }
+      };
 
       mockApp.views = {
         FormControls: null
@@ -24,15 +34,17 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
+      injector.mock('BlinkForms', mockForms);
       injector.mock('bic/model-application', mockApp);
       injector.mock('bic/view-form-controls', mockControls);
+      injector.mock('bic/view-form-error-summary-list-view', MockErrorSummaryViewConstructor);
       injector.require(['bic/view-form-action'], function (required) {
         View = required;
         done();
       });
     });
 
-    after(function () {
+    afterEach(function () {
       injector.remove();
     });
 
@@ -50,6 +62,34 @@ define(['Squire', 'backbone'], function (Squire, Backbone) {
         mockApp.views.FormControls = new Backbone.Model();
         assert(mockApp.views.FormControls === View.prepareSubView());
         assert(mockControls !== View.prepareSubView());
+      });
+    });
+
+    describe('renderErrorSummary', function(){
+      var formActionView;
+
+      beforeEach(function(){
+        formActionView = new View({model: mockApp});
+        mockApp.set('displayErrorSummary', true);
+        mockApp.views.FormErrorSummary = null;
+      });
+
+      afterEach(function(){
+        formActionView = null;
+        //injector.remove();
+      });
+
+      it('should render the default error summary view', function(){
+        assert.equal(formActionView.renderErrorSummary().test(), 'it worked' );
+      });
+
+
+      it('should not render the default error summary view', function(){
+        mockApp.views.FormErrorSummary = Backbone.View.extend({
+          test: function(){ return 'it is overridden'; }
+        });
+
+        assert.equal(formActionView.renderErrorSummary().test(), 'it is overridden' );
       });
     });
 
