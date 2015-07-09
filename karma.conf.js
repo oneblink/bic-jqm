@@ -10,7 +10,7 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'requirejs'],
+    frameworks: ['detectBrowsers', 'mocha', 'requirejs'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -36,8 +36,10 @@ module.exports = function (config) {
       'tests/loader.js'
     ],
 
-    mocha: {
-      ui: 'bdd'
+    client: {
+      mocha: {
+        ui: 'bdd'
+      }
     },
 
     // list of files to exclude
@@ -69,7 +71,18 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Firefox', 'PhantomJS'],
+    // browsers: ['Firefox', 'PhantomJS'],
+    plugins: [
+      'karma-mocha',
+      'karma-requirejs',
+      'karma-chrome-launcher',
+      'karma-firefox-launcher',
+      'karma-ie-launcher',
+      'karma-safari-launcher',
+      // 'karma-opera-launcher',
+      'karma-phantomjs-launcher',
+      'karma-detect-browsers'
+    ],
 
     captureTimeout: 60000,
 
