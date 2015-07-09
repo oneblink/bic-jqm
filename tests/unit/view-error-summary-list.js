@@ -1,7 +1,8 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-error-summary-list.js';
+  var should = chai.should();
 
   describe('View - Form Error Summary ', function () {
     var injector, View;

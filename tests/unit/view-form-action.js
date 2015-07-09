@@ -1,7 +1,8 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-form-action.js';
+  var should = chai.should();
 
   describe('View - Form Actions ', function () {
     var injector, View;

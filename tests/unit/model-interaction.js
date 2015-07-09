@@ -1,5 +1,8 @@
-define(['Squire'], function (Squire) {
+define(['Squire', 'chai'], function (Squire, chai) {
   'use strict';
+
+  var should = chai.should();
+
   describe('Model - Interaction', function () {
     var injector, Model;
 

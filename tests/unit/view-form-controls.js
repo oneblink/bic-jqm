@@ -1,7 +1,10 @@
-define(['Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms'], function (Squire, Backbone, MODEL_STATUS, sinon, Forms) {
+define([
+  'Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms', 'chai'
+], function (Squire, Backbone, MODEL_STATUS, sinon, Forms, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-form-controls.js';
+  var should = chai.should();
 
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;

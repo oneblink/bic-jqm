@@ -44,7 +44,7 @@ module.exports = function (grunt) {
     watch: {
       src: {
         files: ['src/**/**', 'tests/**/**'],
-        tasks: ['build', 'eslint', 'mocha:tests']
+        tasks: ['build', 'eslint', 'karma']
       }
     },
 
@@ -58,17 +58,9 @@ module.exports = function (grunt) {
       }
     },
 
-    mocha: {
-      tests: {
-        options: {
-          urls: [
-            'http://localhost:9876/tests/index.html'
-          ]
-        }
-      },
-      options: {
-        bail: true,
-        log: true
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
       }
     },
 
@@ -138,10 +130,6 @@ module.exports = function (grunt) {
           warnings: false
         }
       }
-    },
-
-    'saucelabs-mocha': {
-      all: { options: require('./saucelabs') }
     },
 
     copy: {
@@ -245,17 +233,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
-  grunt.loadNpmTasks('grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-hapi');
   grunt.loadNpmTasks('grunt-mustache-render');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'mocha']);
-  grunt.registerTask('travis', ['test', 'saucelabs-mocha']);
+  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'karma']);
 
   grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);

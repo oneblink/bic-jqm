@@ -228,7 +228,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         , type
         , action;
 
-      if ( !app.currentInteraction ){
+      if ( !app.currentInteraction || !app.currentInteraction.get ){
         return;
       }
       // Store current URL

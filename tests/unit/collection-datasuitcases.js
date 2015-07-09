@@ -1,7 +1,8 @@
-define(['Squire', 'backbone', 'sinon'], function (Squire, Backbone, sinon) {
+define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sinon, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/collection-datasuitcases.js';
+  var should = chai.should();
 
   describe('Collection - DataSuitcases', function () {
     var injector, Collection, collection;
