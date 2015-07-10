@@ -15,7 +15,9 @@ define([
         current: {
           "index": function() { return pageid; }
         },
-        "goto": function (num) { pageid = num; }
+        "goto": function (num) {
+          pageid = num;
+        }
       };
 
     before(function (done) {
@@ -123,122 +125,88 @@ define([
 
       it('nextFormPage test', function() {
         var gotoSpy,
-          indexSpy,
-          renderSpy,
-          oldRender;
-
-        oldRender = view.render;
-        view.render = function() {};
+          indexSpy;
 
         //setup spys
         indexSpy = sinon.spy(pageObject.current, "index");
         gotoSpy = sinon.spy(pageObject, "goto");
-        renderSpy = sinon.spy(view, "render");
 
         //move to next page
         view.nextFormPage();
         assert.equal(indexSpy.callCount, 1);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
         assert.equal(pageid, 1);
 
         //remove spy
         pageObject.current.index.restore();
         pageObject.goto.restore();
-        view.render = oldRender;
       });
 
       it('firstFormPage test', function() {
         var gotoSpy,
-          indexSpy,
-          renderSpy,
-          oldRender;
-
-        oldRender = view.render;
-        view.render = function() {};
+          indexSpy;
 
         //setup spys
         indexSpy = sinon.spy(pageObject.current, "index");
         gotoSpy = sinon.spy(pageObject, "goto");
-        renderSpy = sinon.spy(view, "render");
 
         //move to first page
         view.firstFormPage();
         assert.equal(indexSpy.callCount, 1);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
         assert.equal(pageid, 0);
 
         //should not re-render the page because already on first page
         view.firstFormPage();
         assert.equal(indexSpy.callCount, 2);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
 
         //remove spy
         pageObject.current.index.restore();
         pageObject.goto.restore();
-        view.render = oldRender;
       });
 
       it('lastFormPage test', function() {
         var gotoSpy,
-          indexSpy,
-          renderSpy,
-          oldRender;
-
-        oldRender = view.render;
-        view.render = function() {};
+          indexSpy;
 
         //setup spys
         indexSpy = sinon.spy(pageObject.current, "index");
         gotoSpy = sinon.spy(pageObject, "goto");
-        renderSpy = sinon.spy(view, "render");
 
         //move to last page
         view.lastFormPage();
         assert.equal(indexSpy.callCount, 1);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
         assert.equal(pageid, pageObject.length - 1);
 
         //should not re-render the page because already on last page
         view.lastFormPage();
         assert.equal(indexSpy.callCount, 2);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
 
         //remove spy
         pageObject.current.index.restore();
         pageObject.goto.restore();
-        view.render = oldRender;
       });
 
       it('previousFormPage test', function() {
         var gotoSpy,
-          indexSpy,
-          renderSpy,
-          oldRender;
-
-        oldRender = view.render;
-        view.render = function() {};
+          indexSpy;
 
         //setup spys
         indexSpy = sinon.spy(pageObject.current, "index");
         gotoSpy = sinon.spy(pageObject, "goto");
-        renderSpy = sinon.spy(view, "render");
 
         //move to second last page
         view.previousFormPage();
         assert.equal(indexSpy.callCount, 1);
         assert.equal(gotoSpy.callCount, 1);
-        assert.equal(renderSpy.callCount, 1);
         assert.equal(pageid, pageObject.length - 2);
 
         //remove spy
         pageObject.current.index.restore();
         pageObject.goto.restore();
-        view.render = oldRender;
       });
 
       it('should add item with status Pending in pending queue', function (done) {

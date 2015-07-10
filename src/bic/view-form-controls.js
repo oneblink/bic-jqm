@@ -91,61 +91,57 @@ define(function (require) {
         }
       }
 
+      Forms.current.get('pages').once('change', function () {
+        Forms.once('pageInjected', function() {
+          view.render();
+        });
+      });
+
       view.$el.html(Mustache.render(view.constructor.template, options));
       view.$el.trigger('create');
       return view;
     },
 
     firstFormPage: function () {
-      var view, index;
+      var index;
 
-      view = this;
       index = Forms.current.get('pages').current.index();
 
       if (index > 0) {
         Forms.current.get('pages').goto(0);
-        view.render();
       }
     },
 
     lastFormPage: function () {
-      var view, index, len;
+      var index, len;
 
-      view = this;
       len = Forms.current.get('pages').length;
       index = Forms.current.get('pages').current.index();
 
       //only move and render if required
       if (index < len - 1) {
         Forms.current.get('pages').goto(len - 1);
-        view.render();
       }
     },
 
     nextFormPage: function () {
-      var view, index;
+      var index;
 
-      view = this;
       index = Forms.current.get('pages').current.index();
 
       if (index < Forms.current.get('pages').length - 1) {
         Forms.current.get('pages').goto(index + 1);
       }
-
-      view.render();
     },
 
     previousFormPage: function () {
-      var view, index;
+      var index;
 
-      view = this;
       index = Forms.current.get('pages').current.index();
 
       if (index > 0) {
         Forms.current.get('pages').goto(index - 1);
       }
-
-      view.render();
     },
 
     formLeave: function (userAction) {
