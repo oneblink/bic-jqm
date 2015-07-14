@@ -1,6 +1,6 @@
 define([
-  'Squire', 'jquery', 'jquerymobile', 'chai'
-], function (Squire, $, $mobile, chai) {
+  'Squire', 'jquery', 'jquerymobile', 'chai', 'backbone'
+], function (Squire, $, $mobile, chai, Backbone) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view-interaction.js';
@@ -8,6 +8,7 @@ define([
 
   describe('View - Interaction - jQuery Mobile Implementation', function () {
     var injector, View;
+    var mockApp, mockPending;
 
     before(function (done) {
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
@@ -19,15 +20,23 @@ define([
       injector.mock('jquery', $);
       injector.mock('jquerymobile', $mobile);
 
-      injector.mock('bic/model-application', function () { return null; });
+      mockApp = new Backbone.Model();
+      mockPending = new Backbone.Model();
+      mockApp.views = {
+        FormPending: null
+      };
+
+      // import global `require('dep')` into local `injector.require('dep')`
+      injector.mock('backbone', Backbone);
+
+      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/view/form/pending', mockPending);
       injector.mock('bic/model-star', function () { return null; });
       injector.mock('bic/view-star', function () { return null; });
       injector.mock('bic/view-form', function () { return null; });
       injector.mock('text!bic/template-interaction.mustache', 'string');
       injector.mock('text!bic/template-inputPrompt.mustache', 'string');
       injector.mock('text!bic/template-category-list.mustache', 'string');
-      injector.mock('text!bic/template-pending.mustache', 'string');
-      injector.mock('text!bic/template-clear-confirmation-popup.mustache', 'string');
 
       injector.require(['bic/view-interaction'], function (required) {
         View = required;
@@ -45,6 +54,15 @@ define([
 
     it('should be a Backbone.View object constructor', function () {
       View.should.be.an.instanceOf(Function);
+    });
+
+    describe('preparePendingQueueSubView', function () {
+      it('functions on view', function () {
+        assert(mockPending === View.preparePendingQueueSubView(), "1");
+        mockApp.views.FormPending = new Backbone.Model();
+        assert(mockApp.views.FormPending === View.preparePendingQueueSubView(), "2");
+        assert(mockPending !== View.preparePendingQueueSubView(), "3");
+      });
     });
 
     describe('view = new View({})', function () {
