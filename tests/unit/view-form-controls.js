@@ -13,9 +13,9 @@ define([
       pageObject = {
         length: 4,
         current: {
-          "index": function() { return pageid; }
+          'index': function() { return pageid; }
         },
-        "goto": function (num) {
+        'goto': function (num) {
           pageid = num;
         }
       };
@@ -128,8 +128,8 @@ define([
           indexSpy;
 
         //setup spys
-        indexSpy = sinon.spy(pageObject.current, "index");
-        gotoSpy = sinon.spy(pageObject, "goto");
+        indexSpy = sinon.spy(pageObject.current, 'index');
+        gotoSpy = sinon.spy(pageObject, 'goto');
 
         //move to next page
         view.nextFormPage();
@@ -147,8 +147,8 @@ define([
           indexSpy;
 
         //setup spys
-        indexSpy = sinon.spy(pageObject.current, "index");
-        gotoSpy = sinon.spy(pageObject, "goto");
+        indexSpy = sinon.spy(pageObject.current, 'index');
+        gotoSpy = sinon.spy(pageObject, 'goto');
 
         //move to first page
         view.firstFormPage();
@@ -171,8 +171,8 @@ define([
           indexSpy;
 
         //setup spys
-        indexSpy = sinon.spy(pageObject.current, "index");
-        gotoSpy = sinon.spy(pageObject, "goto");
+        indexSpy = sinon.spy(pageObject.current, 'index');
+        gotoSpy = sinon.spy(pageObject, 'goto');
 
         //move to last page
         view.lastFormPage();
@@ -195,8 +195,8 @@ define([
           indexSpy;
 
         //setup spys
-        indexSpy = sinon.spy(pageObject.current, "index");
-        gotoSpy = sinon.spy(pageObject, "goto");
+        indexSpy = sinon.spy(pageObject.current, 'index');
+        gotoSpy = sinon.spy(pageObject, 'goto');
 
         //move to second last page
         view.previousFormPage();
