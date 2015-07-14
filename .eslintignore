@@ -7,8 +7,8 @@
 /.idea
 
 # output files
+build
 dist
-/js
 versions
 tests/support/bic.js
 
