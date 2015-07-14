@@ -86,6 +86,72 @@ define([
       View.should.be.an.instanceOf(Function);
     });
 
+    describe('pages collection', function () {
+      var gotoSpy;
+      var indexSpy;
+      var view;
+
+      beforeEach(function (done) {
+        //setup spys
+        indexSpy = sinon.spy(pageObject.current, 'index');
+        gotoSpy = sinon.spy(pageObject, 'goto');
+
+        injector.require(['bic/model-application'], function (app) {
+          view = new View({ model: app});
+          done();
+        });
+      });
+
+      afterEach(function () {
+        //remove spy
+        pageObject.current.index.restore();
+        pageObject.goto.restore();
+      });
+
+      it('nextFormPage', function() {
+        //move to next page
+        view.nextFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(pageid, 1);
+      });
+
+      it('firstFormPage', function() {
+        //move to first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(pageid, 0);
+
+        //should not re-render the page because already on first page
+        view.firstFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+      });
+
+      it('lastFormPage', function() {
+        //move to last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 1);
+
+        //should not re-render the page because already on last page
+        view.lastFormPage();
+        assert.equal(indexSpy.callCount, 2);
+        assert.equal(gotoSpy.callCount, 1);
+      });
+
+      it('previousFormPage', function() {
+        //move to second last page
+        view.previousFormPage();
+        assert.equal(indexSpy.callCount, 1);
+        assert.equal(gotoSpy.callCount, 1);
+        assert.equal(pageid, pageObject.length - 2);
+      });
+
+    });
+
     describe('addToQueue', function () {
       var view, processQueueStub;
 
@@ -111,6 +177,7 @@ define([
 
         });
       });
+
       it('functions on view', function () {
         expect(view.formSubmit).to.be.an.instanceOf(Function);
         expect(view.formClose).to.be.an.instanceOf(Function);
@@ -121,92 +188,6 @@ define([
         expect(view.formSave).to.be.an.instanceOf(Function);
         expect(view.formDiscard).to.be.an.instanceOf(Function);
         expect(view.addToQueue).to.be.an.instanceOf(Function);
-      });
-
-      it('nextFormPage test', function() {
-        var gotoSpy,
-          indexSpy;
-
-        //setup spys
-        indexSpy = sinon.spy(pageObject.current, 'index');
-        gotoSpy = sinon.spy(pageObject, 'goto');
-
-        //move to next page
-        view.nextFormPage();
-        assert.equal(indexSpy.callCount, 1);
-        assert.equal(gotoSpy.callCount, 1);
-        assert.equal(pageid, 1);
-
-        //remove spy
-        pageObject.current.index.restore();
-        pageObject.goto.restore();
-      });
-
-      it('firstFormPage test', function() {
-        var gotoSpy,
-          indexSpy;
-
-        //setup spys
-        indexSpy = sinon.spy(pageObject.current, 'index');
-        gotoSpy = sinon.spy(pageObject, 'goto');
-
-        //move to first page
-        view.firstFormPage();
-        assert.equal(indexSpy.callCount, 1);
-        assert.equal(gotoSpy.callCount, 1);
-        assert.equal(pageid, 0);
-
-        //should not re-render the page because already on first page
-        view.firstFormPage();
-        assert.equal(indexSpy.callCount, 2);
-        assert.equal(gotoSpy.callCount, 1);
-
-        //remove spy
-        pageObject.current.index.restore();
-        pageObject.goto.restore();
-      });
-
-      it('lastFormPage test', function() {
-        var gotoSpy,
-          indexSpy;
-
-        //setup spys
-        indexSpy = sinon.spy(pageObject.current, 'index');
-        gotoSpy = sinon.spy(pageObject, 'goto');
-
-        //move to last page
-        view.lastFormPage();
-        assert.equal(indexSpy.callCount, 1);
-        assert.equal(gotoSpy.callCount, 1);
-        assert.equal(pageid, pageObject.length - 1);
-
-        //should not re-render the page because already on last page
-        view.lastFormPage();
-        assert.equal(indexSpy.callCount, 2);
-        assert.equal(gotoSpy.callCount, 1);
-
-        //remove spy
-        pageObject.current.index.restore();
-        pageObject.goto.restore();
-      });
-
-      it('previousFormPage test', function() {
-        var gotoSpy,
-          indexSpy;
-
-        //setup spys
-        indexSpy = sinon.spy(pageObject.current, 'index');
-        gotoSpy = sinon.spy(pageObject, 'goto');
-
-        //move to second last page
-        view.previousFormPage();
-        assert.equal(indexSpy.callCount, 1);
-        assert.equal(gotoSpy.callCount, 1);
-        assert.equal(pageid, pageObject.length - 2);
-
-        //remove spy
-        pageObject.current.index.restore();
-        pageObject.goto.restore();
       });
 
       it('should add item with status Pending in pending queue', function (done) {
