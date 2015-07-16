@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
-  "description": "The new and revolutionary BIC client, designed to be a dashing as a handlebar mustache and as fast as a ocelot on speed.",
-  "version": "3.5.3",
+  "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
+  "version": "3.6.0",
   "formsversion": "3.3.5",
   "main": "Gruntfile.js",
   "dependencies": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.0",
+    "eslint": "^0.24.0",
     "glob": "^5.0.10",
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",
@@ -30,14 +31,23 @@
     "grunt-contrib-watch": "~0.6",
     "grunt-eslint": "^15.0",
     "grunt-hapi": "^0.9.1",
-    "grunt-mocha": "~0.4",
+    "grunt-karma": "^0.11.2",
     "grunt-mustache-render": "^1.7",
-    "grunt-saucelabs": "~8.6",
     "grunt-text-replace": "^0.4.0",
     "gulp": "^3.8",
     "hapi": "^8.1",
+    "karma": "^0.12.37",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-detect-browsers": "^2.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-requirejs": "^0.2.2",
+    "karma-safari-launcher": "^0.1.1",
     "mocha": "^2.2",
     "mustache": "^2.0",
+    "phantomjs": "^1.9",
     "request": "^2.55",
     "requirejs": "^2.1",
     "sinon": "^1.12",
@@ -46,8 +56,7 @@
     "tape-chai": "^1.1"
   },
   "scripts": {
-    "test": "gulp test && grunt test",
-    "test-travis": "gulp test && grunt travis"
+    "test": "gulp test && grunt test"
   },
   "license": "BSD-3-Clause"
 }

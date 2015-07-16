@@ -1,7 +1,8 @@
-define(['Squire', 'sinon', 'backbone'], function (Squire, sinon, Backbone) {
+define(['Squire', 'sinon', 'backbone', 'chai'], function (Squire, sinon, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/collection-pending.js';
+  var should = chai.should();
 
   describe('Collection - Pending', function () {
     var injector, Collection, collection, apiStub;

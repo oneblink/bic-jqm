@@ -5,6 +5,7 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
+  var Promise = require('feature!promises');
 
   require('feature!es5');
   require('BlinkGap');
@@ -22,6 +23,9 @@ define(function (require) {
   require('bic/backbone-fix');
 
   // this module
+
+  // poly-fill Promise if missing (needed for Forms, etc)
+  window.Promise = window.Promise || Promise;
 
   function start () {
     // AJAX Default Options
@@ -42,7 +46,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
   window.BMP.BIC3 = app;
 
-  window.BMP.BIC.version = '3.5.3';
+  window.BMP.BIC.version = '3.6.0';
 
   return app; // export BMP.BIC
 });

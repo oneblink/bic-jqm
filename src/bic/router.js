@@ -7,6 +7,7 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
+  var Promise = require('feature!promises');
 
   // local modules
 
@@ -93,13 +94,15 @@ define(function (require) {
         .then(function () {
           return app.populate();
         })
-        .then(null, function () {
+        .then(null, function (err) {
+          window.console.error(err);
           return;
         })
         .then(function () {
           return app.initialRender();
         })
         .then(null, function (err) {
+          window.console.error(err);
           throw err;
         });
     },
@@ -225,7 +228,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         , type
         , action;
 
-      if ( !app.currentInteraction ){
+      if ( !app.currentInteraction || !app.currentInteraction.get ){
         return;
       }
       // Store current URL

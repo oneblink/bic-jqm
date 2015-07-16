@@ -1,9 +1,10 @@
 define([
-  'Squire', 'sinon', 'backbone', 'jquery', 'jquerymobile', 'BlinkGap'
-], function (Squire, sinon, Backbone, $, $mobile) {
+  'Squire', 'sinon', 'backbone', 'jquery', 'jquerymobile', 'chai', 'BlinkGap'
+], function (Squire, sinon, Backbone, $, $mobile, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/model-application.js';
+  var should = chai.should();
 
   describe('Model - Application', function () {
     var injector, model, siteMap, loginStatus;

@@ -9,7 +9,7 @@ define(function (require) {
 
   // local modules
 
-  var Template = require('text!bic/template-form-list.mustache');
+  var Template = require('text!bic/template/form/list.mustache');
   var app = require('bic/model-application');
 
   // this module
@@ -20,7 +20,7 @@ define(function (require) {
 
       app.formRecords.pull(view.model.get('blinkFormObjectName')).then(
         function () {
-          var BlinkForms = window.BlinkForms;
+          var BlinkForms = window.BMP.Forms;
           var templateData = {};
 
           templateData.headers = [];
@@ -47,6 +47,7 @@ define(function (require) {
 
               return record;
             });
+            templateData.hasContent = templateData.content.length > 0;
 
             templateData.interactions = {};
             templateData.interactions.edit = app.interactions.findWhere({
@@ -62,7 +63,7 @@ define(function (require) {
               blinkFormAction: 'delete'
             }).id;
 
-            view.$el.html(Mustache.render(Template, templateData));
+            view.$el.html(Mustache.render(view.constructor.template, templateData));
             view.trigger('render');
 
           });
@@ -75,6 +76,8 @@ define(function (require) {
 
       return view;
     }
+  }, {
+    template: Template
   });
 
   return FormListView;

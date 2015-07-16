@@ -1,5 +1,8 @@
-define(['Squire', 'backbone'], function (Squire, Backbone) {
+define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
+
+  var should = chai.should();
+
   describe('Model - Star', function () {
     var injector, Model;
 
