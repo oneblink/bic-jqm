@@ -10,7 +10,7 @@
         <div>
           <h2>{{label}}</h2>
           <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
-            <a data-onclick="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
+            <a class="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
             <a interaction="{{editInteraction}}" _pid="{{_id}}" data-role="button" style="width: 49%;">Edit</a>
           </div>
         </div>
@@ -27,7 +27,7 @@
       {{/pending}}
       {{#pendingPresent}}
       <li>
-        <a data-onclick="submitPendingItems" href="#">Submit All</a>
+        <a id="submitPendingItems" href="#">Submit All</a>
       </li>
       {{/pendingPresent}}
       {{^pending}}<li>No items pending transmission to server</li>{{/pending}}
@@ -38,7 +38,7 @@
         <div>
           <h2>{{label}}</h2>
           <div data-role="controlgroup" data-type="horizontal" style="width: 100%;">
-            <a data-onclick="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
+            <a class="clearPendingItem" _pid="{{_id}}" data-role="button" style="width: 49%;">Clear</a>
             <a interaction="{{editInteraction}}" _pid="{{_id}}" data-role="button" style="width: 49%;">Edit</a>
           </div>
         </div>
@@ -46,7 +46,7 @@
       {{/draft}}
       {{#draftPresent}}
       <li>
-        <a data-onclick="clearPendingItemsConfirmation" href="#">Clear All</a>
+        <a id="clearPendingItemsConfirmation" href="#">Clear All</a>
       </li>
       {{/draftPresent}}
       {{^draft}}<li>No items saved as draft.</li>{{/draft}}

@@ -16,12 +16,15 @@ define(function (require) {
     var Template = require('text!bic/template-interaction.mustache');
     var inputPromptTemplate = require('text!bic/template-inputPrompt.mustache');
     var categoryTemplate = require('text!bic/template-category-list.mustache');
+    var pendingTemplate = require('text!bic/template-pending.mustache');
     var popupTemplate = require('text!bic/template-popup.mustache');
+    var clearConfirmationPopupTemplate = require('text!bic/template-clear-confirmation-popup.mustache');
     var FormView = require('bic/view-form');
     var app = require('bic/model-application');
     var StarModel = require('bic/model-star');
     var StarView = require('bic/view-star');
-    var PendingView = require('bic/view/form/pending');
+    var uiTools = require('bic/lib/ui-tools');
+    var MODEL_STATUS = require('bic/enum-model-status');
 
     // this module
 
@@ -62,6 +65,10 @@ define(function (require) {
 
         // Form Actions
         'click #queue': 'pendingQueue',
+        'click .clearPendingItem': 'clearPendingItem',
+        'click #submitPendingItems': 'submitPendingItems',
+        'click #clearPendingItems': 'clearPendingItems',
+        'click #clearPendingItemsConfirmation': 'clearPendingItemsConfirmation',
 
         // Destroy
         'pageremove': 'destroy'
@@ -372,19 +379,99 @@ define(function (require) {
       },
 
       pendingQueue: function () {
-        var pendingView;
-        var SubView;
-        var view;
+        //var el = $('#pendingContent');
+        var pendingExtractor = function (status) {
+          return _.map(app.pending.where({status: status}), function (pendingItem) {
+            var pendingAttrs = _.clone(pendingItem.attributes);
+            if (!pendingAttrs._id) {
+              pendingAttrs._id = pendingItem.cid;
+            }
+            pendingAttrs.editInteraction = app.interactions.where({
+              blinkFormObjectName: pendingItem.get('name'),
+              blinkFormAction: pendingItem.get('action')
+            });
+            if (pendingAttrs.editInteraction && pendingAttrs.editInteraction.length > 0) {
+              pendingAttrs.editInteraction = pendingAttrs.editInteraction[0].id;
+            } else {
+              pendingAttrs.editInteraction = null;
+            }
+            if (!pendingAttrs.label) {
+              pendingAttrs.label = pendingAttrs.name;
+            }
+            return pendingAttrs;
+          });
+        };
 
-        view = this;
+        this.$el.append(Mustache.render(pendingTemplate, {
+          pending: pendingExtractor( MODEL_STATUS.PENDING ),
+          pendingPresent: pendingExtractor( MODEL_STATUS.PENDING ).length > 0,
+          draft: pendingExtractor( MODEL_STATUS.DRAFT ),
+          draftPresent: pendingExtractor( MODEL_STATUS.DRAFT ).length > 0,
+          validation: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ),
+          validationPresent: pendingExtractor( MODEL_STATUS.FAILED_VALIDATION ).length > 0
+        }));
+        this.$el.trigger('pagecreate');
+        $('#pendingPopup').one('popupafterclose', function () {
+          $('#pendingPopup').remove();
+        });
+        $('#pendingPopup').popup('open');
+      },
 
-        //fetch view (user can override
-        SubView = view.constructor.preparePendingQueueSubView();
-        pendingView = new SubView({
-          el: view.$el
+      clearPendingItem: function (e) {
+        var $element, popup = $('#pendingPopup');
+
+        if (e.target.tagName !== 'A') {
+          $element = $(e.target).parents('a');
+        } else {
+          $element = $(e.target);
+        }
+
+        app.pending.get($element[0].attributes._pid.value).destroy();
+        popup.popup('close');
+      },
+
+      submitPendingItems: function () {
+        var popup = $('#pendingPopup');
+        uiTools.showLoadingAnimation();
+        app.pending.processQueue()
+          .then(null, function () {
+            return null;
+          })
+          .then(function () {
+            popup.one('popupafterclose', uiTools.hideLoadingAnimation);
+            popup.popup('close');
+          });
+      },
+
+      clearPendingItems: function () {
+        var items, popup = $('#clearConfirmationPopup'), i;
+        items = app.pending.where({status: MODEL_STATUS.DRAFT });
+        for (i = 0; i < items.length; i = i + 1) {
+          items[i].destroy();
+        }
+        popup.one('popupafterclose', function () {
+          popup.remove();
+        });
+        popup.popup('close');
+      },
+
+      clearPendingItemsConfirmation: function () {
+        var pendingPopup = $('#pendingPopup');
+
+        pendingPopup.one('popupafterclose', function () {
+          $('#clearConfirmationPopup').popup({
+            afterclose: function () {
+              $('#clearConfirmationPopup').remove();
+            }
+          });
+          setInterval(function () {
+            $('#clearConfirmationPopup').popup('open');
+          }, 100);
         });
 
-        pendingView.render();
+        this.$el.append(Mustache.render(clearConfirmationPopupTemplate, {}));
+        this.$el.trigger('pagecreate');
+        pendingPopup.popup('close');
       },
 
       popup: function (data) {
@@ -545,15 +632,6 @@ define(function (require) {
           });
         }
 
-      }
-    }, {
-      preparePendingQueueSubView: function () {
-        var SubView = PendingView;
-
-        if (app.views.FormPending) {
-          SubView = app.views.FormPending;
-        }
-        return SubView;
       }
     });
 
