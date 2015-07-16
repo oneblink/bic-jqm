@@ -5,7 +5,7 @@
   "formsversion": "3.3.5",
   "main": "Gruntfile.js",
   "dependencies": {
-    "@blinkmobile/geolocation": "1.0.0",
+    "@blinkmobile/geolocation": "1.0.1",
     "amd-feature": "jensarps/AMD-feature#295cb395fe",
     "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
     "domReady": "requirejs/domReady#449478e133",
@@ -14,7 +14,7 @@
     "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "1.0.0",
     "sjcl": "1.0.3",
-    "text": "requirejs/text#0260977d6d"
+    "text": "requirejs/text#2.0.14"
   },
   "repository": "git@github.com:blinkmobile/bic-v3.git",
   "devDependencies": {
@@ -29,14 +29,14 @@
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "~0.6",
-    "grunt-eslint": "^15.0",
+    "grunt-eslint": "^16.0",
     "grunt-hapi": "^0.9.1",
     "grunt-karma": "^0.11.2",
     "grunt-mustache-render": "^1.7",
     "grunt-text-replace": "^0.4.0",
     "gulp": "^3.8",
     "hapi": "^8.1",
-    "karma": "^0.12.37",
+    "karma": "^0.13",
     "karma-chrome-launcher": "^0.2.0",
     "karma-detect-browsers": "^2.0",
     "karma-firefox-launcher": "^0.1.6",
