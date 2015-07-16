@@ -26,10 +26,10 @@ define(function (require) {
   PendingQueue = Backbone.View.extend({
 
     events: {
-      'click .clearPendingItem': 'clearPendingItem',
-      'click #submitPendingItems': 'submitPendingItems',
-      'click #clearPendingItems': 'clearPendingItems',
-      'click #clearPendingItemsConfirmation': 'clearPendingItemsConfirmation'
+      'click [data-onclick="clearPendingItem"]': 'clearPendingItem',
+      'click [data-onclick="submitPendingItems"]': 'submitPendingItems',
+      'click [data-onclick="clearPendingItems"]': 'clearPendingItems',
+      'click [data-onclick="clearPendingItemsConfirmation"]': 'clearPendingItemsConfirmation'
     },
 
     render: function () {
