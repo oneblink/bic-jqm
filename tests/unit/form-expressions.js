@@ -12,6 +12,9 @@ define(['Squire'], function (Squire) {
       require.config(cfg);
       injector = new Squire(CONTEXT);
 
+      window.BMP.Expression = { fn: {} };
+
+      injector.mock('BlinkForms', {});
       injector.mock('bic/model-application', {
         datasuitcases: {
           get: function () {
@@ -38,6 +41,7 @@ define(['Squire'], function (Squire) {
 
     after(function () {
       injector.remove();
+      delete window.BMP.Expression;
     });
 
     beforeEach(function (done) {
