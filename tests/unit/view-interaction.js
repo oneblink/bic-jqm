@@ -34,9 +34,11 @@ define([
       injector.mock('bic/model-star', function () { return null; });
       injector.mock('bic/view-star', function () { return null; });
       injector.mock('bic/view-form', function () { return null; });
-      injector.mock('text!bic/template-interaction.mustache', 'string');
-      injector.mock('text!bic/template-inputPrompt.mustache', 'string');
-      injector.mock('text!bic/template-category-list.mustache', 'string');
+      injector.mock('text!bic/template/interaction.mustache', 'string');
+      injector.mock('text!bic/template/inputPrompt.mustache', 'string');
+      injector.mock('text!bic/template/category-list.mustache', 'string');
+      //NOTE: Some tests still depend on actual popup template, so not using following line
+      //injector.mock('text!bic/template/popup.mustache', 'string');
 
       injector.require(['bic/view-interaction'], function (required) {
         View = required;

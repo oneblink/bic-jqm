@@ -13,10 +13,10 @@ define(function (require) {
 
     // local modules
 
-    var Template = require('text!bic/template-interaction.mustache');
-    var inputPromptTemplate = require('text!bic/template-inputPrompt.mustache');
-    var categoryTemplate = require('text!bic/template-category-list.mustache');
-    var popupTemplate = require('text!bic/template-popup.mustache');
+    var Template = require('text!bic/template/interaction.mustache');
+    var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
+    var categoryTemplate = require('text!bic/template/category-list.mustache');
+    var popupTemplate = require('text!bic/template/popup.mustache');
     var FormView = require('bic/view-form');
     var app = require('bic/model-application');
     var StarModel = require('bic/model-star');
