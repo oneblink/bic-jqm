@@ -324,7 +324,8 @@ define(function (require) {
   singleton.views = {
     FormControls: null,
     FormList: null,
-    FormErrorSummary: null
+    FormErrorSummary: null,
+    FormPending: null
   };
 
   return singleton;
