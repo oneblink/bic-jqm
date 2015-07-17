@@ -9,7 +9,7 @@ define(['Squire', 'sinon', 'jquery'], function (Squire, sinon, $) {
         v4: function () { return 12345; }
       });
 
-      injector.require(['bic/api-web'], function (required) {
+      injector.require(['bic/api/web'], function (required) {
         api = required;
 
         server = sinon.fakeServer.create();

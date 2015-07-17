@@ -20,7 +20,7 @@ define(['Squire', 'sinon', 'backbone', 'chai'], function (Squire, sinon, Backbon
       apiStub.returns(Promise.resolve());
 
       injector.mock('bic/model-pending', Backbone.Model);
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         setPendingItem: apiStub
       });
 

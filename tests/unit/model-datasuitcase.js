@@ -19,7 +19,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
 
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         getDataSuitcase: apiStub
       });
 

@@ -61,7 +61,7 @@ define([
       injector.mock('bic/store-meta', {});
       injector.mock('domReady', function () { return null; });
 
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         getAnswerSpaceMap: function () { return Promise.resolve(siteMap); },
         getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
