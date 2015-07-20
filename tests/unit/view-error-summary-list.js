@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/view-error-summary-list.js';
+  var CONTEXT = 'tests/unit/view/form/error-summary-list.js';
   var should = chai.should();
 
   describe('View - Form Error Summary ', function () {
@@ -31,7 +31,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
 
       injector.mock('BlinkForms', mockForms);
       injector.mock('bic/model-application', mockApp);
-      injector.require(['bic/view-form-error-summary-list-view'], function (required) {
+      injector.require(['bic/view/form/error-summary-list'], function (required) {
         View = required;
 
         formActionView = new View({model: mockApp});

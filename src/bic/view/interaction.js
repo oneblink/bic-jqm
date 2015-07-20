@@ -17,10 +17,10 @@ define(function (require) {
     var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
     var categoryTemplate = require('text!bic/template/category-list.mustache');
     var popupTemplate = require('text!bic/template/popup.mustache');
-    var FormView = require('bic/view-form');
+    var FormView = require('bic/view/form');
     var app = require('bic/model-application');
     var StarModel = require('bic/model-star');
-    var StarView = require('bic/view-star');
+    var StarView = require('bic/view/star');
     var PendingView = require('bic/view/form/pending');
 
     // this module

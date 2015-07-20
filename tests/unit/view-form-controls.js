@@ -3,7 +3,7 @@ define([
 ], function (Squire, Backbone, MODEL_STATUS, sinon, Forms, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/view-form-controls.js';
+  var CONTEXT = 'tests/unit/view/form/controls.js';
   var should = chai.should();
 
   describe('View - Form Controls ', function () {
@@ -68,7 +68,7 @@ define([
       injector.mock('bic/model-pending', Backbone.Model);
       injector.mock('text!bic/template/form/controls.mustache', 'string');
       injector.mock('bic/api', function () { return null; });
-      injector.require(['bic/view-form-controls'], function (required) {
+      injector.require(['bic/view/form/controls'], function (required) {
         View = required;
         done();
       });

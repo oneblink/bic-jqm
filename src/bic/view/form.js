@@ -9,8 +9,8 @@ define(function (require) {
   // local modules
 
   var app = require('bic/model-application');
-  var FormAction = require('bic/view-form-action');
-  var FormList = require('bic/view-form-list');
+  var FormAction = require('bic/view/form/action');
+  var FormList = require('bic/view/form/list');
 
   // this module
 

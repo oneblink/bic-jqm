@@ -59,7 +59,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
           get: function(){}
         }
       });
-      injector.mock('bic/view-interaction', {
+      injector.mock('bic/view/interaction', {
         render: function () { return null; }
       });
       done();
