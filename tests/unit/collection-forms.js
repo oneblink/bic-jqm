@@ -16,6 +16,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
+      injector.mock('BlinkForms', {});
       injector.mock('bic/model/application', Backbone.Model);
       injector.mock('bic/model/form', Backbone.Model);
       injector.mock('bic/api', {});

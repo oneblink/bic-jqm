@@ -1,6 +1,6 @@
 define([
-  'Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'BlinkForms', 'chai'
-], function (Squire, Backbone, MODEL_STATUS, sinon, Forms, chai) {
+  'Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'chai'
+], function (Squire, Backbone, MODEL_STATUS, sinon, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view/form/controls.js';
@@ -9,6 +9,7 @@ define([
   describe('View - Form Controls ', function () {
     var injector, View, apiStub, errorStub;
     var mockApp;
+    var Forms;
     var pageid = 0,
       pageObject = {
         length: 4,
@@ -26,13 +27,16 @@ define([
       require.config(cfg);
       injector = new Squire(CONTEXT);
 
-      Forms.current = {
-        data: function() { return; },
-        getErrors: function() { return; },
-        get: function() {
-          return pageObject;
+      Forms = {
+        current: {
+          data: function() { return; },
+          getErrors: function() { return; },
+          get: function() {
+            return pageObject;
+          }
         }
       };
+      injector.mock('BlinkForms', Forms);
 
       errorStub = sinon.stub(Forms.current, 'getErrors', function () {
         return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};

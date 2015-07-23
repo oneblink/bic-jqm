@@ -1,6 +1,44 @@
 # Changelog
 
 
+## v3.7.0 - 2015-07-17
+
+
+### Changed
+
+- update to Forms v3.4.0 for additions, changes and fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.4.0
+
+
+## v3.6.0 - 2015-07-17
+
+
+### Added
+
+- BIC-171: Forms validation error summary above the submit button
+
+
+### Changed
+
+- BIC-188: pending queue refactored and extensibility improved
+
+    - see [docs/mustache/pending.md](docs/mustache/pending.md) for details
+
+
+### Fixed
+
+- BIC-187: fix Promise dependency causing issues with Android 4.3 and iOS 7
+
+- BIC-180: Forms pagination controls kept in sync with page turns via API
+
+- BIC-164: KML maps configured via MADL behave as expected
+
+    - HelpDesk: 2344-YHLX-0647
+
+- BIC-186: Forms List Interactions behave as expected
+
+
 ## v3.5.3 - 2015-06-26
 
 
