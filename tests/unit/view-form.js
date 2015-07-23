@@ -28,7 +28,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model/application', mockApp);
       injector.mock('bic/view/form/action', mockAction);
       injector.mock('bic/view/form/list', mockList);
       injector.require(['bic/view/form'], function (required) {

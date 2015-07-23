@@ -12,7 +12,7 @@ define(['Squire'], function (Squire) {
       require.config(cfg);
       injector = new Squire(CONTEXT);
 
-      injector.mock('bic/model-application', {
+      injector.mock('bic/model/application', {
         datasuitcases: {
           get: function () {
             return { attributes: { data: 'AAA' } };

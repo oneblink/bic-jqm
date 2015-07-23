@@ -16,7 +16,7 @@ define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sino
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('bic/model-datasuitcase', Backbone.Model);
+      injector.mock('bic/model/datasuitcase', Backbone.Model);
       injector.require(['bic/collection/datasuitcases'], function (required) {
         Collection = required;
         done();

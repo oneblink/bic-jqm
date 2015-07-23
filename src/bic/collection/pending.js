@@ -13,7 +13,7 @@ define(function (require) {
 
   var API = require('bic/api');
   var Collection = require('bic/collection');
-  var PendingItem = require('bic/model-pending');
+  var PendingItem = require('bic/model/pending');
 
   // this module
 

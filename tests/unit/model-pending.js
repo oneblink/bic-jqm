@@ -9,7 +9,7 @@ define(['Squire', 'chai'], function (Squire, chai) {
     before(function (done) {
       injector = new Squire();
 
-      injector.require(['bic/model-pending'], function (required) {
+      injector.require(['bic/model/pending'], function (required) {
         Model = required;
         done();
       });

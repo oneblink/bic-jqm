@@ -11,7 +11,7 @@ define(function (require) {
 
   var API = require('bic/api');
   var Collection = require('bic/collection');
-  var FormRecord = require('bic/model-form-record');
+  var FormRecord = require('bic/model/form-record');
 
   // this module
 

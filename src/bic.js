@@ -16,7 +16,7 @@ define(function (require) {
 
   // local modules
 
-  var app = require('bic/model-application');
+  var app = require('bic/model/application');
   var whenBlinkGapReady = require('bic/promise-blinkgap');
 
   require('bic/auth');

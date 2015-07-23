@@ -23,7 +23,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
         getDataSuitcase: apiStub
       });
 
-      injector.require(['bic/model-datasuitcase'], function (model) {
+      injector.require(['bic/model/datasuitcase'], function (model) {
         Model = model;
         done();
       }, function () {

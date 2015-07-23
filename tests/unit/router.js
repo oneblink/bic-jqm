@@ -32,7 +32,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
 
       collection = {};
 
-      injector.mock('bic/model-application', {
+      injector.mock('bic/model/application', {
         set: function () { return null; },
         interactions: {
           get: function (id) {
@@ -75,7 +75,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         , app;
 
       beforeEach(function(done){
-        injector.require(['bic/router', 'bic/model-application'], function(r, a){
+        injector.require(['bic/router', 'bic/model/application'], function(r, a){
 
           router = r;
           app = a;

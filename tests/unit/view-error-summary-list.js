@@ -30,7 +30,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector.mock('backbone', Backbone);
 
       injector.mock('BlinkForms', mockForms);
-      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model/application', mockApp);
       injector.require(['bic/view/form/error-summary-list'], function (required) {
         View = required;
 

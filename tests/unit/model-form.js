@@ -11,7 +11,7 @@ define(['Squire', 'underscore', 'chai'], function (Squire, _, chai) {
 
       injector.mock('bic/api', function () { return null; });
 
-      injector.require(['bic/model-form'], function (required) {
+      injector.require(['bic/model/form'], function (required) {
         Model = required;
         done();
       });
@@ -35,7 +35,7 @@ define(['Squire', 'underscore', 'chai'], function (Squire, _, chai) {
         , newActions;
 
       beforeEach(function(done){
-        injector.require(['bic/model-form'], function(FormModel){
+        injector.require(['bic/model/form'], function(FormModel){
           formModel = new FormModel();
 
           origActions = {

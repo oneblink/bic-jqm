@@ -64,8 +64,8 @@ define([
       );
       mockApp = new Backbone.Model();
 
-      injector.mock('bic/model-application', mockApp);
-      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('bic/model/application', mockApp);
+      injector.mock('bic/model/pending', Backbone.Model);
       injector.mock('text!bic/template/form/controls.mustache', 'string');
       injector.mock('bic/api', function () { return null; });
       injector.require(['bic/view/form/controls'], function (required) {
@@ -96,7 +96,7 @@ define([
         indexSpy = sinon.spy(pageObject.current, 'index');
         gotoSpy = sinon.spy(pageObject, 'goto');
 
-        injector.require(['bic/model-application'], function (app) {
+        injector.require(['bic/model/application'], function (app) {
           view = new View({ model: app});
           done();
         });
@@ -156,7 +156,7 @@ define([
       var view, processQueueStub;
 
       before(function (done) {
-        injector.require(['bic/model-application'], function (app) {
+        injector.require(['bic/model/application'], function (app) {
           view = new View({ model: app});
           app.view = {
             pendingQueue: sinon.stub()
@@ -167,7 +167,7 @@ define([
           app.setArgument = sinon.stub();
           app.setArgument.withArgs('pid').returns('1');
 
-          injector.require(['bic/model-pending'], function (PendingItem){
+          injector.require(['bic/model/pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };

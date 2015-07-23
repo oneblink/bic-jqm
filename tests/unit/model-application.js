@@ -3,7 +3,7 @@ define([
 ], function (Squire, sinon, Backbone, $, $mobile, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/model-application.js';
+  var CONTEXT = 'tests/unit/model/application.js';
   var should = chai.should();
 
   describe('Model - Application', function () {
@@ -73,7 +73,7 @@ define([
       });
       /*eslint-enable no-console*/
 
-      injector.require(['bic/model-application'], function (required) {
+      injector.require(['bic/model/application'], function (required) {
         model = required;
         done();
       });
