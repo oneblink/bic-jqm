@@ -52,12 +52,12 @@ define([
       injector.mock('jquery', $);
       injector.mock('jquerymobile', $mobile);
 
-      injector.mock('bic/collection-interactions', CollectionMock);
-      injector.mock('bic/collection-datasuitcases', CollectionMock);
-      injector.mock('bic/collection-forms', FormsCollectionMock);
-      injector.mock('bic/collection-pending', CollectionMock);
-      injector.mock('bic/collection-stars', CollectionMock);
-      injector.mock('bic/collection-form-records', CollectionMock);
+      injector.mock('bic/collection/interactions', CollectionMock);
+      injector.mock('bic/collection/datasuitcases', CollectionMock);
+      injector.mock('bic/collection/forms', FormsCollectionMock);
+      injector.mock('bic/collection/pending', CollectionMock);
+      injector.mock('bic/collection/stars', CollectionMock);
+      injector.mock('bic/collection/form-records', CollectionMock);
       injector.mock('bic/store-meta', {});
       injector.mock('domReady', function () { return null; });
 

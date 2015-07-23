@@ -1,7 +1,7 @@
 define(['Squire', 'sinon', 'backbone', 'chai'], function (Squire, sinon, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-pending.js';
+  var CONTEXT = 'tests/unit/collection/pending.js';
   var should = chai.should();
 
   describe('Collection - Pending', function () {
@@ -24,7 +24,7 @@ define(['Squire', 'sinon', 'backbone', 'chai'], function (Squire, sinon, Backbon
         setPendingItem: apiStub
       });
 
-      injector.require(['bic/collection-pending'], function (required) {
+      injector.require(['bic/collection/pending'], function (required) {
         Collection = required;
         done();
       });

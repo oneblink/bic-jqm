@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sinon, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-interactions.js';
+  var CONTEXT = 'tests/unit/collection/interactions.js';
   var should = chai.should();
 
   describe('Collection - Interactions', function () {
@@ -18,7 +18,7 @@ define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sino
 
       injector.mock('bic/model-interaction', Backbone.Model);
 
-      injector.require(['bic/collection-interactions'], function (required) {
+      injector.require(['bic/collection/interactions'], function (required) {
         Collection = required;
         done();
       });
