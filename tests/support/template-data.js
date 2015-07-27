@@ -24,13 +24,13 @@ var bicVersion = (function () {
   return JSON.parse(contents[1].trim());
 }());
 
-module.exports = function (req, callback) {
+module.exports = function (BMP_HOST, req, callback) {
 
   var search = req.path.replace(/^\//, '');
   var searchParts = search.split('/');
   var answerSpace = searchParts[0];
 
-  request('http://blinkm.co/_R_/common/3/xhr/GetConfig.php?_asn=' + answerSpace, {
+  request('http://' + BMP_HOST +'/_R_/common/3/xhr/GetConfig.php?_asn=' + answerSpace, {
     json: true
   }, function (err, res, body) {
     var spaces;
@@ -63,7 +63,7 @@ module.exports = function (req, callback) {
         }, ''),
         styleSheet: '',
         appCache: '',
-        appCachePermalink: '/appcache.manifest'
+        appCachePermalink: '/appcache.manifest?answerSpace=' + answerSpace
       },
 
       BIC: bicVersion
