@@ -2,6 +2,8 @@
 define(function (require) {
   'use strict';
 
+  window.console.log('bic.js');
+
   // foreign modules
 
   var $ = require('jquery');
@@ -28,6 +30,7 @@ define(function (require) {
   window.Promise = window.Promise || Promise;
 
   function start () {
+    window.console.log('bic.js: start()');
     // AJAX Default Options
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
       jqXHR.setRequestHeader('X-Blink-Config',
