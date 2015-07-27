@@ -57,6 +57,7 @@
     "tape-chai": "^1.1"
   },
   "scripts": {
+    "build": "grunt build",
     "test": "gulp test && grunt test"
   },
   "license": "BSD-3-Clause"
