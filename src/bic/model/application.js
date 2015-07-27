@@ -14,7 +14,7 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var domReady = require('domReady');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');;
 
   // local modules
 

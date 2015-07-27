@@ -7,7 +7,6 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var Promise = require('feature!promises');
 
   require('feature!es5');
   require('BlinkGap');
@@ -25,9 +24,6 @@ define(function (require) {
   require('bic/backbone-fix');
 
   // this module
-
-  // poly-fill Promise if missing (needed for Forms, etc)
-  window.Promise = window.Promise || Promise;
 
   function start () {
     window.console.log('bic.js: start()');
