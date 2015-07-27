@@ -13,11 +13,43 @@ define(function (require) {
   var defaultTemplate = require('text!bic/template/form/forms-error-summary.mustache');
 
   var defaultNumberOfErrors = 4;
+// this module
+  var FormsErrorSummaryListView;
+
+  // https://github.com/jquery/jquery-mobile/issues/4919
+  // jquery mobile 1.3 needs the list views to be inside a
+  // data-role="page" element that has been initialised and enhanced
+  // otherwise an error is thrown. However, due to the current way that
+  // a page is rendered, if there are errors on the page at initialisation
+  // the page element is not yet enhanced. Without re-writing the way we render,
+  // we'll do a hacky thing and just set timeouts to continue until intiailised.
+  //
+  // this will bail out after 10 attempts to enhance the content
+  function enhanceElement($el){
+    var t, i = 0;
+    if ( $el.is(':visible') ){
+      $el.listview('refresh');
+
+      return;
+    }
+
+    t = function(){
+      if ( !$el.is(':visible')){
+        if ( ++i < 10 ){
+          setTimeout(t, 125);
+        }
+        return;
+      }
+      $el.listview('refresh');
+    };
+
+    setTimeout(t, 125);
+  }
 
   /**
    * Shows a summary of the errors below the form and above the controls.
    */
-  var FormsErrorSummaryListView = Backbone.View.extend({
+  FormsErrorSummaryListView = Backbone.View.extend({
     tagName: 'ul',
     className: 'bm-errorsummary',
 
@@ -73,9 +105,9 @@ define(function (require) {
       var errors = this.model.getInvalidElements( { limit: this.getLimit() } );
       var template = '';
       var viewModel;
-
+      this.$el.empty();
       //mustache doesnt do simple calculations :\
-      if ( errors ){
+      if ( errors && errors.length ){
         viewModel = {
           invalidElements: errors,
           moreAvailable: errors.total > errors.length,
@@ -86,10 +118,8 @@ define(function (require) {
       }
 
       this.$el.html(template);
+      enhanceElement(this.$el);
 
-      /* eslint-disable no-unused-expressions */
-      this.$el.is(':visible') && this.$el.listview('refresh');
-      /* eslint-enable no-unused-expressions */
       return this;
     }
   }, //static properties.
