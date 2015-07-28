@@ -82,7 +82,12 @@ define(function (require) {
               return view.trigger('render');
             }
 
-            Forms.current.setRecord(pendingModel.get('data'));
+            Forms.current.setRecord(pendingModel.get('data')).then(function(){
+              var errors = pendingModel.get('errors');
+              if ( errors && errors.errors ){
+                Forms.current.setErrors(errors.errors);
+              }
+            });
             view.trigger('render');
           } else {
             view.trigger('render');

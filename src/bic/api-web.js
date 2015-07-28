@@ -13,7 +13,7 @@ define(function (require) {
     GET_CONFIG: '/_R_/common/3/xhr/GetConfig.php',
     GET_FORM: '/_R_/common/3/xhr/GetForm.php',
     GET_MOJO: '/_R_/common/3/xhr/GetMoJO.php',
-    SAVE_FORM_RECORD: '/_R_/common/3/xhr/SaveFormRecord.php',
+    SAVE_FORM_RECORD: '/_R_/common/3/xhr/SaveFormRecord.php?schema=3',
 
     getAnswerSpaceMap: function (user) {
       var userString = '';
@@ -50,7 +50,7 @@ define(function (require) {
     },
 
     setPendingItem: function (formname, formaction, formdata) {
-      var url = this.SAVE_FORM_RECORD + '?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction;
+      var url = this.SAVE_FORM_RECORD + '&_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formname + '&_action=' + formaction;
       formdata._uuid = uuid.v4();
       formdata._submittedTime = $.now();
       formdata._submittedTimezoneOffset = (new Date()).getTimezoneOffset();
