@@ -291,7 +291,7 @@ The argument change event.
                       } else {
                         app.goToInteraction(data.dataUrl);
                       }
-                    } else if (model.get('args') && !model.get('args')['logout']) {
+                    } else if (model.get('args') && !model.get('args').logout) {
                       // Logged Out
                       model.save({
                         'content-anonymous': result
