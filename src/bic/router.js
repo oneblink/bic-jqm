@@ -12,6 +12,7 @@ define(function (require) {
   // local modules
 
   var app = require('bic/model/application');
+  var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
   var uiTools = require('bic/lib/ui-tools');
 
@@ -57,6 +58,7 @@ define(function (require) {
       }
 
       $document.on('pagebeforeload', function (e, data) {
+        c.log('router: pagebeforeload...');
         e.preventDefault();
 
         // keep track of history depth for forms post-submission behaviour
@@ -95,14 +97,14 @@ define(function (require) {
           return app.populate();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           return;
         })
         .then(function () {
           return app.initialRender();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           throw err;
         });
     },
@@ -117,6 +119,8 @@ define(function (require) {
       var path = $.mobile.path.parseUrl(data.absUrl),
         model;
 
+      c.log('router.routeRequest()... ' + data.absUrl);
+
       if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
         // Remove file path
         path.pathname = path.hrefNoSearch.substr(path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) + window.cordova.offline.filePathPrex.length + 1);
@@ -126,17 +130,22 @@ define(function (require) {
         path.pathname = path.pathname.substr(0, path.pathname.indexOf('.'));
       }
 
+      c.log('router.routeRequest(): ' + path.pathname);
+
       app.whenPopulated()
         .then(function () {
+          c.log('router.routeRequest(): #inheritanceChain()...');
           model = app.router.inheritanceChain(path);
           model.setArgsFromQueryString(path.search);
           app.currentInteraction = model;
 
+          c.log('router.routeRequest(): model.prepareForView()...');
           model.prepareForView(data).then(function (innerModel) {
             new InteractionView({
               tagName: 'div',
               model: innerModel
             }).once('render', function () {
+              c.log('router.routeRequest(): modelView: after render...');
               this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
@@ -145,7 +154,9 @@ define(function (require) {
           });
         })
         // catch the error thrown when a model cant be found
-        .then(undefined, function(){
+        .then(undefined, function (err) {
+          c.error('router.routeRequest(): error...');
+          c.error(err);
           data.deferred.reject(data.absUrl, data.options);
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
@@ -207,9 +218,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
 @deprecated
 */
     parseArgs: function (argString, model) {
-      /*eslint-disable no-console, no-unused-expressions*/
-      console && console.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
-      /*eslint-enable no-console, no-unused-expressions*/
+      c.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
       model.setArgsFromQueryString( argString );
       return this;
     },
@@ -227,6 +236,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       var url = $.mobile.path.parseLocation()
         , type
         , action;
+
+      c.log('router.suspendApplication()...');
 
       if ( !app.currentInteraction || !app.currentInteraction.get ){
         return;
@@ -281,6 +292,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
     */
     resumeApplication: function () {
       var pauseURL = localStorage.getItem('pauseURL');
+
+      c.log('router.resumeApplication()...');
 
       if (!pauseURL) {
         return;

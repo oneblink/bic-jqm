@@ -2,8 +2,6 @@
 define(function (require) {
   'use strict';
 
-  window.console.log('bic.js');
-
   // foreign modules
 
   var $ = require('jquery');
@@ -18,6 +16,7 @@ define(function (require) {
   // local modules
 
   var app = require('bic/model/application');
+  var c = require('bic/console');
   var whenBlinkGapReady = require('bic/promise-blinkgap');
 
   require('bic/auth');
@@ -26,7 +25,7 @@ define(function (require) {
   // this module
 
   function start () {
-    window.console.log('bic.js: start()');
+    c.log('bic.js: start()');
     // AJAX Default Options
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
       jqXHR.setRequestHeader('X-Blink-Config',

@@ -9,6 +9,7 @@ define(function (require) {
 
   // local modules
 
+  var c = require('bic/console');
   var app = require('bic/model/application');
   var FormControls = require('bic/view/form/controls');
   var FormErrorSummary = require('bic/view/form/error-summary-list');
@@ -109,7 +110,7 @@ define(function (require) {
         .then(null, function (err) {
           view.$el.append('<p>Error: unable to display this form. Try again later.</p>');
           view.trigger('render');
-          window.console.log(err);
+          c.log(err);
         });
 
       return view;
