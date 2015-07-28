@@ -3,7 +3,7 @@ define(function (require) {
 
   // foreign modules
 
-  var Promise = require('bic/promise');;
+  var Promise = require('bic/promise');
 
   // local modules
 

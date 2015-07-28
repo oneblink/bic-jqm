@@ -5,7 +5,7 @@ define(function (require) {
 
   var _ = require('underscore');
   var Forms = require('BlinkForms');
-  var Promise = require('bic/promise');;
+  var Promise = require('bic/promise');
 
   // local modules
 

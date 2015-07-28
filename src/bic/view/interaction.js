@@ -9,7 +9,7 @@ define(function (require) {
     var Backbone = require('backbone');
     var geolocation = require('@blinkmobile/geolocation');
     var Mustache = require('mustache');
-    var Promise = require('bic/promise');;
+    var Promise = require('bic/promise');
 
     // local modules
 

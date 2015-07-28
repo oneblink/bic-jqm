@@ -7,7 +7,7 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
-  var Promise = require('bic/promise');;
+  var Promise = require('bic/promise');
 
   // local modules
 

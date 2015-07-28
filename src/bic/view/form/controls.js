@@ -7,7 +7,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var Forms = require('BlinkForms');
   var Mustache = require('mustache');
-  var Promise = require('bic/promise');;
+  var Promise = require('bic/promise');
 
   // local modules
 

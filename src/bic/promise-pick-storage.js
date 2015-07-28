@@ -4,7 +4,7 @@ define(function (require) {
   // foreign modules
 
   var Pouch = require('pouchdb');
-  var Promise = require('bic/promise');;
+  var Promise = require('bic/promise');
 
   // local modules
 
