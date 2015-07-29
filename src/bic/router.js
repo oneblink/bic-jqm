@@ -148,6 +148,9 @@ define(function (require) {
               c.log('router.routeRequest(): modelView: after render...');
               this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
+              this.$el.one('pagecreate', function () {
+                c.log('router.routeRequest(): modelView: after pagecreate...');
+              });
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
               data.deferred.resolve(data.absUrl, data.options, this.$el);
             }).render(data);
