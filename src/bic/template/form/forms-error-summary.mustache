@@ -1,9 +1,9 @@
 <li data-role="list-divider" class="bm-errors__bm-listtitle" >Form Error Summary</li>
-{{#invalidElements.errors}}
+{{#invalidElements}}
   <li class="bm-errors__bm-listitem" data-icon="alert">
     <a href="" data-onclick="gotoField" for="{{cid}}" >{{attributes.label}}</a>
   </li>
-{{/invalidElements.errors}}
+{{/invalidElements}}
 {{#moreAvailable}}
 <li data-role="list-divider" class="bm-errors__bm-showmore" >
   <a href="" data-onclick="showAll">Show {{ remaining }} more&#8230;</a>

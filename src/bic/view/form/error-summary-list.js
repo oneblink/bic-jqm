@@ -73,11 +73,10 @@ define(function (require) {
       var errors = this.model.getInvalidElements( { limit: this.getLimit() } );
       var template = '';
       var viewModel;
-
       //mustache doesnt do simple calculations :\
       if ( errors ){
         viewModel = {
-          invalidElements: errors,
+          invalidElements: errors.errors,
           moreAvailable: errors.total > errors.length,
           remaining: errors.total - errors.length
         };
@@ -88,8 +87,16 @@ define(function (require) {
       this.$el.html(template);
 
       /* eslint-disable no-unused-expressions */
-      this.$el.is(':visible') && this.$el.listview('refresh');
+      this.$el.is(':visible') && this.$el.listview().listview('refresh');
       /* eslint-enable no-unused-expressions */
+
+      this.trigger('render');
+
+      return this;
+    },
+
+    enhance: function(){
+      this.$el.listview().listview('refresh');
       return this;
     }
   }, //static properties.

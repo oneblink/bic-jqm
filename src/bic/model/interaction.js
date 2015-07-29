@@ -206,14 +206,49 @@ The argument change event.
       });
     },
 
+    defaultView: function (models, siteVars) {
+      var model = this;
+
+      model.set({interactionList: _.map(_.filter(models, function (value) {
+        return value.id !== siteVars.answerSpace.toLowerCase() && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
+          return element === 'nav-' + siteVars.answerSpace.toLowerCase();
+        }, this).length > 0);
+      }, this), function (value) {
+        return value.attributes;
+      })});
+    },
+
     prepareAnswerSpace: function (resolve, reject, data) {
       var model = this;
       require(['bic'], function (app) {
         var homeInteraction;
         var loginInteraction;
         var path;
+        var url;
 
-        if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        if (app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
+          API.getLoginStatus().then(function (loginData) {
+            if (loginData.status !== 'LOGGED IN') {
+              loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
+
+              path = $.mobile.path.parseLocation().pathname;
+              if (path.slice(-1) === '/') {
+                path = path.slice(0, path.length - 1);
+              }
+
+              url = path;
+              if (_.indexOf(path.split('/'), loginInteraction.id) < 0) {
+                url = url + '/' + loginInteraction.id;
+              }
+              $.mobile.changePage(url);
+
+              resolve(model);
+            } else {
+              model.defaultView(app.interactions.models, app.siteVars);
+              resolve(model);
+            }
+          });
+        } else if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
           homeInteraction = app.interactions.findWhere({dbid: 'i' + app.get('homeInteraction')});
           if (homeInteraction) {
             homeInteraction.set({parent: model.get('parent')});
@@ -224,27 +259,8 @@ The argument change event.
             reject();
           }
         } else {
-          model.set({interactionList: _.map(_.filter(app.interactions.models, function (value) {
-            return value.id !== window.BMP.BIC.siteVars.answerSpace.toLowerCase() && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
-              return element === 'nav-' + window.BMP.BIC.siteVars.answerSpace.toLowerCase();
-            }, this).length > 0);
-          }, this), function (value) {
-            return value.attributes;
-          })});
-
-          if (model.get('interactionList').length === 0 && app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
-            loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
-
-            path = $.mobile.path.parseLocation().pathname;
-            if (path.slice(-1) === '/') {
-              path = path.slice(0, path.length - 1);
-            }
-
-            resolve(model);
-            $.mobile.changePage(path + '/' + loginInteraction.id);
-          } else {
-            resolve(model);
-          }
+          model.defaultView(app.interactions.models);
+          resolve(model);
         }
       });
     },
@@ -271,11 +287,17 @@ The argument change event.
                       model.save({
                         'content-principal': result
                       });
-                    } else if (!model.get('args')['args[logout]']) {
+                      if (app.get('loginToDefaultScreen')) {
+                        app.goToInteraction();
+                      } else {
+                        app.goToInteraction(data.dataUrl);
+                      }
+                    } else if (model.get('args') && !model.get('args').logout) {
                       // Logged Out
                       model.save({
                         'content-anonymous': result
                       });
+                      app.goToInteraction();
                     }
                   });
                 }

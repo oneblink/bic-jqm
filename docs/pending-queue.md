@@ -86,6 +86,14 @@ It is implemented by extending [Backbone.Model](http://backbonejs.org/#Model).
 This means that [Backbone.Events](http://backbonejs.org/#Events) methods and
 events are available.
 
+**Methods**
+- `#process()`
+- `#setErrors(errors)`
+
+`#process()` will process the pending model, regardless of its status, and return a promise. The promise will be resolved if the result from the server is a 200 OK, and rejected if it is anything else. 
+
+`#setErrors(errors)` is called by `#process` when the server responds with failure. The pending model has its status attribute set to [MODEL_STATUS.FAILED_VALIDATION](../src/bic/enum-model-status.js) and the errors are processed using the [BlinkForms Error](https://github.com/blinkmobile/forms/blob/develop/docs/errors.md) helpers and then saved to the errors attribute. Finally, the model is saved to persistant storage in the pending queue. A `Native Promise` is returned when the persiting has completed.  See the [error details](error-details.md) documentation for more information on working with errors that come from the Blink Mobility Platform.
+
 This constructor is private (not globally available), but documenting it is
 a necessary part of explaining how the other APIs are used.
 
@@ -119,8 +127,54 @@ pendingRecord.once('change', function () {
 });
 ```
 
-### BMP.BIC.pending.processQueue = function ()
+### BMP.BIC.pending.processQueue = function (options)
 
-Processes each PendingItem in the queue. If the `status` property is `Pending`,
-then an attempt will be made to submit the entry to the server. All other values
-of `status` cause the PendingItem to be skipped.
+Processes each PendingItem in the queue. By default, only models with a `status` property of `Pending`, will be processed and an attempt made to submit the entry to the server. All other values of `status` cause the PendingItem to be skipped. However, if `options` has a `status` property, this status will be used instead:
+
+    BMP.BIC.pending.processQueue({status: MODEL_STATUS.FAILED_VALIDATION});
+    // only models with a status of MODEL_STATUS.FAILED_VALIDATION will be processed.
+
+`#processQueue()` returns an [aggregated promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) of every pending model's submission. The promise is rejected on the first model that receives a non 200 response from the server.
+
+### BMP.BIC.pending.retryFailed = function()
+
+Syntactic sugar for `BMP.BIC.pending.processQueue({status: MODEL_STATUS.FAILED_VALIDATION});`
+
+### BMP.BIC.pending.getFailedSubmissions = function()
+
+Returns a subset of `BMP.BIC.pending` as a `PendingCollection`. Every model in this subset has a status attribute of `MODEL_STATUS.FAILED_VALIDATION`
+
+###BMP.BIC.pending.getByFormName = function(name)
+
+Returns a subset of `BMP.BIC.pending` as a `PendingCollection`. Every model in this subset has a name attribute of `name`
+
+
+##Displaying errors stored in the pending queue
+Errors stored on a BlinkForm in the pending queue are set at form render time. If you need to display errors on a form in real time, use [BlinkForms Errors](https://github.com/blinkmobile/forms/blob/develop/docs/errors.md) (see "Manually Setting Element Errors")
+
+##Saving errors to the pending queue
+
+Errors sent from the Blink Mobility Platform are persisted automatically via the `PendingModel` instances `#process()` function. If you need to persist your own messages, you will need to consider the following:
+
+- The `errors` attribute of a pending model is considered to be a set of errors for BlinkForms to use.
+- BlinkForms Error objects must be in the specified format.
+- `PendingModel#setErrors` will not merge any existing errors.
+- `PendingModel#setErrors` sets the errors for the entire form.
+
+Because the pending queue is a [backbone collection](http://backbonejs.org/#Collection) any events that a model broadcasts are re-broadcasted by the collection. This means that you can listen to `change:errors`, `add`, `remove` events.
+
+##Event Life cycle
+
+`'add'` -> `'change'` -> `'change:errors'` -> `'remove'`
+
+The above events are broadcast on the pending queue collection.
+
+##Finding a particular pending form
+
+All pending models are given a unique id called "pid". This can be obtained by querying the arguments for the current interaction:
+
+    var pid = BMP.BIC.currentInteraction.getArgument('pid');
+
+Once you have the pid, you can use standard backbone functions to retrieve it from the pending collection:
+
+    var pendingModel = BMP.BIC.pending.get(pid);
