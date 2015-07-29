@@ -28,7 +28,7 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         setPendingItem: apiStub
       });
 
-      injector.require(['bic/model-pending'], function (required) {
+      injector.require(['bic/model/pending'], function (required) {
         Model = required;
         done();
       });

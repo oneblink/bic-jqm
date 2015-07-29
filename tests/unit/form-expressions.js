@@ -15,7 +15,7 @@ define(['Squire'], function (Squire) {
       window.BMP.Expression = { fn: {} };
 
       injector.mock('BlinkForms', {});
-      injector.mock('bic/model-application', {
+      injector.mock('bic/model/application', {
         datasuitcases: {
           get: function () {
             return { attributes: { data: 'AAA' } };

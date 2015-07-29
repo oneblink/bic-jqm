@@ -3,7 +3,7 @@ define([
 ], function (Squire, Backbone, MODEL_STATUS, sinon, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/view-form-controls.js';
+  var CONTEXT = 'tests/unit/view/form/controls.js';
   var should = chai.should();
 
   describe('View - Form Controls ', function () {
@@ -69,11 +69,11 @@ define([
       );
       mockApp = new Backbone.Model();
 
-      injector.mock('bic/model-application', mockApp);
-      injector.mock('bic/model-pending', Backbone.Model);
+      injector.mock('bic/model/application', mockApp);
+      injector.mock('bic/model/pending', Backbone.Model);
       injector.mock('text!bic/template/form/controls.mustache', 'string');
       injector.mock('bic/api', function () { return null; });
-      injector.require(['bic/view-form-controls'], function (required) {
+      injector.require(['bic/view/form/controls'], function (required) {
         View = required;
         done();
       });
@@ -101,7 +101,7 @@ define([
         indexSpy = sinon.spy(pageObject.current, 'index');
         gotoSpy = sinon.spy(pageObject, 'goto');
 
-        injector.require(['bic/model-application'], function (app) {
+        injector.require(['bic/model/application'], function (app) {
           view = new View({ model: app});
           done();
         });
@@ -161,7 +161,7 @@ define([
       var view, processQueueStub;
 
       before(function (done) {
-        injector.require(['bic/model-application'], function (app) {
+        injector.require(['bic/model/application'], function (app) {
           view = new View({ model: app});
           app.view = {
             pendingQueue: sinon.stub()
@@ -172,7 +172,7 @@ define([
           app.setArgument = sinon.stub();
           app.setArgument.withArgs('pid').returns('1');
 
-          injector.require(['bic/model-pending'], function (PendingItem){
+          injector.require(['bic/model/pending'], function (PendingItem){
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };

@@ -23,7 +23,7 @@ define(function (require) {
       } else {
         this.set('state', true);
       }
-      require(['bic/model-application'], function (app) {
+      require(['bic/model/application'], function (app) {
         if (model.get('state')) {
           app.stars.add(model);
         } else {

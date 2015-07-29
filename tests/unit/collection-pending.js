@@ -1,10 +1,8 @@
 define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'], function (Squire, sinon, Backbone, chai, $, MODEL_STATUS) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-pending.js';
+  var CONTEXT = 'tests/unit/collection/pending.js';
   var should = chai.should();
-
-
 
   describe('Collection - Pending', function () {
     var injector, Collection, collection, apiStub;
@@ -32,11 +30,11 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
       //apiStub.returns(Promise.resolve());
 
       //injector.mock('bic/model-pending', Backbone.Model);
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         setPendingItem: apiStub
       });
 
-      injector.require(['bic/collection-pending'], function ( required ) {
+      injector.require(['bic/collection/pending'], function (required) {
         Collection = required;
         done();
       });

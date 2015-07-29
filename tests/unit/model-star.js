@@ -9,10 +9,10 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('bic/model-application', Backbone.Model.extend({
+      injector.mock('bic/model/application', Backbone.Model.extend({
       }));
 
-      injector.require(['bic/model-star'], function (rModel) {
+      injector.require(['bic/model/star'], function (rModel) {
         Model = rModel;
         done();
       });

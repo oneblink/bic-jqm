@@ -12,7 +12,7 @@ define(function (require) {
   var MODEL_STATUS = require('bic/enum-model-status');
 
   var Collection = require('bic/collection');
-  var PendingItem = require('bic/model-pending');
+  var PendingItem = require('bic/model/pending');
 
   // this module
 

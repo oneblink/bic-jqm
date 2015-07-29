@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-forms.js';
+  var CONTEXT = 'tests/unit/collection/forms.js';
   var should = chai.should();
 
   describe('Collection - Forms', function () {
@@ -17,11 +17,11 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector.mock('backbone', Backbone);
 
       injector.mock('BlinkForms', {});
-      injector.mock('bic/model-application', Backbone.Model);
-      injector.mock('bic/model-form', Backbone.Model);
+      injector.mock('bic/model/application', Backbone.Model);
+      injector.mock('bic/model/form', Backbone.Model);
       injector.mock('bic/api', {});
 
-      injector.require(['bic/collection-forms'], function (rCol) {
+      injector.require(['bic/collection/forms'], function (rCol) {
         Collection = rCol;
         done();
       });

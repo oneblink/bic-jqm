@@ -3,7 +3,7 @@ define([
 ], function (Squire, sinon, Backbone, $, $mobile, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/model-application.js';
+  var CONTEXT = 'tests/unit/model/application.js';
   var should = chai.should();
 
   describe('Model - Application', function () {
@@ -52,16 +52,16 @@ define([
       injector.mock('jquery', $);
       injector.mock('jquerymobile', $mobile);
 
-      injector.mock('bic/collection-interactions', CollectionMock);
-      injector.mock('bic/collection-datasuitcases', CollectionMock);
-      injector.mock('bic/collection-forms', FormsCollectionMock);
-      injector.mock('bic/collection-pending', CollectionMock);
-      injector.mock('bic/collection-stars', CollectionMock);
-      injector.mock('bic/collection-form-records', CollectionMock);
+      injector.mock('bic/collection/interactions', CollectionMock);
+      injector.mock('bic/collection/datasuitcases', CollectionMock);
+      injector.mock('bic/collection/forms', FormsCollectionMock);
+      injector.mock('bic/collection/pending', CollectionMock);
+      injector.mock('bic/collection/stars', CollectionMock);
+      injector.mock('bic/collection/form-records', CollectionMock);
       injector.mock('bic/store-meta', {});
       injector.mock('domReady', function () { return null; });
 
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         getAnswerSpaceMap: function () { return Promise.resolve(siteMap); },
         getLoginStatus: function () { return Promise.resolve(loginStatus); }
       });
@@ -73,7 +73,7 @@ define([
       });
       /*eslint-enable no-console*/
 
-      injector.require(['bic/model-application'], function (required) {
+      injector.require(['bic/model/application'], function (required) {
         model = required;
         done();
       });

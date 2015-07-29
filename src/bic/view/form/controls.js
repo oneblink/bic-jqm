@@ -12,7 +12,7 @@ define(function (require) {
   // local modules
 
   var Template = require('text!bic/template/form/controls.mustache');
-  var app = require('bic/model-application');
+  var app = require('bic/model/application');
   var API = require('bic/api');
   var USER_ACTIONS = require('bic/enum-user-actions');
   var MODEL_STATUS = require('bic/enum-model-status');

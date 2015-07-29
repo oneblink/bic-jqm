@@ -9,7 +9,7 @@ define(function (require) {
 
   // local modules
 
-  var apiWeb = require('bic/api-web');
+  var apiWeb = require('bic/api/web');
 
   // this module
 

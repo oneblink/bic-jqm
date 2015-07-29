@@ -3,7 +3,7 @@ define([
 ], function (Squire, $, $mobile, chai, Backbone) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/view-interaction.js';
+  var CONTEXT = 'tests/unit/view/interaction.js';
   var should = chai.should();
 
   describe('View - Interaction - jQuery Mobile Implementation', function () {
@@ -29,16 +29,18 @@ define([
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('bic/model-application', mockApp);
+      injector.mock('bic/model/application', mockApp);
       injector.mock('bic/view/form/pending', mockPending);
-      injector.mock('bic/model-star', function () { return null; });
-      injector.mock('bic/view-star', function () { return null; });
-      injector.mock('bic/view-form', function () { return null; });
-      injector.mock('text!bic/template-interaction.mustache', 'string');
-      injector.mock('text!bic/template-inputPrompt.mustache', 'string');
-      injector.mock('text!bic/template-category-list.mustache', 'string');
+      injector.mock('bic/model/star', function () { return null; });
+      injector.mock('bic/view/star', function () { return null; });
+      injector.mock('bic/view/form', function () { return null; });
+      injector.mock('text!bic/template/interaction.mustache', 'string');
+      injector.mock('text!bic/template/inputPrompt.mustache', 'string');
+      injector.mock('text!bic/template/category-list.mustache', 'string');
+      //NOTE: Some tests still depend on actual popup template, so not using following line
+      //injector.mock('text!bic/template/popup.mustache', 'string');
 
-      injector.require(['bic/view-interaction'], function (required) {
+      injector.require(['bic/view/interaction'], function (required) {
         View = required;
         done();
       });
