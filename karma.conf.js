@@ -40,7 +40,8 @@ module.exports = function (config) {
 
     client: {
       mocha: {
-        ui: 'bdd'
+        ui: 'bdd',
+        reporter: 'html'
       }
     },
 
@@ -70,21 +71,6 @@ module.exports = function (config) {
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    // browsers: ['Firefox', 'PhantomJS'],
-    plugins: [
-      'karma-mocha',
-      'karma-requirejs',
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-ie-launcher',
-      'karma-safari-launcher',
-      // 'karma-opera-launcher',
-      'karma-phantomjs-launcher',
-      'karma-detect-browsers'
-    ],
 
     captureTimeout: 60000,
 
