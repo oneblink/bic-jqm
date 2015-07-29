@@ -31,6 +31,7 @@ define([
         current: {
           data: function() { return; },
           getErrors: function() { return; },
+          getInvalidElements: function(){ return; },
           get: function() {
             return pageObject;
           }

@@ -59,6 +59,15 @@ define(function (require) {
     invalidElements.errors[0].get('_view').scrollTo();
   }
 
+  function checkFormForErrors(model){
+    var formErrors = Forms.current.getInvalidElements();
+    if( formErrors ){
+      model.trigger('showErrors');
+    }
+
+    return !!formErrors;
+  }
+
   FormControlView = Backbone.View.extend({
 
     events: {
@@ -121,6 +130,8 @@ define(function (require) {
     lastFormPage: function () {
       var index, len;
 
+      checkFormForErrors(this.model);
+
       len = Forms.current.get('pages').length;
       index = Forms.current.get('pages').current.index();
 
@@ -132,6 +143,8 @@ define(function (require) {
 
     nextFormPage: function () {
       var index;
+
+      checkFormForErrors(this.model);
 
       index = Forms.current.get('pages').current.index();
 
@@ -181,6 +194,7 @@ define(function (require) {
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
             //CATCH - enable submit if there has been an error
             .then(undefined, function(invalidElements){
+              me.model.trigger('showErrors');
               enableSubmit();
               scrollToFirstError(invalidElements);
             });
@@ -230,6 +244,7 @@ define(function (require) {
           }).then(uiTools.hideLoadingAnimation)
           //CATCH - enable submit if there has been an error
           .then(undefined, function(invalidElements){
+            me.model.trigger('showErrors');
             enableSubmit();
             scrollToFirstError(invalidElements);
           });

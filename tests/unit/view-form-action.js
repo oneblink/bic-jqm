@@ -20,7 +20,8 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       mockApp = new Backbone.Model();
       mockControls = new Backbone.Model();
       MockErrorSummaryViewConstructor = Backbone.View.extend({
-        test: function(){ return 'it worked'; }
+        test: function(){ return 'it worked'; },
+        enhance: function(){ return this; }
       });
       mockForms = {
         current: {
