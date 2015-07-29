@@ -33,6 +33,8 @@ This project is NOT versioned according to Semantic Versioning. Rather, it is ve
 2. open browser
 3. go to http://localhost:9876/integration
 
+By default, tests are executed in PhantomJS. If you want to execute tests in all
+locally available browsers, use `grunt karma:auto`.
 
 ## General Notes on BIC structure
 
