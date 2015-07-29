@@ -19,9 +19,6 @@ define(function (require) {
   var uiTools = require('bic/lib/ui-tools');
 
 
-  // this module
-  var FormControlView;
-
   //private functions
   var isHTML = function (string) {
     var html$;
@@ -68,7 +65,9 @@ define(function (require) {
     return !!formErrors;
   }
 
-  FormControlView = Backbone.View.extend({
+  // this module
+
+  return Backbone.View.extend({
 
     events: {
       'click #FormControls #submit:not([disabled])': 'formSubmit',
@@ -389,6 +388,4 @@ define(function (require) {
   }, {
     template: Template
   });
-
-  return FormControlView;
 });
