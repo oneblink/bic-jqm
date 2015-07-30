@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sinon, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-datasuitcases.js';
+  var CONTEXT = 'tests/unit/collection/datasuitcases.js';
   var should = chai.should();
 
   describe('Collection - DataSuitcases', function () {
@@ -16,8 +16,8 @@ define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sino
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('bic/model-datasuitcase', Backbone.Model);
-      injector.require(['bic/collection-datasuitcases'], function (required) {
+      injector.mock('bic/model/datasuitcase', Backbone.Model);
+      injector.require(['bic/collection/datasuitcases'], function (required) {
         Collection = required;
         done();
       });

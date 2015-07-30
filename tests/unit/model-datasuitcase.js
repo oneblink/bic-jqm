@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-forms.js';
+  var CONTEXT = 'tests/unit/collection/forms.js';
   var should = chai.should();
 
   describe('Model - DataSuitcase', function () {
@@ -19,11 +19,11 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       apiStub = sinon.stub();
       apiStub.returns(Promise.resolve());
 
-      injector.mock('bic/api-web', {
+      injector.mock('bic/api/web', {
         getDataSuitcase: apiStub
       });
 
-      injector.require(['bic/model-datasuitcase'], function (model) {
+      injector.require(['bic/model/datasuitcase'], function (model) {
         Model = model;
         done();
       }, function () {

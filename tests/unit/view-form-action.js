@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/view-form-action.js';
+  var CONTEXT = 'tests/unit/view/form/action.js';
   var should = chai.should();
 
   describe('View - Form Actions ', function () {
@@ -20,7 +20,8 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       mockApp = new Backbone.Model();
       mockControls = new Backbone.Model();
       MockErrorSummaryViewConstructor = Backbone.View.extend({
-        test: function(){ return 'it worked'; }
+        test: function(){ return 'it worked'; },
+        enhance: function(){ return this; }
       });
       mockForms = {
         current: {
@@ -36,10 +37,10 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector.mock('backbone', Backbone);
 
       injector.mock('BlinkForms', mockForms);
-      injector.mock('bic/model-application', mockApp);
-      injector.mock('bic/view-form-controls', mockControls);
-      injector.mock('bic/view-form-error-summary-list-view', MockErrorSummaryViewConstructor);
-      injector.require(['bic/view-form-action'], function (required) {
+      injector.mock('bic/model/application', mockApp);
+      injector.mock('bic/view/form/controls', mockControls);
+      injector.mock('bic/view/form/error-summary-list', MockErrorSummaryViewConstructor);
+      injector.require(['bic/view/form/action'], function (required) {
         View = required;
         done();
       });

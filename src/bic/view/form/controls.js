@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var _ = require('underscore');
   var Backbone = require('backbone');
   var Forms = require('BlinkForms');
   var Mustache = require('mustache');
@@ -13,14 +12,14 @@ define(function (require) {
   // local modules
 
   var Template = require('text!bic/template/form/controls.mustache');
-  var app = require('bic/model-application');
+  var app = require('bic/model/application');
   var API = require('bic/api');
   var USER_ACTIONS = require('bic/enum-user-actions');
   var MODEL_STATUS = require('bic/enum-model-status');
   var uiTools = require('bic/lib/ui-tools');
 
-  // this module
 
+  //private functions
   var isHTML = function (string) {
     var html$;
     var Node = window.Node;
@@ -53,7 +52,22 @@ define(function (require) {
     return uiTools.enableElement('#save');
   };
 
-  var FormControlView = Backbone.View.extend({
+  function scrollToFirstError(invalidElements){
+    invalidElements.errors[0].get('_view').scrollTo();
+  }
+
+  function checkFormForErrors(model){
+    var formErrors = Forms.current.getInvalidElements();
+    if( formErrors ){
+      model.trigger('showErrors');
+    }
+
+    return !!formErrors;
+  }
+
+  // this module
+
+  return Backbone.View.extend({
 
     events: {
       'click #FormControls #submit:not([disabled])': 'formSubmit',
@@ -115,6 +129,8 @@ define(function (require) {
     lastFormPage: function () {
       var index, len;
 
+      checkFormForErrors(this.model);
+
       len = Forms.current.get('pages').length;
       index = Forms.current.get('pages').current.index();
 
@@ -126,6 +142,8 @@ define(function (require) {
 
     nextFormPage: function () {
       var index;
+
+      checkFormForErrors(this.model);
 
       index = Forms.current.get('pages').current.index();
 
@@ -160,7 +178,8 @@ define(function (require) {
 
     formSubmit: function () {
       var me = this
-        , model = this.model;
+        , model = this.model
+        , formErrors;
 
       if ($('#submit').attr('disabled')){
         return;
@@ -169,13 +188,15 @@ define(function (require) {
       uiTools.disableElement('#submit');
 
       if (app.hasStorage()) {
-        this.addToQueue( _.isEmpty(Forms.current.getErrors()) ? MODEL_STATUS.PENDING : MODEL_STATUS.DRAFT)
+        formErrors = Forms.current.getInvalidElements();
+        this.addToQueue( formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
             //CATCH - enable submit if there has been an error
-            .then(undefined, function(){
+            .then(undefined, function(invalidElements){
+              me.model.trigger('showErrors');
               enableSubmit();
-              this.scrollToError();
-            }.bind(this));
+              scrollToFirstError(invalidElements);
+            });
       } else {
         uiTools.showLoadingAnimation();
         Forms.current.data()
@@ -221,10 +242,11 @@ define(function (require) {
             app.view.popup(html);
           }).then(uiTools.hideLoadingAnimation)
           //CATCH - enable submit if there has been an error
-          .then(undefined, function(){
+          .then(undefined, function(invalidElements){
+            me.model.trigger('showErrors');
             enableSubmit();
-            this.scrollToError();
-          }.bind(this));
+            scrollToFirstError(invalidElements);
+          });
       }
     },
 
@@ -245,30 +267,30 @@ define(function (require) {
 
     formSave: function (e) {
       var me = this;
-      e.data.view.addToQueue('Draft')
+      e.data.view.addToQueue(MODEL_STATUS.DRAFT)
        .then(function(){
         $('#closePopup').one('popupafterclose', leaveViewBy(me, USER_ACTIONS.SAVE) );
         $('#closePopup').popup('close');
        })
-       .then(undefined, function(){
+       .then(undefined, function(invalidElements){
           enableSave();
-          this.scrollToError();
-        }.bind(this));
+          scrollToFirstError(invalidElements);
+        });
     },
 
     formSave2: function () {
       uiTools.disableElement('#save');
-      this.addToQueue('Draft')
+      this.addToQueue(MODEL_STATUS.DRAFT)
           .then(function(updatedModel) {
-          this.model.setArgument('pid', updatedModel.id);
-          setTimeout(function() {
+            this.model.setArgument('pid', updatedModel.id);
+            setTimeout(function() {
+              enableSave();
+            }, 1e3);
+          }.bind(this))
+          .then(undefined, function(invalidElements){
             enableSave();
-          }, 1e3);
-        }.bind(this))
-          .then(undefined, function(){
-            enableSave();
-            this.scrollToError();
-          }.bind(this));
+            scrollToFirstError(invalidElements);
+          });
     },
 
     formDiscard: function () {
@@ -276,23 +298,6 @@ define(function (require) {
       $('#closePopup').popup('close');
     },
 
-    scrollToError: function () {
-      var firstElement, pageIndex;
-      var currentIndex = Forms.current.get('pages').current.index();
-      var firstError = _.keys(Forms.current.getErrors())[0];
-
-      if (firstError) {
-        firstElement = Forms.current.getElement(firstError);
-        pageIndex = firstElement.attributes.page.index();
-      }
-      if (currentIndex !== pageIndex) {
-        Forms.current.get('pages').goto(pageIndex);
-      }
-
-      $('body').animate({
-        scrollTop: firstElement.attributes._view.$el.offset().top
-      }, 100);
-    },
 
     /**
       Adds the Current Blink Form to the pending que with the specified status
@@ -315,10 +320,12 @@ define(function (require) {
           var options = {};
 
           options.success = function (updatedModel) {
+            var invalidElements;
             if (!supressQueue) {
               if (pendingModel.get('status') === MODEL_STATUS.DRAFT ) {
-                if (!_.isEmpty(Forms.current.getErrors())) {
-                  return reject('Errors on form');
+                invalidElements = Forms.current.getInvalidElements();
+                if ( invalidElements && invalidElements.length ) {
+                  return reject(invalidElements);
                 }
 
               } else {
@@ -381,6 +388,4 @@ define(function (require) {
   }, {
     template: Template
   });
-
-  return FormControlView;
 });

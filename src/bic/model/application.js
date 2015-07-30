@@ -18,12 +18,12 @@ define(function (require) {
 
   // local modules
 
-  var InteractionCollection = require('bic/collection-interactions');
-  var DataSuitcaseCollection = require('bic/collection-datasuitcases');
-  var FormCollection = require('bic/collection-forms');
-  var PendingCollection = require('bic/collection-pending');
-  var FormRecordsCollection = require('bic/collection-form-records');
-  var StarsCollection = require('bic/collection-stars');
+  var InteractionCollection = require('bic/collection/interactions');
+  var DataSuitcaseCollection = require('bic/collection/datasuitcases');
+  var FormCollection = require('bic/collection/forms');
+  var PendingCollection = require('bic/collection/pending');
+  var FormRecordsCollection = require('bic/collection/form-records');
+  var StarsCollection = require('bic/collection/stars');
 
   var facade = require('bic/facade');
   var API = require('bic/api');

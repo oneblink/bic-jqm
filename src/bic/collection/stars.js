@@ -8,7 +8,7 @@ define(function (require) {
   // local modules
 
   var Collection = require('bic/collection');
-  var Star = require('bic/model-star');
+  var Star = require('bic/model/star');
 
   // this module
 

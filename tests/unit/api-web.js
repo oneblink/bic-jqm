@@ -9,7 +9,7 @@ define(['Squire', 'sinon', 'jquery'], function (Squire, sinon, $) {
         v4: function () { return 12345; }
       });
 
-      injector.require(['bic/api-web'], function (required) {
+      injector.require(['bic/api/web'], function (required) {
         api = required;
 
         server = sinon.fakeServer.create();
@@ -24,7 +24,7 @@ define(['Squire', 'sinon', 'jquery'], function (Squire, sinon, $) {
 
         server.respondWith('/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId, [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
 
-        server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
+        server.respondWith('post', '/_R_/common/3/xhr/SaveFormRecord.php?schema=3&_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=Exists&_action=Exists', [200, { 'Content-Type': 'application/json', 'Content-Length': 10 }, '{"_id": 1}']);
 
         server.autoRespond = true;
 

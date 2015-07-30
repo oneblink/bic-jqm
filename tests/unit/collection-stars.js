@@ -1,7 +1,7 @@
 define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
   'use strict';
 
-  var CONTEXT = 'tests/unit/collection-stars.js';
+  var CONTEXT = 'tests/unit/collection/stars.js';
   var should = chai.should();
 
   describe('Collection - Stars', function () {
@@ -16,9 +16,9 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('bic/model-star', Backbone.Model);
+      injector.mock('bic/model/star', Backbone.Model);
 
-      injector.require(['bic/collection-stars'], function (required) {
+      injector.require(['bic/collection/stars'], function (required) {
         Collection = required;
         done();
       });

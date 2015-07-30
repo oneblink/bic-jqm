@@ -5,12 +5,13 @@ define(function (require) {
 
   var Backbone = require('backbone');
   var Forms = require('BlinkForms');
+  var $ = require('jquery');
 
   // local modules
 
-  var app = require('bic/model-application');
-  var FormControls = require('bic/view-form-controls');
-  var FormErrorSummary = require('bic/view-form-error-summary-list-view');
+  var app = require('bic/model/application');
+  var FormControls = require('bic/view/form/controls');
+  var FormErrorSummary = require('bic/view/form/error-summary-list');
 
   // this module
 
@@ -19,6 +20,11 @@ define(function (require) {
 
     errorSummary: null,
     subView: null,
+
+    initialize: function(){
+      this.model.on('showErrors', this.renderErrorSummary, this);
+      this.$errorSummaryContainer = $('<div class="bm_errorsummary--container"></div>');
+    },
 
     /**
      * renders the Error summary, if it is turned on.
@@ -30,12 +36,20 @@ define(function (require) {
         if ( !this.errorSummary ){
           ErrorView = FormActionView.prepareErrorSummary();
           this.errorSummary = new ErrorView( { model: Forms.current } );
-          this.$el.append( this.errorSummary.render().$el );
+          //insert error summary above the form controls
+          this.$errorSummaryContainer.append( this.errorSummary.render().$el );
+          if ( this.errorSummary.enhance ){
+            this.errorSummary.enhance();
+          }
 
           return this.errorSummary;
         }
 
-        return this.errorSummary.render();
+        this.errorSummary.render();
+        if ( this.errorSummary.enhance ){
+          this.errorSummary.enhance();
+        }
+        return this;
       }
     },
 
@@ -64,8 +78,7 @@ define(function (require) {
 
           Forms.initialize(definition, view.model.get('blinkFormAction'));
           view.$el.append(Forms.current.$form);
-
-          view.renderErrorSummary();
+          view.$el.append(view.$errorSummaryContainer);
           view.renderControls();
 
           if (view.model.getArgument('id')) {
@@ -82,7 +95,12 @@ define(function (require) {
               return view.trigger('render');
             }
 
-            Forms.current.setRecord(pendingModel.get('data'));
+            Forms.current.setRecord(pendingModel.get('data')).then(function(){
+              var errors = pendingModel.get('errors');
+              if ( errors && errors.errors ){
+                Forms.current.setErrors(errors.errors);
+              }
+            });
             view.trigger('render');
           } else {
             view.trigger('render');

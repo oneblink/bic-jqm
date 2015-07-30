@@ -18,7 +18,7 @@ define(['Squire', 'chai'], function (Squire, chai) {
       });
       /*eslint-enable no-console*/
 
-      injector.require(['bic/model-interaction'], function (required) {
+      injector.require(['bic/model/interaction'], function (required) {
         Model = required;
         done();
       });

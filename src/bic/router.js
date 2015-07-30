@@ -11,8 +11,8 @@ define(function (require) {
 
   // local modules
 
-  var app = require('bic/model-application');
-  var InteractionView = require('bic/view-interaction');
+  var app = require('bic/model/application');
+  var InteractionView = require('bic/view/interaction');
   var uiTools = require('bic/lib/ui-tools');
 
   // this module

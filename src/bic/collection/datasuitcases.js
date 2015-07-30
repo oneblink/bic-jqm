@@ -8,7 +8,7 @@ define(function (require) {
   // local modules
 
   var Collection = require('bic/collection');
-  var DataSuitcase = require('bic/model-datasuitcase');
+  var DataSuitcase = require('bic/model/datasuitcase');
 
   // this module
 

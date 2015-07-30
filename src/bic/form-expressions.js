@@ -15,7 +15,7 @@ define(function (require) {
 
   // local modules
 
-  var app = require('bic/model-application');
+  var app = require('bic/model/application');
 
   // this module
 

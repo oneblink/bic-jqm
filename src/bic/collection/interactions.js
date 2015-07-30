@@ -4,7 +4,7 @@ define(function (require) {
   // local modules
 
   var Collection = require('bic/collection');
-  var Interaction = require('bic/model-interaction');
+  var Interaction = require('bic/model/interaction');
 
   // this module
 

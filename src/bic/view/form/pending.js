@@ -41,7 +41,7 @@ define(function (require) {
       var $popup;
 
       view = this;
-      app = require('bic/model-application');
+      app = require('bic/model/application');
       templateObject = {};
       statuses = {
         'pending': MODEL_STATUS.PENDING,
@@ -91,7 +91,7 @@ define(function (require) {
       var app;
 
       $popup = $('#pendingPopup');
-      app = require('bic/model-application');
+      app = require('bic/model/application');
 
       if (e.target.tagName !== 'A') {
         $element = $(e.target).parents('a');
@@ -108,7 +108,7 @@ define(function (require) {
       var app;
 
       $popup = $('#pendingPopup');
-      app = require('bic/model-application');
+      app = require('bic/model/application');
 
       uiTools.showLoadingAnimation();
 
@@ -128,7 +128,7 @@ define(function (require) {
       var app;
 
       $popup = $('#clearConfirmationPopup');
-      app = require('bic/model-application');
+      app = require('bic/model/application');
 
       items = app.pending.where({status: MODEL_STATUS.DRAFT});
 
