@@ -13,7 +13,6 @@ define(function (require) {
   var $ = require('jquery');
   var _ = require('underscore');
   var Backbone = require('backbone');
-  var domReady = require('domReady');
   var Promise = require('bic/promise');
 
   // local modules
@@ -290,20 +289,17 @@ define(function (require) {
 
       c.log('app.initialRender()...');
       $.mobile.defaultPageTransition = app.get('defaultTransition');
-      domReady(function () {
-        c.log('app.initialRender(): domReady...');
-        $.mobile.changePage($.mobile.path.parseLocation().href, {
-          changeHash: false,
-          reloadPage: true,
-          transition: 'fade'
-        });
-        $(document).one('pageshow', function () {
-          c.log('app.initialRender(): pageshow...');
-          if (window.BootStatus && window.BootStatus.notifySuccess) {
-            window.BootStatus.notifySuccess();
-          }
-          $('#temp').remove();
-        });
+      $.mobile.changePage($.mobile.path.parseLocation().href, {
+        changeHash: false,
+        reloadPage: true,
+        transition: 'fade'
+      });
+      $(document).one('pageshow', function () {
+        c.log('app.initialRender(): pageshow...');
+        if (window.BootStatus && window.BootStatus.notifySuccess) {
+          window.BootStatus.notifySuccess();
+        }
+        $('#temp').remove();
       });
     },
 

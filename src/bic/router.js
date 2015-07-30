@@ -15,6 +15,7 @@ define(function (require) {
   var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
   var uiTools = require('bic/lib/ui-tools');
+  var whenDOMReady = require('bic/promise-dom-ready');
 
   // this module
 
@@ -100,6 +101,7 @@ define(function (require) {
           c.error(err);
           return;
         })
+        .then(whenDOMReady)
         .then(function () {
           return app.initialRender();
         })
