@@ -46,7 +46,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
   window.BMP.BIC3 = app;
 
-  window.BMP.BIC.version = '3.7.1';
+  window.BMP.BIC.version = '3.8.0';
 
   return app; // export BMP.BIC
 });

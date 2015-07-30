@@ -59,8 +59,13 @@ module.exports = function (grunt) {
     },
 
     karma: {
-      unit: {
+      auto: {
         configFile: 'karma.conf.js'
+      },
+      phantom: {
+        configFile: 'karma.conf.js',
+        browsers: ['PhantomJS'],
+        frameworks: ['mocha', 'requirejs'] // no detectBrowsers
       }
     },
 
@@ -241,7 +246,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mustache-render');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'karma']);
+  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'karma:phantom']);
 
   grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
