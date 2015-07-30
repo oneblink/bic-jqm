@@ -259,7 +259,7 @@ The argument change event.
             reject();
           }
         } else {
-          model.defaultView(app.interactions.models);
+          model.defaultView(app.interactions.models, app.siteVars);
           resolve(model);
         }
       });
