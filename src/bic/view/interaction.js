@@ -170,8 +170,6 @@ define(function (require) {
           inheritedAttributes = this.model.inherit({}),
           view = this;
 
-        c.log('InteractionView#render()...');
-
         // Non-type specific
         if (_.has(inheritedAttributes, 'themeSwatch')) {
           this.$el.attr('data-theme', inheritedAttributes.themeSwatch);
@@ -244,7 +242,6 @@ define(function (require) {
 
         } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen
-          c.log('InteractionView#render(): home screen...');
           view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
@@ -256,7 +253,6 @@ define(function (require) {
           view.trigger('render');
         } else if (!this.model.has('type')) {
           // Category
-          c.log('InteractionView#render(): category...');
           view.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,

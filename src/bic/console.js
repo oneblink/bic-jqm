@@ -1,33 +1,45 @@
 define(function () {
   'use strict';
 
+  // foreign modules
+
+  var _ = require('underscore');
+
+  // this module
+
   var mod = {};
   var noop = function () { return false; };
 
-  // function domLog (msg) {
-  //   var p = document.createElement('p');
-  //   p.appendChild(document.createTextNode(msg));
-  //   return document.body.appendChild(p);
-  // }
+  function logToDOM () {
+    var args = _.toArray(arguments);
+    var li = document.createElement('li');
+    li.appendChild(document.createTextNode(args.join(' ')));
+    return mod.logElement.appendChild(li);
+  }
 
-  [
-    'assert', 'debug', 'error', 'log', 'time', 'timeEnd', 'warn'
-  ].forEach(function (prop) {
+  /** in order of decreasing noise / increasing importance */
+  mod.LOG_LEVELS = ['debug', 'info', 'log', 'warn', 'error'];
+
+  // mod.logLevel = 0; // 'debug'
+  mod.logLevel = 2; // 'log'
+
+  mod.logElement = null;
+
+  mod.LOG_LEVELS.forEach(function (prop, level) {
     if (window.console && typeof window.console[prop] === 'function') {
-      mod[prop] = function (a, b) {
-        // if (arguments.length >= 2) {
-        //   domLog(prop + ': ' + a + ' ' + b);
-        // } else {
-        //   domLog(prop + ': ' + a);
-        // }
+      mod[prop] = function () {
+        var args;
+        if (mod.logLevel > level) {
+          return false;
+        }
+        if (mod.logElement) {
+          args = _.toArray(arguments);
+          args.unshift(prop + ':');
+          logToDOM.apply(null, args);
+        }
         try {
           return window.console[prop].apply(window.console, arguments);
-        } catch (err) {
-          if (arguments.length >= 2) {
-            return window.console[prop](a, b);
-          }
-          return window.console[prop](a);
-        }
+        } catch (ignore) { return false; }
       };
     } else {
       mod[prop] = noop;

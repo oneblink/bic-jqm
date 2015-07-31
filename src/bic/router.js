@@ -27,6 +27,7 @@ define(function (require) {
   Router = Backbone.Router.extend({
     initialize: function () {
       var location = window.location;
+      c.log('bic/router: initialize()...');
       window.BMP.FileInput.initialize();
 
       app.router = this;
@@ -59,7 +60,8 @@ define(function (require) {
       }
 
       $document.on('pagebeforeload', function (e, data) {
-        c.log('router: pagebeforeload...');
+        // http://api.jquerymobile.com/1.3/pagebeforeload/
+        // data.deferred.resolve|reject is expected after data.preventDefault()
         e.preventDefault();
 
         // keep track of history depth for forms post-submission behaviour
@@ -121,7 +123,7 @@ define(function (require) {
       var path = $.mobile.path.parseUrl(data.absUrl),
         model;
 
-      c.log('router.routeRequest()... ' + data.absUrl);
+      c.debug('router.routeRequest()... ' + data.absUrl);
 
       if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
         // Remove file path
@@ -132,28 +134,23 @@ define(function (require) {
         path.pathname = path.pathname.substr(0, path.pathname.indexOf('.'));
       }
 
-      c.log('router.routeRequest(): ' + path.pathname);
-
       app.whenPopulated()
         .then(function () {
-          c.log('router.routeRequest(): #inheritanceChain()...');
           model = app.router.inheritanceChain(path);
           model.setArgsFromQueryString(path.search);
           app.currentInteraction = model;
 
-          c.log('router.routeRequest(): model.prepareForView()...');
           model.prepareForView(data).then(function (innerModel) {
             new InteractionView({
               tagName: 'div',
               model: innerModel
             }).once('render', function () {
-              c.log('router.routeRequest(): modelView: after render...');
               this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
-              this.$el.one('pagecreate', function () {
-                c.log('router.routeRequest(): modelView: after pagecreate...');
-              });
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
+
+              // http://api.jquerymobile.com/1.3/pagebeforeload/
+              // data.deferred.resolve|reject is expected after data.preventDefault()
               data.deferred.resolve(data.absUrl, data.options, this.$el);
             }).render(data);
           });
@@ -162,7 +159,11 @@ define(function (require) {
         .then(undefined, function (err) {
           c.error('router.routeRequest(): error...');
           c.error(err);
+
+          // http://api.jquerymobile.com/1.3/pagebeforeload/
+          // data.deferred.resolve|reject is expected after data.preventDefault()
           data.deferred.reject(data.absUrl, data.options);
+
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
           setTimeout(function(){
@@ -242,7 +243,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         , type
         , action;
 
-      c.log('router.suspendApplication()...');
+      c.info('router.suspendApplication()...');
 
       if ( !app.currentInteraction || !app.currentInteraction.get ){
         return;
@@ -298,7 +299,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
     resumeApplication: function () {
       var pauseURL = localStorage.getItem('pauseURL');
 
-      c.log('router.resumeApplication()...');
+      c.info('router.resumeApplication()...');
 
       if (!pauseURL) {
         return;

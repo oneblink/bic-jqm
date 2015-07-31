@@ -6,6 +6,10 @@ define(function () {
   var deadline = require('@jokeyrhyme/deadline');
   var Promise = require('bic/promise');
 
+  // local modules
+
+  var c = require('bic/console');
+
   // this module
 
   var realPromise; // not jQuery.Deferred, yuck!
@@ -22,9 +26,8 @@ define(function () {
 
     /** @type {Promise} always resolved, never rejected */
     return realPromise.then(null, function (err) {
-      if (window.console && window.console.error) {
-        window.console.error('BMP.BlinkGap.whenReady()', err);
-      }
+      c.error('BMP.BlinkGap.whenReady()');
+      c.error(err);
       return Promise.resolve();
     });
   }

@@ -110,7 +110,7 @@ define(function (require) {
         .then(null, function (err) {
           view.$el.append('<p>Error: unable to display this form. Try again later.</p>');
           view.trigger('render');
-          c.log(err);
+          c.error(err);
         });
 
       return view;

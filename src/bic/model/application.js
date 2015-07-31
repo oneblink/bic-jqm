@@ -135,7 +135,7 @@ define(function (require) {
       var app = this;
 
       if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
-        c.log('app.populate(): quit early');
+        c.debug('app.populate(): quit early');
         return Promise.resolve();
       }
 
@@ -209,7 +209,7 @@ define(function (require) {
             app.forms.whenUpdated();
             app.retrieveDataSuitcasesForInteractions();
             c.log('app.populate(): done');
-            c.log('app.populate(): interactions.length: ' + app.interactions.length);
+            c.debug('app.populate(): interactions.length: ' + app.interactions.length);
             if (!app.hasStorage()) {
               return Promise.resolve();
             }
@@ -234,7 +234,6 @@ define(function (require) {
         })
       )
       .then(function () {
-        c.log('app.retrieveDataSuitcasesForInteractions(): save()ing...');
         return app.datasuitcases.save();
       });
     },
@@ -287,7 +286,6 @@ define(function (require) {
     initialRender: function () {
       var app = this;
 
-      c.log('app.initialRender()...');
       $.mobile.defaultPageTransition = app.get('defaultTransition');
       $.mobile.changePage($.mobile.path.parseLocation().href, {
         changeHash: false,
@@ -295,7 +293,6 @@ define(function (require) {
         transition: 'fade'
       });
       $(document).one('pageshow', function () {
-        c.log('app.initialRender(): pageshow...');
         if (window.BootStatus && window.BootStatus.notifySuccess) {
           window.BootStatus.notifySuccess();
         }
