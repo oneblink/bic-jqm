@@ -13,7 +13,6 @@ define(function (require) {
 
     // local modules
 
-    var c = require('bic/console');
     var Template = require('text!bic/template/interaction.mustache');
     var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
     var categoryTemplate = require('text!bic/template/category-list.mustache');

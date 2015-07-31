@@ -8,6 +8,7 @@ require.config({
     'is-indexeddb-reliable': 'node_modules/is-indexeddb-reliable/dist/index',
     feature: 'node_modules/amd-feature/feature',
     '@blinkmobile/geolocation': 'node_modules/@blinkmobile/geolocation/geolocation',
+    '@jokeyrhyme/deadline': 'node_modules/@jokeyrhyme/deadline/dist/index',
     Squire: 'node_modules/squirejs/src/Squire',
     pollUntil: 'node_modules/poll-until/poll-until',
     mustache: 'node_modules/mustache/mustache',

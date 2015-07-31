@@ -30,7 +30,7 @@ module.exports = function (BMP_HOST, req, callback) {
   var searchParts = search.split('/');
   var answerSpace = searchParts[0];
 
-  request('http://' + BMP_HOST +'/_R_/common/3/xhr/GetConfig.php?_asn=' + answerSpace, {
+  request('http://' + BMP_HOST + '/_R_/common/3/xhr/GetConfig.php?_asn=' + answerSpace, {
     json: true
   }, function (err, res, body) {
     var spaces;

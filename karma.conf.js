@@ -17,6 +17,7 @@ module.exports = function (config) {
       { pattern: 'node_modules/chai/chai.js', included: false },
       { pattern: 'node_modules/is-indexeddb-reliable/dist/index.js', included: false },
       { pattern: 'node_modules/amd-feature/feature.js', included: false },
+      { pattern: 'node_modules/@jokeyrhyme/deadline/dist/index.js', included: false },
       { pattern: 'node_modules/@blinkmobile/geolocation/geolocation.js', included: false },
       { pattern: 'node_modules/squirejs/src/Squire.js', included: false },
       { pattern: 'node_modules/poll-until/poll-until.js', included: false },
