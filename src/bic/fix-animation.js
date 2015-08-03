@@ -4,6 +4,7 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
+  var $mobile = require('jquerymobile');
   var _ = require('underscore');
 
   // local modules
@@ -12,14 +13,17 @@ define(function (require) {
 
   // this module
 
+  var TRANSITIONS = Object.keys($mobile.transitionFallbacks);
+  TRANSITIONS.push('fade');
+
   function isJQMTransition (event) {
     var classes;
     if (!event || !event.target) {
       return false;
     }
     classes = event.target.className.split(' ');
-    return _.contains(classes, 'fade') &&
-      (_.contains(classes, 'in') || _.contains(classes, 'out'));
+    return (_.contains(classes, 'in') || _.contains(classes, 'out')) &&
+      !!_.intersection(classes, TRANSITIONS).length;
   }
 
   $(window).on('animationstart', function (event) {

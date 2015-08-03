@@ -244,12 +244,12 @@ define(function (require) {
         me.collections().then(function () {
           var timeout;
           if (me.interactions.length) {
-            c.log('app.whenPopulated(): done');
+            c.info('app.whenPopulated(): done');
             resolve();
           } else {
             me.interactions.once('add', function () {
               clearTimeout(timeout);
-              c.log('app.whenPopulated(): done');
+              c.info('app.whenPopulated(): done');
               resolve();
             });
             timeout = setTimeout(function () {
