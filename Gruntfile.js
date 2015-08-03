@@ -1,4 +1,5 @@
-/*eslint-env node*/
+/* eslint-env node */
+/* eslint-disable no-console */
 'use strict';
 
 var pkg = require('./package.json');
@@ -49,13 +50,7 @@ module.exports = function (grunt) {
     },
 
     eslint: {
-      target: [
-          'src/**/*.js',
-          'tests/**/*.js'
-      ],
-      options: {
-        configFile: '.eslintrc'
-      }
+      target: [ './' ]
     },
 
     karma: {
@@ -127,11 +122,11 @@ module.exports = function (grunt) {
       },
       options: {
         uglify: {
-          'max_line_length': 80
+          max_line_length: 80
         },
         uglify2: {
           output: {
-            'max_line_len': 80
+            max_line_len: 80
           },
           warnings: false
         }
@@ -171,20 +166,20 @@ module.exports = function (grunt) {
          sourceMapIncludeSources: true,
          preserveComments: 'some',
          beautify: {
-           'ascii_only': true,
-           'max_line_len': 80
+           ascii_only: true,
+           max_line_len: 80
          },
          compress: {
-           'screw_ie8': false,
+           screw_ie8: false,
            properties: false
          },
          mangle: {
-           'screw_ie8': false
+           screw_ie8: false
          }
        }
      },
 
-    'mustache_render': {
+    mustache_render: {
       versions: {
         files: [
           {

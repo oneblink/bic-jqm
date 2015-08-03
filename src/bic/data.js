@@ -139,7 +139,7 @@ define(function (require) {
       });
     },
 
-    'delete': function (model) {
+    delete: function (model) {
       var that = this;
       return new Promise(function (resolve, reject) {
         if (!model.id) {

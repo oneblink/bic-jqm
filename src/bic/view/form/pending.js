@@ -44,9 +44,9 @@ define(function (require) {
       app = require('bic/model/application');
       templateObject = {};
       statuses = {
-        'pending': MODEL_STATUS.PENDING,
-        'draft': MODEL_STATUS.DRAFT,
-        'validation': MODEL_STATUS.FAILED_VALIDATION
+        pending: MODEL_STATUS.PENDING,
+        draft: MODEL_STATUS.DRAFT,
+        validation: MODEL_STATUS.FAILED_VALIDATION
       };
       pendingExtractor = function (status) {
         return _.map(app.pending.where({status: status}), function (pendingItem) {

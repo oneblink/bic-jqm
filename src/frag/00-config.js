@@ -68,7 +68,7 @@
         deps: ['underscore', 'jquery'],
         exports: 'BMP'
       },
-      'signaturepad': {
+      signaturepad: {
         deps: ['jquery'],
         exports: '$'
       },

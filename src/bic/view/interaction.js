@@ -64,7 +64,7 @@ define(function (require) {
         'click #queue': 'pendingQueue',
 
         // Destroy
-        'pageremove': 'destroy'
+        pageremove: 'destroy'
       },
 
       attributes: {

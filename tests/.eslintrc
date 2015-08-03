@@ -6,5 +6,10 @@
   "globals": {
     "assert": true,
     "requirejs": false
+  },
+  "rules": {
+    "no-console": 0,
+    "no-sync": 0,
+    "quote-props": 0
   }
 }

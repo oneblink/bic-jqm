@@ -1,3 +1,4 @@
+/* eslint-disable no-sync */ // methods are innocently named "...Sync"
 define(function (require) {
   'use strict';
 
