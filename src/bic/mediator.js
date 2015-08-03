@@ -1,5 +1,11 @@
-define([], function () {
+define(function (require) {
   'use strict';
+
+  // local modules
+
+  var c = require('bic/console');
+
+  // this module
 
   var publish;
   var subscribe;
@@ -10,9 +16,7 @@ define([], function () {
   mediator.channels = {};
 
   log = function (type, channel, args) {
-    /*eslint-disable no-console*/
-    console.log(Date.now() + ': ' + type + ' ' + channel, args);
-    /*eslint-enable no-console*/
+    c.log(Date.now() + ': ' + type + ' ' + channel, args);
   };
 
   publish = function (channel) {

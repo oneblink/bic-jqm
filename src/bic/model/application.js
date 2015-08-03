@@ -13,8 +13,7 @@ define(function (require) {
   var $ = require('jquery');
   var _ = require('underscore');
   var Backbone = require('backbone');
-  var domReady = require('domReady');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -25,6 +24,7 @@ define(function (require) {
   var FormRecordsCollection = require('bic/collection/form-records');
   var StarsCollection = require('bic/collection/stars');
 
+  var c = require('bic/console');
   var facade = require('bic/facade');
   var API = require('bic/api');
   var metaStore = require('bic/store-meta');
@@ -127,6 +127,7 @@ define(function (require) {
         app.trigger('loginProcessed');
       });
 
+      c.log('app.setup(): done');
       return Promise.resolve();
     },
 
@@ -134,6 +135,7 @@ define(function (require) {
       var app = this;
 
       if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
+        c.debug('app.populate(): quit early');
         return Promise.resolve();
       }
 
@@ -206,6 +208,8 @@ define(function (require) {
           function () {
             app.forms.whenUpdated();
             app.retrieveDataSuitcasesForInteractions();
+            c.log('app.populate(): done');
+            c.debug('app.populate(): interactions.length: ' + app.interactions.length);
             if (!app.hasStorage()) {
               return Promise.resolve();
             }
@@ -240,17 +244,21 @@ define(function (require) {
         me.collections().then(function () {
           var timeout;
           if (me.interactions.length) {
+            c.info('app.whenPopulated(): done');
             resolve();
           } else {
             me.interactions.once('add', function () {
               clearTimeout(timeout);
+              c.info('app.whenPopulated(): done');
               resolve();
             });
             timeout = setTimeout(function () {
+              c.error('app.whenPopulated(): timeout');
               reject(new Error('whenPopulated timed out after 20 seconds'));
             }, 20e3);
           }
         }, function () {
+          c.error('app.whenPopulated(): #collections() error');
           reject(new Error('whenPopulated failed due to collections'));
         });
       });
@@ -279,18 +287,16 @@ define(function (require) {
       var app = this;
 
       $.mobile.defaultPageTransition = app.get('defaultTransition');
-      domReady(function () {
-        $.mobile.changePage($.mobile.path.parseLocation().href, {
-          changeHash: false,
-          reloadPage: true,
-          transition: 'fade'
-        });
-        $(document).one('pageshow', function () {
-          if (window.BootStatus && window.BootStatus.notifySuccess) {
-            window.BootStatus.notifySuccess();
-          }
-          $('#temp').remove();
-        });
+      $.mobile.changePage($.mobile.path.parseLocation().href, {
+        changeHash: false,
+        reloadPage: true,
+        transition: 'fade'
+      });
+      $(document).one('pageshow', function () {
+        if (window.BootStatus && window.BootStatus.notifySuccess) {
+          window.BootStatus.notifySuccess();
+        }
+        $('#temp').remove();
       });
     },
 
@@ -299,9 +305,7 @@ define(function (require) {
       if (col && col.data && col.data.ready && col.data.hasStorage) {
         return col.data.hasStorage();
       }
-      if (window.console && window.console.warn) {
-        window.console.warn('hasStorage() called before detection complete');
-      }
+      c.warn('hasStorage() called before detection complete');
       return false;
     }
 

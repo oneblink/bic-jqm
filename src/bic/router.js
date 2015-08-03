@@ -7,13 +7,15 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
   var app = require('bic/model/application');
+  var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
   var uiTools = require('bic/lib/ui-tools');
+  var whenDOMReady = require('bic/promise-dom-ready');
 
   // this module
 
@@ -25,6 +27,7 @@ define(function (require) {
   Router = Backbone.Router.extend({
     initialize: function () {
       var location = window.location;
+      c.log('bic/router: initialize()...');
       window.BMP.FileInput.initialize();
 
       app.router = this;
@@ -57,6 +60,8 @@ define(function (require) {
       }
 
       $document.on('pagebeforeload', function (e, data) {
+        // http://api.jquerymobile.com/1.3/pagebeforeload/
+        // data.deferred.resolve|reject is expected after data.preventDefault()
         e.preventDefault();
 
         // keep track of history depth for forms post-submission behaviour
@@ -95,14 +100,15 @@ define(function (require) {
           return app.populate();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           return;
         })
+        .then(whenDOMReady)
         .then(function () {
           return app.initialRender();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           throw err;
         });
     },
@@ -116,6 +122,8 @@ define(function (require) {
     routeRequest: function (data) {
       var path = $.mobile.path.parseUrl(data.absUrl),
         model;
+
+      c.debug('router.routeRequest()... ' + data.absUrl);
 
       if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
         // Remove file path
@@ -140,13 +148,22 @@ define(function (require) {
               this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
+
+              // http://api.jquerymobile.com/1.3/pagebeforeload/
+              // data.deferred.resolve|reject is expected after data.preventDefault()
               data.deferred.resolve(data.absUrl, data.options, this.$el);
             }).render(data);
           });
         })
         // catch the error thrown when a model cant be found
-        .then(undefined, function(){
+        .then(undefined, function (err) {
+          c.error('router.routeRequest(): error...');
+          c.error(err);
+
+          // http://api.jquerymobile.com/1.3/pagebeforeload/
+          // data.deferred.resolve|reject is expected after data.preventDefault()
           data.deferred.reject(data.absUrl, data.options);
+
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
           setTimeout(function(){
@@ -207,9 +224,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
 @deprecated
 */
     parseArgs: function (argString, model) {
-      /*eslint-disable no-console, no-unused-expressions*/
-      console && console.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
-      /*eslint-enable no-console, no-unused-expressions*/
+      c.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
       model.setArgsFromQueryString( argString );
       return this;
     },
@@ -227,6 +242,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       var url = $.mobile.path.parseLocation()
         , type
         , action;
+
+      c.info('router.suspendApplication()...');
 
       if ( !app.currentInteraction || !app.currentInteraction.get ){
         return;
@@ -281,6 +298,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
     */
     resumeApplication: function () {
       var pauseURL = localStorage.getItem('pauseURL');
+
+      c.info('router.resumeApplication()...');
 
       if (!pauseURL) {
         return;

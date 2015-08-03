@@ -4,7 +4,7 @@ define(function (require) {
   // foreign modules
 
   var Backbone = require('backbone');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 

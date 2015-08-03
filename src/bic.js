@@ -5,7 +5,6 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var Promise = require('feature!promises');
 
   require('feature!es5');
   require('BlinkGap');
@@ -21,13 +20,13 @@ define(function (require) {
 
   require('bic/auth');
   require('bic/backbone-fix');
+  require('bic/debug-jquery');
+  require('bic/fix-animation');
 
   // this module
 
-  // poly-fill Promise if missing (needed for Forms, etc)
-  window.Promise = window.Promise || Promise;
-
-  function start () {
+  // delay the app for Cordova if present
+  whenBlinkGapReady.then(function () {
     // AJAX Default Options
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
       jqXHR.setRequestHeader('X-Blink-Config',
@@ -35,11 +34,6 @@ define(function (require) {
     });
 
     require(['bic/router']);
-  }
-
-  // delay the app for Cordova if present
-  whenBlinkGapReady.then(function () {
-    start();
   });
 
   window.BMP.BIC = app;
@@ -47,6 +41,8 @@ define(function (require) {
   window.BMP.BIC3 = app;
 
   window.BMP.BIC.version = '3.8.0';
+
+  window.BMP.console = require('bic/console');
 
   return app; // export BMP.BIC
 });

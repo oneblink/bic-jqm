@@ -4,32 +4,31 @@ define(function (require) {
   // foreign modules
 
   var isIndexedDBReliable = require('is-indexeddb-reliable');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
+  var c = require('bic/console');
+  var deadline = require('@jokeyrhyme/deadline');
   var whenBlinkGapReady = require('bic/promise-blinkgap');
 
   // this module
 
-  return whenBlinkGapReady.then(function () {
+  function isIt () {
     return new Promise(function (resolve) {
-      var timeout = false;
-      var timer = setTimeout(function () {
-        // timer never necessary for actual usage
-        // but timer _is_ mysteriously necessary for running the tests in Safari
-        if (window.console && window.console.warn) {
-          window.console.warn('timeout: IndexedDB tests too slow');
-        }
-        timeout = true;
-        resolve(false);
-      }, 1500); // pick a time under 2sec, which is the default test timeout
       isIndexedDBReliable.quick(function (result) {
-        if (!timeout) {
-          clearTimeout(timer);
-          resolve(result);
-        }
+        resolve(result);
       });
     });
+  }
+
+  return whenBlinkGapReady.then(function () {
+    // pick a time under 2sec, which is the default test timeout
+    return deadline.promise(isIt(), 1500).then(null, function () {
+      c.warn('timeout: IndexedDB tests too slow');
+      return Promise.resolve();
+    });
+    // timer should not be necessary for actual usage
+    // but timer _is_ mysteriously necessary for running the tests in Safari
   });
 });

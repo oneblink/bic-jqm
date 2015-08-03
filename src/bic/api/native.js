@@ -5,7 +5,7 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
