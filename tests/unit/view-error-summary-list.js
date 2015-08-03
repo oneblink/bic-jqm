@@ -17,12 +17,12 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector = new Squire(CONTEXT);
 
       mockApp = new (Backbone.Model.extend({
-          getInvalidElements: function(){ return [1, 2, 3]; }
+          getInvalidElements: function () { return [1, 2, 3]; }
         }))();
 
       mockForms = {
         current: {
-          getInvalidElements: function(){ return [1, 2, 3]; }
+          getInvalidElements: function () { return [1, 2, 3]; }
         }
       };
 
@@ -53,12 +53,12 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       View.should.be.an.instanceOf(Function);
     });
 
-    describe('standard behavior', function(){
-      it('should default to 4 errors', function(){
+    describe('standard behavior', function () {
+      it('should default to 4 errors', function () {
         assert.equal(formActionView.getLimit(), 4);
       });
 
-      it('should set the number of errors correctly', function(){
+      it('should set the number of errors correctly', function () {
         formActionView.showAll();
         assert.equal(formActionView.getLimit(), 0);
         formActionView.showLess();
@@ -66,27 +66,27 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       });
     });
 
-    describe('modified static properties', function(){
-      beforeEach(function(){
+    describe('modified static properties', function () {
+      beforeEach(function () {
         View.limit = 10;
 
-        View.template = function(){
+        View.template = function () {
           return "<li id='test'>modified</li>";
         };
       });
 
-      it('should default to 4 errors', function(){
+      it('should default to 4 errors', function () {
         assert.equal(formActionView.getLimit(), 10);
       });
 
-      it('should set the number of errors correctly', function(){
+      it('should set the number of errors correctly', function () {
         formActionView.showAll();
         assert.equal(formActionView.getLimit(), 0);
         formActionView.showLess();
         assert.equal(formActionView.getLimit(), 10);
       });
 
-      it('should use the modified template', function(){
+      it('should use the modified template', function () {
         assert.equal(formActionView.render().$el.find('#test').text(), 'modified');
       });
     });

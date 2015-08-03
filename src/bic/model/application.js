@@ -66,7 +66,7 @@ define(function (require) {
       var answerSpace = this.get('siteName') || '';
 
       interactionPath = _.compact((interactionPath || '').split('/'));
-      if ( !interactionPath.length || interactionPath[0].toLowerCase() !== answerSpace.toLowerCase()){
+      if (!interactionPath.length || interactionPath[0].toLowerCase() !== answerSpace.toLowerCase()) {
         interactionPath.unshift(answerSpace);
       }
 
@@ -152,10 +152,10 @@ define(function (require) {
               try {
                 data = JSON.parse(data);
               } catch (err) {
-                /*eslint-disable no-console*/
+                /* eslint-disable no-console */
                 console.error('unable to parse answerSpace map');
                 console.error(err);
-                /*eslint-enable no-console*/
+                /* eslint-enable no-console */
               }
             }
             return Promise.all(_.compact(_.map(data, function (value, key) {
@@ -180,7 +180,7 @@ define(function (require) {
               }
             })));
           }
-        )
+       )
         .then(
           function (interactions) {
             return Promise.all(
@@ -188,7 +188,7 @@ define(function (require) {
                 _.reject(app.interactions.models, function (model) {
                   return _.contains(interactions, model.id);
                 }
-              ),
+             ),
               function (model) {
                 if (!app.hasStorage()) {
                   app.interactions.remove(model);
@@ -201,9 +201,9 @@ define(function (require) {
                   });
                 });
               }
-            ));
+           ));
           }
-        )
+       )
         .then(
           function () {
             app.forms.whenUpdated();
@@ -215,7 +215,7 @@ define(function (require) {
             }
             return app.interactions.save();
           }
-        );
+       );
     },
 
     retrieveDataSuitcasesForInteractions: function () {
@@ -232,7 +232,7 @@ define(function (require) {
             }
           });
         })
-      )
+     )
       .then(function () {
         return app.datasuitcases.save();
       });
@@ -265,7 +265,7 @@ define(function (require) {
     },
 
     checkLoginStatus: function () {
-      //false
+      // false
       var app = this;
 
       return new Promise(function (resolve) {

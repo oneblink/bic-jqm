@@ -36,52 +36,52 @@ define(function (require) {
       'click [data-onclick="showLess"]': 'showLess'
     },
 
-    initialize: function(){
+    initialize: function () {
       this.showLess();
       this.listenTo(this.model, 'change:numErrorsShown change:value invalid', this.render);
 
       Backbone.View.prototype.initialize.apply(this, arguments);
     },
 
-    remove: function(){
+    remove: function () {
       this.stopListening(this.model);
       Backbone.View.prototype.remove.apply(this, arguments);
     },
 
-    gotoField: function(e){
+    gotoField: function (e) {
       return Forms.current.get('_view').goToElement($(e.target).attr('for'));
     },
 
-    showLess: function(){
+    showLess: function () {
       this.model.set('numErrorsShown', defaultNumberOfErrors);
     },
 
-    showAll: function(){
+    showAll: function () {
       this.model.set('numErrorsShown', 0);
     },
 
-    getLimit: function(){
+    getLimit: function () {
       var limit = this.model.get('numErrorsShown');
-      if ( defaultNumberOfErrors === limit && !_.isUndefined( FormsErrorSummaryListView.limit ) ){
+      if (defaultNumberOfErrors === limit && !_.isUndefined(FormsErrorSummaryListView.limit)) {
         limit = FormsErrorSummaryListView.limit;
       }
 
       return limit;
     },
 
-    render: function(){
-      var errors = this.model.getInvalidElements( { limit: this.getLimit() } );
+    render: function () {
+      var errors = this.model.getInvalidElements({ limit: this.getLimit() });
       var template = '';
       var viewModel;
-      //mustache doesnt do simple calculations :\
-      if ( errors ){
+      // mustache doesnt do simple calculations :\
+      if (errors) {
         viewModel = {
           invalidElements: errors.errors,
           moreAvailable: errors.total > errors.length,
           remaining: errors.total - errors.length
         };
 
-        template = FormsErrorSummaryListView.template( viewModel );
+        template = FormsErrorSummaryListView.template(viewModel);
       }
 
       this.$el.html(template);
@@ -95,18 +95,18 @@ define(function (require) {
       return this;
     },
 
-    enhance: function(){
+    enhance: function () {
       this.$el.listview().listview('refresh');
       return this;
     }
-  }, //static properties.
+  }, // static properties.
   {
     /**
      * Override to allow for custom LI elements
      * @param  {Object} viewModel An object to be rendered.
      * @return {string} The rendered template.
      */
-    template: function(viewModel){
+    template: function (viewModel) {
       return Mustache.render(defaultTemplate, viewModel);
     },
 

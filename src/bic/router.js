@@ -42,7 +42,7 @@ define(function (require) {
         return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
       }(this));
 
-      if (Modernizr.localstorage){
+      if (Modernizr.localstorage) {
         if (window.BMP.isBlinkGap) {
           $document.on('pause', this.suspendApplication);
           $document.on('resume', this.resumeApplication);
@@ -90,7 +90,7 @@ define(function (require) {
                 function () {
                   reject();
                 }
-              );
+             );
             } else {
               resolve();
             }
@@ -120,8 +120,8 @@ define(function (require) {
 
     */
     routeRequest: function (data) {
-      var path = $.mobile.path.parseUrl(data.absUrl),
-        model;
+      var path = $.mobile.path.parseUrl(data.absUrl);
+      var model;
 
       c.debug('router.routeRequest()... ' + data.absUrl);
 
@@ -145,7 +145,7 @@ define(function (require) {
               tagName: 'div',
               model: innerModel
             }).once('render', function () {
-              this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
+              this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
 
@@ -166,9 +166,9 @@ define(function (require) {
 
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
-          setTimeout(function(){
+          setTimeout(function () {
             $.mobile.hidePageLoadingMsg();
-            if ( app.view ){
+            if (app.view) {
               return app.view.home();
             }
             // if we've gotten here it means that the user has typed in an invalid url
@@ -225,7 +225,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
 */
     parseArgs: function (argString, model) {
       c.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
-      model.setArgsFromQueryString( argString );
+      model.setArgsFromQueryString(argString);
       return this;
     },
 
@@ -239,13 +239,13 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       @fires global#app:pause
     */
     suspendApplication: function () {
-      var url = $.mobile.path.parseLocation()
-        , type
-        , action;
+      var url = $.mobile.path.parseLocation();
+      var type;
+      var action;
 
       c.info('router.suspendApplication()...');
 
-      if ( !app.currentInteraction || !app.currentInteraction.get ){
+      if (!app.currentInteraction || !app.currentInteraction.get) {
         return;
       }
       // Store current URL
@@ -262,19 +262,19 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       Backbone.trigger('app:pause');
 
       type = app.currentInteraction.get('type') + '';
-      //dont save if the current interaction isnt savable.
-      if ( type.toLowerCase() !== 'form'){
+      // dont save if the current interaction isnt savable.
+      if (type.toLowerCase() !== 'form') {
         return;
       }
 
       action = (app.currentInteraction.get('blinkFormAction') + '').toLowerCase();
 
-      if (action !== 'add' && action !== 'edit'){
+      if (action !== 'add' && action !== 'edit') {
         return;
       }
 
       // Store form data, if applicable
-      if (app.currentInteraction.getArgument('pid')){
+      if (app.currentInteraction.getArgument('pid')) {
         // saving over existing draft
         app.view.subView.subView.subView.addToQueue('Draft', true);
       } else {

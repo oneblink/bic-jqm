@@ -72,7 +72,7 @@ define(function (require) {
 
       _.each(statuses, function (flag, status) {
         templateObject[status] = pendingExtractor(flag);
-        templateObject[status + "Present"] = templateObject[status].length > 0;
+        templateObject[status + 'Present'] = templateObject[status].length > 0;
       });
 
       view.$el.append(Mustache.render(view.constructor.template, templateObject));

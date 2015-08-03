@@ -1,22 +1,22 @@
 define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
   'use strict';
 
-  define('lib/ui-tools', function(){
-    define('disableElement', function(){
+  define('lib/ui-tools', function () {
+    define('disableElement', function () {
       var aTag;
 
-      beforeEach(function(){
+      beforeEach(function () {
         aTag = document.createElement('a');
         aTag.id = 'submit';
         document.body.appendChild(aTag);
       });
 
-      afterEach(function(){
+      afterEach(function () {
         document.body.removeChild(aTag);
         aTag = undefined;
       });
 
-      it('should disable the submit button', function(){
+      it('should disable the submit button', function () {
         assert.isUndefined($('#submit').attr('disabled'));
 
         uiTools.disableElement('#submit');
@@ -24,7 +24,7 @@ define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
         assert.strictEqual($('#submit').attr('disabled'), 'disabled');
       });
 
-      it('should add the "ui-disabled" class to the element', function(){
+      it('should add the "ui-disabled" class to the element', function () {
         assert.strictEqual($('#submit').hasClass('ui-disabled'), false);
 
         uiTools.disableElement('#submit');
@@ -32,7 +32,7 @@ define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
         assert.strictEqual($('#submit').hasClass('ui-disabled'), true);
       });
 
-      it('should not trigger a click event', function(){
+      it('should not trigger a click event', function () {
         var onClick = sinon.spy();
         $('#submit').on('click', onClick);
 
@@ -42,28 +42,28 @@ define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
       });
     });
 
-    define('enableElement', function(){
+    define('enableElement', function () {
       var aTag;
 
-      beforeEach(function(){
+      beforeEach(function () {
         aTag = document.createElement('a');
         aTag.id = 'submit';
         document.body.appendChild(aTag);
         uiTools.disableElement('#submit');
       });
 
-      afterEach(function(){
+      afterEach(function () {
         document.body.removeChild(aTag);
         aTag = undefined;
       });
 
-      it('should disable the submit button', function(){
+      it('should disable the submit button', function () {
         assert.strictEqual($('#submit').attr('disabled'), 'disabled');
         uiTools.enableElement('#submit');
         assert.isUndefined($('#submit').attr('disabled'));
       });
 
-      it('should add the "ui-disabled" class to the element', function(){
+      it('should add the "ui-disabled" class to the element', function () {
         assert.strictEqual($('#submit').hasClass('ui-disabled'), true);
 
         uiTools.disableElement('#submit');
@@ -71,7 +71,7 @@ define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
         assert.strictEqual($('#submit').hasClass('ui-disabled'), false);
       });
 
-      it('should trigger a click event when enabled', function(){
+      it('should trigger a click event when enabled', function () {
         var onClick = sinon.spy();
         $('#submit').on('click', onClick);
 

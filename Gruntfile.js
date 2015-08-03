@@ -160,24 +160,20 @@ module.exports = function (grunt) {
     },
 
     uglify: {
-       bic: uglifyConfig,
-       options: {
-         sourceMap: true,
-         sourceMapIncludeSources: true,
-         preserveComments: 'some',
-         beautify: {
-           ascii_only: true,
-           max_line_len: 80
-         },
-         compress: {
-           screw_ie8: false,
-           properties: false
-         },
-         mangle: {
-           screw_ie8: false
-         }
-       }
-     },
+      bic: uglifyConfig,
+      options: {
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        preserveComments: 'some',
+        beautify: {
+          ascii_only: true,
+          max_line_len: 80
+        },
+        compress: {
+          properties: false
+        }
+      }
+    },
 
     mustache_render: {
       versions: {

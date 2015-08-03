@@ -72,7 +72,7 @@ define(function (require) {
           view.$el.html('Cannot contact server');
           view.trigger('render');
         }
-      );
+     );
 
       return view;
     }

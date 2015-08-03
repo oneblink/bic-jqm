@@ -22,6 +22,8 @@
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.2",
     "eslint": "^1.0",
+    "eslint-config-standard": "^4.0.0",
+    "eslint-plugin-standard": "^1.2.0",
     "glob": "^5.0.10",
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",

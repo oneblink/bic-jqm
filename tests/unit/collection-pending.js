@@ -17,7 +17,7 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
       injector.mock('backbone', Backbone);
       injector.mock('BlinkForms', {
         errorHelpers: {
-          fromBMP: function(){
+          fromBMP: function () {
             return 1;
           }
         }
@@ -94,7 +94,7 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
         apiStub.returns(deferred);
       });
 
-      afterEach(function(){
+      afterEach(function () {
         apiStub.reset();
       });
 
@@ -148,7 +148,7 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
 
         expect(collection.length).to.equal(1);
 
-        collection.processQueue().then( undefined, function () {
+        collection.processQueue().then(undefined, function () {
           expect(collection.length).to.equal(1);
           expect(apiStub.called).to.equal(true);
           expect(collection.models[0].get('status')).to.equal(MODEL_STATUS.PENDING);
@@ -156,7 +156,7 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
         });
       });
 
-      it('should keep items in the queue if they fail server side validation', function(done){
+      it('should keep items in the queue if they fail server side validation', function (done) {
         /*eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap*/
@@ -176,13 +176,13 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
           action: 'test',
           data: {}
         });
-        collection.at(0).save = function(){
+        collection.at(0).save = function () {
           collection.at(0).set.apply(collection.at(0), arguments);
           return Promise.resolve();
         };
         expect(collection.length).to.equal(1);
 
-        collection.processQueue().then( undefined, function () {
+        collection.processQueue().then(undefined, function () {
           expect(collection.length).to.equal(1);
           expect(apiStub.called).to.equal(true);
           done();
@@ -190,12 +190,12 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
       });
     });
 
-    describe( 'Pending queue subsets', function(){
+    describe('Pending queue subsets', function () {
       var pendingCollection;
 
-      var makePendingFormModel = function(idx){
+      var makePendingFormModel = function (idx) {
         var name = 'odd_forms';
-        if ( idx % 2 === 0){
+        if (idx % 2 === 0) {
           name = 'even_forms';
         }
 
@@ -205,7 +205,7 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
         };
       };
 
-      beforeEach(function(){
+      beforeEach(function () {
         // make the api stub be sucessfull
          /*eslint-disable new-cap */
         var deferred = $.Deferred();
@@ -219,68 +219,68 @@ define(['Squire', 'sinon', 'backbone', 'chai', 'jquery', 'bic/enum-model-status'
         assert.equal(pendingCollection.length, 6);
       });
 
-      afterEach(function(){
+      afterEach(function () {
         pendingCollection = null;
         apiStub.reset();
       });
 
-      it('should return a list of forms for a specific form name', function(){
+      it('should return a list of forms for a specific form name', function () {
         var evenItems = pendingCollection.getByFormName('even_forms');
 
         //make sure the length of the returned items is correct.
         assert.equal(evenItems.length, 3);
 
         //make sure we have all the even ones
-        evenItems.forEach(function(pendingModel, index){
+        evenItems.forEach(function (pendingModel, index) {
           assert.equal(pendingModel.get('_id'), (index + 1) * 2);
         });
       });
 
-      it('should process a subset of the pending queue and the status should be reflected in every pending collection the model is a part of', function(){
+      it('should process a subset of the pending queue and the status should be reflected in every pending collection the model is a part of', function () {
         var evenItems = pendingCollection.getByFormName('even_forms');
-        return evenItems.processQueue().then(function(){
+        return evenItems.processQueue().then(function () {
           //make sure the even items collection has an updated status
-          evenItems.forEach(function(pendingModel){
+          evenItems.forEach(function (pendingModel) {
             assert.equal(pendingModel.get('status'), MODEL_STATUS.SUBMITTED);
           });
 
           //make sure that the even items are still referenced in the original pending collection
-          evenItems.forEach(function(successfulPendingModel){
-            assert.isAbove( pendingCollection.indexOf(successfulPendingModel), -1);
+          evenItems.forEach(function (successfulPendingModel) {
+            assert.isAbove(pendingCollection.indexOf(successfulPendingModel), -1);
           });
         });
       });
 
-      it('should re-broadcast the "processed" event from the pending models from every collection they are a member of', function(){
+      it('should re-broadcast the "processed" event from the pending models from every collection they are a member of', function () {
         var evenItems = pendingCollection.getByFormName('even_forms');
         var expectedTimesCalled = evenItems.length * 2; // each submitted model is part of 2 pending collections.
         var actualTimesCalled = 0;
 
-        var inc = function(){
+        var inc = function () {
           actualTimesCalled++;
         };
 
         evenItems.on('processed', inc);
         pendingCollection.on('processed', inc);
 
-        return evenItems.processQueue().then(function(){
+        return evenItems.processQueue().then(function () {
           assert.strictEqual(actualTimesCalled, expectedTimesCalled);
         });
       });
 
-      it('should remove the successfully submitted pending model from all collections it is part of', function(){
+      it('should remove the successfully submitted pending model from all collections it is part of', function () {
         var evenItems = pendingCollection.getByFormName('even_forms');
         var originalCollectionLength = pendingCollection.length;
-        evenItems.on('processed', function(model){
+        evenItems.on('processed', function (model) {
           model.destroy();
         });
 
-        return evenItems.processQueue().then(function(){
+        return evenItems.processQueue().then(function () {
           //make sure we have less than we started with
           assert.isBelow(pendingCollection.length, originalCollectionLength);
 
           //make sure they are all the odd ones
-          pendingCollection.forEach(function(model){
+          pendingCollection.forEach(function (model) {
             assert.equal(model.get('name'), 'odd_forms');
           });
 

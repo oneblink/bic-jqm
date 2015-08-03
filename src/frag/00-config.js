@@ -1,4 +1,4 @@
-/*eslint-env browser, node*/
+/* eslint-env browser, node */
 (function () {
   'use strict';
   var cloudfront, filesystem, paths, getPaths, scripts, s, script;

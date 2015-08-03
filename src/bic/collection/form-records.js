@@ -6,7 +6,6 @@ define(function (require) {
   var _ = require('underscore');
   var Promise = require('bic/promise');
 
-
   // local modules
 
   var API = require('bic/api');
@@ -63,7 +62,7 @@ define(function (require) {
           function () {
             reject();
           }
-        );
+       );
       });
     }
   });

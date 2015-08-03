@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended"],
+  "extends": ["eslint:recommended", "standard"],
   "env": {
     "amd": true,
     "browser": true,
@@ -42,11 +42,6 @@
     "no-catch-shadow": 2,
     /* Node.JS */
     "no-sync": 2,
-    /* Stylistic Issues */
-    "no-mixed-spaces-and-tabs": 2,
-    "no-underscore-dangle": 0,
-    "quotes": 0, /* TODO: [1, "single", "avoid-escape"] */
-    "quote-props": [2, "as-needed"],
     /* Semi-Standard */
     "semi": [2, "always"],
     "no-extra-semi": 2,
