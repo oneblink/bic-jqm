@@ -34,17 +34,17 @@ define(['Squire', 'chai'], function (Squire, chai) {
 
 //////////////////////////////////////////////////////////
 
-    describe('setArgument()', function(){
+    describe('setArgument()', function () {
       var interaction;
-      beforeEach(function(){
+      beforeEach(function () {
         interaction = new Model();
       });
 
-      afterEach(function(){
+      afterEach(function () {
         interaction = undefined;
       });
 
-      it('should set the same argument', function(){
+      it('should set the same argument', function () {
         interaction.setArgument('test', 10);
         assert.equal(interaction.get('args')['args[test]'], 10);
 
@@ -54,8 +54,8 @@ define(['Squire', 'chai'], function (Squire, chai) {
         assert.equal(Object.keys(interaction.get('args')).length, 1);
       });
 
-      it('should trigger the "change:args" event with an object hacing at least name and value members', function(){
-        var listener = function(changed){
+      it('should trigger the "change:args" event with an object hacing at least name and value members', function () {
+        var listener = function (changed) {
           assert.equal('test', changed.name);
           assert.equal(10, changed.value);
         };
@@ -67,17 +67,17 @@ define(['Squire', 'chai'], function (Squire, chai) {
 
 //////////////////////////////////////////////////////////
 
-    describe('getArgument()', function(){
+    describe('getArgument()', function () {
       var interaction;
-      beforeEach(function(){
+      beforeEach(function () {
         interaction = new Model();
       });
 
-      afterEach(function(){
+      afterEach(function () {
         interaction = undefined;
       });
 
-      it('should set and get the same argument', function(){
+      it('should set and get the same argument', function () {
         interaction.setArgument('test', 10);
         assert.equal(interaction.getArgument('test'), 10);
 
@@ -90,23 +90,23 @@ define(['Squire', 'chai'], function (Squire, chai) {
 
 //////////////////////////////////////////////////////////
 
-    describe('setArgsFromQueryString()', function(){
+    describe('setArgsFromQueryString()', function () {
       var interaction;
-      beforeEach(function(){
+      beforeEach(function () {
         interaction = new Model();
       });
 
-      afterEach(function(){
+      afterEach(function () {
         interaction = undefined;
       });
 
-      it('should set attributes.args to null', function(){
+      it('should set attributes.args to null', function () {
         interaction.setArgsFromQueryString('');
 
         assert.isNull(interaction.get('args'));
       });
 
-      it('should set the atrributes.args values correctly', function(){
+      it('should set the atrributes.args values correctly', function () {
         var expected = {};
 
         expected['args[pid]'] = 123;
@@ -115,46 +115,46 @@ define(['Squire', 'chai'], function (Squire, chai) {
         assert.equal(interaction.get('args')['args[pid]'], expected['args[pid]']);
       });
 
-      it('should convert arguments using "key[]"" array notation to arrays', function(){
+      it('should convert arguments using "key[]"" array notation to arrays', function () {
         interaction.setArgsFromQueryString('?args[pid]=123&arr[]=0&arr[]=1&arr[]=2');
 
         assert.isArray(interaction.get('args')['args[arr]']);
         assert.equal(interaction.get('args')['args[arr]'].length, 3);
 
-        interaction.getArgument('arr').forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function (val, index) {
           assert.equal(val, index);
         });
       });
 
-      it('should convert arguments using "key" array notation to arrays', function(){
+      it('should convert arguments using "key" array notation to arrays', function () {
         interaction.setArgsFromQueryString('?args[pid]=123&arr=0&arr=1&arr=2');
 
         assert.isArray(interaction.getArgument('arr'));
         assert.equal(interaction.getArgument('arr').length, 3);
 
-        interaction.getArgument('arr').forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function (val, index) {
           assert.equal(val, index);
         });
       });
 
-      it('should convert arguments using "key[]" array notation to arrays, even when wrapped in "args[]"', function(){
+      it('should convert arguments using "key[]" array notation to arrays, even when wrapped in "args[]"', function () {
         interaction.setArgsFromQueryString('?args[pid]=123&args[arr[]]=0&args[arr[]]=1&args[arr[]]=2');
 
         assert.isArray(interaction.get('args')['args[arr]']);
         assert.equal(interaction.get('args')['args[arr]'].length, 3);
 
-        interaction.getArgument('arr').forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function (val, index) {
           assert.equal(val, index);
         });
       });
 
-      it('should convert arguments using "key" array notation to arrays, even when wrapped in "args[]"', function(){
+      it('should convert arguments using "key" array notation to arrays, even when wrapped in "args[]"', function () {
         interaction.setArgsFromQueryString('?args[pid]=123&args[arr]=0&args[arr]=1&args[arr]=2');
 
         assert.isArray(interaction.get('args')['args[arr]']);
         assert.equal(interaction.get('args')['args[arr]'].length, 3);
 
-        interaction.getArgument('arr').forEach(function(val, index){
+        interaction.getArgument('arr').forEach(function (val, index) {
           assert.equal(val, index);
         });
       });

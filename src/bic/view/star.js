@@ -9,7 +9,7 @@ define(function (require) {
 
   var StarView = Backbone.View.extend({
     events: {
-      'click': 'toggle'
+      click: 'toggle'
     },
 
     initialize: function () {

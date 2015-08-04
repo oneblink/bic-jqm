@@ -1,3 +1,4 @@
+/* eslint-disable no-sync */ // methods are innocently named "...Sync"
 define(function (require) {
   'use strict';
 
@@ -29,23 +30,23 @@ define(function (require) {
     data = model.data || model.collection.data;
 
     switch (method) {
-    case 'read':
-      promise = model.id !== undefined ? data.read(model) : data.readAll();
-      break;
-    case 'create':
-      promise = data.create(model);
-      break;
-    case 'update':
-      promise = data.update(model);
-      break;
-    case 'patch':
-      promise = data.update(model);
-      break;
-    case 'delete':
-      promise = data.delete(model);
-      break;
-    default:
-      promise = Promise.reject(new Error('unknown method'));
+      case 'read':
+        promise = model.id !== undefined ? data.read(model) : data.readAll();
+        break;
+      case 'create':
+        promise = data.create(model);
+        break;
+      case 'update':
+        promise = data.update(model);
+        break;
+      case 'patch':
+        promise = data.update(model);
+        break;
+      case 'delete':
+        promise = data.delete(model);
+        break;
+      default:
+        promise = Promise.reject(new Error('unknown method'));
     }
 
     promise.then(function (response) {

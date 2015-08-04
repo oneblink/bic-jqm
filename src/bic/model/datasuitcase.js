@@ -16,8 +16,8 @@ define(function (require) {
     idAttribute: '_id',
 
     populate: function () {
-      var model = this,
-        time = 0;
+      var model = this;
+      var time = 0;
 
       if (this.has('contentTime')) {
         time = this.get('contentTime');
@@ -34,7 +34,7 @@ define(function (require) {
               error: reject
             });
           }
-        );
+       );
       });
     }
   });

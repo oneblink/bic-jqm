@@ -10,16 +10,16 @@ define([
     var injector, View, apiStub, errorStub;
     var mockApp;
     var Forms;
-    var pageid = 0,
-      pageObject = {
-        length: 4,
-        current: {
-          'index': function() { return pageid; }
-        },
-        'goto': function (num) {
-          pageid = num;
-        }
-      };
+    var pageid = 0;
+    var pageObject = {
+      length: 4,
+      current: {
+        'index': function () { return pageid; }
+      },
+      'goto': function (num) {
+        pageid = num;
+      }
+    };
 
     before(function (done) {
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
@@ -29,10 +29,10 @@ define([
 
       Forms = {
         current: {
-          data: function() { return; },
-          getErrors: function() { return; },
-          getInvalidElements: function(){ return; },
-          get: function() {
+          data: function () { return; },
+          getErrors: function () { return; },
+          getInvalidElements: function () { return; },
+          get: function () {
             return pageObject;
           }
         }
@@ -44,28 +44,28 @@ define([
       });
       apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
-          Promise.resolve({
-              'text_box': '123456789',
-              'number': 90,
-              '_action': 'add',
-              'subform': []
-          })
+        Promise.resolve({
+          'text_box': '123456789',
+          'number': 90,
+          '_action': 'add',
+          'subform': []
+        })
       );
       apiStub.onCall(1).returns(
-          Promise.resolve({
-              'text_box': 'Devyani',
-              'number': 99,
-              '_action': 'add',
-              'subform': []
-          })
+        Promise.resolve({
+          'text_box': 'Devyani',
+          'number': 99,
+          '_action': 'add',
+          'subform': []
+        })
       );
       apiStub.onCall(2).returns(
-          Promise.resolve({
-              'text_box': 'Anandita',
-              'number': 109,
-              '_action': 'add',
-              'subform': []
-          })
+        Promise.resolve({
+          'text_box': 'Anandita',
+          'number': 109,
+          '_action': 'add',
+          'subform': []
+        })
       );
       mockApp = new Backbone.Model();
 
@@ -102,7 +102,7 @@ define([
         gotoSpy = sinon.spy(pageObject, 'goto');
 
         injector.require(['bic/model/application'], function (app) {
-          view = new View({ model: app});
+          view = new View({ model: app });
           done();
         });
       });
@@ -113,7 +113,7 @@ define([
         pageObject.goto.restore();
       });
 
-      it('nextFormPage', function() {
+      it('nextFormPage', function () {
         //move to next page
         view.nextFormPage();
         assert.equal(indexSpy.callCount, 1);
@@ -121,7 +121,7 @@ define([
         assert.equal(pageid, 1);
       });
 
-      it('firstFormPage', function() {
+      it('firstFormPage', function () {
         //move to first page
         view.firstFormPage();
         assert.equal(indexSpy.callCount, 1);
@@ -134,7 +134,7 @@ define([
         assert.equal(gotoSpy.callCount, 1);
       });
 
-      it('lastFormPage', function() {
+      it('lastFormPage', function () {
         //move to last page
         view.lastFormPage();
         assert.equal(indexSpy.callCount, 1);
@@ -147,7 +147,7 @@ define([
         assert.equal(gotoSpy.callCount, 1);
       });
 
-      it('previousFormPage', function() {
+      it('previousFormPage', function () {
         //move to second last page
         view.previousFormPage();
         assert.equal(indexSpy.callCount, 1);
@@ -162,7 +162,7 @@ define([
 
       before(function (done) {
         injector.require(['bic/model/application'], function (app) {
-          view = new View({ model: app});
+          view = new View({ model: app });
           app.view = {
             pendingQueue: sinon.stub()
           };
@@ -172,7 +172,7 @@ define([
           app.setArgument = sinon.stub();
           app.setArgument.withArgs('pid').returns('1');
 
-          injector.require(['bic/model/pending'], function (PendingItem){
+          injector.require(['bic/model/pending'], function (PendingItem) {
             var PCol = Backbone.Collection.extend({ model: PendingItem });
             app.pending = new PCol();
             app.pending.processQueue = function () { return; };
@@ -204,7 +204,7 @@ define([
         expect(processQueueStub.called).to.equal(false);
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.PENDING, true).then(function(){
+        view.addToQueue(MODEL_STATUS.PENDING, true).then(function () {
           expect(apiStub.called).to.equal(true);
           pendingQueue = mockApp.pending.where({status: MODEL_STATUS.PENDING});
           expect(pendingQueue.length).to.equal(1);
@@ -217,9 +217,9 @@ define([
         var draftQueue;
 
         mockApp.set('args', []);
-        view.addToQueue(MODEL_STATUS.DRAFT, true).then(function(){
+        view.addToQueue(MODEL_STATUS.DRAFT, true).then(function () {
           return view.addToQueue(MODEL_STATUS.DRAFT, true);
-        }).then(function(){
+        }).then(function () {
           draftQueue = mockApp.pending.where({status: MODEL_STATUS.DRAFT});
           expect(draftQueue.length).to.equal(2);
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
@@ -230,22 +230,22 @@ define([
 
     });
 
-    describe('formLeave', function(){
-      var origGet
-        , viewInstance
-        , modelGetStub
-        , interactionGetStub;
+    describe('formLeave', function () {
+      var origGet;
+      var viewInstance;
+      var modelGetStub;
+      var interactionGetStub;
 
-      beforeEach(function(){
+      beforeEach(function () {
         var mockModel;
 
         origGet = Forms.current.get;
-        Forms.current.get = function(){};
+        Forms.current.get = function () {};
 
         interactionGetStub = sinon.stub(Forms.current, 'get');
 
         mockModel = {
-          get: function(){}
+          get: function () {}
         };
 
         modelGetStub = sinon.stub(mockModel, 'get')
@@ -255,19 +255,19 @@ define([
         viewInstance.model = mockModel;
       });
 
-      afterEach(function(){
+      afterEach(function () {
         Forms.current.get = origGet;
         modelGetStub.restore();
         interactionGetStub.restore();
       });
 
-      it('should go home', function(){
+      it('should go home', function () {
         var viewMock;
         var expectation;
 
         mockApp.history = [];
         mockApp.view = {
-          home: function(){}
+          home: function () {}
         };
 
         viewMock = sinon.mock(mockApp.view);
@@ -281,14 +281,13 @@ define([
         expectation.verify();
       });
 
-      it('should execute the onLeave action', function(){
-        var afterInteraction
-          , afterInteractionMock
-          , afterInteractionExpectation;
-
+      it('should execute the onLeave action', function () {
+        var afterInteraction;
+        var afterInteractionMock;
+        var afterInteractionExpectation;
 
         afterInteraction = {
-          add: function(){}
+          add: function () {}
         };
 
         afterInteractionMock = sinon.mock(afterInteraction);

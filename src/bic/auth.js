@@ -40,7 +40,7 @@ define(function (require) {
       function (err) {
         callback(err);
       }
-    );
+   );
   };
   auth.setRecord = function (data, callback) {
     var model = {};
@@ -66,12 +66,12 @@ define(function (require) {
               function (err) {
                 callback(err);
               }
-            );
+           );
           },
           function (err) {
             callback(err);
           }
-        );
+       );
       },
       function () {
         metaStore.create(model).then(
@@ -81,9 +81,9 @@ define(function (require) {
           function (err) {
             callback(err);
           }
-        );
+       );
       }
-    );
+   );
   };
 
 });

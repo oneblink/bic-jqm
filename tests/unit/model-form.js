@@ -29,26 +29,26 @@ define(['Squire', 'underscore', 'chai'], function (Squire, _, chai) {
       it('should save the form definition the the data store');
     });
 
-    describe('setActionDestination', function(){
-      var formModel
-        , origActions
-        , newActions;
+    describe('setActionDestination', function () {
+      var formModel;
+      var origActions;
+      var newActions;
 
-      beforeEach(function(done){
-        injector.require(['bic/model/form'], function(FormModel){
+      beforeEach(function (done) {
+        injector.require(['bic/model/form'], function (FormModel) {
           formModel = new FormModel();
 
           origActions = {
-            add: function(){
+            add: function () {
               return 'add-orig';
             }
           };
 
           newActions = {
-            add: function(){
+            add: function () {
               return 'add-new';
             },
-            list: function(){
+            list: function () {
               return 'list-new';
             }
           };
@@ -57,13 +57,13 @@ define(['Squire', 'underscore', 'chai'], function (Squire, _, chai) {
         });
       });
 
-      afterEach(function(){
+      afterEach(function () {
         formModel = null;
         origActions = null;
         newActions = null;
       });
 
-      it('should set the "onFormLeaveInteraction" attribute', function(){
+      it('should set the "onFormLeaveInteraction" attribute', function () {
         var mergedActions;
 
         formModel.setActionDestination(origActions);

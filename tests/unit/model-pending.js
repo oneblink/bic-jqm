@@ -16,7 +16,7 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
       injector.mock('backbone', Backbone);
       injector.mock('BlinkForms', {
         errorHelpers: {
-          fromBMP: function(){
+          fromBMP: function () {
             return 1;
           }
         }
@@ -54,13 +54,13 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
       });
     });
 
-    describe('#process', function(){
+    describe('#process', function () {
       var model, oldSave;
 
-      beforeEach(function(){
+      beforeEach(function () {
         oldSave = Backbone.Model.prototype.save;
 
-        Backbone.Model.prototype.save = function(){
+        Backbone.Model.prototype.save = function () {
           return Promise.resolve();
         };
 
@@ -69,26 +69,26 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         });
       });
 
-      afterEach(function(){
+      afterEach(function () {
         apiStub.reset();
         model = null;
 
         Backbone.Model.prototype.save = oldSave;
       });
 
-      it('should resolve the promise on success', function(done){
+      it('should resolve the promise on success', function (done) {
         /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
         deferred.resolve();
         apiStub.returns(deferred);
 
-        model.process().then(function(){
+        model.process().then(function () {
           done();
         });
       });
 
-      it('should reject the promise on fail', function(done){
+      it('should reject the promise on fail', function (done) {
          /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
@@ -96,22 +96,22 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         apiStub.returns(deferred);
 
         return model.process()
-              .then(function(){
+              .then(function () {
                 assert.fail(arguments, 'This should not be hit');
               })
-              .then(undefined, function(){
+              .then(undefined, function () {
                 done();
               });
       });
 
-      it('should trigger the "processed" event with itself as an argument, on successful submission', function(done){
+      it('should trigger the "processed" event with itself as an argument, on successful submission', function (done) {
         /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
         deferred.resolve();
         apiStub.returns(deferred);
 
-        model.on('processed', function(suppliedModel){
+        model.on('processed', function (suppliedModel) {
           assert.strictEqual(suppliedModel, model);
           done();
         });
@@ -119,24 +119,24 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         model.process().catch(done);
       });
 
-      it('should NOT trigger the "processed" event, on unsuccessful submission', function(done){
+      it('should NOT trigger the "processed" event, on unsuccessful submission', function (done) {
         /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
         deferred.reject();
         apiStub.returns(deferred);
 
-        model.on('processed', function(){
+        model.on('processed', function () {
           assert.fail('processed', '"processed" event should never have run');
           done('"processed" event should never have run');
         });
 
-        model.process().catch(function(){
+        model.process().catch(function () {
           done();
         });
       });
 
-      it('should update a model status if there is a server error', function(done){
+      it('should update a model status if there is a server error', function (done) {
         /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
@@ -144,10 +144,10 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         apiStub.returns(deferred);
 
         model.process()
-              .then(function(){
+              .then(function () {
                 assert.fail('processed', 'should not reach this bit of code');
               })
-              .catch(function(){
+              .catch(function () {
                 assert.equal(model.get('status'), MODEL_STATUS.FAILED_VALIDATION);
                 done();
               });

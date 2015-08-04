@@ -21,6 +21,9 @@ var BMP_HOST = process.env.BMP_HOST || 'blinkm.co';
 var STATIC_PATHS = [
   '_c_', '_BICv3_', '_R_', '_W_', '_api', 'active_pages', 'admin', 'admintools', 'api_access', 'gfx', 'icons', 'livezone', 'tools', 'text3y'
 ];
+var LOCAL_PATHS = [
+  'node_modules', 'src', 'tests'
+];
 
 var pkg = require(path.join(__dirname, '..', '..', 'package.json'));
 
@@ -69,6 +72,20 @@ server.route({
     contents += '\nCACHE:\n/_R_/common/3/xhr/GetConfig.php?_asn=' + request.query.answerSpace + '\n';
     reply(contents).header('Content-Type', 'text/cache-manifest');
   }
+});
+
+LOCAL_PATHS.forEach(function (s) {
+  server.route({
+    path: '/' + s + '/{param*}',
+    method: 'GET',
+    handler: {
+      directory: {
+        path: s + '/',
+        listing: true,
+        redirectToSlash: true
+      }
+    }
+  });
 });
 
 STATIC_PATHS.forEach(function (s) {
