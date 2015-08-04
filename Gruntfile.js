@@ -1,4 +1,5 @@
-/*eslint-env node*/
+/* eslint-env node */
+/* eslint-disable no-console */
 'use strict';
 
 var pkg = require('./package.json');
@@ -49,13 +50,7 @@ module.exports = function (grunt) {
     },
 
     eslint: {
-      target: [
-          'src/**/*.js',
-          'tests/**/*.js'
-      ],
-      options: {
-        configFile: '.eslintrc'
-      }
+      target: [ './' ]
     },
 
     karma: {
@@ -89,6 +84,7 @@ module.exports = function (grunt) {
             BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap',
             '@blinkmobile/geolocation': '../node_modules/@blinkmobile/geolocation/geolocation',
             'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
+            '@jokeyrhyme/deadline': '../node_modules/@jokeyrhyme/deadline/dist/index',
             text: '../node_modules/text/text',
             domReady: '../node_modules/domReady/domReady',
             uuid: '../node_modules/node-uuid/uuid',
@@ -126,11 +122,11 @@ module.exports = function (grunt) {
       },
       options: {
         uglify: {
-          'max_line_length': 80
+          max_line_length: 80
         },
         uglify2: {
           output: {
-            'max_line_len': 80
+            max_line_len: 80
           },
           warnings: false
         }
@@ -164,26 +160,22 @@ module.exports = function (grunt) {
     },
 
     uglify: {
-       bic: uglifyConfig,
-       options: {
-         sourceMap: true,
-         sourceMapIncludeSources: true,
-         preserveComments: 'some',
-         beautify: {
-           'ascii_only': true,
-           'max_line_len': 80
-         },
-         compress: {
-           'screw_ie8': false,
-           properties: false
-         },
-         mangle: {
-           'screw_ie8': false
-         }
-       }
-     },
+      bic: uglifyConfig,
+      options: {
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        preserveComments: 'some',
+        beautify: {
+          ascii_only: true,
+          max_line_len: 80
+        },
+        compress: {
+          properties: false
+        }
+      }
+    },
 
-    'mustache_render': {
+    mustache_render: {
       versions: {
         files: [
           {

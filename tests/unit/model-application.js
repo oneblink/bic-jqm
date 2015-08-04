@@ -286,21 +286,21 @@ define([
       });
     });
 
-    describe('#goToInteraction()', function(){
+    describe('#goToInteraction()', function () {
       var changePageStub;
 
-      beforeEach(function(done){
+      beforeEach(function (done) {
         model.set('siteName', 'simons-answerspace');
         changePageStub = sinon.stub($.mobile, 'changePage');
         done();
       });
 
-      afterEach(function(){
+      afterEach(function () {
         model.set('siteName', '');
         $.mobile.changePage.restore();
       });
 
-      it('should go to the same url', function(){
+      it('should go to the same url', function () {
         model.goToInteraction('one/two/three');
         model.goToInteraction('/one/two/three');
 
@@ -308,13 +308,13 @@ define([
         assert.strictEqual(changePageStub.withArgs('/simons-answerspace/one/two/three').calledThrice, false);
       });
 
-      it('should go to the answerSpace home on falsy parameter', function(){
+      it('should go to the answerSpace home on falsy parameter', function () {
         model.goToInteraction();
 
         assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);
       });
 
-      it('should go to the answerSpace home', function(){
+      it('should go to the answerSpace home', function () {
         model.goToInteraction('simons-answerspace');
 
         assert.strictEqual(changePageStub.withArgs('/simons-answerspace').calledOnce, true);

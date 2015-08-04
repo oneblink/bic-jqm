@@ -1,9 +1,14 @@
-define(function () {
+define(function (require) {
   'use strict';
 
   // foreign modules
 
-  var Promise = require('feature!promises');
+  var deadline = require('@jokeyrhyme/deadline');
+  var Promise = require('bic/promise');
+
+  // local modules
+
+  var c = require('bic/console');
 
   // this module
 
@@ -16,11 +21,13 @@ define(function () {
     // convert jQuery.Deferred to an ES6 Promise so we can safely chain it
     realPromise = Promise.resolve(window.BMP.BlinkGap.whenReady());
 
+    // wait a maximum of 5 seconds for this to be resolved
+    realPromise = deadline.promise(realPromise, 5e3);
+
     /** @type {Promise} always resolved, never rejected */
     return realPromise.then(null, function (err) {
-      if (window.console && window.console.error) {
-        window.console.error('BMP.BlinkGap.whenReady()', err);
-      }
+      c.error('BMP.BlinkGap.whenReady()');
+      c.error(err);
       return Promise.resolve();
     });
   }

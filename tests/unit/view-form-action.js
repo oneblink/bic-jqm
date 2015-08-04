@@ -20,12 +20,12 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       mockApp = new Backbone.Model();
       mockControls = new Backbone.Model();
       MockErrorSummaryViewConstructor = Backbone.View.extend({
-        test: function(){ return 'it worked'; },
-        enhance: function(){ return this; }
+        test: function () { return 'it worked'; },
+        enhance: function () { return this; }
       });
       mockForms = {
         current: {
-          getInvalidElements: function(){}
+          getInvalidElements: function () {}
         }
       };
 
@@ -67,31 +67,30 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       });
     });
 
-    describe('renderErrorSummary', function(){
+    describe('renderErrorSummary', function () {
       var formActionView;
 
-      beforeEach(function(){
+      beforeEach(function () {
         formActionView = new View({model: mockApp});
         mockApp.set('displayErrorSummary', true);
         mockApp.views.FormErrorSummary = null;
       });
 
-      afterEach(function(){
+      afterEach(function () {
         formActionView = null;
         //injector.remove();
       });
 
-      it('should render the default error summary view', function(){
-        assert.equal(formActionView.renderErrorSummary().test(), 'it worked' );
+      it('should render the default error summary view', function () {
+        assert.equal(formActionView.renderErrorSummary().test(), 'it worked');
       });
 
-
-      it('should not render the default error summary view', function(){
+      it('should not render the default error summary view', function () {
         mockApp.views.FormErrorSummary = Backbone.View.extend({
-          test: function(){ return 'it is overridden'; }
+          test: function () { return 'it is overridden'; }
         });
 
-        assert.equal(formActionView.renderErrorSummary().test(), 'it is overridden' );
+        assert.equal(formActionView.renderErrorSummary().test(), 'it is overridden');
       });
     });
 

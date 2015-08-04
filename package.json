@@ -1,11 +1,12 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "formsversion": "3.4.2",
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
+    "@jokeyrhyme/deadline": "1.0.0",
     "amd-feature": "jensarps/AMD-feature#295cb395fe",
     "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
     "domReady": "requirejs/domReady#449478e133",
@@ -20,7 +21,9 @@
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.2",
-    "eslint": "^0.24.0",
+    "eslint": "^1.0",
+    "eslint-config-standard": "^4.0.0",
+    "eslint-plugin-standard": "^1.2.0",
     "glob": "^5.0.10",
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",
@@ -29,7 +32,7 @@
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "~0.6",
-    "grunt-eslint": "^16.0",
+    "grunt-eslint": "^17.0",
     "grunt-hapi": "^0.9.1",
     "grunt-karma": "^0.12.0",
     "grunt-mustache-render": "^1.7",
@@ -56,6 +59,7 @@
     "tape-chai": "^1.1"
   },
   "scripts": {
+    "build": "grunt build",
     "test": "gulp test && grunt test"
   },
   "license": "BSD-3-Clause"

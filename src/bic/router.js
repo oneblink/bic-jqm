@@ -7,13 +7,15 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
   var app = require('bic/model/application');
+  var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
   var uiTools = require('bic/lib/ui-tools');
+  var whenDOMReady = require('bic/promise-dom-ready');
 
   // this module
 
@@ -25,6 +27,7 @@ define(function (require) {
   Router = Backbone.Router.extend({
     initialize: function () {
       var location = window.location;
+      c.log('bic/router: initialize()...');
       window.BMP.FileInput.initialize();
 
       app.router = this;
@@ -39,7 +42,7 @@ define(function (require) {
         return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
       }(this));
 
-      if (Modernizr.localstorage){
+      if (Modernizr.localstorage) {
         if (window.BMP.isBlinkGap) {
           $document.on('pause', this.suspendApplication);
           $document.on('resume', this.resumeApplication);
@@ -57,6 +60,8 @@ define(function (require) {
       }
 
       $document.on('pagebeforeload', function (e, data) {
+        // http://api.jquerymobile.com/1.3/pagebeforeload/
+        // data.deferred.resolve|reject is expected after data.preventDefault()
         e.preventDefault();
 
         // keep track of history depth for forms post-submission behaviour
@@ -85,7 +90,7 @@ define(function (require) {
                 function () {
                   reject();
                 }
-              );
+             );
             } else {
               resolve();
             }
@@ -95,14 +100,15 @@ define(function (require) {
           return app.populate();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           return;
         })
+        .then(whenDOMReady)
         .then(function () {
           return app.initialRender();
         })
         .then(null, function (err) {
-          window.console.error(err);
+          c.error(err);
           throw err;
         });
     },
@@ -114,8 +120,10 @@ define(function (require) {
 
     */
     routeRequest: function (data) {
-      var path = $.mobile.path.parseUrl(data.absUrl),
-        model;
+      var path = $.mobile.path.parseUrl(data.absUrl);
+      var model;
+
+      c.debug('router.routeRequest()... ' + data.absUrl);
 
       if (BMP.BlinkGap.isOfflineReady() && path.hrefNoSearch.indexOf(window.cordova.offline.filePathPrex) !== -1) {
         // Remove file path
@@ -137,21 +145,30 @@ define(function (require) {
               tagName: 'div',
               model: innerModel
             }).once('render', function () {
-              this.$el.attr('data-url', data.dataUrl ); // .replace(/['"]/g, convertIllegalUrlChars));
+              this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
               this.$el.attr('data-external-page', true);
               this.$el.one('pagecreate', $.mobile._bindPageRemove);
+
+              // http://api.jquerymobile.com/1.3/pagebeforeload/
+              // data.deferred.resolve|reject is expected after data.preventDefault()
               data.deferred.resolve(data.absUrl, data.options, this.$el);
             }).render(data);
           });
         })
         // catch the error thrown when a model cant be found
-        .then(undefined, function(){
+        .then(undefined, function (err) {
+          c.error('router.routeRequest(): error...');
+          c.error(err);
+
+          // http://api.jquerymobile.com/1.3/pagebeforeload/
+          // data.deferred.resolve|reject is expected after data.preventDefault()
           data.deferred.reject(data.absUrl, data.options);
+
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
-          setTimeout(function(){
+          setTimeout(function () {
             $.mobile.hidePageLoadingMsg();
-            if ( app.view ){
+            if (app.view) {
               return app.view.home();
             }
             // if we've gotten here it means that the user has typed in an invalid url
@@ -207,10 +224,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
 @deprecated
 */
     parseArgs: function (argString, model) {
-      /*eslint-disable no-console, no-unused-expressions*/
-      console && console.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
-      /*eslint-enable no-console, no-unused-expressions*/
-      model.setArgsFromQueryString( argString );
+      c.warn('BMP.BIC.router.parseArgs() is deprecated and will be removed.');
+      model.setArgsFromQueryString(argString);
       return this;
     },
 
@@ -224,11 +239,13 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       @fires global#app:pause
     */
     suspendApplication: function () {
-      var url = $.mobile.path.parseLocation()
-        , type
-        , action;
+      var url = $.mobile.path.parseLocation();
+      var type;
+      var action;
 
-      if ( !app.currentInteraction || !app.currentInteraction.get ){
+      c.info('router.suspendApplication()...');
+
+      if (!app.currentInteraction || !app.currentInteraction.get) {
         return;
       }
       // Store current URL
@@ -245,19 +262,19 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       Backbone.trigger('app:pause');
 
       type = app.currentInteraction.get('type') + '';
-      //dont save if the current interaction isnt savable.
-      if ( type.toLowerCase() !== 'form'){
+      // dont save if the current interaction isnt savable.
+      if (type.toLowerCase() !== 'form') {
         return;
       }
 
       action = (app.currentInteraction.get('blinkFormAction') + '').toLowerCase();
 
-      if (action !== 'add' && action !== 'edit'){
+      if (action !== 'add' && action !== 'edit') {
         return;
       }
 
       // Store form data, if applicable
-      if (app.currentInteraction.getArgument('pid')){
+      if (app.currentInteraction.getArgument('pid')) {
         // saving over existing draft
         app.view.subView.subView.subView.addToQueue('Draft', true);
       } else {
@@ -281,6 +298,8 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
     */
     resumeApplication: function () {
       var pauseURL = localStorage.getItem('pauseURL');
+
+      c.info('router.resumeApplication()...');
 
       if (!pauseURL) {
         return;

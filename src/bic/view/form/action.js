@@ -9,6 +9,7 @@ define(function (require) {
 
   // local modules
 
+  var c = require('bic/console');
   var app = require('bic/model/application');
   var FormControls = require('bic/view/form/controls');
   var FormErrorSummary = require('bic/view/form/error-summary-list');
@@ -21,7 +22,7 @@ define(function (require) {
     errorSummary: null,
     subView: null,
 
-    initialize: function(){
+    initialize: function () {
       this.model.on('showErrors', this.renderErrorSummary, this);
       this.$errorSummaryContainer = $('<div class="bm_errorsummary--container"></div>');
     },
@@ -30,15 +31,15 @@ define(function (require) {
      * renders the Error summary, if it is turned on.
      * @return {Backbone.View} The Error summary view that was rendered
      */
-    renderErrorSummary: function(){
+    renderErrorSummary: function () {
       var ErrorView;
-      if ( app.get('displayErrorSummary') && Forms.current.getInvalidElements ){
-        if ( !this.errorSummary ){
+      if (app.get('displayErrorSummary') && Forms.current.getInvalidElements) {
+        if (!this.errorSummary) {
           ErrorView = FormActionView.prepareErrorSummary();
-          this.errorSummary = new ErrorView( { model: Forms.current } );
-          //insert error summary above the form controls
-          this.$errorSummaryContainer.append( this.errorSummary.render().$el );
-          if ( this.errorSummary.enhance ){
+          this.errorSummary = new ErrorView({ model: Forms.current });
+          // insert error summary above the form controls
+          this.$errorSummaryContainer.append(this.errorSummary.render().$el);
+          if (this.errorSummary.enhance) {
             this.errorSummary.enhance();
           }
 
@@ -46,26 +47,26 @@ define(function (require) {
         }
 
         this.errorSummary.render();
-        if ( this.errorSummary.enhance ){
+        if (this.errorSummary.enhance) {
           this.errorSummary.enhance();
         }
         return this;
       }
     },
 
-    renderControls: function(){
-        var SubView;
+    renderControls: function () {
+      var SubView;
 
-        if ( !this.subView){
-          SubView = FormActionView.prepareSubView();
+      if (!this.subView) {
+        SubView = FormActionView.prepareSubView();
 
-          this.subView = new SubView({
-            model: this.model
-          });
-        }
+        this.subView = new SubView({
+          model: this.model
+        });
+      }
 
-        this.subView.render();
-        this.$el.append(this.subView.$el);
+      this.subView.render();
+      this.$el.append(this.subView.$el);
     },
 
     render: function () {
@@ -95,9 +96,9 @@ define(function (require) {
               return view.trigger('render');
             }
 
-            Forms.current.setRecord(pendingModel.get('data')).then(function(){
+            Forms.current.setRecord(pendingModel.get('data')).then(function () {
               var errors = pendingModel.get('errors');
-              if ( errors && errors.errors ){
+              if (errors && errors.errors) {
                 Forms.current.setErrors(errors.errors);
               }
             });
@@ -109,7 +110,7 @@ define(function (require) {
         .then(null, function (err) {
           view.$el.append('<p>Error: unable to display this form. Try again later.</p>');
           view.trigger('render');
-          window.console.log(err);
+          c.error(err);
         });
 
       return view;
@@ -124,7 +125,7 @@ define(function (require) {
       return SubView;
     },
 
-    prepareErrorSummary: function(){
+    prepareErrorSummary: function () {
       return app.views.FormErrorSummary ? app.views.FormErrorSummary : FormErrorSummary;
     }
   });

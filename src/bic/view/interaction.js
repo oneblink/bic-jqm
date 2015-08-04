@@ -9,7 +9,7 @@ define(function (require) {
     var Backbone = require('backbone');
     var geolocation = require('@blinkmobile/geolocation');
     var Mustache = require('mustache');
-    var Promise = require('feature!promises');
+    var Promise = require('bic/promise');
 
     // local modules
 
@@ -32,7 +32,7 @@ define(function (require) {
 
     // due to jQuery mobile's handling of ' and " chars, we need to manually escape this.
     convertIllegalUrlChars = function (chr) {
-      switch (chr){
+      switch (chr) {
         case '"':
           return '%22';
         case "'":
@@ -64,7 +64,7 @@ define(function (require) {
         'click #queue': 'pendingQueue',
 
         // Destroy
-        'pageremove': 'destroy'
+        pageremove: 'destroy'
       },
 
       attributes: {
@@ -113,10 +113,10 @@ define(function (require) {
         for (count = 0; count < $element[0].attributes.length; count = count + 1) {
           if ($element[0].attributes[count].name.substr(0, 1) === '_') {
             if (!first) {
-              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
+              attributes += '&args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars);
             } else {
               first = false;
-              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars );
+              attributes = '/?args[' + $element[0].attributes[count].name.substr(1) + ']=' + $element[0].attributes[count].value.replace(/['"]/g, convertIllegalUrlChars);
             }
           }
         }
@@ -151,7 +151,7 @@ define(function (require) {
 
         path = '/' + path;
 
-        $.mobile.changePage(path + '/' + location + attributes );
+        $.mobile.changePage(path + '/' + location + attributes);
       },
 
       back: function (e) {
@@ -164,10 +164,10 @@ define(function (require) {
       },
 
       render: function (data) {
-        var form,
-          rawform,
-          inheritedAttributes = this.model.inherit({}),
-          view = this;
+        var form;
+        var rawform;
+        var inheritedAttributes = this.model.inherit({});
+        var view = this;
 
         // Non-type specific
         if (_.has(inheritedAttributes, 'themeSwatch')) {
@@ -288,11 +288,12 @@ define(function (require) {
       },
 
       maps: function () {
-        var mapDiv = this.$el.find('[class=googlemap]'), script;
+        var mapDiv = this.$el.find('[class=googlemap]');
+        var script;
 
         if (mapDiv.length !== 0) {
-          //this.$el.append('<style type='text/css'>.googlemap { width: 100%; height: 360px; }</style>');
-          //this.$el.append('<script src='/_BICv3_/js/gMaps.js'></script>');
+          // this.$el.append('<style type='text/css'>.googlemap { width: 100%; height: 360px; }</style>');
+          // this.$el.append('<script src='/_BICv3_/js/gMaps.js'></script>');
           if (mapDiv.attr('data-marker-title') !== undefined) {
           // Address Map
             window.BMP.BIC.mapCallback = this.addressMap;
@@ -378,7 +379,7 @@ define(function (require) {
 
         view = this;
 
-        //fetch view (user can override
+        // fetch view (user can override
         SubView = view.constructor.preparePendingQueueSubView();
         pendingView = new SubView({
           el: view.$el
@@ -405,9 +406,9 @@ define(function (require) {
         var elements = this.$el.find('.blink-starrable');
         if (elements) {
           elements.each(function (index, element) {
-            var attrs,
-              model = app.stars.get($(element).data('id')),
-              star;
+            var attrs;
+            var model = app.stars.get($(element).data('id'));
+            var star;
             if (!model) {
               attrs = $(element).data();
               attrs._id = attrs.id.toString();
@@ -424,10 +425,10 @@ define(function (require) {
         }
       },
 
-
-
       basicMap: function () {
-        var options, map, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
+        var options;
+        var map;
+        var mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         options = {
           center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
@@ -444,7 +445,8 @@ define(function (require) {
       },
 
       addressMap: function () {
-        var geocoder, options, map, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
+        var geocoder, options, map;
+        var mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         geocoder = new google.maps.Geocoder();
 
@@ -467,7 +469,8 @@ define(function (require) {
       },
 
       kmlMap: function () {
-        var options, map, kml, mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
+        var options, map, kml;
+        var mapDiv = window.BMP.BIC3.view.$el.find('[class=googlemap]');
 
         options = {
           center: new google.maps.LatLng(mapDiv.attr('data-latitude'), mapDiv.attr('data-longitude')),
@@ -571,21 +574,21 @@ define(function (require) {
         }, function (error) {
           var string;
           // ESLint bug: https://github.com/eslint/eslint/issues/2038
-          /*eslint-disable no-duplicate-case*/
+          /* eslint-disable no-duplicate-case */
           switch (error.code) {
-          case error.PERMISSION_DENIED:
-            string = 'user has not granted permission';
-            break;
-          case error.PERMISSION_DENIED_TIMEOUT:
-            string = 'user did not grant permission in time';
-            break;
-          case error.POSITION_UNAVAILABLE:
-            string = 'unable to determine position';
-            break;
-          default:
-            string = 'unknown error';
+            case error.PERMISSION_DENIED:
+              string = 'user has not granted permission';
+              break;
+            case error.PERMISSION_DENIED_TIMEOUT:
+              string = 'user did not grant permission in time';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              string = 'unable to determine position';
+              break;
+            default:
+              string = 'unknown error';
           }
-          /*eslint-enable no-duplicate-case*/
+          /* eslint-enable no-duplicate-case */
           reject('GeoLocation error: ' + string);
         }, options);
       });

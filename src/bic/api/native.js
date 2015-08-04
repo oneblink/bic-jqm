@@ -5,7 +5,7 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -28,7 +28,7 @@ define(function (require) {
           {
             url: '/_R_/common/3/xhr/GetConfig.php?_asn=' + window.BMP.BIC.siteVars.answerSpace.toLowerCase() + userString
           }
-        );
+       );
       });
     },
 
@@ -44,7 +44,7 @@ define(function (require) {
           {
             url: '/_R_/common/3/xhr/GetForm.php?_v=3&_aid=' + window.BMP.BIC.siteVars.answerSpaceId
           }
-        );
+       );
       });
     },
 
@@ -56,7 +56,7 @@ define(function (require) {
           {
             url: apiWeb.GET_MOJO + '?_id=' + window.BMP.BIC.siteVars.answerSpaceId + '&_m=' + suitcase
           }
-        );
+       );
       });
     },
 
@@ -74,7 +74,7 @@ define(function (require) {
           {
             url: '/_R_/common/3/xhr/GetFormList.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName
           }
-        );
+       );
       });
     },
 
@@ -88,7 +88,7 @@ define(function (require) {
           {
             url: '/_R_/common/3/xhr/GetFormRecord.php?_asid=' + window.BMP.BIC.siteVars.answerSpaceId + '&_fn=' + formName + '&_tid=' + recordID + '&action=' + formAction
           }
-        );
+       );
       });
     }
   };

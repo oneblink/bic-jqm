@@ -6,7 +6,6 @@ define(function (require) {
   var _ = require('underscore');
   var Promise = require('feature!promises');
 
-
   // local modules
 
   var MODEL_STATUS = require('bic/enum-model-status');
@@ -18,15 +17,15 @@ define(function (require) {
 
   var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Pending';
 
-  var onQueueProcessingError = function(err){
+  var onQueueProcessingError = function (err) {
     /* eslint-disable no-unused-expressions */
-    window.console && window.console.log && window.console.log( 'There was an error processing the pending queue:', err);
+    window.console && window.console.log && window.console.log('There was an error processing the pending queue:', err);
     /* eslint-enable no-unused-expressions */
 
     return err;
   };
 
-  var processModel = function(pendingFormModel){
+  var processModel = function (pendingFormModel) {
     return pendingFormModel.process();
   };
 
@@ -40,32 +39,32 @@ define(function (require) {
     processQueue: function (options) {
       // an options hash because I can see a need to batch pending queue
       // processing, and therefore will need some form of range options.
-      var pendingModelStatus = MODEL_STATUS.PENDING,
-          pendingForms,
-          promises;
+      var pendingModelStatus = MODEL_STATUS.PENDING;
+      var pendingForms;
+      var promises;
 
-      if ( options ){
+      if (options) {
         pendingModelStatus = options.status || pendingModelStatus;
       }
 
-      pendingForms = this.where( { status: pendingModelStatus } );
-      promises = Promise.all( _.map( pendingForms, processModel) );
+      pendingForms = this.where({ status: pendingModelStatus });
+      promises = Promise.all(_.map(pendingForms, processModel));
 
       promises.then(undefined, onQueueProcessingError);
 
       return promises;
     },
 
-    retryFailed: function(){
-      return this.processQueue( { status: MODEL_STATUS.FAILED_VALIDATION } );
+    retryFailed: function () {
+      return this.processQueue({ status: MODEL_STATUS.FAILED_VALIDATION });
     },
 
     /**
      * Gets all forms in the pending queue that have failed submission
      * @return {[type]} [description]
      */
-    getFailedSubmissions: function(){
-      return new PendingCollection( this.where( { status: MODEL_STATUS.FAILED_VALIDATION }) );
+    getFailedSubmissions: function () {
+      return new PendingCollection(this.where({ status: MODEL_STATUS.FAILED_VALIDATION }));
     },
 
     /**
@@ -75,8 +74,8 @@ define(function (require) {
      * @return {PendingCollection} A new pending collection that is a subset of
      * the parent collection where every model has the given form name.
      */
-    getByFormName: function(name){
-      return new PendingCollection( this.where({name: name}) );
+    getByFormName: function (name) {
+      return new PendingCollection(this.where({name: name}));
     }
   });
 

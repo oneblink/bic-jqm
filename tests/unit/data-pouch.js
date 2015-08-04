@@ -8,7 +8,6 @@ define(['Squire'], function (Squire) {
       before(function (done) {
         var injector = new Squire();
 
-
         model = {
           toJSON: function () {
             return {cat: 'hat'};
@@ -398,7 +397,7 @@ define(['Squire'], function (Squire) {
             function () {
               done();
             }
-          );
+         );
         });
 
         it('should resolve if successful', function (done) {

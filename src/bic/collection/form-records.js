@@ -4,8 +4,7 @@ define(function (require) {
   // foreign modules
 
   var _ = require('underscore');
-  var Promise = require('feature!promises');
-
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -63,7 +62,7 @@ define(function (require) {
           function () {
             reject();
           }
-        );
+       );
       });
     }
   });

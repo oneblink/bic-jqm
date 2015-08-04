@@ -25,7 +25,6 @@ define(function (require) {
   var Form = Backbone.Model.extend({
     idAttribute: '_id',
 
-
 /**
   @callback DestinationDefinition~AfterFormActionCallback
 
@@ -54,18 +53,18 @@ define(function (require) {
 
   @example
 //First wait for the forms to be loaded from the server
-window.BMP.BIC3.forms.whenUpdated().then(function(){
+window.BMP.BIC3.forms.whenUpdated().then(function () {
   //Get the BlinkForm Model for form 'my_form_id'
   var myBlinkForm = BMP.BIC3.forms.get('my_form_id');
 
   //set the destination for the 'add' action
   myBlinkForm.setActionDestination({
-    'add': function(details){
+    'add': function (details) {
 
       //request the data entered by the user
-      details.model.data().then(function(formActionData){
+      details.model.data().then(function (formActionData) {
         //do stuff based on form data eg; go to a specific interaction:
-        if (formActionData.name === 'simon' ){
+        if (formActionData.name === 'simon') {
           return window.BMP.BIC.goToInteraction('special_interactions/simon/thanks');
         }
 
@@ -92,7 +91,7 @@ window.BMP.BIC3.forms.whenUpdated().then(function(){
             contentTime: Date.now()
           });
         }
-      );
+     );
     }
   });
 

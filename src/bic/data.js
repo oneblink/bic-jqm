@@ -5,7 +5,7 @@ define(function (require) {
 
   var _ = require('underscore');
   var Pouch = require('pouchdb');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -41,9 +41,9 @@ define(function (require) {
           pouch = new Pouch({
             name: me.name,
             adapter: type,
-            /*eslint-disable camelcase*/
+            /* eslint-disable camelcase */
             auto_compaction: true
-            /*eslint-enable camelcase*/
+            /* eslint-enable camelcase */
           }, function (err) {
             if (err) {
               reject(err);
@@ -124,9 +124,9 @@ define(function (require) {
       var that = this;
       return new Promise(function (resolve, reject) {
         that.getDB().then(function (db) {
-          /*eslint-disable camelcase*/
+          /* eslint-disable camelcase */
           db.allDocs({include_docs: true}, function (err, response) {
-            /*eslint-enable camelcase*/
+            /* eslint-enable camelcase */
             if (err) {
               reject(err);
             } else {
@@ -139,7 +139,7 @@ define(function (require) {
       });
     },
 
-    'delete': function (model) {
+    delete: function (model) {
       var that = this;
       return new Promise(function (resolve, reject) {
         if (!model.id) {

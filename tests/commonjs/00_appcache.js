@@ -14,7 +14,6 @@ var test = require('tape');
 
 // this module
 
-
 var projectPath = path.join(__dirname, '..', '..');
 var pkg = require(path.join(projectPath, 'package.json'));
 
@@ -22,7 +21,6 @@ var appCache;
 var config;
 
 test('AppCache', function (t) {
-
 
   t.test('is correctly formatted', function (tt) {
     var filePath = path.join(projectPath, 'src', 'buildFiles', 'templates', 'appcache.mustache');

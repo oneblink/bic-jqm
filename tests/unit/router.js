@@ -24,9 +24,9 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
             then: function () { return null; }
           }),
           set: sinon.stub().returns({}),
-          setArgsFromQueryString: function(){ },
-          getArgument: function(){ },
-          setArgument: function(){ }
+          setArgsFromQueryString: function () { },
+          getArgument: function () { },
+          setArgument: function () { }
         };
       };
 
@@ -49,14 +49,14 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         setup: function () { return Promise.resolve(); },
         populate: function () { return Promise.resolve(); },
         initialRender: function () { return null; },
-        setArgsFromQueryString: function(){ },
-        getArgument: function(){ },
-        setArgument: function(){ },
+        setArgsFromQueryString: function () { },
+        getArgument: function () { },
+        setArgument: function () { },
         forms: {
           download: function () { return null; }
         },
         currentInteraction: {
-          get: function(){}
+          get: function () {}
         }
       });
       injector.mock('bic/view/interaction', {
@@ -70,12 +70,12 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
       injector.remove();
     });
 
-    describe('suspendApplication', function(){
-      var router
-        , app;
+    describe('suspendApplication', function () {
+      var router;
+      var app;
 
-      beforeEach(function(done){
-        injector.require(['bic/router', 'bic/model/application'], function(r, a){
+      beforeEach(function (done) {
+        injector.require(['bic/router', 'bic/model/application'], function (r, a) {
 
           router = r;
           app = a;
@@ -83,12 +83,12 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         });
       });
 
-      afterEach(function(){
+      afterEach(function () {
         router = undefined;
         app = undefined;
       });
 
-      it('should not throw an error', function(){
+      it('should not throw an error', function () {
 
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('not a form');
@@ -98,7 +98,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         stub.restore();
       });
 
-      it('should not throw an error', function(){
+      it('should not throw an error', function () {
 
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('form');
@@ -109,7 +109,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         stub.restore();
       });
 
-      it('should throw an error', function(){
+      it('should throw an error', function () {
 
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('form');
@@ -121,27 +121,26 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
       });
     });
 
-    describe('resumeApplication', function(){
-      var router
-        , changeMock
-        , expectation
-        , parseLocationStub
-        , testUrl = 'http://test';
+    describe('resumeApplication', function () {
+      var router;
+      var changeMock;
+      var expectation;
+      var parseLocationStub;
+      var testUrl = 'http://test';
 
-      beforeEach(function(done){
-        injector.require(['bic/router'], function(r){
+      beforeEach(function (done) {
+        injector.require(['bic/router'], function (r) {
 
           router = r;
           parseLocationStub = sinon.stub($.mobile.path, 'parseLocation');
           changeMock = sinon.mock($.mobile);
           expectation = changeMock.expects('changePage');
 
-
           done();
         });
       });
 
-      afterEach(function(){
+      afterEach(function () {
         router = undefined;
         expectation = undefined;
         localStorage.clear();
@@ -150,7 +149,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         localStorage.removeItem('pauseURL');
       });
 
-      it('should not call $.mobile.changePage', function(){
+      it('should not call $.mobile.changePage', function () {
         localStorage.setItem('pauseURL', testUrl);
         parseLocationStub.returns({href: testUrl});
         expectation.never();
@@ -161,8 +160,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
 
       });
 
-
-      it('should not call $.mobile.changePage', function(){
+      it('should not call $.mobile.changePage', function () {
         localStorage.removeItem('pauseURL');
         parseLocationStub.returns({href: testUrl});
         expectation.never();
@@ -173,7 +171,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
 
       });
 
-      it('should call $.mobile.changePage', function(){
+      it('should call $.mobile.changePage', function () {
 
         parseLocationStub.returns({href: testUrl + '1234'});
         localStorage.setItem('pauseURL', testUrl);
@@ -186,7 +184,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
       });
 
     });
-    // describe('routeRequest', function(){
+    // describe('routeRequest', function () {
     //   var router;
 
     //   beforeEach(function (done) {
@@ -196,7 +194,7 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
     //     });
     //   });
 
-    //   afterEach(function(){
+    //   afterEach(function () {
 
     //   });
 
@@ -226,7 +224,6 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
         //router.parseArgs.restore();
         testmodel.prepareForView.reset();
       });
-
 
       it('should call the inheritanceChain function to get the correct interaction model', function () {
         router.inheritanceChain.called.should.equal(true);

@@ -5,7 +5,7 @@ define(function (require) {
 
   var _ = require('underscore');
   var Forms = require('BlinkForms');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -81,8 +81,8 @@ define(function (require) {
 
       return API.getForm().then(function (data) {
         _.each(data, function (recordData) {
-          var record = JSON.parse(recordData),
-            preExisting = collection.findWhere({_id: record.default.name});
+          var record = JSON.parse(recordData);
+          var preExisting = collection.findWhere({_id: record.default.name});
           if (preExisting) {
             preExisting.set(record).save();
           } else {

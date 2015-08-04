@@ -2,7 +2,7 @@ define(function () {
   'use strict';
 
   return {
-    'es5': [
+    es5: [
       {
         isAvailable: function () {
           // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/es5/array.js

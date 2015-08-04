@@ -7,7 +7,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var Forms = require('BlinkForms');
   var Mustache = require('mustache');
-  var Promise = require('feature!promises');
+  var Promise = require('bic/promise');
 
   // local modules
 
@@ -18,8 +18,7 @@ define(function (require) {
   var MODEL_STATUS = require('bic/enum-model-status');
   var uiTools = require('bic/lib/ui-tools');
 
-
-  //private functions
+  // private functions
   var isHTML = function (string) {
     var html$;
     var Node = window.Node;
@@ -52,13 +51,13 @@ define(function (require) {
     return uiTools.enableElement('#save');
   };
 
-  function scrollToFirstError(invalidElements){
+  function scrollToFirstError (invalidElements) {
     invalidElements.errors[0].get('_view').scrollTo();
   }
 
-  function checkFormForErrors(model){
+  function checkFormForErrors (model) {
     var formErrors = Forms.current.getInvalidElements();
-    if( formErrors ){
+    if (formErrors) {
       model.trigger('showErrors');
     }
 
@@ -106,7 +105,7 @@ define(function (require) {
       }
 
       Forms.current.get('pages').once('change', function () {
-        Forms.once('pageInjected', function() {
+        Forms.once('pageInjected', function () {
           view.render();
         });
       });
@@ -134,7 +133,7 @@ define(function (require) {
       len = Forms.current.get('pages').length;
       index = Forms.current.get('pages').current.index();
 
-      //only move and render if required
+      // only move and render if required
       if (index < len - 1) {
         Forms.current.get('pages').goto(len - 1);
       }
@@ -165,8 +164,8 @@ define(function (require) {
     formLeave: function (userAction) {
       var onLeave = Forms.current.get('onFormLeaveInteraction');
 
-      if ( onLeave && onLeave[this.model.get('blinkFormAction')] ){
-        return onLeave[this.model.get('blinkFormAction')]({ model: Forms.current, userAction: userAction});
+      if (onLeave && onLeave[this.model.get('blinkFormAction')]) {
+        return onLeave[this.model.get('blinkFormAction')]({ model: Forms.current, userAction: userAction });
       }
 
       if (app.history.length <= 1) {
@@ -177,11 +176,11 @@ define(function (require) {
     },
 
     formSubmit: function () {
-      var me = this
-        , model = this.model
-        , formErrors;
+      var me = this;
+      var model = this.model;
+      var formErrors;
 
-      if ($('#submit').attr('disabled')){
+      if ($('#submit').attr('disabled')) {
         return;
       }
 
@@ -189,10 +188,10 @@ define(function (require) {
 
       if (app.hasStorage()) {
         formErrors = Forms.current.getInvalidElements();
-        this.addToQueue( formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
+        this.addToQueue(formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
-            //CATCH - enable submit if there has been an error
-            .then(undefined, function(invalidElements){
+            // CATCH - enable submit if there has been an error
+            .then(undefined, function (invalidElements) {
               me.model.trigger('showErrors');
               enableSubmit();
               scrollToFirstError(invalidElements);
@@ -205,7 +204,7 @@ define(function (require) {
               model.get('blinkFormObjectName'),
               model.get('blinkFormAction'),
               data
-            );
+           );
           })
           .then(function (data) {
             if (!isHTML(data)) {
@@ -241,8 +240,8 @@ define(function (require) {
             }
             app.view.popup(html);
           }).then(uiTools.hideLoadingAnimation)
-          //CATCH - enable submit if there has been an error
-          .then(undefined, function(invalidElements){
+          // CATCH - enable submit if there has been an error
+          .then(undefined, function (invalidElements) {
             me.model.trigger('showErrors');
             enableSubmit();
             scrollToFirstError(invalidElements);
@@ -268,26 +267,26 @@ define(function (require) {
     formSave: function (e) {
       var me = this;
       e.data.view.addToQueue(MODEL_STATUS.DRAFT)
-       .then(function(){
-        $('#closePopup').one('popupafterclose', leaveViewBy(me, USER_ACTIONS.SAVE) );
+      .then(function () {
+        $('#closePopup').one('popupafterclose', leaveViewBy(me, USER_ACTIONS.SAVE));
         $('#closePopup').popup('close');
-       })
-       .then(undefined, function(invalidElements){
-          enableSave();
-          scrollToFirstError(invalidElements);
-        });
+      })
+      .then(undefined, function (invalidElements) {
+        enableSave();
+        scrollToFirstError(invalidElements);
+      });
     },
 
     formSave2: function () {
       uiTools.disableElement('#save');
       this.addToQueue(MODEL_STATUS.DRAFT)
-          .then(function(updatedModel) {
+          .then(function (updatedModel) {
             this.model.setArgument('pid', updatedModel.id);
-            setTimeout(function() {
+            setTimeout(function () {
               enableSave();
             }, 1e3);
           }.bind(this))
-          .then(undefined, function(invalidElements){
+          .then(undefined, function (invalidElements) {
             enableSave();
             scrollToFirstError(invalidElements);
           });
@@ -297,7 +296,6 @@ define(function (require) {
       $('#closePopup').one('popupafterclose', leaveViewBy(this, USER_ACTIONS.DISCARD));
       $('#closePopup').popup('close');
     },
-
 
     /**
       Adds the Current Blink Form to the pending que with the specified status
@@ -309,8 +307,8 @@ define(function (require) {
       **client side** errors.
     */
     addToQueue: function (status, supressQueue) {
-      var view = this
-        , pendingModel;
+      var view = this;
+      var pendingModel;
 
       supressQueue = supressQueue || false;
 
@@ -322,9 +320,9 @@ define(function (require) {
           options.success = function (updatedModel) {
             var invalidElements;
             if (!supressQueue) {
-              if (pendingModel.get('status') === MODEL_STATUS.DRAFT ) {
+              if (pendingModel.get('status') === MODEL_STATUS.DRAFT) {
                 invalidElements = Forms.current.getInvalidElements();
-                if ( invalidElements && invalidElements.length ) {
+                if (invalidElements && invalidElements.length) {
                   return reject(invalidElements);
                 }
 
@@ -332,8 +330,8 @@ define(function (require) {
                 pendingModel.once('processed', function () {
                   var result = pendingModel.get('result');
 
-                  if (pendingModel.get('status') === MODEL_STATUS.SUBMITTED ) {
-                    //This will display a message pop up on the return page.
+                  if (pendingModel.get('status') === MODEL_STATUS.SUBMITTED) {
+                    // .fseventsd/This will display a message pop up on the return page.
                     if (!isHTML(result)) {
                       data = '<p>' + result + '</p>';
                     }
@@ -342,7 +340,7 @@ define(function (require) {
                     // the pending queue.
                     pendingModel.destroy();
                   } else {
-                    //shows the pending queue on the new page
+                    // shows the pending queue on the new page
                     app.view.pendingQueue();
                   }
                 });
@@ -368,16 +366,16 @@ define(function (require) {
             data: data
           };
 
-          if (view.model.getArgument('pid')){
+          if (view.model.getArgument('pid')) {
             pendingModel = app.pending.get(view.model.getArgument('pid'));
-            if ( pendingModel ){
+            if (pendingModel) {
               modelAttrs.id = view.model.getArgument('pid');
               pendingModel.save(modelAttrs, options);
               return;
             }
 
-            //if we got here then args[pid] shouldn't be set as the model is not
-            //in the process queue
+            // if we got here then args[pid] shouldn't be set as the model is not
+            // in the process queue
             view.model.setArgument('pid', null);
           }
 
