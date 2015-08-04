@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v3.8.1 - 2015-08-04
+
+
+### Fixed
+
+- BIC-190: jQM transitions that depend on CSS Animation events now have a
+  watchdog timer, so missing events no longer break everything
+
+- BIC-165: answerSpaces lacking home interactions and login security no longer
+  fail to start (introduced in v3.8.0)
+
+
 ## v3.8.0 - 2015-07-30
 
 
