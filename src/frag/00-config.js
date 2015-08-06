@@ -53,10 +53,10 @@
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),
     jquery: getPaths('jquery/1.11.3/jquery-1.11.3.min'),
     bluebird: getPaths('bluebird/1.2.4/bluebird.min'),
-    backbone: getPaths('backbonejs/1.1.2/backbone-min'),
+    backbone: getPaths('backbonejs/1.2.1/backbone-min'),
     modernizr: getPaths('modernizr/2.7.1/modernizr.custom.26204.min'),
     mustache: getPaths('mustache/0.7.3/mustache.min'),
-    underscore: getPaths('lodash/2.4.1/lodash.underscore.min'),
+    underscore: getPaths('underscorejs/1.8.3/underscore-min'),
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
     pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
   };
