@@ -77,6 +77,8 @@ define(function (require) {
     return true;
   };
 
+  /* eslint-disable indent */ // ESLint seems to be very confused about below
+
   [
     'animationend', 'animationstart', 'pagehide', 'pageshow'
   ].forEach(function (name) {
