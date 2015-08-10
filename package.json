@@ -6,7 +6,7 @@
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
-    "@jokeyrhyme/deadline": "1.0.0",
+    "@jokeyrhyme/deadline": "1.1.0",
     "amd-feature": "jensarps/AMD-feature#295cb395fe",
     "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
     "domReady": "requirejs/domReady#449478e133",
