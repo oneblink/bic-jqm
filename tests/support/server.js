@@ -112,7 +112,10 @@ server.route({
     require('./template-data')(BMP_HOST, request, function (err, data) {
       if (err) { throw err; }
       contents = Mustache.render(contents, data);
-      reply(contents).header('Content-Type', 'text/html');
+      reply(contents).header('Content-Type', 'text/html')
+        .header('X-BMP-Gap-Target', 'bmp-blinkgap-js')
+        .header("X-BMP-Version", "3.xx.x");
+
     });
   }
 });

@@ -43,7 +43,9 @@ module.exports = function (BMP_HOST, req, callback) {
 
     callback(null, {
       _SERVER: request.headers,
-
+      _SESSION: {
+        "HTTP_USER_AGENT": req.headers["user-agent"]
+      },
       answerSpace: {
         id: answerSpaceId,
         name: answerSpace,

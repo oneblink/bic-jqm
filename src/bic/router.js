@@ -45,15 +45,12 @@ define(function (require) {
       if (Modernizr.localstorage) {
         if (window.BMP.isBlinkGap) {
           $document.on('pause', this.suspendApplication);
-          $document.on('resume', this.resumeApplication);
         }
 
         if (document.hidden !== undefined) {
           $document.on('visibilitychange', function () {
             if (document.hidden) {
               app.router.suspendApplication();
-            } else {
-              app.router.resumeApplication();
             }
           });
         }
