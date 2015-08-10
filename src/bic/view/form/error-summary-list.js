@@ -99,8 +99,8 @@ define(function (require) {
       this.$el.listview().listview('refresh');
       return this;
     }
-  }, // static properties.
-  {
+  }, {
+    // static properties.
     /**
      * Override to allow for custom LI elements
      * @param  {Object} viewModel An object to be rendered.

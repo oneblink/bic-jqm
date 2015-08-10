@@ -38,8 +38,6 @@
     "radix": 2,
     "vars-on-top": 2,
     "wrap-iife": 2,
-    /* Variables */
-    "no-catch-shadow": 2,
     /* Node.JS */
     "no-sync": 2,
     /* Semi-Standard */

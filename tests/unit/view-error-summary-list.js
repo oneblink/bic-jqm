@@ -17,8 +17,8 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector = new Squire(CONTEXT);
 
       mockApp = new (Backbone.Model.extend({
-          getInvalidElements: function () { return [1, 2, 3]; }
-        }))();
+        getInvalidElements: function () { return [1, 2, 3]; }
+      }))();
 
       mockForms = {
         current: {

@@ -2,9 +2,7 @@
 
 execute a platform-agnostic definition, becoming a ready-to-use app
 
-[![Join the chat at https://gitter.im/blinkmobile/bic-v3](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/blinkmobile/bic-v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/blinkmobile/bic-v3.png)](https://travis-ci.org/blinkmobile/bic-v3)
+[![Build Status](https://travis-ci.org/blinkmobile/bic-jqm.png)](https://travis-ci.org/blinkmobile/bic-jqm)
 
 
 ## Core Technologies
@@ -14,9 +12,9 @@ execute a platform-agnostic definition, becoming a ready-to-use app
 * RequireJS
 
 
-## Version Numbers
+## Semantic Versioning
 
-This project is NOT versioned according to Semantic Versioning. Rather, it is versioned according to our [Shifted Semantic Versioning](https://github.com/blinkmobile/docs/wiki/Process:-Semantic-Versioning#shifted-semantic-versioning).
+This project follows [Semantic Versioning](http://semver.org/) principles.
 
 
 ## Project Setup
