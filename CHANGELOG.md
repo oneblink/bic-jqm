@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v3.8.3 - 2015-08-10
+
+
+### Changed
+
+- updated to [Backbone.js](http://backbonejs.org/#changelog) 1.2.1 (from 1.1.2)
+
+- updated to [Underscore.js](http://underscorejs.org/#changelog) 1.8.3
+
+    - from [Lo-Dash](https://github.com/lodash/lodash/wiki/Changelog) 2.4.1
+
+
+### Fixed
+
+- BIC-194: using full-screen native widgets in the app should no longer cause
+  the BIC to reload
+
+- update to Forms v3.4.4 for fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.4.4
+
+
 ## v3.8.2 - 2015-08-04
 
 
