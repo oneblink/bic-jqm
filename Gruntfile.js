@@ -45,7 +45,7 @@ module.exports = function (grunt) {
     watch: {
       src: {
         files: ['src/**/**', 'tests/**/**'],
-        tasks: ['build', 'eslint', 'karma']
+        tasks: ['build', 'eslint', 'karma:phantom']
       }
     },
 
