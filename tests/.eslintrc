@@ -5,7 +5,9 @@
   },
   "globals": {
     "assert": true,
-    "requirejs": false
+    "expect": false,
+    "requirejs": false,
+    "sinon": true
   },
   "rules": {
     "accessor-pairs": 0,
