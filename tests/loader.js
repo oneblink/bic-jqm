@@ -9,6 +9,7 @@ require.config({
     feature: 'node_modules/amd-feature/feature',
     '@blinkmobile/geolocation': 'node_modules/@blinkmobile/geolocation/geolocation',
     '@jokeyrhyme/deadline': 'node_modules/@jokeyrhyme/deadline/dist/index',
+    '@jokeyrhyme/promised-requirejs': 'node_modules/@jokeyrhyme/promised-requirejs/dist/index',
     Squire: 'node_modules/squirejs/src/Squire',
     pollUntil: 'node_modules/poll-until/poll-until',
     mustache: 'node_modules/mustache/mustache',
