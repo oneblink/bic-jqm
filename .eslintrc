@@ -20,7 +20,7 @@
   "rules": {
     /* Possible Errors */
     "no-extra-parens": 2,
-    "valid-jsdoc": 1, /* TODO: 2 */
+    "valid-jsdoc": 0, /* TODO: 2 */
     /* Best Practices */
     "block-scoped-var": 2,
     "complexity": [1, 5],
