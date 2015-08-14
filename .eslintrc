@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "standard"],
+  "extends": ["eslint:recommended", "semistandard"],
   "env": {
     "amd": true,
     "browser": true,
@@ -34,15 +34,11 @@
     "no-process-env": 2,
     "no-self-compare": 2,
     "no-void": 2,
-    "no-warning-comments": 0, /* TODO: 2 */
+    "no-warning-comments": 1, /* TODO: 2 */
     "radix": 2,
     "vars-on-top": 2,
     "wrap-iife": 2,
     /* Node.JS */
-    "no-sync": 2,
-    /* Semi-Standard */
-    "semi": [2, "always"],
-    "no-extra-semi": 2,
-    "semi-spacing": [2, { "before": false, "after": true }]
+    "no-sync": 2
   }
 }

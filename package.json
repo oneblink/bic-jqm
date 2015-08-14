@@ -1,8 +1,8 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "3.8.3",
-  "formsversion": "3.4.4",
+  "version": "3.9.0",
+  "formsversion": "3.5.0",
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
@@ -22,6 +22,7 @@
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "~3.2",
     "eslint": "^1.0",
+    "eslint-config-semistandard": "^5.0.0",
     "eslint-config-standard": "^4.0.0",
     "eslint-plugin-standard": "^1.2.0",
     "glob": "^5.0.10",

@@ -1,19 +1,25 @@
 # BIC: persistent storage
 
+For more information on how we persist Backbone Models and Collections (using
+the underlying approach outlined here) see
+[persistent-backbone.md](persistent-backbone.md).
+
+
 ## What's out?
 
-Our collections avoid using any of the following mechanisms by default:
+We avoid using any of the following mechanisms by default:
 
 - cookies: it would be weird and unsafe to store pending records there
 - sessionStorage: volatile, so loses data when the app / browser terminates
 - localStorage: inconsistent but frequently low storage cap
 - WebSQL: poor quotas, W3C disapproves, Firefox and IE/Edge don't offer it
 
+
 ## What's in?
 
-Our collections do use WebSQL if we are in our native app. Native app shells can
-provide a consistent API for WebSQL, and offer access to a large amount of the
-device's total storage capacity.
+We do use WebSQL if we are in our native app. Native app shells can provide a
+consistent API for WebSQL, and offer access to a large amount of the device's
+total storage capacity.
 
 If we are lacking both conditions (native app _and_ WebSQL) and IndexedDB passes
 [our reliability tests](https://github.com/blinkmobile/is-indexeddb-reliable),
@@ -26,76 +32,149 @@ API.
 Note: Safari in OS X Yosemite (10.10) and in iOS 7 and 8 does offer IndexedDB,
 but it doesn't pass our reliability tests so we don't touch it.
 
-## Checklist: before you use our persistent collections
 
-1. check to see if the BIC has loaded
+## API: "bic/data" AMD module
 
-2. check to see whether the collections exist
+This module provides a wrapper around PouchDB that performs the described
+detection of suitable storage mechanisms.
 
-3. check to see whether we have detected reliable persistent storage (per-above)
+- @constructor
+- @param {`String`} [name=BlinkMobile] - unique identifier for table / collection
 
-Example:
-
-```javascript
-require(['bic'], function (bic) { // 1.
-  bic.collections().then(function () { // 2.
-    if (bic.hasStorage()) { // 3.
-      // TODO: do something with a persistent collection
-      // e.g. `bic.interactions`, `bic.pending`, etc
-    }
-  });
+```js
+require(['bic/data'], function (Data) {
+  var myData = new Data('myData');)
+  // TODO: do something with `myData`
 });
 ```
 
-We list our persistent collections with our other
-[publicly accessible values](public-values.md).
 
-Note: the "pending" collection will not exist if persistent storage is
-unavailable.
+### `Data#getDB()`
 
-## Backbone -> PouchDB
+- @returns {`Promise`}, resolved with the wrapped `PouchDB` instance or a fake
+  version that offers no-op APIs (when neither WebSQL or IndexedDB are suitable)
 
-Backbone's Collection and Model APIs are synchronous: when your statement is
-complete, you can expect the state of the Collection / Model to be as expected.
-
-PouchDB is asynchronous: your statement will complete, and PouchDB executes the
-actual storage command an unknown period of time in the future. PouchDB will
-call you back when this has happened (hence the term "callback").
-
-Backbone does provide asynchronous Collection and Model APIs that we have
-configured to trigger persistent storage via PouchDB:
-
-- [`Backbone.Model#save()`](http://backbonejs.org/#Model-save)
-- [`Backbone.Model#destroy()`](http://backbonejs.org/#Model-destroy)
-- [`Backbone.Collection#create()`](http://backbonejs.org/#Collection-create)
-
-If you use these, then you can be certain that PouchDB has persisted your data
-to device storage. For example:
-
-```javascript
-require(['bic'], function (bic) {
-  bic.collections().then(function () {
-    if (bic.hasStorage()) {
-      var pendingRecord = {
-        type: 'Form',
-        status: 'Draft',
-        name: 'MyFormName',
-        label: 'My Friendlier Form Name',
-        action: 'add',
-        answerspaceid: BMP.BIC.siteVars.answerSpaceId,
-        data: {
-          /* TODO: this is where the pending record data would go */
-        }
-      };
-      var createOptions = {};
-      createOptions.success = function () {
-        // TODO: do something after persistence is complete
-      };
-      createOptions.error = function (err) {
-        // TODO: do something with `err`
-      }
-      bic.pending.create(pendingRecord, createOptions);
-    }
-  });
+```js
+myData.getDB().then(function (pouch) {
+  var myPouch = pouch
+  // TODO: do something with `myPouch`
 });
 ```
+
+
+### `Data#hasStorage()`
+
+- @returns {`Boolean`} did we wrap a real PouchDB on WebSQL / IndexedDB?
+
+This won't have reliable results until after `#getDB()` has completed.
+
+```js
+myData.getDB().then(function () {
+  if (myData.hasStorage()) {
+    // TODO: persistent mode, do something that needs real storage
+  } else {
+    // TODO: volatile mode, inform user they can't expect to store anything
+  }
+});
+```
+
+
+### `Data#create()` and `Data#update()`
+
+- @param {`DataDocument`} document ("id" property is mandatory for `#update()`)
+- @returns {`Promise`} resolved with `document` on success
+
+```js
+var myToJSON = function () { return this; }; // reusable `toJSON` method
+var doc = {
+  data: 'value to persist',
+  moreData: 'other stuff',
+  toJSON: myToJSON // DataDocuments _must_ have a "toJSON" method
+};
+var saved;
+myData.create(doc)
+.then(function (result) {
+  saved = result; // convenient for this example
+  console.log('automatic id:', saved.id);
+  console.assert(saved.data === doc.data);
+  console.assert(saved.moreData === doc.moreData);
+})
+.then(function () {
+  // try to create the same document with the same ID
+  saved.toJSON = myToJSON;
+  return myData.create(saved);
+})
+.then(null, function (err) {
+  console.assert(err instanceof Error);
+  // "create" operation not performed due to unique ID conflict
+  return Promise.resolve(); // just so we can keep `.then()`ing
+})
+.then(function () {
+  return myData.update(doc);
+})
+.then(null, function (err) {
+  console.assert(err instanceof Error);
+  // "update" operation not performed due to missing ID
+  return Promise.resolve(); // just so we can keep `.then()`ing
+})
+.then(function () {
+  saved.data = 'something different';
+  return myData.update(saved);
+});
+```
+
+
+### `Data#read()` and `Data#delete()`
+
+- @param {`DataDocument`} document ("id" property is mandatory)
+- @returns {`Promise`} resolved with `document` on success
+
+```js
+var doc = {
+  id: 'unique-abc',
+  toJSON: myToJSON // DataDocuments _must_ have a "toJSON" method
+};
+myData.read(doc)
+.then(function (result) {
+  console.assert(result.id === 'unique-abc');
+  // TODO: do something with the other values in the `result` document
+})
+.then(function () {
+  return myData.delete(doc);
+});
+```
+
+
+### `Data#readAll()`
+
+- @returns {`Promise`} resolved with `DataDocument[]`
+
+```js
+myData.readAll()
+.then(function (results) {
+  console.assert(Array.isArray(results));
+  // TODO: do something with the DataDocuments in the `results` Array
+});
+```
+
+
+### `Data#deleteAll()`
+
+- @returns {`Promise`}
+
+
+### @interface DataDocument
+
+- @property {(`Number`|`String`)} [id] - unique amongst documents in this store
+
+
+#### `DataDocument.toJSON()`
+
+- @abstract
+- @returns {Object} data to store
+
+With the current implementation, we expect all DataDocuments have a `.toJSON()`
+method.
+
+Mozilla documents how `Object`s that have a `.toJSON()` method behave
+during the [JSON serialisation process](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON()_behavior).
