@@ -22,11 +22,11 @@ define(function (require) {
           var nodes, node, record;
 
           record = {};
-          nodes = data.evaluate('//' + model.get('formName'), data);
+          nodes = data.evaluate('//' + model.get('formName'), data, null, XPathResult.ANY_TYPE, null);
           node = nodes.iterateNext();
 
-          _.each(node.children, function (key) {
-            record[key.nodeName] = key.innerHTML;
+          _.each(node.childNodes, function (key) {
+            record[key.nodeName] = key.textContent;
           });
 
           model.set({
