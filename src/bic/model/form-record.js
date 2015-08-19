@@ -26,7 +26,9 @@ define(function (require) {
           node = nodes.iterateNext();
 
           _.each(node.childNodes, function (key) {
-            record[key.nodeName] = key.textContent;
+            if (key.nodeType === key.ELEMENT_NODE) {
+              record[key.nodeName] = key.textContent;
+            }
           });
 
           model.set({

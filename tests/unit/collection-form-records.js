@@ -1,26 +1,31 @@
-define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
+define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/collection/form-records.js';
   var should = chai.should();
 
+  function isPhantom () {
+    return navigator.userAgent.toLowerCase().indexOf('phantom') !== -1;
+  }
+
+  if (isPhantom()) {
+    return false;
+  }
+
   describe('Collection - FormRecords', function () {
     var injector, Collection, collection;
     var form;
+    var api;
 
     before(function (done) {
-      var parser, formRecord;
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
       cfg.context = CONTEXT;
       require.config(cfg);
       injector = new Squire(CONTEXT);
 
-      parser = new DOMParser();
-      form = 'test';
-      formRecord = '<xml>';
-      formRecord += '<test><id>1</id><Text1>1</Text1><Text2>2</Text2><Text3>3</Text3></test>';
-      formRecord += '<test><id>2</id><Text1>12</Text1><Text2>22</Text2><Text3>32</Text3></test>';
-      formRecord += '</xml>';
+      api = {
+        getFormList: {}
+      };
 
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
@@ -28,12 +33,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       injector.mock('BlinkForms', {});
       injector.mock('bic/model/application', Backbone.Model);
       injector.mock('bic/model/form-record', Backbone.Model);
-      injector.mock('bic/api/web', {
-        getFormList: function () {
-          window.console.log('getFormList', parser.parseFromString(formRecord, "text/xml"));
-          return Promise.resolve(parser.parseFromString(formRecord, "text/xml"));
-        }
-      });
+      injector.mock('bic/api/web', api);
 
       injector.require(['bic/collection/form-records'], function (rCol) {
         Collection = rCol;
@@ -89,10 +89,25 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
     });
 
     describe('API.getFormList(formName)', function () {
-      it('should correctly parse the xml', function (done) {
-        var collection = new Collection();
-        var temp;
-        var record = [{
+      it('should correctly parse the xml (one line xml)', function (done) {
+        var collection;
+        var record;
+
+        api.getFormList = function () {
+          var parser = new DOMParser();
+          var formRecord;
+
+          formRecord = '<xml>';
+          formRecord += '<test><id>1</id><Text1>1</Text1><Text2>2</Text2><Text3>3</Text3></test>';
+          formRecord += '<test><id>2</id><Text1>12</Text1><Text2>22</Text2><Text3>32</Text3></test>';
+          formRecord += '</xml>';
+
+          return Promise.resolve(parser.parseFromString(formRecord, "text/xml"));
+        };
+
+        collection = new Collection();
+        form = 'test';
+        record = [{
           'formName': form,
           'id': "1",
           'list': {
@@ -109,11 +124,48 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
             'Text3': "32"
           }
         }];
+
         collection.pull(form).then(function () {
-          collection.models.forEach(function (m, i) {
-            temp = record[i];
-            temp._id = form + "-" + temp.id;
-            assert.deepEqual(temp, m.toJSON());
+          record.forEach(function (rec, i) {
+            rec._id = form + "-" + rec.id;
+            assert.deepEqual(rec, collection.models[i].toJSON());
+          });
+          done();
+        });
+      });
+
+      it('should correctly parse the xml (prettified XML)', function (done) {
+        var collection;
+        var record;
+
+        api.getFormList = function () {
+          return $.ajax('assets/GetFormList.xml');
+        };
+
+        collection = new Collection();
+        form = 'test';
+        record = [{
+          'formName': form,
+          'id': "1",
+          'list': {
+            'Text1': "1",
+            'Text2': "2",
+            'Text3': "3"
+          }
+        }, {
+          'formName': form,
+          'id': "2",
+          'list': {
+            'Text1': "12",
+            'Text2': "22",
+            'Text3': "32"
+          }
+        }];
+
+        collection.pull(form).then(function () {
+          record.forEach(function (rec, i) {
+            rec._id = form + "-" + rec.id;
+            assert.deepEqual(rec, collection.models[i].toJSON());
           });
           done();
         });

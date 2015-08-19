@@ -39,7 +39,7 @@ define(function (require) {
             parseNodes = function (key) {
               if (key.nodeName === 'id') {
                 parsed.id = key.textContent;
-              } else {
+              } else if (key.nodeType === key.ELEMENT_NODE) {
                 parsed.list[key.nodeName] = key.textContent;
               }
             };
