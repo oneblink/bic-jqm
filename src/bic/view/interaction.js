@@ -17,7 +17,6 @@ define(function (require) {
     var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
     var categoryTemplate = require('text!bic/template/category-list.mustache');
     var popupTemplate = require('text!bic/template/popup.mustache');
-    var FormView = require('bic/view/form');
     var app = require('bic/model/application');
     var StarModel = require('bic/model/star');
     var StarView = require('bic/view/star');
@@ -44,7 +43,8 @@ define(function (require) {
 
     InteractionView = Backbone.View.extend({
 
-      initialize: function () {
+      initialize: function (options) {
+        Backbone.View.prototype.initialize.call(this, options);
         $('body').append(this.$el);
         window.BMP.BIC.view = this;
       },
@@ -217,27 +217,6 @@ define(function (require) {
             }
           });
           this.model.performXSLT();
-        } else if (this.model.has('type') && this.model.get('type') === 'form') {
-          if ($('#ActiveFormContainer').length > 0) {
-            $('#ActiveFormContainer').attr('id', 'FormContainer');
-          }
-
-          // Form
-          view.$el.html(Mustache.render(Template, {
-            header: inheritedAttributes.header,
-            footer: inheritedAttributes.footer
-          }));
-
-          view.subView = new FormView({
-            model: view.model,
-            el: view.$el.children('[data-role="content"]')
-          });
-
-          view.listenToOnce(view.subView, 'render', function () {
-            view.trigger('render');
-          });
-
-          view.subView.render();
 
         } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen

@@ -14,6 +14,7 @@ define(function (require) {
   var app = require('bic/model/application');
   var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
+  var FormInteractionView = require('bic/view/interaction/form');
   var uiTools = require('bic/lib/ui-tools');
   var whenDOMReady = require('bic/promise-dom-ready');
 
@@ -140,7 +141,8 @@ define(function (require) {
           return model.prepareForView(data);
         })
         .then(function (model) {
-          return new InteractionView({
+          var View = model.get('type') === 'form' ? FormInteractionView : InteractionView;
+          return new View({
             tagName: 'div',
             model: model
           });
