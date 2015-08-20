@@ -137,23 +137,28 @@ define(function (require) {
           model.setArgsFromQueryString(path.search);
           app.currentInteraction = model;
 
-          model.prepareForView(data).then(function (innerModel) {
-            new InteractionView({
-              tagName: 'div',
-              model: innerModel
-            }).once('render', function () {
-              this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
-              this.$el.attr('data-external-page', true);
-              this.$el.one('pagecreate', $.mobile._bindPageRemove);
-
-              // http://api.jquerymobile.com/1.3/pagebeforeload/
-              // data.deferred.resolve|reject is expected after data.preventDefault()
-              data.deferred.resolve(data.absUrl, data.options, this.$el);
-            }).render(data);
+          return model.prepareForView(data);
+        })
+        .then(function (model) {
+          return new InteractionView({
+            tagName: 'div',
+            model: model
           });
         })
+        .then(function (view) {
+          view.once('render', function () {
+            this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
+            this.$el.attr('data-external-page', true);
+            this.$el.one('pagecreate', $.mobile._bindPageRemove);
+
+            // http://api.jquerymobile.com/1.3/pagebeforeload/
+            // data.deferred.resolve|reject is expected after data.preventDefault()
+            data.deferred.resolve(data.absUrl, data.options, this.$el);
+          });
+          view.render(data);
+        })
         // catch the error thrown when a model cant be found
-        .then(undefined, function (err) {
+        .catch(function (err) {
           c.error('router.routeRequest(): error...');
           c.error(err);
 
