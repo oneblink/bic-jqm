@@ -33,14 +33,14 @@ define(function (require) {
 
             collection.reset();
 
-            nodes = data.evaluate('//' + formName, data);
+            nodes = data.evaluate('//' + formName, data, null, XPathResult.ANY_TYPE, null);
             node = nodes.iterateNext();
 
             parseNodes = function (key) {
               if (key.nodeName === 'id') {
-                parsed.id = key.innerHTML;
-              } else {
-                parsed.list[key.nodeName] = key.innerHTML;
+                parsed.id = key.textContent;
+              } else if (key.nodeType === key.ELEMENT_NODE) {
+                parsed.list[key.nodeName] = key.textContent;
               }
             };
 
@@ -49,7 +49,7 @@ define(function (require) {
               parsed.formName = formName;
               parsed.list = {};
 
-              _.each(node.children, parseNodes);
+              _.each(node.childNodes, parseNodes);
 
               parsed._id = formName + '-' + parsed.id;
 
