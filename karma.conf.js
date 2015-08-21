@@ -36,6 +36,7 @@ module.exports = function (config) {
 
       // wildcards for included:false must not clash with included:true
       { pattern: 'tests/unit/**/*.js', included: false },
+      { pattern: 'tests/assets/**/*.xml', included: false },
       'tests/loader.js'
     ],
 

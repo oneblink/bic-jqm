@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v3.9.1 - 2015-08-21
+
+
+### Fixed
+
+- BIC-197: form "list" interactions now function correctly in Safari, Firefox,
+  and Internet Explorer
+
+    - HelpDesk: 8822-YPJZ-6091
+
+
 ## v3.9.0 - 2015-08-14
 
 

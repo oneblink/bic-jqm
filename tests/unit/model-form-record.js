@@ -8,7 +8,11 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
     return navigator.userAgent.toLowerCase().indexOf('phantom') !== -1;
   }
 
-  if (isPhantom()) {
+  function isKarma () {
+    return !!window.__karma__;
+  }
+
+  if (isPhantom() || isKarma()) {
     return false;
   }
 
@@ -86,8 +90,10 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         var model;
         var record;
 
+        this.timeout(5e3);
+
         api.getFormRecord = function () {
-          return $.ajax('assets/getFormRecord.xml');
+          return $.ajax('/tests/assets/getFormRecord.xml');
         };
 
         model = new Model({_id: '1', formName: form});
