@@ -71,6 +71,7 @@ require([
   'tests/unit/promise-blinkgap',
   'tests/unit/router',
   'tests/unit/view-interaction',
+  'tests/unit/view-interaction-form',
   'tests/unit/view-star',
   'tests/unit/view-form',
   'tests/unit/view-form-action',
