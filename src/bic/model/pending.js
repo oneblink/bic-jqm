@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var Backbone = require('backbone');
-  var Forms = require('BlinkForms');
 
   // local modules
   var MODEL_STATUS = require('bic/enum-model-status');
@@ -94,7 +93,7 @@ define(function (require) {
      */
     setErrors: function (errors) {
       if (errors.errors) {
-        errors.errors = Forms.errorHelpers.fromBMP(errors.errors);
+        errors.errors = window.BMP.Forms.errorHelpers.fromBMP(errors.errors);
       }
       this.set({
         status: MODEL_STATUS.FAILED_VALIDATION,

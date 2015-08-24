@@ -10,8 +10,7 @@ define([
     var injector, View;
     var FormView, FormActionView, FormControlsView;
     var Forms;
-    var interactionModel;
-    var mockApp;
+    var mockApp, mockForms, interactionModel;
 
     before(function (done) {
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
@@ -29,7 +28,7 @@ define([
       mockApp.hasStorage = function () { return false; };
       injector.mock('bic/model/application', mockApp);
 
-      injector.mock('BlinkForms', {
+      mockForms = {
         initialize: function () {
           var formModel = new Backbone.Model({ pages: new Backbone.Collection() });
           this.current = formModel;
@@ -38,6 +37,10 @@ define([
         getDefinition: function () {
           return Promise.resolve({ default: { name: 'test' } });
         }
+      };
+      injector.mock('BlinkForms', mockForms);
+      injector.mock('bic/promise-forms', function () {
+        return Promise.resolve(mockForms);
       });
 
       interactionModel = new Backbone.Model({

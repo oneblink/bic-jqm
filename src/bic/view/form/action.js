@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var Backbone = require('backbone');
-  var Forms = require('BlinkForms');
   var $ = require('jquery');
 
   // local modules
@@ -13,6 +12,7 @@ define(function (require) {
   var app = require('bic/model/application');
   var FormControls = require('bic/view/form/controls');
   var FormErrorSummary = require('bic/view/form/error-summary-list');
+  var loadForms = require('bic/promise-forms');
 
   // this module
 
@@ -33,10 +33,11 @@ define(function (require) {
      */
     renderErrorSummary: function () {
       var ErrorView;
-      if (app.get('displayErrorSummary') && Forms.current.getInvalidElements) {
+      var currentForm = this.model.attributes.currentForm;
+      if (app.get('displayErrorSummary') && currentForm.getInvalidElements) {
         if (!this.errorSummary) {
           ErrorView = FormActionView.prepareErrorSummary();
-          this.errorSummary = new ErrorView({ model: Forms.current });
+          this.errorSummary = new ErrorView({ model: currentForm });
           // insert error summary above the form controls
           this.$errorSummaryContainer.append(this.errorSummary.render().$el);
           if (this.errorSummary.enhance) {
@@ -71,8 +72,16 @@ define(function (require) {
 
     render: function () {
       var view = this;
+      var Forms;
 
-      Forms.getDefinition(view.model.get('blinkFormObjectName'), view.model.get('blinkFormAction'))
+      loadForms()
+        .then(function (F) {
+          Forms = F;
+          return Forms.getDefinition(
+            view.model.get('blinkFormObjectName'),
+            view.model.get('blinkFormAction')
+          );
+        })
         .then(function (definition) {
           var formRecord;
           var pendingModel;

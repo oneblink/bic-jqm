@@ -11,7 +11,6 @@ define(function (require) {
   var $ = require('jquery');
   var Promise = require('bic/promise');
   require('jquerymobile');
-  require('BlinkForms');
 
   // local modules
 
