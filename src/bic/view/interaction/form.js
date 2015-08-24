@@ -51,8 +51,11 @@ define(function (require) {
       this.subView.render();
     },
 
-    destroy: function () {
-      InteractionView.prototype.destroy.apply(this, arguments);
+    remove: function () {
+      if (this.subView) {
+        this.subView.remove();
+      }
+      InteractionView.prototype.remove.apply(this, arguments);
     }
 
   });

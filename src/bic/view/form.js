@@ -45,6 +45,13 @@ define(function (require) {
       view.subView.render();
 
       return view;
+    },
+
+    remove: function () {
+      if (this.subView) {
+        this.subView.remove();
+      }
+      Backbone.View.prototype.remove.apply(this, arguments);
     }
   }, {
     prepareSubView: function () {
