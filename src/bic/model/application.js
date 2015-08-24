@@ -73,6 +73,14 @@ define(function (require) {
       $.mobile.changePage('/' + interactionPath.join('/'));
     },
 
+    hasHomeInteraction: function () {
+      var app = this;
+      if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        return true;
+      }
+      return false;
+    },
+
     collections: function () {
       var app = this;
 

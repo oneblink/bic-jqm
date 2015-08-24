@@ -243,7 +243,7 @@ The argument change event.
 
               resolve(model);
             } else {
-              if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+              if (app.hasHomeInteraction()) {
                 model.goToHomeInteraction(resolve, reject, data);
               } else {
                 model.defaultView(app.interactions.models, app.siteVars);
@@ -251,7 +251,7 @@ The argument change event.
               }
             }
           });
-        } else if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        } else if (app.hasHomeInteraction()) {
           model.goToHomeInteraction(resolve, reject, data);
         } else {
           model.defaultView(app.interactions.models, app.siteVars);
@@ -265,7 +265,7 @@ The argument change event.
       require(['bic'], function (app) {
         var homeInteraction;
 
-        if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        if (app.hasHomeInteraction()) {
           homeInteraction = app.interactions.findWhere({dbid: 'i' + app.get('homeInteraction')});
           if (homeInteraction) {
             homeInteraction.set({parent: model.get('parent')});
