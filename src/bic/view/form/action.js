@@ -78,6 +78,7 @@ define(function (require) {
           var pendingModel;
 
           Forms.initialize(definition, view.model.get('blinkFormAction'));
+          view.model.set('currentForm', Forms.current);
           view.$el.append(Forms.current.$form);
           view.$el.append(view.$errorSummaryContainer);
           view.renderControls();
@@ -117,6 +118,9 @@ define(function (require) {
     },
 
     remove: function () {
+      if (this.model && this.model.get('currentForm')) {
+        this.model.set('currentForm', null);
+      }
       if (this.subView) {
         this.subView.remove();
       }

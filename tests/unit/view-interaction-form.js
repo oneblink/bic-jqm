@@ -9,6 +9,7 @@ define([
   describe('FormInteractionView - jQuery Mobile Implementation', function () {
     var injector, View;
     var FormView, FormActionView, FormControlsView;
+    var Forms;
     var interactionModel;
     var mockApp;
 
@@ -49,11 +50,13 @@ define([
       };
 
       injector.require([
+        'BlinkForms',
         'bic/view/interaction/form',
         'bic/view/form',
         'bic/view/form/action',
         'bic/view/form/controls'
-      ], function (FIV, FV, FAV, FCV) {
+      ], function (F, FIV, FV, FAV, FCV) {
+        Forms = F;
         View = FIV;
         FormView = FV;
         FormActionView = FAV;
@@ -104,6 +107,11 @@ define([
         assert(subView);
         assert.instanceOf(subView, FormControlsView);
         assert.equal(subView.model, interactionModel, 'sharing the same model');
+      });
+
+      it('establishes Forms.current === model.attributes.currentForm', function () {
+        assert.instanceOf(Forms.current, Backbone.Model);
+        assert.equal(Forms.current, view.model.attributes.currentForm);
       });
 
     });

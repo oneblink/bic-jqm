@@ -64,7 +64,8 @@ A model of an interaction
       content: null,
       contentTime: null,
       footer: null,
-      name: null
+      name: null,
+      currentForm: null // equivalent to Forms.current
     },
 
     inherit: function (config) {
