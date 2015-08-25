@@ -221,7 +221,6 @@ The argument change event.
     prepareAnswerSpace: function (resolve, reject, data) {
       var model = this;
       require(['bic'], function (app) {
-        var homeInteraction;
         var loginInteraction;
         var path;
         var url;
@@ -244,11 +243,29 @@ The argument change event.
 
               resolve(model);
             } else {
-              model.defaultView(app.interactions.models, app.siteVars);
-              resolve(model);
+              if (app.hasHomeInteraction()) {
+                model.goToHomeInteraction(resolve, reject, data);
+              } else {
+                model.defaultView(app.interactions.models, app.siteVars);
+                resolve(model);
+              }
             }
           });
-        } else if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        } else if (app.hasHomeInteraction()) {
+          model.goToHomeInteraction(resolve, reject, data);
+        } else {
+          model.defaultView(app.interactions.models, app.siteVars);
+          resolve(model);
+        }
+      });
+    },
+
+    goToHomeInteraction: function (resolve, reject, data) {
+      var model = this;
+      require(['bic'], function (app) {
+        var homeInteraction;
+
+        if (app.hasHomeInteraction()) {
           homeInteraction = app.interactions.findWhere({dbid: 'i' + app.get('homeInteraction')});
           if (homeInteraction) {
             homeInteraction.set({parent: model.get('parent')});
@@ -258,9 +275,6 @@ The argument change event.
           } else {
             reject();
           }
-        } else {
-          model.defaultView(app.interactions.models, app.siteVars);
-          resolve(model);
         }
       });
     },
