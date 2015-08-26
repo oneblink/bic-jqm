@@ -28,6 +28,7 @@ define(function (require) {
   var facade = require('bic/facade');
   var API = require('bic/api');
   var metaStore = require('bic/store-meta');
+  var loadForms = require('bic/promise-forms');
 
   // this module
 
@@ -214,6 +215,7 @@ define(function (require) {
        )
         .then(
           function () {
+            loadForms();
             app.forms.whenUpdated();
             app.retrieveDataSuitcasesForInteractions();
             c.log('app.populate(): done');

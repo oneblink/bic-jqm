@@ -1,4 +1,6 @@
-define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $, $mobile) {
+define([
+  'Squire', 'sinon', 'jquery', 'jquerymobile', 'backbone'
+], function (Squire, sinon, $, $mobile, Backbone) {
   'use strict';
 
   var CONTEXT = 'tests/unit/router.js';
@@ -59,9 +61,8 @@ define(['Squire', 'sinon', 'jquery', 'jquerymobile'], function (Squire, sinon, $
           get: function () {}
         }
       });
-      injector.mock('bic/view/interaction', {
-        render: function () { return null; }
-      });
+      injector.mock('bic/view/interaction', Backbone.View);
+      injector.mock('bic/view/interaction/form', Backbone.View);
       done();
 
     });

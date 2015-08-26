@@ -7,7 +7,6 @@
             'underscore',
             'backbone',
             'mustache',
-            'BlinkForms',
             'jquerymobile',
             'BMP.Blobs',
             'modernizr',
@@ -19,5 +18,5 @@
     } else {
         root.bic = factory();
     }
-}(this, function (Promise, $, _, Backbone, Mustache, BlinkForms, jquerymobile, BMP, Modernizr, Pouch, pollUntil) {
+}(this, function (Promise, $, _, Backbone, Mustache, jquerymobile, BMP, Modernizr, Pouch, pollUntil) {
   window.pollUntil = pollUntil;

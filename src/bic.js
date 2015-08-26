@@ -11,8 +11,6 @@ define(function (require) {
   require('BMP.Blobs');
   require('jquerymobile');
 
-  window.BMP.Forms = require('BlinkForms');
-
   // local modules
 
   var app = require('bic/model/application');

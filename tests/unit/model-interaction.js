@@ -1,4 +1,4 @@
-define(['Squire', 'chai'], function (Squire, chai) {
+define(['Squire', 'chai', 'backbone'], function (Squire, chai, Backbone) {
   'use strict';
 
   var should = chai.should();
@@ -17,6 +17,8 @@ define(['Squire', 'chai'], function (Squire, chai) {
         subscribe: function () { console.log('#subscribe'); }
       });
       /*eslint-enable no-console*/
+
+      injector.mock('bic/view/interaction', Backbone.View);
 
       injector.require(['bic/model/interaction'], function (required) {
         Model = required;

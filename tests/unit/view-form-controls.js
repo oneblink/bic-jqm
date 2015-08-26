@@ -1,6 +1,6 @@
 define([
-  'Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'chai'
-], function (Squire, Backbone, MODEL_STATUS, sinon, chai) {
+  'Squire', 'backbone', 'bic/enum-model-status', 'sinon', 'chai', 'underscore'
+], function (Squire, Backbone, MODEL_STATUS, sinon, chai, _) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view/form/controls.js';
@@ -28,16 +28,19 @@ define([
       injector = new Squire(CONTEXT);
 
       Forms = {
-        current: {
-          data: function () { return; },
-          getErrors: function () { return; },
-          getInvalidElements: function () { return; },
-          get: function () {
-            return pageObject;
-          }
-        }
+        current: new Backbone.Model({})
       };
-      injector.mock('BlinkForms', Forms);
+      _.extend(Forms.current, {
+        data: function () { return; },
+        getErrors: function () { return; },
+        getInvalidElements: function () { return; },
+        get: function () {
+          return pageObject;
+        }
+      });
+      injector.mock('bic/promise-forms', function () {
+        return Promise.resolve(Forms);
+      });
 
       errorStub = sinon.stub(Forms.current, 'getErrors', function () {
         return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
@@ -68,6 +71,7 @@ define([
         })
       );
       mockApp = new Backbone.Model();
+      mockApp.attributes.currentForm = Forms.current;
 
       injector.mock('bic/model/application', mockApp);
       injector.mock('bic/model/pending', Backbone.Model);
@@ -245,14 +249,16 @@ define([
         interactionGetStub = sinon.stub(Forms.current, 'get');
 
         mockModel = {
-          get: function () {}
+          get: function () {},
+          attributes: {
+            currentForm: Forms.current
+          }
         };
 
         modelGetStub = sinon.stub(mockModel, 'get')
                             .returns('add');
 
-        viewInstance = new View();
-        viewInstance.model = mockModel;
+        viewInstance = new View({ model: mockModel });
       });
 
       afterEach(function () {
