@@ -222,8 +222,7 @@ The argument change event.
                         uiTools.hideLoadingAnimation();
                         resolve(model);
                       })
-                      .catch(function (err) {
-                        console.log('.catch(err)', err)
+                      .catch(function () {
                         uiTools.hideLoadingAnimation();
                         reject(new NotFoundError('Form Record not found'));
                       });

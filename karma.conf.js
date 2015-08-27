@@ -43,6 +43,7 @@ module.exports = function (config) {
     ],
 
     client: {
+      captureConsole: false, // reduces the amount of useless messages printed to the console
       mocha: {
         ui: 'bdd',
         reporter: 'html'
@@ -61,7 +62,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['dots'],
 
     // web server port
     port: 9879,
@@ -74,7 +75,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
     captureTimeout: 60000,
 

@@ -1,15 +1,21 @@
-define(['Squire', 'chai', 'backbone'], function (Squire, chai, Backbone) {
+define(['Squire', 'chai', 'backbone', 'sinon'], function (Squire, chai, Backbone, sinon) {
   'use strict';
 
   var should = chai.should();
 
   describe('Model - Interaction', function () {
-    var injector, Model;
+    var injector;
+    var Model;
+    var getFormRecordStub = sinon.stub();
 
     before(function (done) {
       injector = new Squire();
 
-      injector.mock('bic/api', function () { return null; });
+      injector.mock('bic/api', function () {
+        return {
+          getFormRecord: getFormRecordStub
+        };
+      });
 
       /*eslint-disable no-console*/ // just for testing
       injector.mock('bic/facade', {
@@ -190,6 +196,45 @@ define(['Squire', 'chai', 'backbone'], function (Squire, chai, Backbone) {
       it('should detect if you are on a Stars XSLT interaction and prepare the XML');
 
       it('should return a promise');
+
+      describe('when the form Record cannot be found', function () {
+        var interaction;
+        beforeEach(function () {
+          interaction = new Model({
+            type: 'form',
+            id: 574676474564,
+            blinkFormObjectName: 'interaction'
+          });
+
+          interaction.setArgument('id', 12345);
+        });
+
+        afterEach(function () {
+          interaction = undefined;
+          getFormRecordStub.reset();
+        });
+
+        function prepareForViewTest (viewType, promiseFnName) {
+          return function (done) {
+            interaction.set('blinkFormAction', viewType);
+            getFormRecordStub.returns(Promise[promiseFnName]());
+
+            interaction.prepareForView()
+              .then(function () {
+                assert.isTrue(false, 'prepare for view should reject');
+              })
+              .catch(function () {
+                done();
+              });
+          };
+        }
+
+        it('should reject with a NotFoundError on an "edit" interaction', prepareForViewTest('edit', 'reject'));
+        it('should reject with a NotFoundError on an "view" interaction', prepareForViewTest('view', 'reject'));
+        it('should reject with a NotFoundError on an "delete" interaction', prepareForViewTest('delete', 'reject'));
+
+        it('should resolve on an "add" interaction', prepareForViewTest('add', 'resolve'));
+      });
     });
   });
 });

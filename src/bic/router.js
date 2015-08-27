@@ -176,13 +176,6 @@ define(function (require) {
             // http://api.jquerymobile.com/1.3/pagebeforeload/
             // data.deferred.resolve|reject is expected after data.preventDefault()
             data.deferred.resolve(data.absUrl, data.options, this.$el);
-          }).catch(function (rejectReason) {
-            data.deferred.reject(data.absUrl, data.options);
-
-            // TODO make every `reject()` reject with an Error Constructor
-            if (rejectReason instanceof NotFoundError) {
-              return handleFormRecordNotExisting(data);
-            }
           });
           view.render(data);
         })
@@ -193,6 +186,10 @@ define(function (require) {
           // http://api.jquerymobile.com/1.3/pagebeforeload/
           // data.deferred.resolve|reject is expected after data.preventDefault()
           data.deferred.reject(data.absUrl, data.options);
+
+          if (err instanceof NotFoundError) {
+            return handleFormRecordNotExisting(data);
+          }
 
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 
