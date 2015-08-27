@@ -14,6 +14,7 @@ define(function (require) {
   var app = require('bic/model/application');
   var c = require('bic/console');
   var InteractionView = require('bic/view/interaction');
+  var FormInteractionView = require('bic/view/interaction/form');
   var uiTools = require('bic/lib/ui-tools');
   var whenDOMReady = require('bic/promise-dom-ready');
 
@@ -137,23 +138,29 @@ define(function (require) {
           model.setArgsFromQueryString(path.search);
           app.currentInteraction = model;
 
-          model.prepareForView(data).then(function (innerModel) {
-            new InteractionView({
-              tagName: 'div',
-              model: innerModel
-            }).once('render', function () {
-              this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
-              this.$el.attr('data-external-page', true);
-              this.$el.one('pagecreate', $.mobile._bindPageRemove);
-
-              // http://api.jquerymobile.com/1.3/pagebeforeload/
-              // data.deferred.resolve|reject is expected after data.preventDefault()
-              data.deferred.resolve(data.absUrl, data.options, this.$el);
-            }).render(data);
+          return model.prepareForView(data);
+        })
+        .then(function (model) {
+          var View = model.get('type') === 'form' ? FormInteractionView : InteractionView;
+          return new View({
+            tagName: 'div',
+            model: model
           });
         })
+        .then(function (view) {
+          view.once('render', function () {
+            this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
+            this.$el.attr('data-external-page', true);
+            this.$el.one('pagecreate', $.mobile._bindPageRemove);
+
+            // http://api.jquerymobile.com/1.3/pagebeforeload/
+            // data.deferred.resolve|reject is expected after data.preventDefault()
+            data.deferred.resolve(data.absUrl, data.options, this.$el);
+          });
+          view.render(data);
+        })
         // catch the error thrown when a model cant be found
-        .then(undefined, function (err) {
+        .catch(function (err) {
           c.error('router.routeRequest(): error...');
           c.error(err);
 

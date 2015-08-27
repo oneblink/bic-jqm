@@ -5,7 +5,6 @@ define(function (require) {
 
   var $ = require('jquery');
   var Backbone = require('backbone');
-  var Forms = require('BlinkForms');
   var Mustache = require('mustache');
   var Promise = require('bic/promise');
 
@@ -17,6 +16,7 @@ define(function (require) {
   var USER_ACTIONS = require('bic/enum-user-actions');
   var MODEL_STATUS = require('bic/enum-model-status');
   var uiTools = require('bic/lib/ui-tools');
+  var loadForms = require('bic/promise-forms');
 
   // private functions
   var isHTML = function (string) {
@@ -56,7 +56,8 @@ define(function (require) {
   }
 
   function checkFormForErrors (model) {
-    var formErrors = Forms.current.getInvalidElements();
+    var currentForm = model.attributes.currentForm;
+    var formErrors = currentForm.getInvalidElements();
     if (formErrors) {
       model.trigger('showErrors');
     }
@@ -81,13 +82,14 @@ define(function (require) {
     render: function () {
       var view, options;
       var pages, index;
+      var currentForm = this.model.attributes.currentForm;
       view = this;
       options = {
         hasStorage: app.hasStorage()
       };
 
-      if (Forms.current.get('pages').length > 1) {
-        pages = Forms.current.get('pages');
+      if (currentForm.get('pages').length > 1) {
+        pages = currentForm.get('pages');
         index = pages.current.index();
         options.pages = {
           current: index + 1,
@@ -104,9 +106,11 @@ define(function (require) {
         }
       }
 
-      Forms.current.get('pages').once('change', function () {
-        Forms.once('pageInjected', function () {
-          view.render();
+      loadForms().then(function (Forms) {
+        currentForm.get('pages').once('change', function () {
+          Forms.once('pageInjected', function () {
+            view.render();
+          });
         });
       });
 
@@ -117,55 +121,60 @@ define(function (require) {
 
     firstFormPage: function () {
       var index;
+      var currentForm = this.model.attributes.currentForm;
 
-      index = Forms.current.get('pages').current.index();
+      index = currentForm.get('pages').current.index();
 
       if (index > 0) {
-        Forms.current.get('pages').goto(0);
+        currentForm.get('pages').goto(0);
       }
     },
 
     lastFormPage: function () {
       var index, len;
+      var currentForm = this.model.attributes.currentForm;
 
       checkFormForErrors(this.model);
 
-      len = Forms.current.get('pages').length;
-      index = Forms.current.get('pages').current.index();
+      len = currentForm.get('pages').length;
+      index = currentForm.get('pages').current.index();
 
       // only move and render if required
       if (index < len - 1) {
-        Forms.current.get('pages').goto(len - 1);
+        currentForm.get('pages').goto(len - 1);
       }
     },
 
     nextFormPage: function () {
       var index;
+      var currentForm = this.model.attributes.currentForm;
 
       checkFormForErrors(this.model);
 
-      index = Forms.current.get('pages').current.index();
+      index = currentForm.get('pages').current.index();
 
-      if (index < Forms.current.get('pages').length - 1) {
-        Forms.current.get('pages').goto(index + 1);
+      if (index < currentForm.get('pages').length - 1) {
+        currentForm.get('pages').goto(index + 1);
       }
     },
 
     previousFormPage: function () {
       var index;
+      var currentForm = this.model.attributes.currentForm;
 
-      index = Forms.current.get('pages').current.index();
+      index = currentForm.get('pages').current.index();
 
       if (index > 0) {
-        Forms.current.get('pages').goto(index - 1);
+        currentForm.get('pages').goto(index - 1);
       }
     },
 
     formLeave: function (userAction) {
-      var onLeave = Forms.current.get('onFormLeaveInteraction');
+      var currentForm = this.model.attributes.currentForm;
+      var onLeave = currentForm.get('onFormLeaveInteraction');
 
       if (onLeave && onLeave[this.model.get('blinkFormAction')]) {
-        return onLeave[this.model.get('blinkFormAction')]({ model: Forms.current, userAction: userAction });
+        return onLeave[this.model.get('blinkFormAction')]({ model: currentForm, userAction: userAction });
       }
 
       if (app.history.length <= 1) {
@@ -179,6 +188,7 @@ define(function (require) {
       var me = this;
       var model = this.model;
       var formErrors;
+      var currentForm = this.model.attributes.currentForm;
 
       if ($('#submit').attr('disabled')) {
         return;
@@ -187,7 +197,7 @@ define(function (require) {
       uiTools.disableElement('#submit');
 
       if (app.hasStorage()) {
-        formErrors = Forms.current.getInvalidElements();
+        formErrors = currentForm.getInvalidElements();
         this.addToQueue(formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
             // CATCH - enable submit if there has been an error
@@ -198,7 +208,7 @@ define(function (require) {
             });
       } else {
         uiTools.showLoadingAnimation();
-        Forms.current.data()
+        currentForm.data()
           .then(function (data) {
             return API.setPendingItem(
               model.get('blinkFormObjectName'),
@@ -309,11 +319,12 @@ define(function (require) {
     addToQueue: function (status, supressQueue) {
       var view = this;
       var pendingModel;
+      var currentForm = this.model.attributes.currentForm;
 
       supressQueue = supressQueue || false;
 
       return new Promise(function (resolve, reject) {
-        Forms.current.data().then(function (data) {
+        currentForm.data().then(function (data) {
           var modelAttrs;
           var options = {};
 
@@ -321,7 +332,7 @@ define(function (require) {
             var invalidElements;
             if (!supressQueue) {
               if (pendingModel.get('status') === MODEL_STATUS.DRAFT) {
-                invalidElements = Forms.current.getInvalidElements();
+                invalidElements = currentForm.getInvalidElements();
                 if (invalidElements && invalidElements.length) {
                   return reject(invalidElements);
                 }

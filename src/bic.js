@@ -11,8 +11,6 @@ define(function (require) {
   require('BMP.Blobs');
   require('jquerymobile');
 
-  window.BMP.Forms = require('BlinkForms');
-
   // local modules
 
   var app = require('bic/model/application');
@@ -40,7 +38,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
   window.BMP.BIC3 = app;
 
-  window.BMP.BIC.version = '3.10.0';
+  window.BMP.BIC.version = '4.0.0';
 
   window.BMP.console = require('bic/console');
 

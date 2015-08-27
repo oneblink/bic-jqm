@@ -10,12 +10,6 @@
     /* Blink */
     "BMP": true,
     "BlinkForms": true,
-    /* Testing */
-    "mocha": true,
-    "sinon": true,
-    "should": true,
-    "expect": true,
-    "chai": true
   },
   "rules": {
     /* Possible Errors */

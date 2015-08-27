@@ -11,7 +11,7 @@ define(function (require) {
 
   // this module
 
-  var oldOnError = window.onerror;
+  // var oldOnError = window.onerror;
   // var support = {};
 
   require('feature!es5');
@@ -69,13 +69,13 @@ define(function (require) {
     };
   }
 
-  window.onerror = function (msg, url, line) {
-    c.error([msg, url, line].join(' '));
-    if (oldOnError) {
-      return oldOnError(msg, url, line);
-    }
-    return true;
-  };
+  // window.onerror = function (msg, url, line) {
+  //   c.error([msg, url, line].join(' '));
+  //   if (oldOnError) {
+  //     return oldOnError(msg, url, line);
+  //   }
+  //   return true;
+  // };
 
   /* eslint-disable indent */ // ESLint seems to be very confused about below
 

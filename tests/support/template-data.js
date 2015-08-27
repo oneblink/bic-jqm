@@ -24,6 +24,22 @@ var bicVersion = (function () {
   return JSON.parse(contents[1].trim());
 }());
 
+function getScriptsHTML (bicVersion, config) {
+  var html = bicVersion.scripts.reduce(function (prev, current) {
+    var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
+    if (current.indexOf('bic.min.js') !== -1) {
+      return prev + '<script src="/bic.js"></script>';
+    }
+    return prev + '<script src="' + href + '"></script>';
+  }, '');
+
+  if (config && config.pertinent && config.pertinent.externalJavaScript) {
+    html += config.pertinent.externalJavaScript;
+  }
+
+  return html;
+}
+
 module.exports = function (BMP_HOST, req, callback) {
 
   var search = req.path.replace(/^\//, '');
@@ -56,13 +72,7 @@ module.exports = function (BMP_HOST, req, callback) {
           var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
           return prev + '<link rel="stylesheet" href="' + href + '" />';
         }, ''),
-        scripts_html: bicVersion.scripts.reduce(function (prev, current) {
-          var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
-          if (current.indexOf('bic.min.js') !== -1) {
-            return prev + '<script src="/bic.js"></script>';
-          }
-          return prev + '<script src="' + href + '"></script>';
-        }, ''),
+        scripts_html: getScriptsHTML(bicVersion, body['a' + answerSpaceId]),
         styleSheet: '',
         appCache: '',
         appCachePermalink: '/appcache.manifest?answerSpace=' + answerSpace

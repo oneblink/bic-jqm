@@ -28,6 +28,7 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
           getInvalidElements: function () {}
         }
       };
+      mockApp.attributes.currentForm = mockForms.current;
 
       mockApp.views = {
         FormControls: null
@@ -36,7 +37,10 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
       // import global `require('dep')` into local `injector.require('dep')`
       injector.mock('backbone', Backbone);
 
-      injector.mock('BlinkForms', mockForms);
+      injector.mock('bic/promise-forms', function () {
+        return Promise.resolve(mockForms);
+      });
+
       injector.mock('bic/model/application', mockApp);
       injector.mock('bic/view/form/controls', mockControls);
       injector.mock('bic/view/form/error-summary-list', MockErrorSummaryViewConstructor);

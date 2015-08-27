@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var _ = require('underscore');
-  var Forms = require('BlinkForms');
   var Promise = require('bic/promise');
 
   // local modules
@@ -19,43 +18,6 @@ define(function (require) {
 
   var FormCollection = Collection.extend({
     model: Form,
-
-    initialize: function () {
-      if (!Forms) {
-        Forms = {};
-      }
-
-      // BlinkForms expects this function to be defined by whatever is using it.
-      // otherwise, subforms will fall over.
-      Forms.getDefinition = function (name, action) {
-        var app = window.BMP.BIC;
-        var formDefinition;
-
-        return app.forms.whenUpdated()
-        .then(function () {
-          return new Promise(function (resolve, reject) {
-            var def = app.forms.get(name);
-            if (!def) {
-              return reject(new Error('unable to locate "' + name + '" definition'));
-            }
-
-            try {
-              formDefinition = Forms.flattenDefinition(def.attributes, action);
-              // BlinkForms.flattenDefinition returns a non backbone object
-              // so lets make sure that the leave interactions defined exist on it, so
-              // BlinkForms will use them when creating the form model.
-              if (def.get('onFormLeaveInteraction')) {
-                formDefinition.onFormLeaveInteraction = def.get('onFormLeaveInteraction');
-              }
-              resolve(formDefinition);
-            } catch (err) {
-              reject(err);
-            }
-          });
-        });
-      };
-
-    },
 
     datastore: function () {
       return Collection.prototype.datastore.call(this, NAME);

@@ -28,6 +28,7 @@ define(function (require) {
   var facade = require('bic/facade');
   var API = require('bic/api');
   var metaStore = require('bic/store-meta');
+  var loadForms = require('bic/promise-forms');
 
   // this module
 
@@ -71,6 +72,14 @@ define(function (require) {
       }
 
       $.mobile.changePage('/' + interactionPath.join('/'));
+    },
+
+    hasHomeInteraction: function () {
+      var app = this;
+      if (app.has('homeScreen') && app.get('homeScreen') !== false && app.has('homeInteraction')) {
+        return true;
+      }
+      return false;
     },
 
     collections: function () {
@@ -206,6 +215,7 @@ define(function (require) {
        )
         .then(
           function () {
+            loadForms();
             app.forms.whenUpdated();
             app.retrieveDataSuitcasesForInteractions();
             c.log('app.populate(): done');

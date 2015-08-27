@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var Backbone = require('backbone');
-  var Forms = require('BlinkForms');
   var $ = require('jquery');
   var _ = require('underscore');
   var Mustache = require('mustache');
@@ -49,7 +48,8 @@ define(function (require) {
     },
 
     gotoField: function (e) {
-      return Forms.current.get('_view').goToElement($(e.target).attr('for'));
+      var currentForm = this.model.attributes.currentForm;
+      return currentForm.get('_view').goToElement($(e.target).attr('for'));
     },
 
     showLess: function () {

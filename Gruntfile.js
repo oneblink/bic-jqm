@@ -45,7 +45,7 @@ module.exports = function (grunt) {
     watch: {
       src: {
         files: ['src/**/**', 'tests/**/**'],
-        tasks: ['build', 'eslint', 'karma']
+        tasks: ['build', 'eslint', 'karma:phantom']
       }
     },
 
@@ -85,6 +85,7 @@ module.exports = function (grunt) {
             '@blinkmobile/geolocation': '../node_modules/@blinkmobile/geolocation/geolocation',
             'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
             '@jokeyrhyme/deadline': '../node_modules/@jokeyrhyme/deadline/dist/index',
+            '@jokeyrhyme/promised-requirejs': '../node_modules/@jokeyrhyme/promised-requirejs/dist/index',
             text: '../node_modules/text/text',
             domReady: '../node_modules/domReady/domReady',
             uuid: '../node_modules/node-uuid/uuid',
