@@ -24,17 +24,13 @@ Now we do our Git Flow process and our testing:
 
 6. `grunt build; npm test`, confirm everything passes (if you changed package.json)
 
-7. JIRA: BIC-141 -> Add to Test Cycle(s), for x.x.x (Ad hoc)
+7. execute [MANUAL-TESTS.md](MANUAL-TESTS.md), fix issues until everything PASSes
 
-8. JIRA: BIC-141, in Text Executions, click the E next to new Test Cycle
+8. (from above JIRA guide) update CHANGELOG.md based on Issues Done (and commit)
 
-9. execute the Test Cycle, fix issues until everything PASSes
+9. bump version in package.json AND main.js (and commit)
 
-10. (from above JIRA guide) update CHANGELOG.md based on Issues Done (and commit)
-
-11. bump version in package.json AND main.js (and commit)
-
-12. `git flow release finish vx.x.x`, using "vx.x.x" as the tag's message
+10. `git flow release finish vx.x.x`, using "vx.x.x" as the tag's message
 
 - resolve any merge issues
 
@@ -45,11 +41,11 @@ just stop here.
 To point BIC at a new Forms version, change the `formsversion` property in
 package.json.
 
-13. `git checkout develop && git pull && git push`
+11. `git checkout develop && git pull && git push`
 
-14. `git checkout master && git pull && git push && git push --tags`
+12. `git checkout master && git pull && git push && git push --tags`
 
-15. `grunt build; npm test`, just to trigger a fresh build
+13. `grunt build; npm test`, just to trigger a fresh build
 
 Now the Git project is up to date and everything.
 
