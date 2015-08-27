@@ -8,6 +8,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
   var Promise = require('bic/promise');
+  var NotFoundError = require('typed-errors').NotFoundError;
 
   // local modules
 
@@ -24,6 +25,25 @@ define(function (require) {
   var $document = $(document);
 
   require('jquerymobile');
+
+  function handleFormRecordNotExisting () {
+    $('body').one('click', function () {
+      uiTools.hideLoadingAnimation();
+
+      if (app.history.length > 1) {
+        return;
+      }
+      $.mobile.changePage('/' + app.get('siteName'));
+
+    });
+
+    uiTools.showLoadingAnimation({
+      text: app.get('recordNotFoundMessage'),
+      textVisible: true,
+      textonly: true,
+      theme: 'a'
+    });
+  }
 
   Router = Backbone.Router.extend({
     initialize: function () {
@@ -156,10 +176,16 @@ define(function (require) {
             // http://api.jquerymobile.com/1.3/pagebeforeload/
             // data.deferred.resolve|reject is expected after data.preventDefault()
             data.deferred.resolve(data.absUrl, data.options, this.$el);
+          }).catch(function (rejectReason) {
+            data.deferred.reject(data.absUrl, data.options);
+
+            // TODO make every `reject()` reject with an Error Constructor
+            if (rejectReason instanceof NotFoundError) {
+              return handleFormRecordNotExisting(data);
+            }
           });
           view.render(data);
         })
-        // catch the error thrown when a model cant be found
         .catch(function (err) {
           c.error('router.routeRequest(): error...');
           c.error(err);

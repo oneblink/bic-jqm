@@ -46,10 +46,28 @@ define(function (require) {
 
     idAttribute: '_id',
 
+    /**
+     * @property {string} _id - The Answer space id
+     * @property {string} siteName - The site name
+     * @property {string} currentURL - The current URL
+     * @property {string} loginStatus - If the user is logged in or logged out
+     * @property {boolean} displayErrorSummary - controls the error summary display
+     * @property {string} defaultTransition - 'fade'. See http://api.jquerymobile.com/1.3/global-config/
+     * @property {string} recordNotFoundMessage - A Message to display to the user when a requested record is not found on the server.
+     */
     defaults: {
       _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
       loginStatus: false,
-      displayErrorSummary: true
+      displayErrorSummary: true,
+      siteName: undefined,
+      currentURL: undefined,
+
+      homeScreen: undefined,
+      homeInteraction: undefined,
+
+      defaultTransition: 'fade',
+      recordNotFoundMessage: 'The requested record does not exist on the server'
+
     },
 
     /**

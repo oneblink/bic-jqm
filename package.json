@@ -12,6 +12,7 @@
     "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
     "domReady": "requirejs/domReady#449478e133",
     "is-indexeddb-reliable": "blinkmobile/is-indexeddb-reliable#v1.0.1",
+    "js-typed-errors": "simonmarklar/js-typed-errors",
     "node-uuid": "1.4.3",
     "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "1.0.0",
