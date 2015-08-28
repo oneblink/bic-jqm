@@ -64,7 +64,7 @@ define(function (require) {
       homeInteraction: null,
 
       defaultTransition: 'fade',
-      recordNotFoundMessage: 'The requested record does not exist on the server'
+      recordNotFoundMessage: 'The requested record does not exist'
 
     },
 
