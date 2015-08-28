@@ -49,7 +49,6 @@ define(function (require) {
     /**
      * @property {string} _id - The Answer space id
      * @property {string} siteName - The site name
-     * @property {string} currentURL - The current URL
      * @property {string} loginStatus - If the user is logged in or logged out
      * @property {boolean} displayErrorSummary - controls the error summary display
      * @property {string} defaultTransition - 'fade'. See http://api.jquerymobile.com/1.3/global-config/
@@ -57,13 +56,12 @@ define(function (require) {
      */
     defaults: {
       _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
-      loginStatus: false,
+      loginStatus: '',
       displayErrorSummary: true,
-      siteName: undefined,
-      currentURL: undefined,
+      siteName: '',
 
-      homeScreen: undefined,
-      homeInteraction: undefined,
+      homeScreen: null,
+      homeInteraction: null,
 
       defaultTransition: 'fade',
       recordNotFoundMessage: 'The requested record does not exist on the server'

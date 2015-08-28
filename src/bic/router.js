@@ -169,7 +169,7 @@ define(function (require) {
         })
         .then(function (view) {
           view.once('render', function () {
-            this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
+            this.$el.attr('data-url', data.dataUrl);
             this.$el.attr('data-external-page', true);
             this.$el.one('pagecreate', $.mobile._bindPageRemove);
 
