@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <firstLevel>
+    <id>21</id>
+    <first_level_req>hgjhj</first_level_req>
+    <second_level_test>
+      <second_level_field>
+        <id>8</id>
+        <second_level_text>Second Level Text</second_level_text>
+        <hidden_when_first></hidden_when_first>
+        <hidden_when_text_is_a>Hidden When Text Is A</hidden_when_text_is_a>
+        <third_level>
+          <third_level_sub>
+            <id>6</id>
+            <third_level_req>Third Level Req</third_level_req>
+          </third_level_sub>
+        </third_level>
+        <trigger_field>Trigger Field</trigger_field>
+      </second_level_field>
+    </second_level_test>
+  </firstLevel>
