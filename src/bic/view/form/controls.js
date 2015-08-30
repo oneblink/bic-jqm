@@ -51,8 +51,19 @@ define(function (require) {
     return uiTools.enableElement('#save');
   };
 
-  function scrollToFirstError (invalidElements) {
-    invalidElements.errors[0].get('_view').scrollTo();
+  function scrollToFirstError (invalidElements, currentForm) {
+    var erroredElement = invalidElements.errors[0];
+    var page = erroredElement.get('page');
+    var pages = currentForm.get('pages');
+
+    if (pages.current.cid !== page.cid) {
+      pages.goto(page);
+      currentForm.once('pageInjected', function () {
+        erroredElement.get('_view').scrollTo();
+      });
+      return;
+    }
+    erroredElement.get('_view').scrollTo();
   }
 
   function checkFormForErrors (model) {
@@ -204,7 +215,7 @@ define(function (require) {
             .then(undefined, function (invalidElements) {
               me.model.trigger('showErrors');
               enableSubmit();
-              scrollToFirstError(invalidElements);
+              scrollToFirstError(invalidElements, me.model.attributes.currentForm);
             });
       } else {
         uiTools.showLoadingAnimation();
@@ -254,7 +265,7 @@ define(function (require) {
           .then(undefined, function (invalidElements) {
             me.model.trigger('showErrors');
             enableSubmit();
-            scrollToFirstError(invalidElements);
+            scrollToFirstError(invalidElements, me.model.attributes.currentForm);
           });
       }
     },
@@ -283,11 +294,12 @@ define(function (require) {
       })
       .then(undefined, function (invalidElements) {
         enableSave();
-        scrollToFirstError(invalidElements);
+        scrollToFirstError(invalidElements, me.model.attributes.currentForm);
       });
     },
 
     formSave2: function () {
+      var currentForm = this.model.attributes.currentForm;
       uiTools.disableElement('#save');
       this.addToQueue(MODEL_STATUS.DRAFT)
           .then(function (updatedModel) {
@@ -298,7 +310,7 @@ define(function (require) {
           }.bind(this))
           .then(undefined, function (invalidElements) {
             enableSave();
-            scrollToFirstError(invalidElements);
+            scrollToFirstError(invalidElements, currentForm);
           });
     },
 
