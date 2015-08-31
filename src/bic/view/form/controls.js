@@ -245,7 +245,7 @@ define(function (require) {
             }
             app.view.popup(html);
           })
-          .then(uiTools.hideLoadingAnimation) 
+          .then(uiTools.hideLoadingAnimation)
           .catch(function (invalidElements) {
             me.model.trigger('showErrors');
             enableSubmit();
