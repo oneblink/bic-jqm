@@ -25,12 +25,12 @@ define(function (require) {
     defaults: {
       type: 'Form',
       status: MODEL_STATUS.PENDING,
-      result: undefined,
-      errors: undefined,
-      name: undefined,
-      action: undefined,
-      data: undefined,
-      answerspaceid: undefined
+      result: null,
+      errors: null,
+      name: '',
+      action: '',
+      data: null,
+      answerspaceid: ''
     },
 
     /**

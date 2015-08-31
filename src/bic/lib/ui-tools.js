@@ -45,9 +45,11 @@ define(function (require) {
 
   /**
   shows the loading animation
+
+    @param {Object} - The jquery mobile options to pass to [$.mobile.loading]{@link http://api.jquerymobile.com/1.3/loader/}
   */
-  var showLoadingAnimation = exports.showLoadingAnimation = function () {
-    $.mobile.loading('show');
+  var showLoadingAnimation = exports.showLoadingAnimation = function (options) {
+    $.mobile.loading('show', options);
   };
 
   /**
