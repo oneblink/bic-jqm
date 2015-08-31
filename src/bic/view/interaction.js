@@ -551,6 +551,8 @@ define(function (require) {
             reject('GeoLocation error: blank location from browser / device');
           }
         }, function (error) {
+          // Travis eslint is complaining about the indentation whilst local is not
+          /* eslint-disable indent */
           var string;
           // ESLint bug: https://github.com/eslint/eslint/issues/2038
           /* eslint-disable no-duplicate-case */
@@ -570,6 +572,7 @@ define(function (require) {
           /* eslint-enable no-duplicate-case */
           reject('GeoLocation error: ' + string);
         }, options);
+        /* eslint-enable indent */
       });
     };
 
