@@ -51,21 +51,6 @@ define(function (require) {
     return uiTools.enableElement('#save');
   };
 
-  function scrollToFirstError (invalidElements, currentForm) {
-    var erroredElement = invalidElements.errors[0];
-    var page = erroredElement.get('page');
-    var pages = currentForm.get('pages');
-
-    if (pages.current.cid !== page.cid) {
-      pages.goto(page);
-      currentForm.once('pageInjected', function () {
-        erroredElement.get('_view').scrollTo();
-      });
-      return;
-    }
-    erroredElement.get('_view').scrollTo();
-  }
-
   function checkFormForErrors (model) {
     var currentForm = model.attributes.currentForm;
     var formErrors = currentForm.getInvalidElements();
@@ -211,11 +196,10 @@ define(function (require) {
         formErrors = currentForm.getInvalidElements();
         this.addToQueue(formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
-            // CATCH - enable submit if there has been an error
-            .then(undefined, function (invalidElements) {
+            .catch(function (invalidElements) {
               me.model.trigger('showErrors');
               enableSubmit();
-              scrollToFirstError(invalidElements, me.model.attributes.currentForm);
+              currentForm.get('_view').goToElement(invalidElements.errors[0]);
             });
       } else {
         uiTools.showLoadingAnimation();
@@ -260,12 +244,12 @@ define(function (require) {
               html = '<p>' + html + '</p>';
             }
             app.view.popup(html);
-          }).then(uiTools.hideLoadingAnimation)
-          // CATCH - enable submit if there has been an error
-          .then(undefined, function (invalidElements) {
+          })
+          .then(uiTools.hideLoadingAnimation) 
+          .catch(function (invalidElements) {
             me.model.trigger('showErrors');
             enableSubmit();
-            scrollToFirstError(invalidElements, me.model.attributes.currentForm);
+            currentForm.get('_view').goToElement(invalidElements.errors[0]);
           });
       }
     },
@@ -292,9 +276,9 @@ define(function (require) {
         $('#closePopup').one('popupafterclose', leaveViewBy(me, USER_ACTIONS.SAVE));
         $('#closePopup').popup('close');
       })
-      .then(undefined, function (invalidElements) {
+      .catch(function (invalidElements) {
         enableSave();
-        scrollToFirstError(invalidElements, me.model.attributes.currentForm);
+        me.model.attributes.currentForm.get('_view').goToElement(invalidElements.errors[0]);
       });
     },
 
@@ -308,9 +292,9 @@ define(function (require) {
               enableSave();
             }, 1e3);
           }.bind(this))
-          .then(undefined, function (invalidElements) {
+          .catch(function (invalidElements) {
             enableSave();
-            scrollToFirstError(invalidElements, currentForm);
+            currentForm.get('_view').goToElement(invalidElements.errors[0]);
           });
     },
 
