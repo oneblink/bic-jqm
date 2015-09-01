@@ -8,6 +8,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var Modernizr = require('modernizr');
   var Promise = require('bic/promise');
+  var NotFoundError = require('typed-errors').NotFoundError;
 
   // local modules
 
@@ -24,6 +25,25 @@ define(function (require) {
   var $document = $(document);
 
   require('jquerymobile');
+
+  function handleFormRecordNotExisting () {
+    $('body').one('click', function () {
+      uiTools.hideLoadingAnimation();
+
+      if (app.history.length > 1) {
+        return;
+      }
+      $.mobile.changePage('/' + app.get('siteName'));
+
+    });
+
+    uiTools.showLoadingAnimation({
+      text: app.get('recordNotFoundMessage'),
+      textVisible: true,
+      textonly: true,
+      theme: 'a'
+    });
+  }
 
   Router = Backbone.Router.extend({
     initialize: function () {
@@ -149,7 +169,7 @@ define(function (require) {
         })
         .then(function (view) {
           view.once('render', function () {
-            this.$el.attr('data-url', data.dataUrl); // .replace(/['"]/g, convertIllegalUrlChars));
+            this.$el.attr('data-url', data.dataUrl);
             this.$el.attr('data-external-page', true);
             this.$el.one('pagecreate', $.mobile._bindPageRemove);
 
@@ -159,7 +179,6 @@ define(function (require) {
           });
           view.render(data);
         })
-        // catch the error thrown when a model cant be found
         .catch(function (err) {
           c.error('router.routeRequest(): error...');
           c.error(err);
@@ -167,6 +186,10 @@ define(function (require) {
           // http://api.jquerymobile.com/1.3/pagebeforeload/
           // data.deferred.resolve|reject is expected after data.preventDefault()
           data.deferred.reject(data.absUrl, data.options);
+
+          if (err instanceof NotFoundError) {
+            return handleFormRecordNotExisting(data);
+          }
 
           $.mobile.showPageLoadingMsg($.mobile.pageLoadErrorMessageTheme, $.mobile.pageLoadErrorMessage, true);
 

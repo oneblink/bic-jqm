@@ -111,6 +111,32 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
           done();
         });
       });
+
+      it('should keep subform xml information', function (done) {
+        var model;
+
+        api.getFormRecord = function () {
+          return $.ajax('/tests/assets/singleFormRecordWithSubforms.xml');
+        };
+
+        model = new Model({_id: '1', formName: 'firstLevel'});
+        model.populate();
+        model.on('change', function () {
+          var subformXML;
+          var xmlDOM;
+          var parser = new DOMParser();
+
+          subformXML = model.get('record').second_level_test;
+          assert.isString(subformXML);
+
+          xmlDOM = parser.parseFromString(subformXML, 'text/xml');
+
+          //subform tag names will be the name of the element, or html;
+          //if there was a parse error
+          assert.notEqual(xmlDOM.documentElement.tagName, 'html');
+          done();
+        });
+      });
     });
   });
 });

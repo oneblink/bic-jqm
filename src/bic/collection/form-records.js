@@ -40,7 +40,7 @@ define(function (require) {
               if (key.nodeName === 'id') {
                 parsed.id = key.textContent;
               } else if (key.nodeType === key.ELEMENT_NODE) {
-                parsed.list[key.nodeName] = key.textContent;
+                parsed.list[key.nodeName] = key.children.length ? key.innerHTML : key.textContent;
               }
             };
 

@@ -10,6 +10,7 @@ require.config({
     '@blinkmobile/geolocation': 'node_modules/@blinkmobile/geolocation/geolocation',
     '@jokeyrhyme/deadline': 'node_modules/@jokeyrhyme/deadline/dist/index',
     '@jokeyrhyme/promised-requirejs': 'node_modules/@jokeyrhyme/promised-requirejs/dist/index',
+    'typed-errors': 'node_modules/js-typed-errors/dist/typed-errors',
     Squire: 'node_modules/squirejs/src/Squire',
     pollUntil: 'node_modules/poll-until/poll-until',
     mustache: 'node_modules/mustache/mustache',

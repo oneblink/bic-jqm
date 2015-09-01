@@ -7,11 +7,13 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Promise = require('bic/promise');
+  var NotFoundError = require('typed-errors').NotFoundError;
 
   // local modules
 
   var facade = require('bic/facade');
   var API = require('bic/api');
+  var uiTools = require('bic/lib/ui-tools');
 
   // this module
 
@@ -19,6 +21,8 @@ define(function (require) {
   var makeArgId;
   var extractArgProp;
   var convertQueryStringArrays;
+
+  var INTERACTIONS_THAT_NEED_VALID_ID = ['delete', 'edit', 'view'];
 
   // helper for flattening the processed query string
   convertQueryStringArrays = function (args, key) {
@@ -48,6 +52,16 @@ define(function (require) {
 
     return match ? match[1] : keyName;
   };
+
+  // bypass the pending queue and check the server that this form record exists on the server
+  // wrap the api in a native promise because jquery.
+  function checkIfFormRecordExists (formName, formAction, recordID) {
+    return new Promise(function (resolve, reject) {
+      API.getFormRecord(formName, formAction, recordID)
+         .done(resolve)
+         .fail(reject);
+    });
+  }
 
 // end private
 
@@ -201,6 +215,19 @@ The argument change event.
         }
 
         if (model.get('type') !== 'madl code' && model.id !== window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
+          if (INTERACTIONS_THAT_NEED_VALID_ID.indexOf(model.get('blinkFormAction')) > -1) {
+            uiTools.showLoadingAnimation();
+            return checkIfFormRecordExists(model.get('blinkFormObjectName'), model.get('blinkFormAction'), model.getArgument('id'))
+                      .then(function () {
+                        uiTools.hideLoadingAnimation();
+                        resolve(model);
+                      })
+                      .catch(function () {
+                        uiTools.hideLoadingAnimation();
+                        reject(new NotFoundError('Form Record not found'));
+                      });
+          }
+
           resolve(model);
         }
 

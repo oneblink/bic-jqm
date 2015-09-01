@@ -27,7 +27,7 @@ define(function (require) {
 
           _.each(node.childNodes, function (key) {
             if (key.nodeType === key.ELEMENT_NODE) {
-              record[key.nodeName] = key.textContent;
+              record[key.nodeName] = key.children.length ? key.innerHTML.trim() : key.textContent;
             }
           });
 

@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v4.1.1 - 2015-09-01
+
+
+### Fixed
+
+- BIC-202: guard against submitting data that may result in unsafe SQL DELETEs
+
+    - HelpDesk: 1593-QEIK-1411
+
+- BIC-205: pre-existing sub-record data now loads as expected
+
+- BIC-206: form submission with a validation error on a different page will no longer throw a `TypeError`
+
+
 ## v4.1.0 - 2015-08-27
 
 

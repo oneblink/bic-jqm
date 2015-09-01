@@ -106,32 +106,32 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
           formRecord += '<test><id>2</id><Text1>12</Text1><Text2>22</Text2><Text3>32</Text3></test>';
           formRecord += '</xml>';
 
-          return Promise.resolve(parser.parseFromString(formRecord, "text/xml"));
+          return Promise.resolve(parser.parseFromString(formRecord, 'text/xml'));
         };
 
         collection = new Collection();
         form = 'test';
         record = [{
           'formName': form,
-          'id': "1",
+          'id': '1',
           'list': {
-            'Text1': "1",
-            'Text2': "2",
-            'Text3': "3"
+            'Text1': '1',
+            'Text2': '2',
+            'Text3': '3'
           }
         }, {
           'formName': form,
-          'id': "2",
+          'id': '2',
           'list': {
-            'Text1': "12",
-            'Text2': "22",
-            'Text3': "32"
+            'Text1': '12',
+            'Text2': '22',
+            'Text3': '32'
           }
         }];
 
         collection.pull(form).then(function () {
           record.forEach(function (rec, i) {
-            rec._id = form + "-" + rec.id;
+            rec._id = form + '-' + rec.id;
             assert.deepEqual(rec, collection.models[i].toJSON());
           });
           done();
@@ -152,28 +152,54 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         form = 'test';
         record = [{
           'formName': form,
-          'id': "1",
+          'id': '1',
           'list': {
-            'Text1': "1",
-            'Text2': "2",
-            'Text3': "3"
+            'Text1': '1',
+            'Text2': '2',
+            'Text3': '3'
           }
         }, {
           'formName': form,
-          'id': "2",
+          'id': '2',
           'list': {
-            'Text1': "12",
-            'Text2': "22",
-            'Text3': "32"
+            'Text1': '12',
+            'Text2': '22',
+            'Text3': '32'
           }
         }];
 
         collection.pull(form).then(function () {
           record.forEach(function (rec, i) {
-            rec._id = form + "-" + rec.id;
+            rec._id = form + '-' + rec.id;
             assert.deepEqual(rec, collection.models[i].toJSON());
           });
           done();
+        });
+      });
+
+      it('should keep subform xml information (prettified XML)', function () {
+        var collection;
+
+        api.getFormList = function () {
+          return $.ajax('/tests/assets/singleFormRecordWithSubforms.xml');
+        };
+
+        collection = new Collection();
+
+        return collection.pull('firstLevel').then(function () {
+          var subformXML;
+          var xmlDOM;
+          var parser = new DOMParser();
+
+          assert.strictEqual(collection.length, 1);
+          subformXML = collection.at(0).get('list').second_level_test;
+          assert.isString(subformXML);
+
+          xmlDOM = parser.parseFromString(subformXML, 'text/xml');
+
+          //subform tag names will be the name of the element, or html;
+          //if there was a parse error
+          assert.notEqual(xmlDOM.documentElement.tagName, 'html');
         });
       });
     });
