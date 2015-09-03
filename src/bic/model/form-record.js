@@ -3,32 +3,28 @@ define(function (require) {
 
   // foreign modules
 
+  var $ = require('jquery');
   var _ = require('underscore');
   var Backbone = require('backbone');
 
   // local modules
 
   var API = require('bic/api');
+  var parseFormChildXML = require('bic/lib/parse-form-child-xml');
 
   // this module
-
-  var FormRecord = Backbone.Model.extend({
+  return Backbone.Model.extend({
     idAttribute: '_id',
 
     populate: function (action, callback) {
       var model = this;
-      API.getFormRecord(model.get('formName'), action, model.get('id')).then(
+      var formName = model.get('formName');
+      API.getFormRecord(formName, action, model.get('id')).then(
         function (data) {
-          var nodes, node, record;
+          var record = {};
 
-          record = {};
-          nodes = data.evaluate('//' + model.get('formName'), data, null, XPathResult.ANY_TYPE, null);
-          node = nodes.iterateNext();
-
-          _.each(node.childNodes, function (key) {
-            if (key.nodeType === key.ELEMENT_NODE) {
-              record[key.nodeName] = key.children.length ? key.innerHTML.trim() : key.textContent;
-            }
+          $(formName, data).children().each(function (index, nodeChild) {
+            _.extend(record, parseFormChildXML(nodeChild));
           });
 
           model.set({
@@ -44,6 +40,4 @@ define(function (require) {
      );
     }
   });
-
-  return FormRecord;
 });
