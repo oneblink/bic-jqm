@@ -18,7 +18,7 @@ define(function (require) {
   var FormInteractionView = require('bic/view/interaction/form');
   var uiTools = require('bic/lib/ui-tools');
   var whenDOMReady = require('bic/promise-dom-ready');
-
+  var parseUrlPath = require('bic/lib/url-path-parser');
   // this module
 
   var Router;
@@ -92,9 +92,6 @@ define(function (require) {
         .then(function () {
           return app.setup();
         })
-        .then(null, function () {
-          return;
-        })
         .then(function () {
           // Need to hang around until native offline is ready
           return new Promise(function (resolve, reject) {
@@ -116,15 +113,11 @@ define(function (require) {
         .then(function () {
           return app.populate();
         })
-        .then(null, function (err) {
-          c.error(err);
-          return;
-        })
         .then(whenDOMReady)
         .then(function () {
           return app.initialRender();
         })
-        .then(null, function (err) {
+        .catch(function (err) {
           c.error(err);
           throw err;
         });
@@ -207,20 +200,13 @@ define(function (require) {
     inheritanceChain: function (data) {
       var path, parentModel, parent, usedPathItems;
 
-      path = (data.pathname || data.path || '').substr(1).toLowerCase().split('/').reverse();
+      path = parseUrlPath(data.pathname || data.path || '');
 
-      parent = path[path.length - 1];
+      parent = path.length ? path[path.length - 1] : app.siteVars.answerSpace.toLowerCase();
       usedPathItems = [];
 
-      // account for file:/// with triple slash, or leading slashes
-      if (path[0] === '') {
-        path.shift();
-      }
-
-      if (this.isOfflineFirst) {
-        if (path[0] === 'index.html' && path[1] === 'www') {
-          path = [ app.siteVars.answerSpace.toLowerCase() ];
-        }
+      if (this.isOfflineFirst && !path.length) {
+        path = [app.siteVars.answerSpace.toLowerCase()];
       }
 
       _.each(path, function (element, index) {
