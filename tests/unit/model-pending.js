@@ -152,7 +152,6 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
                 done();
               });
       });
-
     });
   });
 });

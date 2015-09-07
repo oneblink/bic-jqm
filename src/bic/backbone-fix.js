@@ -76,5 +76,4 @@ define(function (require) {
     // Hook Backbone.sync up to the data layer
     return Backbone.getSyncMethod(model).apply(this, arguments);
   };
-
 });

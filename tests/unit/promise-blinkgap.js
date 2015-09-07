@@ -6,7 +6,6 @@ define(['Squire'], function (Squire) {
   var CONTEXT = 'tests/unit/promise-blinkgap.js';
 
   describe('whenBlinkGapReady', function () {
-
     var injector, promise;
 
     before(function (done) {
@@ -48,6 +47,5 @@ define(['Squire'], function (Squire) {
         done();
       });
     });
-
   });
 });

@@ -34,7 +34,6 @@ define(function (require) {
         return;
       }
       $.mobile.changePage('/' + app.get('siteName'));
-
     });
 
     uiTools.showLoadingAnimation({
@@ -225,7 +224,7 @@ define(function (require) {
       }
 
       _.each(path, function (element, index) {
-        if (!_.find(usedPathItems, function (id) {return id === element; })) {
+        if (!_.find(usedPathItems, function (id) { return id === element; })) {
           parentModel = app.interactions.get(element) || app.interactions.where({dbid: 'i' + element})[0] || null;
           if (parent && parentModel) {
             if (index !== path.length - 1) {

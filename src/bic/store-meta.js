@@ -10,5 +10,4 @@ define(function (require) {
   var NAME = window.BMP.BIC.siteVars.answerSpace.toLowerCase() + '-Meta';
 
   return new Data(NAME);
-
 });

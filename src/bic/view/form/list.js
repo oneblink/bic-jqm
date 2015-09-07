@@ -65,7 +65,6 @@ define(function (require) {
 
             view.$el.html(Mustache.render(view.constructor.template, templateData));
             view.trigger('render');
-
           });
         },
         function () {

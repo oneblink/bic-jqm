@@ -26,5 +26,4 @@ define(function () {
     remove: asyncError
 
   };
-
 });

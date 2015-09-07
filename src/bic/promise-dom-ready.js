@@ -18,5 +18,4 @@ define(function (require) {
       resolve();
     });
   });
-
 });

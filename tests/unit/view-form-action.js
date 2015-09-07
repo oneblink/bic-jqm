@@ -97,7 +97,5 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
         assert.equal(formActionView.renderErrorSummary().test(), 'it is overridden');
       });
     });
-
   });
-
 });
