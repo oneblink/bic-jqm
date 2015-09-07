@@ -57,7 +57,6 @@ define(['jquery', 'Squire', 'chai'], function ($, Squire, chai) {
     describe('browser url paths', makeTests('/'));
 
     describe('cordova url paths', function () {
-
       /*
         Cordova prefixes taken from
         https://github.com/apache/cordova-plugin-file
