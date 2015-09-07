@@ -86,7 +86,6 @@ define([
       });
 
       describe('view.popup()', function () {
-
         it('is a function', function () {
           assert.isFunction(view.popup);
         });
@@ -202,19 +201,14 @@ define([
   });
 
   describe('BMP.geolocation', function () {
-
     it('should exist', function () {
       should.exist(BMP.geolocation);
     });
-
   });
 
   describe('BMP.BIC.getCurrentPosition', function () {
-
     it('should exist', function () {
       should.exist(BMP.BIC.getCurrentPosition);
     });
-
   });
-
 });

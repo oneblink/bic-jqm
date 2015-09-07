@@ -230,7 +230,6 @@ The argument change event.
 
           resolve(model);
         }
-
       });
     },
 

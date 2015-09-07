@@ -96,7 +96,6 @@ define([
     });
 
     describe('#collections', function () {
-
       afterEach(function (done) {
         delete model.interactions;
         delete model.datasuitcases;
@@ -176,11 +175,9 @@ define([
     });
 
     describe('#setup', function () {
-
       it('should return a promise', function () {
         expect(model.setup()).to.be.instanceOf(Promise);
       });
-
     });
 
     describe('#populate', function () {

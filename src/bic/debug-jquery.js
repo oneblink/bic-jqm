@@ -123,5 +123,4 @@ define(function (require) {
   ].forEach(function (fn) {
     logFnDecorator(fn, '$.mobile.');
   });
-
 });

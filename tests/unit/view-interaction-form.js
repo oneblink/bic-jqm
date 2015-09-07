@@ -116,9 +116,6 @@ define([
         assert.instanceOf(Forms.current, Backbone.Model);
         assert.equal(Forms.current, view.model.attributes.currentForm);
       });
-
     });
-
   });
-
 });

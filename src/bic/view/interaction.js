@@ -217,7 +217,6 @@ define(function (require) {
             }
           });
           this.model.performXSLT();
-
         } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
           // Home Screen
           view.$el.html(Mustache.render(Template, {
@@ -526,7 +525,6 @@ define(function (require) {
             }
           });
         }
-
       }
     }, {
       preparePendingQueueSubView: function () {

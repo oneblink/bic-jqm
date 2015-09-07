@@ -85,5 +85,4 @@ define(function (require) {
       }
    );
   };
-
 });

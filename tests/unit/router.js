@@ -9,7 +9,6 @@ define([
     var injector, model, collection;
 
     before(function (done) {
-
       var cfg = JSON.parse(JSON.stringify(requirejs.s.contexts._.config));
       cfg.context = CONTEXT;
       require.config(cfg);
@@ -64,7 +63,6 @@ define([
       injector.mock('bic/view/interaction', Backbone.View);
       injector.mock('bic/view/interaction/form', Backbone.View);
       done();
-
     });
 
     after(function () {
@@ -77,7 +75,6 @@ define([
 
       beforeEach(function (done) {
         injector.require(['bic/router', 'bic/model/application'], function (r, a) {
-
           router = r;
           app = a;
           done();
@@ -90,7 +87,6 @@ define([
       });
 
       it('should not throw an error', function () {
-
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('not a form');
         stub.withArgs('blinkFormAction').throws('Error');
@@ -100,7 +96,6 @@ define([
       });
 
       it('should not throw an error', function () {
-
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('form');
         stub.withArgs('blinkFormAction').returns('not savable');
@@ -111,7 +106,6 @@ define([
       });
 
       it('should throw an error', function () {
-
         var stub = sinon.stub(app.currentInteraction, 'get');
         stub.withArgs('type').returns('form');
         stub.withArgs('blinkFormAction').returns('add');
@@ -131,7 +125,6 @@ define([
 
       beforeEach(function (done) {
         injector.require(['bic/router'], function (r) {
-
           router = r;
           parseLocationStub = sinon.stub($.mobile.path, 'parseLocation');
           changeMock = sinon.mock($.mobile);
@@ -158,7 +151,6 @@ define([
         router.resumeApplication();
 
         expectation.verify();
-
       });
 
       it('should not call $.mobile.changePage', function () {
@@ -169,11 +161,9 @@ define([
         router.resumeApplication();
 
         expectation.verify();
-
       });
 
       it('should call $.mobile.changePage', function () {
-
         parseLocationStub.returns({href: testUrl + '1234'});
         localStorage.setItem('pauseURL', testUrl);
         expectation.once();
@@ -181,9 +171,7 @@ define([
         router.resumeApplication();
 
         expectation.verify();
-
       });
-
     });
     // describe('routeRequest', function () {
     //   var router;

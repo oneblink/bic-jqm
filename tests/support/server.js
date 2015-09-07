@@ -115,7 +115,6 @@ server.route({
       reply(contents).header('Content-Type', 'text/html')
         .header('X-BMP-Gap-Target', 'bmp-blinkgap-js')
         .header("X-BMP-Version", "3.xx.x");
-
     });
   }
 });

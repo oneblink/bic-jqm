@@ -41,7 +41,6 @@ function getScriptsHTML (bicVersion, config) {
 }
 
 module.exports = function (BMP_HOST, req, callback) {
-
   var search = req.path.replace(/^\//, '');
   var searchParts = search.split('/');
   var answerSpace = searchParts[0];
@@ -81,5 +80,4 @@ module.exports = function (BMP_HOST, req, callback) {
       BIC: bicVersion
     });
   });
-
 };

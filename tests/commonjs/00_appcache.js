@@ -21,7 +21,6 @@ var appCache;
 var config;
 
 test('AppCache', function (t) {
-
   t.test('is correctly formatted', function (tt) {
     var filePath = path.join(projectPath, 'src', 'buildFiles', 'templates', 'appcache.mustache');
     var template = fs.readFileSync(filePath, { encoding: 'utf8' });
@@ -44,7 +43,6 @@ test('AppCache', function (t) {
 });
 
 test('runtime Require.js configuration', function (t) {
-
   t.test('sets "paths"', function (tt) {
     config = require(path.join(projectPath, 'src', 'frag', '00-config'));
 
@@ -56,7 +54,6 @@ test('runtime Require.js configuration', function (t) {
 });
 
 test('AppCache vs Require.js', function (t) {
-
   t.test('every Require.js CDN path is in the AppCache', function (tt) {
     var paths = Object.keys(config.paths).map(function (id) {
       return config.paths[id][1]; // this is the /_c_/ path from frag/00-config.js

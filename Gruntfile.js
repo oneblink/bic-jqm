@@ -245,5 +245,4 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
-
 };
