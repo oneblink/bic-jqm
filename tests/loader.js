@@ -80,7 +80,8 @@ require([
   'tests/unit/view-error-summary-list',
   'tests/unit/model-form-record',
   'tests/unit/collection-form-records',
-  'tests/unit/lib/parse-form-child-xml'
+  'tests/unit/lib/parse-form-child-xml',
+  'tests/unit/lib/url-path-parser'
 ], function (chai, Backbone, Promise) {
   'use strict';
 
