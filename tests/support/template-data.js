@@ -24,8 +24,8 @@ var bicVersion = (function () {
   return JSON.parse(contents[1].trim());
 }());
 
-function getScriptsHTML (bicVersion, config) {
-  var html = bicVersion.scripts.reduce(function (prev, current) {
+function getScriptsHTML (bic, config) {
+  var html = bic.scripts.reduce(function (prev, current) {
     var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
     if (current.indexOf('bic.min.js') !== -1) {
       return prev + '<script src="/bic.js"></script>';

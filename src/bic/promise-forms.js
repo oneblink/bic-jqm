@@ -40,10 +40,10 @@ define(function (require) {
             formDefinition.onFormLeaveInteraction = def.get('onFormLeaveInteraction');
           }
           resolve(formDefinition);
-        } catch (err) {
+        } catch (defErr) {
           c.error('BMP.Forms.getDefinition():');
-          c.error(err);
-          reject(err);
+          c.error(defErr);
+          reject(defErr);
         }
       });
     });

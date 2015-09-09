@@ -139,7 +139,7 @@ setArgsFromQueryString('?args[pid]=23&args[id]=1&args[arr]=1&args[arr]=2&args[ar
         return;
       }
 
-      _.each(args, function (arg) { this.setArgument.apply(this, arg); }, this);
+      args.forEach(function (arg) { this.setArgument.apply(this, arg); }, this);
     },
 
 /**
@@ -239,7 +239,7 @@ The argument change event.
       model.set({interactionList: _.map(_.filter(models, function (value) {
         return value.id !== siteVars.answerSpace.toLowerCase() && value.get('display') !== 'hide' && (!value.has('tags') || value.has('tags') && value.get('tags').length === 0 || _.filter(value.get('tags'), function (element) {
           return element === 'nav-' + siteVars.answerSpace.toLowerCase();
-        }, this).length > 0);
+        }).length > 0);
       }, this), function (value) {
         return value.attributes;
       })});

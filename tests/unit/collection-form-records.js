@@ -94,7 +94,6 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
 
     describe('API.getFormList(formName)', function () {
       it('should correctly parse the xml (one line xml)', function (done) {
-        var collection;
         var record;
 
         api.getFormList = function () {
@@ -139,7 +138,6 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
       });
 
       it('should correctly parse the xml (prettified XML)', function (done) {
-        var collection;
         var record;
 
         this.timeout(5e3);
@@ -178,8 +176,6 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
       });
 
       it('should keep subform xml information (prettified XML)', function () {
-        var collection;
-
         api.getFormList = function () {
           return $.ajax('/tests/assets/singleFormRecordWithSubforms.xml');
         };

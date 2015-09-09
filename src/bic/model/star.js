@@ -13,7 +13,7 @@ define(function (require) {
     initialize: function () {
       this.on('add', function () {
         this.save();
-      }, this);
+      }.bind(this));
     },
 
     toggle: function () {
