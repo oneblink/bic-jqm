@@ -48,8 +48,7 @@ define(function (require) {
     },
 
     gotoField: function (e) {
-      var currentForm = this.model.attributes.currentForm;
-      return currentForm.get('_view').goToElement($(e.target).attr('for'));
+      return this.model.get('_view').goToElement($(e.target).attr('for'));
     },
 
     showLess: function () {
