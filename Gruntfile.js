@@ -45,12 +45,8 @@ module.exports = function (grunt) {
     watch: {
       src: {
         files: ['src/**/**', 'tests/**/**'],
-        tasks: ['build', 'eslint', 'karma:phantom']
+        tasks: ['build', 'karma:phantom']
       }
-    },
-
-    eslint: {
-      target: [ './' ]
     },
 
     karma: {
@@ -231,7 +227,6 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-concurrent');
@@ -240,7 +235,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mustache-render');
   grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['build', 'eslint', 'hapi:test', 'karma:phantom']);
+  grunt.registerTask('test', ['build', 'hapi:test', 'karma:phantom']);
 
   grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
