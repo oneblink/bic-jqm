@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "4.1.2",
+  "version": "4.1.3",
   "formsversion": "3.7.1",
   "main": "Gruntfile.js",
   "dependencies": {
