@@ -332,7 +332,6 @@ define(function (require) {
                 if (invalidElements && invalidElements.length) {
                   return reject(invalidElements);
                 }
-
               } else {
                 pendingModel.once('processed', function () {
                   var result = pendingModel.get('result');

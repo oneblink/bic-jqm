@@ -90,7 +90,5 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
         assert.equal(formActionView.render().$el.find('#test').text(), 'modified');
       });
     });
-
   });
-
 });

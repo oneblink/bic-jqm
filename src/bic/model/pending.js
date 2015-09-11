@@ -42,7 +42,6 @@ define(function (require) {
       var self = this;
 
       return new Promise(function (resolve, reject) {
-
         var processed = function (result) {
           // the listener for this is in view-form-controls.js:325
           // shows popup and then removes the model from the collection.

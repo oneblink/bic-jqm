@@ -73,5 +73,4 @@ define(function (require) {
       return Promise.resolve(Forms);
     });
   };
-
 });

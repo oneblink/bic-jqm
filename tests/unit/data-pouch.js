@@ -60,7 +60,6 @@ define(['Squire'], function (Squire) {
         it('should return a boolean', function () {
           assert.isBoolean(data.hasStorage());
         });
-
       });
 
       describe('#getDB', function () {
@@ -84,7 +83,6 @@ define(['Squire'], function (Squire) {
             done();
           });
         });
-
       });
 
       describe('promise-pick-storage', function () {
@@ -114,7 +112,6 @@ define(['Squire'], function (Squire) {
             done();
           });
         });
-
       });
 
       describe('#create', function () {

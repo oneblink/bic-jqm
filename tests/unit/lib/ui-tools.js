@@ -83,6 +83,5 @@ define(['./lib/ui-tools', 'jquery'], function (uiTools, $) {
         assert.equal(1, onClick.callCount);
       });
     });
-
   });
 });

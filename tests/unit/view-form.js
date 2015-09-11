@@ -57,7 +57,5 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
         assert(mockList !== View.prepareSubView());
       });
     });
-
   });
-
 });

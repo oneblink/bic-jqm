@@ -3,6 +3,7 @@ define(function (require) {
 
   // foreign modules
 
+  var $ = require('jquery');
   var _ = require('underscore');
   var Promise = require('bic/promise');
 
@@ -11,6 +12,7 @@ define(function (require) {
   var API = require('bic/api');
   var Collection = require('bic/collection');
   var FormRecord = require('bic/model/form-record');
+  var parseFormChildXML = require('bic/lib/parse-form-child-xml');
 
   // this module
 
@@ -23,39 +25,41 @@ define(function (require) {
       return Collection.prototype.datastore.call(this, NAME);
     },
 
+    /**
+     * Gets a list of records for the specified formName
+     * @param  {string} formName - The name of the form to get
+     * @return {Promise} - Resolved when the server returns the list or rejected if the request fails
+     */
     pull: function (formName) {
       var collection = this;
 
       return new Promise(function (resolve, reject) {
         API.getFormList(formName).then(
           function (data) {
-            var nodes, node, parsed, parseNodes;
+            var $forms = $(formName, data);
 
             collection.reset();
 
-            nodes = data.evaluate('//' + formName, data, null, XPathResult.ANY_TYPE, null);
-            node = nodes.iterateNext();
+            $forms.each(function (index, node) {
+              var formElement = {
+                formName: formName,
+                list: {}
+              };
 
-            parseNodes = function (key) {
-              if (key.nodeName === 'id') {
-                parsed.id = key.textContent;
-              } else if (key.nodeType === key.ELEMENT_NODE) {
-                parsed.list[key.nodeName] = key.children.length ? key.innerHTML : key.textContent;
-              }
-            };
+              $(node).children().each(function (index, nodeChild) {
+                var $nodeChild = $(nodeChild);
 
-            while (node) {
-              parsed = {};
-              parsed.formName = formName;
-              parsed.list = {};
+                if ($nodeChild.prop('nodeName') === 'id') {
+                  formElement.id = $nodeChild.text();
+                  formElement._id = formName + '-' + formElement.id;
+                  return;
+                }
 
-              _.each(node.childNodes, parseNodes);
+                _.extend(formElement.list, parseFormChildXML(nodeChild));
+              });
 
-              parsed._id = formName + '-' + parsed.id;
-
-              collection.add(parsed, {merge: true});
-              node = nodes.iterateNext();
-            }
+              collection.add(formElement, {merge: true});
+            });
 
             resolve();
           },

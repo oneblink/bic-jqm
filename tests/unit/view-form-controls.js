@@ -158,7 +158,6 @@ define([
         assert.equal(gotoSpy.callCount, 1);
         assert.equal(pageid, pageObject.length - 2);
       });
-
     });
 
     describe('addToQueue', function () {
@@ -183,7 +182,6 @@ define([
             processQueueStub = sinon.stub(app.pending, 'processQueue');
             done();
           });
-
         });
       });
 
@@ -231,7 +229,6 @@ define([
           done();
         });
       });
-
     });
 
     describe('formLeave', function () {
@@ -310,5 +307,4 @@ define([
       });
     });
   });
-
 });

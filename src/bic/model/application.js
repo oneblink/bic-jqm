@@ -107,7 +107,6 @@ define(function (require) {
       }
 
       this.collections._promise = new Promise(function (resolve, reject) {
-
         app.interactions = app.interactions || new InteractionCollection();
         app.datasuitcases = app.datasuitcases || new DataSuitcaseCollection();
         app.forms = app.forms || new FormCollection();
@@ -133,7 +132,6 @@ define(function (require) {
           return Promise.resolve();
         })
         .then(resolve, reject);
-
       });
 
       return this.collections._promise;
