@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v4.1.4 - 2015-09-11
+
+
+### Changed
+
+- update to Forms v3.7.2 for fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.7.2
+
+
 ## v4.1.3 - 2015-09-11
 
 
@@ -11,6 +21,10 @@
     - was already working in Chrome
 
     - HelpDesk: 8822-YPJZ-6091
+
+- BIC-208: router navigation better accounts for Cordova paths
+
+    - addresses issues with login interactions
 
 
 ## v4.1.2 - 2015-09-01
