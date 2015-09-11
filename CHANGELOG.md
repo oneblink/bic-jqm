@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v4.1.3 - 2015-09-11
+
+
+### Fixed
+
+- BIC-197: lists of completed form records in Firefox, Safari and IE
+
+    - was already working in Chrome
+
+    - HelpDesk: 8822-YPJZ-6091
+
+
 ## v4.1.2 - 2015-09-01
 
 
