@@ -16,7 +16,7 @@ Now we do our Git Flow process and our testing:
 
 2. `npm install; npm update`
 
-3. `npm test`, confirm everything passes
+3. `grunt build; npm test`, confirm everything passes
 
 4. `npm outdated`, keep devDependencies up to date in package.json
 
