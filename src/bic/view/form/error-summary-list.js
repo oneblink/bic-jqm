@@ -37,7 +37,7 @@ define(function (require) {
 
     initialize: function () {
       this.showLess();
-      this.listenTo(this.model, 'change:numErrorsShown change:value invalid', this.render);
+      this.listenTo(this.model, 'change:numErrorsShown valid invalid', this.render);
 
       Backbone.View.prototype.initialize.apply(this, arguments);
     },
@@ -48,8 +48,7 @@ define(function (require) {
     },
 
     gotoField: function (e) {
-      var currentForm = this.model.attributes.currentForm;
-      return currentForm.get('_view').goToElement($(e.target).attr('for'));
+      return this.model.get('_view').goToElement($(e.target).attr('for'));
     },
 
     showLess: function () {
@@ -73,6 +72,7 @@ define(function (require) {
       var errors = this.model.getInvalidElements({ limit: this.getLimit() });
       var template = '';
       var viewModel;
+
       // mustache doesnt do simple calculations :\
       if (errors) {
         viewModel = {
