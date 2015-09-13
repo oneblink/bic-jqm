@@ -40,13 +40,13 @@ define(function (require) {
 
             collection.reset();
 
-            $forms.each(function (index, node) {
+            $forms.each(function (nodeIndex, node) {
               var formElement = {
                 formName: formName,
                 list: {}
               };
 
-              $(node).children().each(function (index, nodeChild) {
+              $(node).children().each(function (childIndex, nodeChild) {
                 var $nodeChild = $(nodeChild);
 
                 if ($nodeChild.prop('nodeName') === 'id') {

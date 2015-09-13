@@ -131,7 +131,6 @@ define(function (require) {
     */
     routeRequest: function (data) {
       var path = $.mobile.path.parseUrl(data.absUrl);
-      var model;
 
       c.debug('router.routeRequest()... ' + data.absUrl);
 
@@ -146,7 +145,7 @@ define(function (require) {
 
       app.whenPopulated()
         .then(function () {
-          model = app.router.inheritanceChain(path);
+          var model = app.router.inheritanceChain(path);
           model.setArgsFromQueryString(path.search);
           app.currentInteraction = model;
 
@@ -161,13 +160,13 @@ define(function (require) {
         })
         .then(function (view) {
           view.once('render', function () {
-            this.$el.attr('data-url', data.dataUrl);
-            this.$el.attr('data-external-page', true);
-            this.$el.one('pagecreate', $.mobile._bindPageRemove);
+            view.$el.attr('data-url', data.dataUrl);
+            view.$el.attr('data-external-page', true);
+            view.$el.one('pagecreate', $.mobile._bindPageRemove);
 
             // http://api.jquerymobile.com/1.3/pagebeforeload/
             // data.deferred.resolve|reject is expected after data.preventDefault()
-            data.deferred.resolve(data.absUrl, data.options, this.$el);
+            data.deferred.resolve(data.absUrl, data.options, view.$el);
           });
           view.render(data);
         })

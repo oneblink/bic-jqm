@@ -7,8 +7,6 @@ define(function (require) {
 
   // this module
 
-  var publish;
-  var subscribe;
   var mediator;
   var log;
 
@@ -19,42 +17,39 @@ define(function (require) {
     c.log(Date.now() + ': ' + type + ' ' + channel, args);
   };
 
-  publish = function (channel) {
-    var args;
-    var i;
-    var subscription;
-
-    if (!mediator.channels[channel]) {
-      return false;
-    }
-    args = Array.prototype.slice.call(arguments, 1);
-    for (i = 0; i < mediator.channels[channel].length; i++) {
-      subscription = mediator.channels[channel][i];
-      subscription.callback.apply(subscription.context, args);
-    }
-
-    if (window.BMP.Debug) {
-      log('Publish', channel, args);
-    }
-
-    return this;
-  };
-
-  subscribe = function (channel, fn) {
-    if (!mediator.channels[channel]) {
-      mediator.channels[channel] = [];
-    }
-    mediator.channels[channel].push({ context: this, callback: fn });
-
-    if (window.BMP.Debug) {
-      log('Subscribe', channel);
-    }
-
-    return this;
-  };
-
   return {
-    publish: publish,
-    subscribe: subscribe
+    publish: function publish (channel) {
+      var args;
+      var i;
+      var subscription;
+
+      if (!mediator.channels[channel]) {
+        return false;
+      }
+      args = Array.prototype.slice.call(arguments, 1);
+      for (i = 0; i < mediator.channels[channel].length; i++) {
+        subscription = mediator.channels[channel][i];
+        subscription.callback.apply(subscription.context, args);
+      }
+
+      if (window.BMP.Debug) {
+        log('Publish', channel, args);
+      }
+
+      return this;
+    },
+
+    subscribe: function subscribe (channel, fn) {
+      if (!mediator.channels[channel]) {
+        mediator.channels[channel] = [];
+      }
+      mediator.channels[channel].push({ context: this, callback: fn });
+
+      if (window.BMP.Debug) {
+        log('Subscribe', channel);
+      }
+
+      return this;
+    }
   };
 });

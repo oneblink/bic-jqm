@@ -12,6 +12,7 @@
   "rules": {
     "accessor-pairs": 0,
     "no-console": 0,
+    "no-invalid-this": 0,
     "no-sync": 0,
     "quotes": 0,
     "spaced-comment": 0

@@ -237,8 +237,8 @@ define(function (require) {
               models: _.map(_.filter(app.interactions.models, function (value) {
                 return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
                   return element === 'nav-' + this.model.id.toLowerCase();
-                }, this).length > 0;
-              }, view), function (value) {
+                }.bind(this)).length > 0;
+              }.bind(view)), function (value) {
                 return value.attributes;
               }),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
@@ -303,7 +303,7 @@ define(function (require) {
         if (!message) {
           // First Pass - Extract content
           if ($.type(blinkAnswerMessage) === 'array') {
-            _.each(blinkAnswerMessage, function (element) {
+            blinkAnswerMessage.forEach(function (element) {
               this.blinkAnswerMessages(element.substring(24, element.length - 4));
             }, this);
           }
