@@ -13,6 +13,7 @@ define(function (require) {
 
   // this module
 
+  var $window = $(window);
   var TRANSITIONS = Object.keys($mobile.transitionFallbacks);
   TRANSITIONS.push('fade');
 
@@ -26,15 +27,17 @@ define(function (require) {
       !!_.intersection(classes, TRANSITIONS).length;
   }
 
-  $(window).on('animationstart', function (event) {
+  $window.on('animationstart', function (event) {
     var timer;
     if (isJQMTransition(event)) {
       // okay, we need to set a 1s timer in case this doesn't finish
       timer = setTimeout(function () {
         c.warn('"animationend" event expected but not observed');
-        $(event.target).trigger('animationend');
+        $window.trigger('animationend');
       }, 1e3);
-      $(event.target).one('animationend', function () {
+      $window.one('animationend', function () {
+        // https://github.com/jquery/jquery-mobile/issues/6515
+        $.mobile.pageContainer.removeClass('ui-mobile-viewport-transitioning');
         clearTimeout(timer);
       });
     }
