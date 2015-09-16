@@ -15,6 +15,7 @@ define(function (require) {
 
   var $document = $(document);
   var TRANSITIONS = Object.keys($mobile.transitionFallbacks);
+  var numAnimationsRunning = 0;
   TRANSITIONS.push('fade');
 
   function isJQMTransition (event) {
@@ -29,7 +30,10 @@ define(function (require) {
 
   $document.on('animationstart', function (event) {
     var timer;
+
     if (isJQMTransition(event)) {
+      numAnimationsRunning = Math.max(numAnimationsRunning, 0);
+      numAnimationsRunning++;
       // okay, we need to set a 1s timer in case this doesn't finish
       timer = setTimeout(function () {
         c.warn('"animationend" event expected but not observed');
@@ -37,7 +41,15 @@ define(function (require) {
       }, 1e3);
       $document.one('animationend', function () {
         // https://github.com/jquery/jquery-mobile/issues/6515
-        $.mobile.pageContainer.removeClass('ui-mobile-viewport-transitioning');
+        c.log('there are ' + numAnimationsRunning + ' animations running');
+        if (!--numAnimationsRunning) {
+          c.log('making sure the transitioning classes are being removed.');
+
+          $.mobile.pageContainer.removeClass('ui-mobile-viewport-transitioning');
+          TRANSITIONS.forEach(function (transitionName) {
+            $.mobile.pageContainer.removeClass('viewport-' + transitionName);
+          });
+        }
         clearTimeout(timer);
       });
     }
