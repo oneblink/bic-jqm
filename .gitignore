@@ -4,12 +4,13 @@
 /*.iml
 /.idea
 
-# output files
+# temporary / output files
 dist
 build/
 /js
 versions
 tests/support/bic.js
+.eslintcache
 
 # 3rd-party files
 bower_components

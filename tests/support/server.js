@@ -114,7 +114,7 @@ server.route({
       contents = Mustache.render(contents, data);
       reply(contents).header('Content-Type', 'text/html')
         .header('X-BMP-Gap-Target', 'bmp-blinkgap-js')
-        .header("X-BMP-Version", "3.xx.x");
+        .header('X-BMP-Version', '3.xx.x');
     });
   }
 });

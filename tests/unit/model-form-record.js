@@ -67,16 +67,16 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
 
           formRecord = '<?xml version="1.0" encoding="utf-8"?><test><id>1</id><Text1>1</Text1><Text2>2</Text2><Text3>3</Text3></test>';
 
-          return Promise.resolve(parser.parseFromString(formRecord, "text/xml"));
+          return Promise.resolve(parser.parseFromString(formRecord, 'text/xml'));
         };
 
         form = 'test';
         model = new Model({_id: '1', formName: form});
         record = {
-          'Text1': "1",
-          'Text2': "2",
-          'Text3': "3",
-          'id': "1"
+          'Text1': '1',
+          'Text2': '2',
+          'Text3': '3',
+          'id': '1'
         };
 
         model.populate();
@@ -100,10 +100,10 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         form = 'test';
 
         record = {
-          'Text1': "1",
-          'Text2': "2",
-          'Text3': "3",
-          'id': "1"
+          'Text1': '1',
+          'Text2': '2',
+          'Text3': '3',
+          'id': '1'
         };
         model.populate();
         model.on('change', function () {

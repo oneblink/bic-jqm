@@ -63,7 +63,7 @@
   },
   "scripts": {
     "build": "grunt build",
-    "lint": "eslint .",
+    "lint": "eslint --fix --cache .",
     "test": "gulp test && grunt test",
     "posttest": "npm run lint"
   },
