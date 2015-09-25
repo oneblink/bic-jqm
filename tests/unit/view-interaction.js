@@ -60,10 +60,10 @@ define([
 
     describe('preparePendingQueueSubView', function () {
       it('functions on view', function () {
-        assert(mockPending === View.preparePendingQueueSubView(), "1");
+        assert(mockPending === View.preparePendingQueueSubView(), '1');
         mockApp.views.FormPending = new Backbone.Model();
-        assert(mockApp.views.FormPending === View.preparePendingQueueSubView(), "2");
-        assert(mockPending !== View.preparePendingQueueSubView(), "3");
+        assert(mockApp.views.FormPending === View.preparePendingQueueSubView(), '2');
+        assert(mockPending !== View.preparePendingQueueSubView(), '3');
       });
     });
 

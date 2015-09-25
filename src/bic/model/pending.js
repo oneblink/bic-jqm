@@ -65,7 +65,7 @@ define(function (require) {
           if (status === 'error' && data.responseText) {
             try {
               err = JSON.parse(data.responseText);
-            } catch(e) {
+            } catch (e) {
               /* eslint-disable no-unused-expressions */
               window.console && window.console.log('Pending model: unable to parse response from server');
               /* eslint-enable no-unused-expressions */

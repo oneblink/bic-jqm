@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "semistandard"],
+  "extends": ["@jokeyrhyme/es5"],
   "env": {
     "amd": true,
     "browser": true,
@@ -13,25 +13,11 @@
   },
   "rules": {
     /* Possible Errors */
-    "no-extra-parens": 2,
     "valid-jsdoc": 0, /* TODO: 2 */
     /* Best Practices */
-    "block-scoped-var": 2,
-    "complexity": [1, 5],
-    "default-case": 2,
-    "dot-notation": 2,
-    "guard-for-in": 2,
-    "no-div-regex": 2,
-    "no-else-return": 2,
-    "no-eq-null": 2,
-    "no-floating-decimal": 2,
-    "no-process-env": 2,
-    "no-self-compare": 2,
-    "no-void": 2,
-    "no-warning-comments": 1, /* TODO: 2 */
-    "radix": 2,
-    "vars-on-top": 2,
-    "wrap-iife": 2,
+    "no-param-reassign": 0, /* TODO: 2 */
+    /* Variables */
+    "no-undefined": 0, /* TODO: 2 */
     /* Node.JS */
     "no-sync": 2
   }

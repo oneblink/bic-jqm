@@ -7,20 +7,14 @@ define(function (require) {
 
   // this module
 
-  var publish;
-  var subscribe;
-
-  publish = function () {
-    mediator.publish.apply(this, arguments);
-  };
-
-  subscribe = function (subscriber, channel, callback) {
-    // subscriber is here to allow future permission checking
-    mediator.subscribe(channel, callback);
-  };
-
   return {
-    publish: publish,
-    subscribe: subscribe
+    publish: function publish () {
+      mediator.publish.apply(this, arguments);
+    },
+
+    subscribe: function subscribe (subscriber, channel, callback) {
+      // subscriber is here to allow future permission checking
+      mediator.subscribe(channel, callback);
+    }
   };
 });

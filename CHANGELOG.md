@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v4.1.5 - 2015-09-25
+
+
+### Fixed
+
+- BIC-212: normal scrolling is no longer randomly turned off
+
+- BIC-216: clicking in the forms error summary no longer throws an exception
+
+
 ## v4.1.4 - 2015-09-11
 
 
