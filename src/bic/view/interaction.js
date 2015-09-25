@@ -98,8 +98,8 @@ define(function (require) {
       } else if ($element.attr('masterCategory')) {
         location = $element.attr('masterCategory');
       } else if ($element.attr('home') === '') {
-          location = app.get('siteName');
-        } else if ($element.attr('login') === '') {
+        location = app.get('siteName');
+      } else if ($element.attr('login') === '') {
           if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
             location = app.get('loginPromptInteraction');
           } else {
@@ -193,28 +193,28 @@ define(function (require) {
         view.model.once('change:content', function () {
           if (typeof view.model.get('content') === 'object') {
             view.$el.html(Mustache.render(Template, {
-                header: inheritedAttributes.header,
-                footer: inheritedAttributes.footer,
-                content: ''
-              }));
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: ''
+            }));
             view.$el.children('[data-role=content]')[0].appendChild(view.model.get('content'));
             view.processStars();
             view.trigger('render');
           } else if (typeof view.model.get('content') === 'string') {
-              view.$el.html(Mustache.render(Template, {
+            view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
                 content: view.model.get('content')
               }));
-              view.trigger('render');
-            } else {
-              view.$el.html(Mustache.render(Template, {
+            view.trigger('render');
+          } else {
+            view.$el.html(Mustache.render(Template, {
                 header: inheritedAttributes.header,
                 footer: inheritedAttributes.footer,
                 content: 'Unknown error rendering XSLT interaction.'
               }));
-              view.trigger('render');
-            }
+            view.trigger('render');
+          }
         });
         this.model.performXSLT();
       } else if (this.model.id.toLowerCase() === window.BMP.BIC.siteVars.answerSpace.toLowerCase()) {
@@ -223,17 +223,17 @@ define(function (require) {
           header: inheritedAttributes.header,
           footer: inheritedAttributes.footer,
           content: Mustache.render(categoryTemplate, {
-              models: view.model.get('interactionList'),
-              path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
-            })
+            models: view.model.get('interactionList'),
+            path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
+          })
         }));
         view.trigger('render');
       } else if (!this.model.has('type')) {
           // Category
         view.$el.html(Mustache.render(Template, {
-            header: inheritedAttributes.header,
-            footer: inheritedAttributes.footer,
-            content: Mustache.render(categoryTemplate, {
+          header: inheritedAttributes.header,
+          footer: inheritedAttributes.footer,
+          content: Mustache.render(categoryTemplate, {
               models: _.map(_.filter(app.interactions.models, function (value) {
                 return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
                   return element === 'nav-' + this.model.id.toLowerCase();
@@ -243,25 +243,25 @@ define(function (require) {
               }),
               path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
             })
-          }));
+        }));
         view.trigger('render');
       } else if (this.model.get('type') === 'message') {
-          this.$el.html(Mustache.render(Template, {
+        this.$el.html(Mustache.render(Template, {
             header: inheritedAttributes.header,
             footer: inheritedAttributes.footer,
             content: inheritedAttributes.message
           }));
-          this.trigger('render');
-        } else {
+        this.trigger('render');
+      } else {
           // MADL, others
-          this.$el.html(Mustache.render(Template, inheritedAttributes));
-          if (this.model.has('content')) {
+        this.$el.html(Mustache.render(Template, inheritedAttributes));
+        if (this.model.has('content')) {
             this.blinkAnswerMessages();
             this.maps();
             this.processStars();
           }
-          this.trigger('render');
-        }
+        this.trigger('render');
+      }
       return this;
     },
 
@@ -332,18 +332,18 @@ define(function (require) {
               // Remove specific stars
             _.each(message.staroff, function (element) {
               if (app.stars.get(element)) {
-                  app.stars.get(element.toString()).destroy();
-                }
+                app.stars.get(element.toString()).destroy();
+              }
             }, this);
           }
           if ($.type(message.staron) === 'array') {
               // Add stars
             _.each(message.staron, function (element) {
               app.stars.create({
-                  _id: element.toString(),
-                  type: message.startype,
-                  state: true
-                });
+                _id: element.toString(),
+                type: message.startype,
+                state: true
+              });
             });
           }
         }
