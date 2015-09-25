@@ -100,12 +100,12 @@ define(function (require) {
       } else if ($element.attr('home') === '') {
         location = app.get('siteName');
       } else if ($element.attr('login') === '') {
-          if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
-            location = app.get('loginPromptInteraction');
-          } else {
-            location = app.get('siteName');
-          }
+        if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
+          location = app.get('loginPromptInteraction');
+        } else {
+          location = app.get('siteName');
         }
+      }
 
 // see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes.
 // jquery mobile will die due to the way it builds the [data-url] attribute, using the html encoded variety could break existing
@@ -202,17 +202,17 @@ define(function (require) {
             view.trigger('render');
           } else if (typeof view.model.get('content') === 'string') {
             view.$el.html(Mustache.render(Template, {
-                header: inheritedAttributes.header,
-                footer: inheritedAttributes.footer,
-                content: view.model.get('content')
-              }));
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: view.model.get('content')
+            }));
             view.trigger('render');
           } else {
             view.$el.html(Mustache.render(Template, {
-                header: inheritedAttributes.header,
-                footer: inheritedAttributes.footer,
-                content: 'Unknown error rendering XSLT interaction.'
-              }));
+              header: inheritedAttributes.header,
+              footer: inheritedAttributes.footer,
+              content: 'Unknown error rendering XSLT interaction.'
+            }));
             view.trigger('render');
           }
         });
@@ -234,32 +234,32 @@ define(function (require) {
           header: inheritedAttributes.header,
           footer: inheritedAttributes.footer,
           content: Mustache.render(categoryTemplate, {
-              models: _.map(_.filter(app.interactions.models, function (value) {
-                return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
+            models: _.map(_.filter(app.interactions.models, function (value) {
+              return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
                   return element === 'nav-' + this.model.id.toLowerCase();
                 }.bind(this)).length > 0;
-              }.bind(view)), function (value) {
+            }.bind(view)), function (value) {
                 return value.attributes;
               }),
-              path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
-            })
+            path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
+          })
         }));
         view.trigger('render');
       } else if (this.model.get('type') === 'message') {
         this.$el.html(Mustache.render(Template, {
-            header: inheritedAttributes.header,
-            footer: inheritedAttributes.footer,
-            content: inheritedAttributes.message
-          }));
+          header: inheritedAttributes.header,
+          footer: inheritedAttributes.footer,
+          content: inheritedAttributes.message
+        }));
         this.trigger('render');
       } else {
           // MADL, others
         this.$el.html(Mustache.render(Template, inheritedAttributes));
         if (this.model.has('content')) {
-            this.blinkAnswerMessages();
-            this.maps();
-            this.processStars();
-          }
+          this.blinkAnswerMessages();
+          this.maps();
+          this.processStars();
+        }
         this.trigger('render');
       }
       return this;
