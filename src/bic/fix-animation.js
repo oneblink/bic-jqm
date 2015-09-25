@@ -41,9 +41,9 @@ define(function (require) {
       }, 1e3);
       $document.one('animationend', function () {
         // https://github.com/jquery/jquery-mobile/issues/6515
-        c.log('there are ' + numAnimationsRunning + ' animations running');
+        c.debug('there are ' + numAnimationsRunning + ' animations running');
         if (!--numAnimationsRunning) {
-          c.log('making sure the transitioning classes are being removed.');
+          c.debug('making sure the transitioning classes are being removed.');
 
           $.mobile.pageContainer.removeClass('ui-mobile-viewport-transitioning');
           TRANSITIONS.forEach(function (transitionName) {
