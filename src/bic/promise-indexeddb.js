@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var isIndexedDBReliable = require('is-indexeddb-reliable');
-  var Promise = require('bic/promise');
 
   // local modules
 

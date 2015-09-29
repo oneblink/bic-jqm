@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var domReady = require('domReady');
-  var Promise = require('bic/promise');
 
   // local modules
 

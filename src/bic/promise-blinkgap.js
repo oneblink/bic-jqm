@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var deadline = require('@jokeyrhyme/deadline');
-  var Promise = require('bic/promise');
 
   // local modules
 

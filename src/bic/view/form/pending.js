@@ -14,8 +14,8 @@ define(function (require) {
   // ...
 
   // templates
-  var Template = require('text!bic/template/form/pending.mustache');
-  var clearConfirmationTemplate = require('text!bic/template/form/pending-clear-confirmation-popup.mustache');
+  var Template = require('raw!bic/template/form/pending.mustache');
+  var clearConfirmationTemplate = require('raw!bic/template/form/pending-clear-confirmation-popup.mustache');
 
   // utils
   var uiTools = require('bic/lib/ui-tools');

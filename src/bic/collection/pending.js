@@ -4,7 +4,6 @@ define(function (require) {
   // foreign modules
 
   var _ = require('underscore');
-  var Promise = require('feature!promises');
 
   // local modules
 

@@ -18,6 +18,19 @@ uglifyConfig.files['dist/' + now.valueOf() + '/bic.min.js'] = ['dist/' + now.val
 module.exports = function (grunt) {
   grunt.initConfig({
 
+    concat: {
+      build: {
+        dest: 'build/bic.js',
+        nonull: true,
+        src: [
+          'src/frag/00-config.js',
+          'node_modules/blinkgap-utils/BMP.BlinkGap.js',
+          'build/bic.js',
+          'src/frag/99-end.js'
+        ]
+      }
+    },
+
     concurrent: {
       background: ['hapi:http', 'watch'],
       options: {
@@ -228,10 +241,16 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+
+    webpack: {
+      options: require('./webpack.conf'),
+      build: {}
     }
 
   });
 
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -241,10 +260,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-hapi');
   grunt.loadNpmTasks('grunt-mustache-render');
   grunt.loadNpmTasks('grunt-text-replace');
+  grunt.loadNpmTasks('grunt-webpack');
 
   grunt.registerTask('test', ['build', 'hapi:test', 'karma:phantom']);
 
-  grunt.registerTask('build', ['replace', 'requirejs', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
+  grunt.registerTask('build', ['replace', 'webpack', 'concat', 'copy:main', 'copy:dev', 'uglify', 'mustache_render']);
   grunt.registerTask('develop', ['concurrent']);
   grunt.registerTask('default', ['test']);
 };

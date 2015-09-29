@@ -9,7 +9,7 @@ define(function (require) {
 
   // local modules
 
-  var Template = require('text!bic/template/form/list.mustache');
+  var Template = require('raw!bic/template/form/list.mustache');
   var app = require('bic/model/application');
 
   // this module

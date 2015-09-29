@@ -14,7 +14,6 @@ define(function (require) {
   // var oldOnError = window.onerror;
   // var support = {};
 
-  require('feature!es5');
   require('jquerymobile');
 
   // Object.keys($.support).forEach(function (prop) {

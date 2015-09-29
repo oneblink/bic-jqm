@@ -6,8 +6,6 @@ define(function (require) {
 
   var $ = require('jquery');
 
-  require('feature!es5');
-  require('BlinkGap');
   require('BMP.Blobs');
   require('jquerymobile');
 

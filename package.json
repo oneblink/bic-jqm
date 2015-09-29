@@ -23,6 +23,7 @@
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "@jokeyrhyme/eslint-config-es5": "^1.0",
+    "babel-loader": "^5.3.2",
     "chai": "^3.3",
     "eslint": "^1.5.1",
     "eslint-config-semistandard": "^5.0.0",
@@ -32,6 +33,7 @@
     "grunt": "~0.4",
     "grunt-cli": "^0.1.13",
     "grunt-concurrent": "~2.0",
+    "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-copy": "~0.8",
     "grunt-contrib-requirejs": "~0.4",
     "grunt-contrib-uglify": "^0.9.1",
@@ -40,6 +42,7 @@
     "grunt-karma": "^0.12.0",
     "grunt-mustache-render": "^1.9",
     "grunt-text-replace": "^0.4.0",
+    "grunt-webpack": "^1.0.11",
     "gulp": "^3.8",
     "hapi": "^8.0",
     "karma": "^0.13.3",
@@ -54,12 +57,15 @@
     "mocha": "^2.3",
     "mustache": "^2.0",
     "phantomjs": "^1.9",
+    "raw-loader": "^0.5.1",
     "request": "^2.63",
     "requirejs": "^2.1",
     "sinon": "^1.17",
     "squirejs": "^0.2.0",
     "tape": "^4.0",
-    "tape-chai": "^1.1"
+    "tape-chai": "^1.1",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0"
   },
   "scripts": {
     "build": "grunt build",

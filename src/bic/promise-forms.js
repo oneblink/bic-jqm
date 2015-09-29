@@ -13,8 +13,6 @@ define(function (require) {
 
   var Forms;
 
-  require('bic/promise'); // ensure `global.Promise` exists before starting
-
   function getDefinition (name, action) {
     var app = window.BMP.BIC;
     var formDefinition;

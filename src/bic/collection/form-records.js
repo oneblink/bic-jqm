@@ -5,7 +5,6 @@ define(function (require) {
 
   var $ = require('jquery');
   var _ = require('underscore');
-  var Promise = require('bic/promise');
 
   // local modules
 

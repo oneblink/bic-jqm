@@ -6,7 +6,6 @@ define(function (require) {
   var $ = require('jquery');
   var _ = require('underscore');
   var Backbone = require('backbone');
-  var Promise = require('bic/promise');
   var NotFoundError = require('typed-errors').NotFoundError;
 
   // local modules
@@ -247,7 +246,7 @@ The argument change event.
 
     prepareAnswerSpace: function (resolve, reject, data) {
       var model = this;
-      require(['bic'], function (app) {
+      require(['bic/model/application'], function (app) {
         var loginInteraction;
         var path;
         var url;
@@ -289,7 +288,7 @@ The argument change event.
 
     goToHomeInteraction: function (resolve, reject, data) {
       var model = this;
-      require(['bic'], function (app) {
+      require(['bic/model/application'], function (app) {
         var homeInteraction;
 
         if (app.hasHomeInteraction()) {
@@ -308,7 +307,7 @@ The argument change event.
 
     prepareMADL: function (resolve, reject, data) {
       var model = this;
-      require(['bic'], function (app) {
+      require(['bic/model/application'], function (app) {
         API.getInteractionResult(model.id, model.get('args'), data.options).then(
           // Online
           function (result) {
@@ -379,7 +378,7 @@ The argument change event.
 
     prepareStars: function (resolve) {
       var model = this;
-      require(['bic'], function (app) {
+      require(['bic/model/application'], function (app) {
         var xml;
         var attrs;
 
@@ -470,7 +469,7 @@ The argument change event.
 
       starType = xsl.match(/blink-stars\(([@\w.]+),\W*(\w+)\W*\)/);
       if (starType) {
-        require(['bic'], function (app) {
+        require(['bic/model/application'], function (app) {
           var constructCondition;
 
           constructCondition = function (innerStarType) {
@@ -499,7 +498,7 @@ The argument change event.
       }
 
       model = this;
-      require(['bic'], function (app) {
+      require(['bic/model/application'], function (app) {
         xmlString = model.get('starXml') || app.datasuitcases.get(model.get('xml')).get('data');
         xslString = xsl;
         if (typeof xmlString !== 'string' || typeof xslString !== 'string') {

@@ -9,7 +9,6 @@ define(function (require) {
   // foreign modules
 
   var $ = require('jquery');
-  var Promise = require('bic/promise');
   require('jquerymobile');
 
   // local modules

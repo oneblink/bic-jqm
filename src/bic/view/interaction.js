@@ -9,14 +9,13 @@ define(function (require) {
   var Backbone = require('backbone');
   var geolocation = require('@blinkmobile/geolocation');
   var Mustache = require('mustache');
-  var Promise = require('bic/promise');
 
     // local modules
 
-  var Template = require('text!bic/template/interaction.mustache');
-  var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
-  var categoryTemplate = require('text!bic/template/category-list.mustache');
-  var popupTemplate = require('text!bic/template/popup.mustache');
+  var Template = require('raw!bic/template/interaction.mustache');
+  var inputPromptTemplate = require('raw!bic/template/inputPrompt.mustache');
+  var categoryTemplate = require('raw!bic/template/category-list.mustache');
+  var popupTemplate = require('raw!bic/template/popup.mustache');
   var app = require('bic/model/application');
   var StarModel = require('bic/model/star');
   var StarView = require('bic/view/star');

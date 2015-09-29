@@ -9,7 +9,7 @@ define(function (require) {
   var Mustache = require('mustache');
 
   // local modules
-  var defaultTemplate = require('text!bic/template/form/forms-error-summary.mustache');
+  var defaultTemplate = require('raw!bic/template/form/forms-error-summary.mustache');
 
   var defaultNumberOfErrors = 4;
 

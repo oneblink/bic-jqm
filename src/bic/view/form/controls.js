@@ -6,11 +6,10 @@ define(function (require) {
   var $ = require('jquery');
   var Backbone = require('backbone');
   var Mustache = require('mustache');
-  var Promise = require('bic/promise');
 
   // local modules
 
-  var Template = require('text!bic/template/form/controls.mustache');
+  var Template = require('raw!bic/template/form/controls.mustache');
   var app = require('bic/model/application');
   var API = require('bic/api');
   var USER_ACTIONS = require('bic/enum-user-actions');

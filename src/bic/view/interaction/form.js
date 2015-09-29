@@ -11,7 +11,7 @@ define(function (require) {
 
   var FormView = require('bic/view/form');
   var InteractionView = require('bic/view/interaction');
-  var Template = require('text!bic/template/interaction.mustache');
+  var Template = require('raw!bic/template/interaction.mustache');
 
   // this module
 

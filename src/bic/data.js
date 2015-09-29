@@ -5,7 +5,6 @@ define(function (require) {
 
   var _ = require('underscore');
   var Pouch = require('pouchdb');
-  var Promise = require('bic/promise');
 
   // local modules
 

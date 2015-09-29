@@ -1,10 +1,6 @@
 define(function (require) {
   'use strict';
 
-  // foreign modules
-
-  var Promise = require('bic/promise');
-
   // local modules
 
   var Collection = require('bic/collection');
