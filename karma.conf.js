@@ -19,6 +19,7 @@ module.exports = function (config) {
       { pattern: 'node_modules/amd-feature/feature.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/deadline/dist/index.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/promised-requirejs/dist/index.js', included: false },
+      { pattern: 'vendor/**/*.js', included: false },
       { pattern: 'node_modules/js-typed-errors/dist/typed-errors.js', included: false },
       { pattern: 'node_modules/@blinkmobile/geolocation/geolocation.js', included: false },
       { pattern: 'node_modules/squirejs/src/Squire.js', included: false },
