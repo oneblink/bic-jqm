@@ -236,11 +236,11 @@ define(function (require) {
           content: Mustache.render(categoryTemplate, {
             models: _.map(_.filter(app.interactions.models, function (value) {
               return value.get('display') !== 'hide' && _.filter(value.get('tags'), function (element) {
-                  return element === 'nav-' + this.model.id.toLowerCase();
-                }.bind(this)).length > 0;
+                return element === 'nav-' + this.model.id.toLowerCase();
+              }.bind(this)).length > 0;
             }.bind(view)), function (value) {
-                return value.attributes;
-              }),
+              return value.attributes;
+            }),
             path: data.dataUrl.substr(-1) === '/' ? data.dataUrl : data.dataUrl + '/'
           })
         }));
