@@ -65,7 +65,13 @@ module.exports = function (grunt) {
         options: {
           baseUrl: 'src',
           name: 'bic',
-          include: ['bic/form-expressions', 'bic/router'],
+          include: [
+            /* modules without direct (sync) dependants */
+            'bic/form-expressions',
+            'bic/router',
+            'bic/view/interaction',
+            'bic/view/interaction/form'
+          ],
           insertRequire: ['bic/form-expressions', 'bic'],
           out: 'build/bic.js',
           optimize: 'none',

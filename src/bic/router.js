@@ -18,8 +18,6 @@ define(function (require) {
   var whenDOMReady = require('bic/promise-dom-ready');
   var parseUrlPath = require('bic/lib/url-path-parser');
 
-  var everythingMiddleware = require('bic/router/middleware/everything');
-
   // this module
 
   var Router;
@@ -36,7 +34,15 @@ define(function (require) {
       app.router = this;
 
       this.middleware = new Middleware();
-      this.middleware.use(everythingMiddleware);
+      this.middleware.use(Middleware.path);
+      this.middleware.use(Middleware.app);
+      this.middleware.use(Middleware.whenPopulated);
+      this.middleware.use(Middleware.model);
+      this.middleware.use(Middleware.view);
+      this.middleware.use(Middleware.viewRender);
+      this.middleware.use(Middleware.resolve);
+
+      this.middleware.addErrorHandler(Middleware.errorHandler);
 
       this.isOfflineFirst = (function () {
         var isLocalProtocol = location.protocol === 'file:' || location.protocol === 'ms-appx:';
@@ -116,7 +122,7 @@ define(function (require) {
 
     */
     routeRequest: function (data) {
-      this.middleware.init(data);
+      this.middleware.init(data, {});
     },
 
     inheritanceChain: function (data) {
@@ -263,9 +269,9 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
     }
   });
 
-  Router.Middleware = {
-    everything: everythingMiddleware
-  };
+  Router.Middleware = Middleware;
+
+  app.Router = Router;
 
   return new Router();
 });
