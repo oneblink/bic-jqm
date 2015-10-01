@@ -1,9 +1,12 @@
 define([
-  'Squire', 'sinon', 'jquery', 'jquerymobile', 'backbone'
-], function (Squire, sinon, $, $mobile, Backbone) {
+  'Squire', 'sinon', 'jquery', 'jquerymobile', 'backbone', 'chai'
+], function (Squire, sinon, $, $mobile, Backbone, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/router.js';
+
+  var assert = chai.assert;
+  chai.should();
 
   describe('Router - jQuery Mobile Implementation', function () {
     var injector, model, collection;
@@ -22,7 +25,7 @@ define([
         return {
           id: id,
           prepareForView: sinon.stub().returns({
-            then: function () { return null; }
+            then: function () { return Promise.resolve(null); }
           }),
           set: sinon.stub().returns({}),
           setArgsFromQueryString: function () { },
