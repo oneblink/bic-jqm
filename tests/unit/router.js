@@ -304,5 +304,241 @@ define([
       //it('should parse found arguments into an object');
       //it('should set the object on the model as 'args'');
     //});
+
+    describe('router.constructor.Middleware', function () {
+      var router, Middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router', 'bic/router/middleware'], function (r, mw) {
+          router = r;
+          Middleware = mw;
+          done();
+        });
+      });
+
+      it('is a Function', function () {
+        assert.isFunction(router.constructor.Middleware);
+      });
+
+      it('is a reference to bic/router/middleware', function () {
+        assert.strictEqual(router.constructor.Middleware, Middleware);
+      });
+    });
+
+    describe('router.middleware', function () {
+      var router, Middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router', 'bic/router/middleware'], function (r, mw) {
+          router = r;
+          Middleware = mw;
+          done();
+        });
+      });
+
+      it('is an instance of bic/router/middleware', function () {
+        assert.instanceOf(router.middleware, Middleware);
+      });
+    });
+
+    describe('bic/router/middleware/app', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/app'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        middleware({}, {}, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/errorHandler', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/errorHandler'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+    });
+
+    describe('bic/router/middleware/model', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/model'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        var mockModel = new Backbone.Model();
+        mockModel.setArgsFromQueryString = function () {};
+        mockModel.prepareForView = function () { return Promise.resolve(); };
+        middleware({}, {
+          app: {
+            router: {
+              inheritanceChain: function () {
+                return mockModel;
+              }
+            }
+          },
+          path: $mobile.path.parseUrl(location.href)
+        }, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/path', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/path'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        middleware({}, {}, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/resolve', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/resolve'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        middleware({
+          deferred: new $.Deferred()
+        }, {
+          view: new Backbone.View()
+        }, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/view', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/view'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        middleware({}, {
+          model: new Backbone.Model()
+        }, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/viewRender', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/viewRender'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        var mockView = new Backbone.View();
+        mockView.render = function () {
+          setTimeout(function () {
+            this.trigger('render');
+          }.bind(this), 0);
+        };
+        middleware({}, {
+          view: mockView
+        }, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/whenPopulated', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/whenPopulated'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        middleware({}, {
+          app: {
+            whenPopulated: function () { return Promise.resolve(); }
+          }
+        }, function () {
+          done();
+        });
+      });
+    });
   });
 });
