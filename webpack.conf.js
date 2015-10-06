@@ -40,7 +40,7 @@ module.exports = {
     ]
   },
   node: {
-    crypto: false // optional dep for sjcl, adds 110KB to pre-minify size
+    crypto: 'empty' // optional dep for sjcl, adds 110KB to pre-minify size
   },
   output: {
     filename: 'bic.js',
