@@ -3,10 +3,8 @@ require.config({
   baseUrl: window.__karma__ ? '/base/' : '/',
   paths: {
     bic: 'src/bic',
-    implementations: 'src/implementations',
     chai: 'node_modules/chai/chai',
     'is-indexeddb-reliable': 'node_modules/is-indexeddb-reliable/dist/index',
-    feature: 'node_modules/amd-feature/feature',
     '@blinkmobile/geolocation': 'node_modules/@blinkmobile/geolocation/geolocation',
     '@jokeyrhyme/deadline': 'node_modules/@jokeyrhyme/deadline/dist/index',
     '@jokeyrhyme/promised-requirejs': 'node_modules/@jokeyrhyme/promised-requirejs/dist/index',
@@ -25,9 +23,6 @@ require.config({
     BlinkGap: {
       deps: ['pollUntil'],
       exports: 'BMP.BlinkGap'
-    },
-    pouchdb: {
-      deps: ['feature!es5']
     }
   }
 });
@@ -53,8 +48,6 @@ window.Modernizr = { indexeddb: false };
 require([
   'chai',
   'backbone',
-  'feature!promises',
-  'feature!es5',
   'BlinkGap',
   'tests/unit/api-web',
   'tests/unit/collection-datasuitcases',
@@ -83,13 +76,11 @@ require([
   'tests/unit/collection-form-records',
   'tests/unit/lib/parse-form-child-xml',
   'tests/unit/lib/url-path-parser'
-], function (chai, Backbone, Promise) {
+], function (chai, Backbone) {
   'use strict';
 
   window.assert = chai.assert;
   window.expect = chai.expect;
-
-  window.Promise = window.Promise || Promise;
 
   Backbone.sync = function (method, model, options) {
     var promise = Promise.resolve({});

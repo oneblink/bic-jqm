@@ -16,7 +16,6 @@ module.exports = function (config) {
     files: [
       { pattern: 'node_modules/chai/chai.js', included: false },
       { pattern: 'node_modules/is-indexeddb-reliable/dist/index.js', included: false },
-      { pattern: 'node_modules/amd-feature/feature.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/deadline/dist/index.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/promised-requirejs/dist/index.js', included: false },
       { pattern: 'vendor/**/*.js', included: false },
