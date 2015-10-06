@@ -12,8 +12,6 @@ define(['Squire'], function (Squire) {
       require.config(cfg);
       injector = new Squire(CONTEXT);
 
-      window.BMP.Expression = { fn: {} };
-
       injector.mock('BlinkForms', {});
       injector.mock('bic/model/application', {
         datasuitcases: {
@@ -41,7 +39,6 @@ define(['Squire'], function (Squire) {
 
     after(function () {
       injector.remove();
-      delete window.BMP.Expression;
     });
 
     beforeEach(function (done) {
@@ -78,11 +75,6 @@ define(['Squire'], function (Squire) {
         assert.equal(result, 'AAA');
         done();
       });
-    });
-
-    it('BMP.Expression.fn', function () {
-      assert.equal(window.BMP.Expression.fn.interaction, mod.interaction);
-      assert.equal(window.BMP.Expression.fn.suitcase, mod.suitcase);
     });
   });
 });

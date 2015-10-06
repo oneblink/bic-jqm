@@ -4,7 +4,7 @@
   var cloudfront, filesystem, paths, getPaths, scripts, s, script;
 
   var setConfig = function (cfg) {
-    if (typeof window.require !== 'undefined' && typeof window.require.config !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.require !== 'undefined' && typeof window.require.config !== 'undefined') {
       window.require.config(cfg);
     } else if (typeof process !== 'undefined' && typeof module !== 'undefined') {
       module.exports = cfg;

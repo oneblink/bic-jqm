@@ -7,6 +7,7 @@ define(function (require) {
 
   // local modules
 
+  var bicExpressions = require('bic/form-expressions');
   var c = require('bic/console');
 
   // this module
@@ -64,9 +65,10 @@ define(function (require) {
       return promisedRequire('forms/jqm');
     })
     .then(function () {
-      return promisedRequire('bic/form-expressions');
-    })
-    .then(function () {
+      if (window.BMP.Expression) {
+        window.BMP.Expression.fn.interaction = bicExpressions.interaction;
+        window.BMP.Expression.fn.suitcase = bicExpressions.suitcase;
+      }
       // consumers of this module expect it to resolve with Forms
       return Promise.resolve(Forms);
     });

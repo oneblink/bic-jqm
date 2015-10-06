@@ -17,7 +17,7 @@ require.config({
     mustache: 'node_modules/mustache/mustache',
     BlinkGap: 'node_modules/blinkgap-utils/BMP.BlinkGap',
     sinon: 'node_modules/sinon/pkg/sinon',
-    text: 'node_modules/text/text',
+    raw: 'node_modules/text/text',
     uuid: 'node_modules/node-uuid/uuid',
     domReady: 'node_modules/domReady/domReady'
   },
