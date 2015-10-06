@@ -22,7 +22,7 @@ var STATIC_PATHS = [
   '_c_', '_BICv3_', '_R_', '_W_', '_api', 'active_pages', 'admin', 'admintools', 'api_access', 'gfx', 'icons', 'livezone', 'tools', 'text3y'
 ];
 var LOCAL_PATHS = [
-  'node_modules', 'src', 'tests'
+  'node_modules', 'src', 'tests', 'vendor'
 ];
 
 var pkg = require(path.join(__dirname, '..', '..', 'package.json'));
