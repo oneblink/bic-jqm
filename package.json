@@ -71,7 +71,8 @@
     "build": "grunt build",
     "lint": "eslint --fix --cache .",
     "test": "gulp test && grunt test",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "webpack-stats": "webpack --config webpack.conf.js --json --profile > stats.json"
   },
   "license": "BSD-3-Clause"
 }

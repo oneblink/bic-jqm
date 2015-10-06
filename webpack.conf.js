@@ -39,6 +39,9 @@ module.exports = {
       }
     ]
   },
+  node: {
+    crypto: false // optional dep for sjcl, adds 110KB to pre-minify size
+  },
   output: {
     filename: 'bic.js',
     library: 'bic/main',
@@ -47,7 +50,9 @@ module.exports = {
     umdNamedDefine: true
   },
   plugins: [
-    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 1e6 })
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 1e6 }),
+    new webpack.optimize.OccurenceOrderPlugin()
   ],
   resolve: {
     alias: {
