@@ -154,7 +154,7 @@ define(function (require) {
       return Promise.resolve();
     },
 
-    populate: function () {
+    populate: function (options) {
       var app = this;
 
       if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
@@ -162,12 +162,14 @@ define(function (require) {
         return Promise.resolve();
       }
 
+      options = options || {};
+
       return app.collections()
         .then(null, function () {
           return null;
         })
         .then(function () {
-          return Promise.resolve(API.getAnswerSpaceMap());
+          return Promise.resolve(API.getAnswerSpaceMap(options.username));
         })
         .then(
           function (data) {
@@ -296,9 +298,9 @@ define(function (require) {
         API.getLoginStatus().then(function (data) {
           var status = data.status || data;
           if (app.get('loginStatus') !== status) {
-            app.populate().then(function () {
-              app.set({loginStatus: status});
-              resolve();
+            app.populate({ username: data.username }).then(function () {
+              app.set({ loginStatus: status });
+              resolve(data);
             });
           } else {
             resolve();

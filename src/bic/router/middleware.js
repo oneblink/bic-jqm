@@ -28,6 +28,7 @@ define(function (require) {
     app: require('bic/router/middleware/app'),
     errorHandler: require('bic/router/middleware/errorHandler'),
     path: require('bic/router/middleware/path'),
+    postLogin: require('bic/router/middleware/postLogin'),
     model: require('bic/router/middleware/model'),
     resolve: require('bic/router/middleware/resolve'),
     view: require('bic/router/middleware/view'),

@@ -317,31 +317,7 @@ The argument change event.
               contentTime: Date.now()
             }, {
               success: function () {
-                var credentials;
                 resolve(model);
-
-                if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
-                  app.checkLoginStatus().then(function () {
-                    if (app.get('loginStatus') === 'LOGGED IN' && data.options.data) {
-                      credentials = model.parseAuthString(data.options.data);
-                      facade.publish('storeAuth', credentials);
-                      model.save({
-                        'content-principal': result
-                      });
-                      if (app.get('loginToDefaultScreen')) {
-                        app.goToInteraction();
-                      } else {
-                        app.goToInteraction(data.dataUrl);
-                      }
-                    } else if (model.get('args') && !model.get('args').logout) {
-                      // Logged Out
-                      model.save({
-                        'content-anonymous': result
-                      });
-                      app.goToInteraction();
-                    }
-                  });
-                }
               },
               error: function () {
                 resolve(model);
@@ -350,28 +326,7 @@ The argument change event.
           },
           function (jqXHR, textStatus, errorThrown) {
             // Offline
-            var credentials;
-
-            if (app.get('loginAccess') && 'i' + app.get('loginPromptInteraction') === model.get('dbid')) {
-              if (data.options.data) {
-                // Offline login attempt;
-                credentials = model.parseAuthString(data.options.data);
-                model.listenToOnce(app, 'loginProcessed', function () {
-                  if (app.get('loginStatus') === 'LOGGED IN') {
-                    model.set('content', model.get('content-principal'));
-                  } else {
-                    model.set('content', model.get('content-anonymous'));
-                  }
-                  resolve(model);
-                });
-                facade.publish('authenticateAuth', credentials);
-              } else {
-                model.set('content', model.get('content-anonymous'));
-                resolve(model);
-              }
-            } else {
-              reject(errorThrown);
-            }
+            reject(errorThrown);
           }
        );
       });
