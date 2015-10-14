@@ -14,6 +14,32 @@ define(function (require) {
 
   // this module
 
+  var extractNames = function (headers, element) {
+    if (element.type !== 'subForm' && !(element.name === 'id' || element.name === '_id')) {
+      headers.push(element.name);
+    }
+
+    return headers;
+  };
+
+  var extractValues = function (whitelist) {
+    whitelist = whitelist || _.identity;
+
+    return function (formRecordModel) {
+      return {
+        id: formRecordModel.get('id'),
+        contents: _.chain(formRecordModel.get('list'))
+                    .pick(whitelist)
+                    .values()
+                    .value()
+      };
+    };
+  };
+
+  var extractId = function (interaction) {
+    return interaction.id;
+  };
+
   var FormListView = Backbone.View.extend({
     render: function () {
       var view = this;
@@ -21,42 +47,19 @@ define(function (require) {
 
       app.formRecords.pull(objectName).then(
         function () {
-          var BlinkForms = window.BMP.Forms;
-          var templateData = {};
+          window.BMP.Forms.getDefinition(objectName, view.model.get('blinkFormAction'))
+            .then(function (definition) {
+              var templateData = {
+                headers: _.reduce(definition._elements, extractNames, []),
+                interactions: app.interactions.getFormActions(objectName, extractId)
+              };
 
-          templateData.headers = [];
-          BlinkForms.getDefinition(objectName, view.model.get('blinkFormAction')).then(function (definition) {
-            var elements = [];
-            _.each(definition._elements, function (value) {
-              if (value.type !== 'subForm') {
-                elements.push(value.name);
-                templateData.headers.push(value.name);
-              }
+              templateData.content = app.formRecords.map(extractValues(templateData.headers));
+              templateData.hasContent = templateData.content.length > 0;
+
+              view.$el.html(Mustache.render(view.constructor.template, templateData));
+              view.trigger('render');
             });
-
-            templateData.content = _.map(app.formRecords.models, function (value) {
-              var record = {};
-
-              record.id = value.get('id');
-              record.contents = [];
-
-              _.each(value.attributes.list, function (iv, ik) {
-                if (ik !== 'id' && ik !== '_id' && _.contains(elements, ik)) {
-                  record.contents.push(iv);
-                }
-              });
-
-              return record;
-            });
-            templateData.hasContent = templateData.content.length > 0;
-
-            templateData.interactions = app.interactions.getFormActions(objectName, function (interaction) {
-              return interaction.id;
-            });
-
-            view.$el.html(Mustache.render(view.constructor.template, templateData));
-            view.trigger('render');
-          });
         },
         function () {
           view.$el.html('Cannot contact server');
