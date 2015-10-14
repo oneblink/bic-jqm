@@ -17,14 +17,15 @@ define(function (require) {
   var FormListView = Backbone.View.extend({
     render: function () {
       var view = this;
+      var objectName = view.model.get('blinkFormObjectName');
 
-      app.formRecords.pull(view.model.get('blinkFormObjectName')).then(
+      app.formRecords.pull(objectName).then(
         function () {
           var BlinkForms = window.BMP.Forms;
           var templateData = {};
 
           templateData.headers = [];
-          BlinkForms.getDefinition(view.model.get('blinkFormObjectName'), view.model.get('blinkFormAction')).then(function (definition) {
+          BlinkForms.getDefinition(objectName, view.model.get('blinkFormAction')).then(function (definition) {
             var elements = [];
             _.each(definition._elements, function (value) {
               if (value.type !== 'subForm') {
@@ -49,19 +50,9 @@ define(function (require) {
             });
             templateData.hasContent = templateData.content.length > 0;
 
-            templateData.interactions = {};
-            templateData.interactions.edit = app.interactions.findWhere({
-              blinkFormObjectName: view.model.get('blinkFormObjectName'),
-              blinkFormAction: 'edit'
-            }).id;
-            templateData.interactions.view = app.interactions.findWhere({
-              blinkFormObjectName: view.model.get('blinkFormObjectName'),
-              blinkFormAction: 'view'
-            }).id;
-            templateData.interactions.delete = app.interactions.findWhere({
-              blinkFormObjectName: view.model.get('blinkFormObjectName'),
-              blinkFormAction: 'delete'
-            }).id;
+            templateData.interactions = app.interactions.getFormActions(objectName, function (interaction) {
+              return interaction.id;
+            });
 
             view.$el.html(Mustache.render(view.constructor.template, templateData));
             view.trigger('render');
