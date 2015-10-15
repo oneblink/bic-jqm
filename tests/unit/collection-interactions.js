@@ -72,5 +72,36 @@ define(['Squire', 'backbone', 'sinon', 'chai'], function (Squire, Backbone, sino
     describe('#save', function () {
       it('should persist any models to the data store');
     });
+
+    describe('#getFormActions', function () {
+      var data = [
+        new Backbone.Model({blinkFormObjectName: 'a', blinkFormAction: 'add', extra: '1'}),
+        new Backbone.Model({blinkFormObjectName: 'a', blinkFormAction: 'edit', extra: '2'}),
+        new Backbone.Model({blinkFormObjectName: 'a', blinkFormAction: 'view', extra: '3'}),
+        new Backbone.Model({blinkFormObjectName: 'b', blinkFormAction: 'add', extra: '4'})
+      ];
+      var c;
+
+      before(function () {
+        c = new Collection(data);
+      });
+
+      it('should return 3 full records', function () {
+        var result = c.getFormActions('a');
+        assert.lengthOf(Object.keys(result), 3);
+        Object.keys(result).forEach(function (key, index) {
+          assert.deepEqual(result[key], data[index]);
+        });
+      });
+
+      it('should return 1 record with correct transform', function () {
+        var action = c.getFormActions('b', function (interaction) {
+          return 'it works!';
+        });
+
+        assert.lengthOf(Object.keys(action), 1);
+        assert.equal(action.add, 'it works!');
+      });
+    });
   });
 });
