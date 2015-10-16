@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v4.2.1 - 2015-10-16
+
+
+### Fixed
+
+- BIC-218: refactored navigation routing to allow future extensibility,
+  and improved maintainability
+
+- BIC-228: fixed a case where form validation error summaries would not display,
+  and would block further submission attempts
+
+    - HelpDesk: 1652-ODLM-4900, 6953-ERSG-1898
+
+- BIC-229: list view now supports forms that are missing certain actions (e.g. "delete", "edit", etc)
+
+
 ## v4.2.0 - 2015-09-25
 
 
