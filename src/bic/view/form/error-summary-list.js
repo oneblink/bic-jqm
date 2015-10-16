@@ -19,6 +19,7 @@ define(function (require) {
   var FormsErrorSummaryListView = Backbone.View.extend({
     tagName: 'ul',
     className: 'bm-errorsummary',
+    isEnhanced: false,
 
     attributes: {
       'data-corners': 'true',
@@ -86,9 +87,9 @@ define(function (require) {
 
       this.$el.html(template);
 
-      /* eslint-disable no-unused-expressions */
-      this.$el.is(':visible') && this.$el.listview().listview('refresh');
-      /* eslint-enable no-unused-expressions */
+      if (this.$el.is(':visible')) {
+        this.enhance();
+      }
 
       this.trigger('render');
 
@@ -96,7 +97,12 @@ define(function (require) {
     },
 
     enhance: function () {
-      this.$el.listview().listview('refresh');
+      if (!this.isEnhanced) {
+        this.$el.listview();
+        this.isEnhanced = true;
+      }
+
+      this.$el.listview('refresh');
       return this;
     }
   }, {
