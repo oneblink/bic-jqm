@@ -20,7 +20,8 @@ define(function (require) {
     bicData.model = model;
 
     model.prepareForView(jqmData)
-      .then(function () {
+      .then(function (finalModel) {
+        bicData.model = finalModel;
         next(null, jqmData, bicData);
       })
       .catch(function (err) {
