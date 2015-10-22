@@ -435,6 +435,46 @@ define([
       });
     });
 
+    describe('bic/router/middleware/bootStatus', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/bootStatus'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next()', function (done) {
+        window.BootStatus = {
+          notifySuccess: function () {}
+        };
+        var bootStatusSpy = sinon.spy(window.BootStatus, 'notifySuccess');
+        middleware({
+          deferred: new $.Deferred()
+        }, {
+          view: new Backbone.View()
+        }, function () {
+          middleware({
+            deferred: new $.Deferred()
+          }, {
+            view: new Backbone.View()
+          }, function () {
+            assert.ok(bootStatusSpy.callCount, 1);
+            done();
+          });
+        });
+
+
+
+      });
+    });
+
     describe('bic/router/middleware/resolve', function () {
       var middleware;
 
