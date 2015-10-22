@@ -437,6 +437,7 @@ define([
 
     describe('bic/router/middleware/bootStatus', function () {
       var middleware;
+      var bootStatusSpy;
 
       beforeEach(function (done) {
         injector.require(['bic/router/middleware/bootStatus'], function (mw) {
@@ -454,7 +455,7 @@ define([
         window.BootStatus = {
           notifySuccess: function () {}
         };
-        var bootStatusSpy = sinon.spy(window.BootStatus, 'notifySuccess');
+        bootStatusSpy = sinon.spy(window.BootStatus, 'notifySuccess');
         middleware({
           deferred: new $.Deferred()
         }, {
@@ -469,9 +470,6 @@ define([
             done();
           });
         });
-
-
-
       });
     });
 
