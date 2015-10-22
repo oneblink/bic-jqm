@@ -1,4 +1,4 @@
-define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
+define(['Squire', 'backbone', 'chai', 'sinon'], function (Squire, Backbone, chai, sinon) {
   'use strict';
 
   var CONTEXT = 'tests/unit/view/form/error-summary-list.js';
@@ -54,6 +54,17 @@ define(['Squire', 'backbone', 'chai'], function (Squire, Backbone, chai) {
     });
 
     describe('standard behavior', function () {
+      it('should not be flagged as enhanced', function () {
+        assert.isFalse(formActionView.isEnhanced);
+      });
+
+      it('should flag that it is enahnced after being enhanced', function () {
+        var stub = sinon.stub(formActionView.$el, 'listview');
+        formActionView.enhance();
+        assert.isTrue(formActionView.isEnhanced);
+        stub.restore();
+      });
+
       it('should default to 4 errors', function () {
         assert.equal(formActionView.getLimit(), 4);
       });

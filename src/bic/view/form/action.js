@@ -23,7 +23,7 @@ define(function (require) {
     subView: null,
 
     initialize: function () {
-      this.model.on('showErrors', this.renderErrorSummary, this);
+      this.listenTo(this.model, 'showErrors', this.renderErrorSummary);
       this.$errorSummaryContainer = $('<div class="bm_errorsummary--container"></div>');
     },
 
@@ -133,6 +133,11 @@ define(function (require) {
       if (this.subView) {
         this.subView.remove();
       }
+
+      if (this.errorSummary) {
+        this.errorSummary.remove();
+      }
+
       Backbone.View.prototype.remove.apply(this, arguments);
     }
 
