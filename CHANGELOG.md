@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v4.2.3 - 2015-10-27
+
+
+### Fixed
+
+- BIC-225: explicitly dismiss native splash screen _after_ "loading..."
+
+    - requires upcoming iOS and Android app shell releases
+
+    - HelpDesk: 4236-WYDZ-2353
+
+- BIC-231: fix homeInteraction setting after regression in BIC-218
+
+
 ## v4.2.2 - 2015-10-16
 
 
