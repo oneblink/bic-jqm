@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v4.2.4 - 2015-10-27
+
+
+### Changed
+
+- update to Forms v3.9.0 for changes and fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.9.0
+
+
 ## v4.2.3 - 2015-10-27
 
 
