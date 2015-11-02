@@ -48,9 +48,6 @@ define(function (require) {
         }
 
         this.errorSummary.render();
-        if (this.errorSummary.enhance) {
-          this.errorSummary.enhance();
-        }
         return this;
       }
     },
@@ -93,7 +90,7 @@ define(function (require) {
           view.renderControls();
 
           if (view.model.getArgument('id')) {
-            formRecord = app.formRecords.get(view.model.get('blinkFormObjectName') + '-' + view.model.get('args')['args[id]']);
+            formRecord = app.formRecords.get(view.model.get('blinkFormObjectName') + '-' + view.model.getArgument('id'));
             formRecord.populate(view.model.get('blinkFormAction'), function () {
               Forms.current.setRecord(formRecord.get('record'));
               view.trigger('render');
@@ -117,7 +114,7 @@ define(function (require) {
             view.trigger('render');
           }
         })
-        .then(null, function (err) {
+        .catch(function (err) {
           view.$el.append('<p>Error: unable to display this form. Try again later.</p>');
           view.trigger('render');
           c.error(err);
