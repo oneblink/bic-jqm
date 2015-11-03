@@ -30,6 +30,7 @@ define(function (require) {
     path: require('bic/router/middleware/path'),
     model: require('bic/router/middleware/model'),
     resolve: require('bic/router/middleware/resolve'),
+    login: require('bic/router/middleware/login'),
     view: require('bic/router/middleware/view'),
     viewRender: require('bic/router/middleware/viewRender'),
     whenPopulated: require('bic/router/middleware/whenPopulated')
