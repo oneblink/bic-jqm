@@ -5,6 +5,8 @@ define(function (require) {
 
   var c = require('bic/console');
   var API = require('bic/api');
+  var $ = require('jquery');
+  var _ = require('underscore');
   // this module
 
   return function (jqmData, bicData, next) {
@@ -31,8 +33,7 @@ define(function (require) {
           if (_.indexOf(path.split('/'), loginInteraction.id) < 0) {
             url = url + '/' + loginInteraction.id;
             bicData.stopRoute();
-            $.mobile.navigate(url);
-            return;
+            return $.mobile.navigate(url);
             // return app.goToInteraction(url);
           }
         }
