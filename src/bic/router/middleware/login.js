@@ -22,7 +22,6 @@ define(function (require) {
     if (app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
       API.getLoginStatus().then(function (loginData) {
         if (loginData.status !== 'LOGGED IN') {
-
           loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
           path = $.mobile.path.parseLocation().pathname;
           if (path.slice(-1) === '/') {
@@ -35,13 +34,9 @@ define(function (require) {
             $.mobile.navigate(url);
             return;
             // return app.goToInteraction(url);
-          } else {
-            return next(null, jqmData, bicData);
           }
-        } else {
-          next(null, jqmData, bicData);
         }
-
+        next(null, jqmData, bicData);
       })
       .fail(function (err) {
         next(err, jqmData, bicData);
