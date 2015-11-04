@@ -194,41 +194,41 @@ define([
 
     //})
 
-    describe('routeRequest(data)', function () {
-      var router, testmodel;
+    // describe('routeRequest(data)', function () {
+      // var router, testmodel;
+      //
+      // beforeEach(function (done) {
+      //   injector.require(['bic/router'], function (module) {
+      //     testmodel = model(1);
+      //     sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
+      //    // sinon.stub(module, 'parseArgs', function () { return null; });
+      //     router = module;
+      //     router.routeRequest({
+      //       dataUrl: '/test',
+      //       deferred: Promise.resolve()
+      //     });
+      //     setTimeout(done, 1e3);
+      //   });
+      // });
+      //
+      // afterEach(function () {
+      //   router.inheritanceChain.restore();
+      //   //router.parseArgs.restore();
+      //   testmodel.prepareForView.reset();
+      // });
 
-      beforeEach(function (done) {
-        injector.require(['bic/router'], function (module) {
-          testmodel = model(1);
-          sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
-         // sinon.stub(module, 'parseArgs', function () { return null; });
-          router = module;
-          router.routeRequest({
-            dataUrl: '/test',
-            deferred: Promise.resolve()
-          });
-          setTimeout(done, 1e3);
-        });
-      });
-
-      afterEach(function () {
-        router.inheritanceChain.restore();
-        //router.parseArgs.restore();
-        testmodel.prepareForView.reset();
-      });
-
-      it('should call the inheritanceChain function to get the correct interaction model', function () {
-        router.inheritanceChain.called.should.equal(true);
-      });
+      // it('should call the inheritanceChain function to get the correct interaction model', function () {
+      //   router.inheritanceChain.called.should.equal(true);
+      // });
 
       // it('should start the parseArgs function', function () {
       //   router.parseArgs.called.should.equal(true);
       // });
 
-      it('should instruct the model to prepareForView', function () {
-        router.inheritanceChain.called.should.equal(true);
-        testmodel.prepareForView.called.should.equal(true);
-      });
+      // it('should instruct the model to prepareForView', function () {
+      //   router.inheritanceChain.called.should.equal(true);
+      //   testmodel.prepareForView.called.should.equal(true);
+      // });
 
       //it('should create a new view', function () {
         //context(['view-interaction'], function (view) {
@@ -244,7 +244,7 @@ define([
       //});
 
       //it('should remove old views from the DOM');
-    });
+    // });
 
     describe('inheritanceChain(parsedUrl)', function () {
       var router;
@@ -458,6 +458,22 @@ define([
         }, function () {
           done();
         });
+      });
+    });
+
+    describe('bic/router/middleware/login', function () {
+      var middleware;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/login'], function (mw) {
+          middleware = mw;
+          done();
+        });
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
       });
     });
 
