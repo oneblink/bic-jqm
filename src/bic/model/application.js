@@ -317,9 +317,6 @@ define(function (require) {
         transition: 'fade'
       });
       $(document).one('pageshow', function () {
-        if (window.BootStatus && window.BootStatus.notifySuccess) {
-          window.BootStatus.notifySuccess();
-        }
         $('#temp').remove();
       });
     },

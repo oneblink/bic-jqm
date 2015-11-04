@@ -41,6 +41,7 @@ define(function (require) {
       this.middleware.use(Middleware.model);
       this.middleware.use(Middleware.view);
       this.middleware.use(Middleware.viewRender);
+      this.middleware.use(Middleware.bootStatus);
       this.middleware.use(Middleware.resolve);
 
       this.middleware.addErrorHandler(Middleware.errorHandler);
