@@ -1,12 +1,15 @@
 define(function (require) {
   'use strict';
 
+  // foreign modules
+  var $ = require('jquery');
+  var _ = require('underscore');
+
   // local modules
 
   var c = require('bic/console');
   var API = require('bic/api');
-  var $ = require('jquery');
-  var _ = require('underscore');
+
   // this module
 
   return function (jqmData, bicData, next) {
@@ -34,7 +37,6 @@ define(function (require) {
             url = url + '/' + loginInteraction.id;
             bicData.stopRoute();
             return $.mobile.navigate(url);
-            // return app.goToInteraction(url);
           }
         }
         next(null, jqmData, bicData);
