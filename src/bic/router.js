@@ -73,7 +73,7 @@ define(function (require) {
         // http://api.jquerymobile.com/1.3/pagebeforeload/
         // data.deferred.resolve|reject is expected after data.preventDefault()
         e.preventDefault();
-
+        Backbone.trigger('route:beforechange');
         // keep track of history depth for forms post-submission behaviour
         app.history.length += 1;
 
