@@ -44,6 +44,8 @@ define(function (require) {
   InteractionView = Backbone.View.extend({
 
     initialize: function (options) {
+      this.listenTo(Backbone, 'route:beforechange', this.destroy);
+
       Backbone.View.prototype.initialize.call(this, options);
       $('body').append(this.$el);
       window.BMP.BIC.view = this;
@@ -61,10 +63,7 @@ define(function (require) {
       'click [pending]': 'pendingQueue',
 
         // Form Actions
-      'click #queue': 'pendingQueue',
-
-        // Destroy
-      pageremove: 'destroy'
+      'click #queue': 'pendingQueue'
     },
 
     attributes: {
@@ -376,8 +375,10 @@ define(function (require) {
       });
     },
 
-    destroy: function () {
-      this.remove();
+    destroy: function (event) {
+      // remove backbone listeners but leave the DOM element for jQuery Mobile to clean
+      // up because jqm expects this.
+      this.stopListening();
     },
 
     processStars: function () {
