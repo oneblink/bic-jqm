@@ -18,9 +18,8 @@ define(function (require) {
     var path;
     var url;
 
-    c.debug('Router.Middleware.login().............');
     // loggin not required
-    if (!app.get('loginAccess')) {
+    if (!app.has('loginAccess') || !app.get('loginAccess')) {
       next(null, jqmData, bicData);
     }
 
