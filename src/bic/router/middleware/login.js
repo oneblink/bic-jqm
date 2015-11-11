@@ -7,7 +7,6 @@ define(function (require) {
 
   // local modules
 
-  var c = require('bic/console');
   var API = require('bic/api');
 
   // this module

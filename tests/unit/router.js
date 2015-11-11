@@ -443,7 +443,6 @@ define([
         assert.lengthOf(middleware, 3);
       });
 
-
       it('eventually calls next() when loginAccess set undefined', function (done) {
         var data = {app: appModel};
         var stubHas = sinon.stub(appModel, 'has');
