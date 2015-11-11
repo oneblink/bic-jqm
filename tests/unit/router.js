@@ -47,8 +47,7 @@ define([
             }
             return collection[id];
           },
-          set: function () { return null; },
-          findWhere:
+          set: function () { return null; }
         },
         datastore: function () { return this; },
         collections: function () { return Promise.resolve(); },
