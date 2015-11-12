@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v4.2.5 - 2015-11-12
+
+
+### Fixed
+
+- BIC-200: for protected answerSpaces, no longer briefly display a different interaction first before redirecting to login
+
+- BIC-232: loading a form from the pending queue whilst another form is active no longer triggers a console error
+
+
 ## v4.2.4 - 2015-10-27
 
 
