@@ -8,6 +8,9 @@ module.exports = function (config) {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
 
+    // run in browsers one at a time
+    concurrency: 1,
+
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['detectBrowsers', 'mocha', 'requirejs'],
