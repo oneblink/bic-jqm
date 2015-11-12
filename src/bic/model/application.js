@@ -299,7 +299,7 @@ define(function (require) {
         API.getLoginStatus().then(function (data) {
           var status = data.status || data;
           if (app.get('loginStatus') !== status) {
-            app.populate({ username: data.username}).then(function () {
+            app.populate({ username: data.username }).then(function () {
               app.set({loginStatus: status});
               resolve();
             });
