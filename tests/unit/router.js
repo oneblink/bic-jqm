@@ -448,10 +448,10 @@ define([
         var stubHas = sinon.stub(appModel, 'has');
 
         stubHas.withArgs('loginAccess').returns(undefined);
-          middleware({}, data, function () {
-            stubHas.restore();
-            done();
-          });
+        middleware({}, data, function () {
+          stubHas.restore();
+          done();
+        });
       });
 
       it('eventually calls next() when loginAccess set true and user in LOGGED IN', function (done) {
