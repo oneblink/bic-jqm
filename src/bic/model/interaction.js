@@ -248,37 +248,7 @@ The argument change event.
     prepareAnswerSpace: function (resolve, reject, data) {
       var model = this;
       require(['bic'], function (app) {
-        var loginInteraction;
-        var path;
-        var url;
-
-        if (app.has('loginAccess') && app.get('loginAccess') === true && app.has('loginPromptInteraction')) {
-          API.getLoginStatus().then(function (loginData) {
-            if (loginData.status !== 'LOGGED IN') {
-              loginInteraction = app.interactions.findWhere({dbid: 'i' + app.get('loginPromptInteraction')});
-
-              path = $.mobile.path.parseLocation().pathname;
-              if (path.slice(-1) === '/') {
-                path = path.slice(0, path.length - 1);
-              }
-
-              url = path;
-              if (_.indexOf(path.split('/'), loginInteraction.id) < 0) {
-                url = url + '/' + loginInteraction.id;
-              }
-              $.mobile.changePage(url);
-
-              resolve(model);
-            } else {
-              if (app.hasHomeInteraction()) {
-                model.goToHomeInteraction(resolve, reject, data);
-              } else {
-                model.defaultView(app.interactions.models, app.siteVars);
-                resolve(model);
-              }
-            }
-          });
-        } else if (app.hasHomeInteraction()) {
+        if (app.hasHomeInteraction()) {
           model.goToHomeInteraction(resolve, reject, data);
         } else {
           model.defaultView(app.interactions.models, app.siteVars);

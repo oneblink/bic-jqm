@@ -74,6 +74,12 @@ define([
         view = new View({});
       });
 
+      after(function () {
+        view.destroy();
+        view.$el.remove();
+        view = null;
+      });
+
       it('should have a home method', function () {
         expect(view.home).to.be.an.instanceOf(Function);
       });
@@ -113,6 +119,18 @@ define([
     });
 
     describe('events', function () {
+      var view;
+
+      before(function () {
+        view = new View({});
+      });
+
+      after(function () {
+        view.destroy();
+        view.$el.remove();
+        view = null;
+      });
+
       it('should handle click [keyword]');
       it('should handle click [interaction]');
       it('should handle click [category]');
@@ -120,6 +138,13 @@ define([
       it('should handle click [back]');
       it('should handle click [home]');
       it('should handle click [login]');
+
+      it('should listen for route:beforechange to clean up events but the element should be left in the DOM for jqm to clean up', function () {
+        var initialNumListeners = Object.keys(view._listeningTo).length;
+        Backbone.trigger('route:beforechange');
+        assert.isBelow(Object.keys(view._listeningTo || {}).length, initialNumListeners);
+        assert.isTrue($.contains(document, view.el));
+      });
     });
 
     describe('attributes', function () {

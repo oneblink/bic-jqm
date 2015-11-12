@@ -14,8 +14,12 @@ define(function (require) {
 
     c.debug('Router.Middleware.model()');
 
-    model = app.router.inheritanceChain(path);
-    model.setArgsFromQueryString(path.search);
+    if (!bicData.model) {
+      model = app.router.inheritanceChain(path);
+      model.setArgsFromQueryString(path.search);
+    } else {
+      model = bicData.model;
+    }
     app.currentInteraction = model;
     bicData.model = model;
 

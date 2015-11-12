@@ -38,6 +38,8 @@ define([
 
       injector.mock('bic/model/application', {
         set: function () { return null; },
+        get: function () { return null; },
+        has: function () { return null; },
         interactions: {
           get: function (id) {
             if (!collection[id]) {
@@ -63,6 +65,11 @@ define([
           get: function () {}
         }
       });
+
+      injector.mock('bic/api', {
+        getLoginStatus: function () { return null; }
+      });
+
       injector.mock('bic/view/interaction', Backbone.View);
       injector.mock('bic/view/interaction/form', Backbone.View);
       done();
@@ -176,75 +183,6 @@ define([
         expectation.verify();
       });
     });
-    // describe('routeRequest', function () {
-    //   var router;
-
-    //   beforeEach(function (done) {
-    //     injector.require(['bic/router'], function (module) {
-    //       router = module;
-    //       done();
-    //     });
-    //   });
-
-    //   afterEach(function () {
-
-    //   });
-
-    //   it('should ');
-
-    //})
-
-    describe('routeRequest(data)', function () {
-      var router, testmodel;
-
-      beforeEach(function (done) {
-        injector.require(['bic/router'], function (module) {
-          testmodel = model(1);
-          sinon.stub(module, 'inheritanceChain', function () { return testmodel; });
-         // sinon.stub(module, 'parseArgs', function () { return null; });
-          router = module;
-          router.routeRequest({
-            dataUrl: '/test',
-            deferred: Promise.resolve()
-          });
-          setTimeout(done, 1e3);
-        });
-      });
-
-      afterEach(function () {
-        router.inheritanceChain.restore();
-        //router.parseArgs.restore();
-        testmodel.prepareForView.reset();
-      });
-
-      it('should call the inheritanceChain function to get the correct interaction model', function () {
-        router.inheritanceChain.called.should.equal(true);
-      });
-
-      // it('should start the parseArgs function', function () {
-      //   router.parseArgs.called.should.equal(true);
-      // });
-
-      it('should instruct the model to prepareForView', function () {
-        router.inheritanceChain.called.should.equal(true);
-        testmodel.prepareForView.called.should.equal(true);
-      });
-
-      //it('should create a new view', function () {
-        //context(['view-interaction'], function (view) {
-          //view.render.should.be.true;
-          //view.reset();
-        //});
-      //});
-
-      //it('should resolve the event deferred (transitioning the view onscreen)', function (done) {
-        //dfrd.always(function () {
-          //done();
-        //});
-      //});
-
-      //it('should remove old views from the DOM');
-    });
 
     describe('inheritanceChain(parsedUrl)', function () {
       var router;
@@ -273,19 +211,6 @@ define([
         chainedModel.set.calledWith({parent: 'councils'}).should.equal(true);
       });
 
-      //it('should set the parent of each interaction in the chain on the associated model', function () {
-        //var interaction = router.inheritanceChain('/test/second');
-        //interaction.get('parent').should.be.string(interactionSetSpy.secondCall.args[0].parent);
-      //});
-
-      //it('should set the topmost interaction in the chain to have a parent of the answerspace', function () {
-        //router.inheritanceChain('/test').get('parent').should.be.string('app');
-      //});
-
-      //it('should return the correct interaction to attach the view to', function () {
-        //router.inheritanceChain('/test').should.be.instanceOf(Backbone.Model);
-      //});
-
       it('should handle the same interaction being listed twice (last winning out)', function () {
         var data = '/councils/traffic/trafficcams/traffic';
         data = $.mobile.path.parseUrl(data);
@@ -298,12 +223,6 @@ define([
         router.inheritanceChain(data).id.should.equal('traffic');
       });
     });
-
-    //describe('parseArgs(argsString, model)', function () {
-      //it('should identify any GET arguments in the input string');
-      //it('should parse found arguments into an object');
-      //it('should set the object on the model as 'args'');
-    //});
 
     describe('router.constructor.Middleware', function () {
       var router, Middleware;
@@ -494,6 +413,66 @@ define([
         }, {
           view: new Backbone.View()
         }, function () {
+          done();
+        });
+      });
+    });
+
+    describe('bic/router/middleware/login', function () {
+      var middleware;
+      var appModel;
+      var api;
+
+      beforeEach(function (done) {
+        injector.require(['bic/router/middleware/login', 'bic/model/application', 'bic/api'], function (mw, a, ap) {
+          middleware = mw;
+          appModel = a;
+          api = ap;
+          done();
+        });
+      });
+
+      afterEach(function () {
+        middleware = undefined;
+        appModel = undefined;
+        api = undefined;
+      });
+
+      it('exports a Function, with 3 arguments', function () {
+        assert.isFunction(middleware);
+        assert.lengthOf(middleware, 3);
+      });
+
+      it('eventually calls next() when loginAccess set undefined', function (done) {
+        var data = {app: appModel};
+        var stubHas = sinon.stub(appModel, 'has');
+
+        stubHas.withArgs('loginAccess').returns(undefined);
+        middleware({}, data, function () {
+          stubHas.restore();
+          done();
+        });
+      });
+
+      it('eventually calls next() when loginAccess set true and user in LOGGED IN', function (done) {
+        var loginData = {status: 'LOGGED IN'};
+        var data = { app: appModel };
+        var stubAPI = sinon.stub(api, 'getLoginStatus', function () {
+          var d = new $.Deferred();
+          d.resolve(loginData);
+          return d;
+        });
+        var stub = sinon.stub(appModel, 'get');
+        var stubHas = sinon.stub(appModel, 'has');
+
+        stub.withArgs('loginAccess').returns(true);
+        stub.withArgs('loginPromptInteraction').returns(8124);
+        stubHas.withArgs('loginAccess').returns(true);
+        stubHas.withArgs('loginPromptInteraction').returns(true);
+        middleware({}, data, function () {
+          stubAPI.restore();
+          stub.restore();
+          stubHas.restore();
           done();
         });
       });

@@ -37,6 +37,7 @@ define(function (require) {
       this.middleware.use(Middleware.path);
       this.middleware.use(Middleware.app);
       this.middleware.use(Middleware.whenPopulated);
+      this.middleware.use(Middleware.login);
       this.middleware.use(Middleware.model);
       this.middleware.use(Middleware.view);
       this.middleware.use(Middleware.viewRender);
@@ -73,7 +74,7 @@ define(function (require) {
         // http://api.jquerymobile.com/1.3/pagebeforeload/
         // data.deferred.resolve|reject is expected after data.preventDefault()
         e.preventDefault();
-
+        Backbone.trigger('route:beforechange');
         // keep track of history depth for forms post-submission behaviour
         app.history.length += 1;
 
@@ -122,8 +123,17 @@ define(function (require) {
       answerSpace if no model can be found
 
     */
-    routeRequest: function (data) {
-      this.middleware.init(data, {});
+    routeRequest: function (jqmData) {
+      var bicData = {};
+      /**
+      call `stopRoute()` from within a middleware if `next()` will not be called
+      do not call both, and definitely call one of them
+      */
+      bicData.stopRoute = function () {
+        // http://api.jquerymobile.com/1.3/pagebeforeload/
+        jqmData.deferred.reject(jqmData.absUrl, jqmData.options);
+      };
+      this.middleware.init(jqmData, bicData);
     },
 
     inheritanceChain: function (data) {
