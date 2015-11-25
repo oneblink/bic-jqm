@@ -192,6 +192,7 @@ define([
         done();
       });
 
+
       it('should do nothing if offline');
 
       it('should fetch the answerSpaceMap from API');//, function (done) {
@@ -242,10 +243,19 @@ define([
     });
 
     describe('#checkLoginStatus', function () {
+    var api;
+
       before(function (done) {
         model.collections().then(function () {
           done();
         }, done);
+      });
+
+      beforeEach(function (done) {
+        injector.require(['bic/api/web'], function (a) {
+          api = a;
+          done();
+        });
       });
 
       it('should return a promise', function () {
@@ -264,6 +274,17 @@ define([
             expect(model.interactions.length).to.equal(0);
             done();
           }, done);
+        }, done);
+      });
+
+      it('called populate after aetting username', function (done) {
+        var spy = sinon.spy(api, 'getAnswerSpaceMap');
+
+        model.set('loginStatus', 'LOGGED IN');
+        model.set('username', 'geeta');
+        model.populate().then(function () {
+          assert.strictEqual(spy.calledWith('geeta'), true);
+          done();
         }, done);
       });
     });
