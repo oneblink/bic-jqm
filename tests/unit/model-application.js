@@ -192,7 +192,6 @@ define([
         done();
       });
 
-
       it('should do nothing if offline');
 
       it('should fetch the answerSpaceMap from API');//, function (done) {
