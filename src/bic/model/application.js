@@ -298,7 +298,7 @@ define(function (require) {
         API.getLoginStatus().then(function (data) {
           var status = data.status || data;
 
-          if (status = 'LOGGED IN' && data.username) {
+          if (status === 'LOGGED IN' && data.username) {
             app.set({username: data.username});
           } else {
             app.unset('username');
