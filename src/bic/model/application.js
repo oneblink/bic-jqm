@@ -297,8 +297,13 @@ define(function (require) {
       return new Promise(function (resolve) {
         API.getLoginStatus().then(function (data) {
           var status = data.status || data;
-          if (app.get('loginStatus') !== status) {
+
+          if (status = 'LOGGED IN' && data.username) {
             app.set({username: data.username});
+          } else {
+            app.unset('username');
+          }
+          if (app.get('loginStatus') !== status) {
             app.populate().then(function () {
               app.set({loginStatus: status});
               resolve();
