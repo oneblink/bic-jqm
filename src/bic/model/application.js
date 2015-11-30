@@ -156,7 +156,6 @@ define(function (require) {
 
     populate: function () {
       var app = this;
-
       if (!(navigator.onLine || BMP.BlinkGap.isHere())) {
         c.debug('app.populate(): quit early');
         return Promise.resolve();
@@ -167,6 +166,9 @@ define(function (require) {
           return null;
         })
         .then(function () {
+          if (app.get('username')) {
+            return Promise.resolve(API.getAnswerSpaceMap(app.get('username')));
+          }
           return Promise.resolve(API.getAnswerSpaceMap());
         })
         .then(
@@ -295,6 +297,12 @@ define(function (require) {
       return new Promise(function (resolve) {
         API.getLoginStatus().then(function (data) {
           var status = data.status || data;
+
+          if (status === 'LOGGED IN' && data.username) {
+            app.set({username: data.username});
+          } else {
+            app.unset('username');
+          }
           if (app.get('loginStatus') !== status) {
             app.populate().then(function () {
               app.set({loginStatus: status});
