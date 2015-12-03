@@ -14,7 +14,7 @@ define(function (require) {
 
   // this module
 
-  function Data (name) {// , apiTrigger, apiCall, apiParameters) {
+  function Data (name) { // , apiTrigger, apiCall, apiParameters) {
     var self = this;
     var db;
     this.name = name || 'BlinkMobile';
