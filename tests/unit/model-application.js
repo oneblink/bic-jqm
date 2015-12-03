@@ -242,7 +242,7 @@ define([
     });
 
     describe('#checkLoginStatus', function () {
-    var api;
+      var api;
 
       before(function (done) {
         model.collections().then(function () {

@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v4.2.7 - 2015-12-03
+
+
+### Fixed
+
+- BIC-217: refresh configuration after login / logout (#55 @GeetaSajwan)
+
+
 ## v4.2.6 - 2015-11-12
 
 
