@@ -58,7 +58,8 @@
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     underscore: getPaths('underscorejs/1.8.3/underscore-min'),
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
-    pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
+    pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min'),
+    moment: getPaths('moment/2.10.3/moment.min')
   };
 
   setConfig({
