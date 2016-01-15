@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v4.2.9 - 2016-01-15
+
+
+### Changed
+
+- BIC-233: register Moment.js with Require.js (#56, @simonmarklar)
+
+    - allows custom code to `require(['moment'], /* ... */)`
+
+    - HelpDesk: 3214-YIHX-8393
+
+- update to Forms v3.9.3 for fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.9.3
+
+
 ## v4.2.8 - 2015-11-12
 
 
@@ -16,7 +32,7 @@
 
 ### Fixed
 
-- BIC-217: refresh configuration after login / logout (#55 @GeetaSajwan)
+- BIC-217: refresh configuration after login / logout (#55, @GeetaSajwan)
 
 
 ## v4.2.6 - 2015-11-12

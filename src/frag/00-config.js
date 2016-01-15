@@ -47,7 +47,7 @@
 
   // dynamically set paths and fall-back paths;
   paths = {
-    BlinkForms: getPaths('blink/forms/3/3.9.2/forms3jqm.min'),
+    BlinkForms: getPaths('blink/forms/3/3.9.3/forms3jqm.min'),
     'BMP.Blobs': getPaths('blink/blobs/1377493706402/bmp-blobs.min'),
     signaturepad: getPaths('signaturepad/2.3.0/jq.sig.min'),
     jquerymobile: getPaths('jquery.mobile/1.3.2/jquery.mobile-1.3.2.min'),
@@ -58,7 +58,8 @@
     mustache: getPaths('mustache/0.7.3/mustache.min'),
     underscore: getPaths('underscorejs/1.8.3/underscore-min'),
     'es5-shim': getPaths('es5-shim/2.3.0/es5-shim.min'),
-    pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min')
+    pouchdb: getPaths('pouchdb/3.2.1/pouchdb-3.2.1.min'),
+    moment: getPaths('moment/2.10.3/moment.min')
   };
 
   setConfig({

@@ -107,7 +107,8 @@ module.exports = function (grunt) {
             mustache: 'empty:',
             pouchdb: 'empty:',
             signaturepad: 'empty:',
-            underscore: 'empty:'
+            underscore: 'empty:',
+            moment: 'empty:'
           },
           shim: {
             BlinkGap: {
