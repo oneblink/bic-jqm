@@ -68,7 +68,11 @@ define(function (require) {
     .then(function () {
       return promisedRequire('bic/form-expressions');
     })
-    .then(function () {
+    .then(function (mod) {
+      if (BMP.Expression && BMP.Expression.fn) {
+        BMP.Expression.fn.interaction = mod.interaction;
+        BMP.Expression.fn.suitcase = mod.suitcase;
+      }
       // consumers of this module expect it to resolve with Forms
       return Promise.resolve(Forms);
     });
