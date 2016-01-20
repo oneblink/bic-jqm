@@ -1,6 +1,6 @@
 /*globals describe:false, it:false, before:false, after:false*/ // Mocha
 /*globals assert:false*/ // Chai
-define(['Squire'], function (Squire) {
+define(['Squire', 'chai'], function (Squire, chai) {
   'use strict';
 
   var CONTEXT = 'tests/unit/promise-form.js';
@@ -29,16 +29,15 @@ define(['Squire'], function (Squire) {
     it('window.BMP.Expression exist', function (done) {
       assert(promiseForm);
       assert.isFunction(promiseForm);
-      expect(window.BMP.Expression).to.not.exist;
+      assert.isUndefined(window.BMP.Expression);
 
       promiseForm().then(function () {
-        expect(window.BMP.Expression).to.exist;
-        expect(window.BMP.Expression.fn).to.exist;
-        expect(window.BMP.Expression.fn.interaction).to.exist;
-        expect(window.BMP.Expression.fn.suitcase).to.exist;
+        assert.isDefined(window.BMP.Expression);
+        assert.isDefined(window.BMP.Expression.fn);
+        assert.isDefined(window.BMP.Expression.fn.interaction);
+        assert.isDefined(window.BMP.Expression.fn.suitcase);
         done();
       });
     });
-
   });
 });
