@@ -76,10 +76,5 @@ define(function (require) {
     });
   };
 
-  if (BMP.Expression && BMP.Expression.fn) {
-    BMP.Expression.fn.interaction = mod.interaction;
-    BMP.Expression.fn.suitcase = mod.suitcase;
-  }
-
   return mod;
 });
