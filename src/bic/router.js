@@ -47,7 +47,7 @@ define(function (require) {
       this.middleware.addErrorHandler(Middleware.errorHandler);
 
       this.isOfflineFirst = (function () {
-        var isLocalProtocol = location.protocol === 'file:' || location.protocol === 'ms-appx:';
+        var isLocalProtocol = ['file:', 'ms-appx:', 'ms-appx-web'].indexOf(location.protocol) > -1;
         return isLocalProtocol &&
           /\/www\/index\.html$/.test(location.pathname);
       }());
