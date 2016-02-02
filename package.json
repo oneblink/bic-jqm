@@ -53,6 +53,7 @@
     "karma-safari-launcher": "^0.1.1",
     "mocha": "^2.3",
     "mustache": "^2.0",
+    "npm-run-all": "^1.5.1",
     "phantomjs-prebuilt": "^2.1",
     "request": "^2.63",
     "requirejs": "^2.1",
@@ -62,9 +63,11 @@
     "tape-chai": "^1.1"
   },
   "scripts": {
+    "testgrunt": "grunt test",
+    "testgulp": "gulp test",
     "build": "grunt build",
     "lint": "eslint --fix --cache .",
-    "test": "gulp test && grunt test",
+    "test": "npm-run-all testgrunt testgulp",
     "posttest": "npm run lint"
   },
   "license": "BSD-3-Clause"
