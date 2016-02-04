@@ -10,6 +10,7 @@ var path = require('path');
 var AppCache = require('@jokeyrhyme/appcache');
 var Mustache = require('mustache');
 
+var request = require('request');
 var test = require('tape');
 
 // this module
@@ -37,6 +38,30 @@ test('AppCache', function (t) {
     tt.isArray(appCache.cache);
     tt.equal(appCache.cache.length, 34);
     tt.end();
+  });
+
+  t.end();
+});
+
+test('AppCache CACHE items', function (t) {
+  appCache.cache.filter(function (assetPath) {
+    // filter out any templated URLs
+    return assetPath.indexOf('{{') === -1;
+  }).forEach(function (assetPath) {
+    [
+      'https://d1c6dfkb81l78v.cloudfront.net/',
+      'https://d2wxp0xv9nwmh.cloudfront.net/'
+    ].forEach(function (origin) {
+      var assetUrl = assetPath.replace('/_c_/', origin);
+      test('reachable: ' + assetUrl, function (tt) {
+        request(assetUrl, function (err, res, body) {
+          tt.error(err);
+          tt.equal(res.statusCode, 200);
+          tt.ok(body);
+          tt.end();
+        });
+      });
+    });
   });
 
   t.end();
