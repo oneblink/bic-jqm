@@ -79,10 +79,5 @@ define(['Squire'], function (Squire) {
         done();
       });
     });
-
-    it('BMP.Expression.fn', function () {
-      assert.equal(window.BMP.Expression.fn.interaction, mod.interaction);
-      assert.equal(window.BMP.Expression.fn.suitcase, mod.suitcase);
-    });
   });
 });
