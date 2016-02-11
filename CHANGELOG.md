@@ -1,6 +1,30 @@
 # Changelog
 
 
+## 4.2.11 - 2015-02-11
+
+
+### Changed
+
+- update to Forms 3.9.4 for fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/3.9.4
+
+
+## 4.2.10 - 2015-02-11
+
+
+### Fixed
+
+- BIC-211: Forms library loaded such that interaction-populated choice fields work (#57, @GeetaSajwan)
+
+- BIC-238: Moment.js URLs in AppCache manifest are now correct (#59, @jokeyrhyme)
+
+    - HelpDesk: 5592-WEGJ-0376
+
+- BIC-239: detect `ms-appx-web:` as an offline protocol (#58, @simonmarklar)
+
+
 ## v4.2.9 - 2016-01-15
 
 
