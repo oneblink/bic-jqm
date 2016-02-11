@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "4.2.9",
+  "version": "4.2.10",
   "formsversion": "3.9.3",
   "main": "Gruntfile.js",
   "dependencies": {
@@ -19,7 +19,7 @@
     "sjcl": "1.0.3",
     "text": "requirejs/text#2.0.14"
   },
-  "repository": "git@github.com:blinkmobile/bic-v3.git",
+  "repository": "git@github.com:blinkmobile/bic-jqm.git",
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "@jokeyrhyme/eslint-config-es5": "^1.0",
