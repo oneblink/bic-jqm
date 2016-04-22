@@ -1,0 +1,17 @@
+{
+  "extends": ["eslint:recommended", "semistandard"],
+  "env": {
+    "amd": true,
+    "browser": true,
+    "mocha": true,
+    "node": false
+  },
+  "globals": {
+    /* Blink */
+    "BMP": true,
+    "BlinkForms": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 5
+  }
+}
