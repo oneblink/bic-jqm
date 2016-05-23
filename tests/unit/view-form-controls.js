@@ -70,6 +70,14 @@ define([
           'subform': []
         })
       );
+      apiStub.returns(
+        Promise.resolve({
+          'text_box': '123456789',
+          'number': 90,
+          '_action': 'add',
+          'subform': []
+        })
+      );
       mockApp = new Backbone.Model();
       mockApp.attributes.currentForm = Forms.current;
 
@@ -227,6 +235,50 @@ define([
           expect(draftQueue[0].get('data').text_box).to.equal('Devyani');
           expect(draftQueue[1].get('data').text_box).to.equal('Anandita');
           done();
+        });
+      });
+
+      it('should not check for errors when saving a draft', function (done) {
+        view.addToQueue(MODEL_STATUS.DRAFT, true)
+          .then(function (updatedModel) {
+            done();
+          })
+          .catch(function (invalidElements) {
+            done('Should not of thrown error');
+          });
+      });
+    });
+
+    describe('formSave2', function () {
+      var view;
+      before(function (done) {
+        injector.require(['bic/model/application'], function (app) {
+          view = new View({ model: app });
+          app.view = view;
+
+          app.getArgument = sinon.stub();
+          app.getArgument.withArgs('pid').returns(view.model.attributes.pid);
+
+          app.setArgument = function (name, value) {
+            view.model.attributes.pid = value;
+          };
+          injector.require(['bic/model/pending'], function (PendingItem) {
+            var PCol = Backbone.Collection.extend({ model: PendingItem });
+            app.pending = new PCol();
+            app.pending.create = function (attrs, options) {
+              options.success({id: 1234});
+            };
+            done();
+          });
+        });
+      });
+
+      it('should set the pending id (pid) of the model', function (done) {
+        view.formSave2().then(function (updatedModel) {
+          assert.equal(view.model.attributes.pid, updatedModel.id);
+          done();
+        }).catch(function (err) {
+          done(err);
         });
       });
     });
