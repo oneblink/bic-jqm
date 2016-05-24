@@ -283,18 +283,18 @@ define(function (require) {
     },
 
     formSave2: function () {
-      var currentForm = this.model.attributes.currentForm;
       uiTools.disableElement('#save');
-      this.addToQueue(MODEL_STATUS.DRAFT)
+      return this.addToQueue(MODEL_STATUS.DRAFT, true)
           .then(function (updatedModel) {
             this.model.setArgument('pid', updatedModel.id);
             setTimeout(function () {
               enableSave();
             }, 1e3);
+
+            return updatedModel;
           }.bind(this))
-          .catch(function (invalidElements) {
+          .catch(function () {
             enableSave();
-            currentForm.get('_view').goToElement(invalidElements.errors[0]);
           });
     },
 
@@ -327,12 +327,11 @@ define(function (require) {
           options.success = function (updatedModel) {
             var invalidElements;
             if (!supressQueue) {
-              if (pendingModel.get('status') === MODEL_STATUS.DRAFT) {
+              if (pendingModel.get('status') === MODEL_STATUS.PENDING) {
                 invalidElements = currentForm.getInvalidElements();
                 if (invalidElements && invalidElements.length) {
                   return reject(invalidElements);
                 }
-              } else {
                 pendingModel.once('processed', function () {
                   var result = pendingModel.get('result');
 
