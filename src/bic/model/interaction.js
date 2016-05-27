@@ -425,7 +425,7 @@ The argument change event.
       if (this.has('args')) {
         args = this.get('args');
         xsl = this.get('xsl');
-        placeholders = xsl.match(/\$args\[[\w\:][\w\:\-\.]*\]/g);
+        placeholders = xsl.match(/\$args\[[\w:][\w:\-\.]*\]/g);
         pLength = placeholders ? placeholders.length : 0;
         for (p = 0; p < pLength; p = p + 1) {
           value = typeof args[placeholders[p].substring(1)] === 'string' ? args[placeholders[p].substring(1)] : '';

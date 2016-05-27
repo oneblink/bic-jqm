@@ -41,6 +41,10 @@ server.connection({
   }
 });
 
+server.register([ require('h2o2'), require('inert') ])
+  .then(() => server.start())
+  .catch((err) => console.error(err));
+
 server.route({
   path: '/favicon.ico',
   method: 'GET',
@@ -116,12 +120,6 @@ server.route({
         .header('X-BMP-Gap-Target', 'bmp-blinkgap-js')
         .header('X-BMP-Version', '3.xx.x');
     });
-  }
-});
-
-server.start(function (err) {
-  if (err) {
-    console.log(err);
   }
 });
 
