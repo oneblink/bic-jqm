@@ -1,6 +1,14 @@
 # Changelog
 
 
+## 4.3.1 - 2016-05-27
+
+
+- BIC-243: validation no longer blocks save draft (#60, @simonmarklar)
+
+    - also ensure that saving over existing draft works as expected
+
+
 ## 4.3.0 - 2016-04-22
 
 
