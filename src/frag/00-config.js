@@ -11,7 +11,7 @@
     }
   };
 
-  cloudfront = '//d1c6dfkb81l78v.cloudfront.net/';
+  cloudfront = '//d2wxp0xv9nwmh.cloudfront.net/';
   filesystem = '/_c_/';
 
   if (typeof document !== 'undefined' && typeof location !== 'undefined') {
