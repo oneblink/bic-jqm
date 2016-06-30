@@ -26,7 +26,7 @@ var bicVersion = (function () {
 
 function getScriptsHTML (bic, config) {
   var html = bic.scripts.reduce(function (prev, current) {
-    var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
+    var href = '//d2wxp0xv9nwmh.cloudfront.net/' + current;
     if (current.indexOf('bic.min.js') !== -1) {
       return prev + '<script src="/bic.js"></script>';
     }
@@ -68,7 +68,7 @@ module.exports = function (BMP_HOST, req, callback) {
         env: {},
         env_json: '{}',
         styleSheets_html: bicVersion.styleSheets.theme.reduce(function (prev, current) {
-          var href = '//d1c6dfkb81l78v.cloudfront.net/' + current;
+          var href = '//d2wxp0xv9nwmh.cloudfront.net/' + current;
           return prev + '<link rel="stylesheet" href="' + href + '" />';
         }, ''),
         scripts_html: getScriptsHTML(bicVersion, body['a' + answerSpaceId]),

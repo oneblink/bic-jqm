@@ -1,6 +1,20 @@
 # Changelog
 
 
+## 4.3.2 - 2016-06-30
+
+
+### Fixed
+
+- BIC-242: use new GZIP CDN (same as BMP) (#61, @jokeyrhyme)
+
+    - enables this and newer BIC versions on BMP 3.1.0 and newer to be used with the AppCache Fetcher
+
+    - improves resource loading performance for fresh visitors
+
+    - HelpDesk: 6296-QTAZ-4747
+
+
 ## 4.3.1 - 2016-05-27
 
 

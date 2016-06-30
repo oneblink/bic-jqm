@@ -49,7 +49,7 @@ test('AppCache CACHE items', function (t) {
     return assetPath.indexOf('{{') === -1;
   }).forEach(function (assetPath) {
     [
-      'https://d1c6dfkb81l78v.cloudfront.net/',
+      'https://d2wxp0xv9nwmh.cloudfront.net/',
       'https://d2wxp0xv9nwmh.cloudfront.net/'
     ].forEach(function (origin) {
       var assetUrl = assetPath.replace('/_c_/', origin);

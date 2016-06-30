@@ -18,7 +18,7 @@ following somewhat-cumbersome ritual is required:
 ```javascript
 require(['jquery', 'bic'], function ($) {
   $(document).one('pagebeforeload', function () {
-    $.when(BMP.BIC.pending.initialize).then(function () {
+    BMP.BIC.whenPopulated().then(function () {
 
       /* here your code can safely manipulate the pending queue */
 
@@ -31,7 +31,7 @@ Just checking the Promise should be all that is necessary for
 Interaction-specific and Form Behaviour-specific code:
 
 ```javascript
-$.when(BMP.BIC.pending.initialize).then(function () {
+BMP.BIC.whenPopulated().then(function () {
 
   /* here your Interaction code can safely manipulate the pending queue */
 
