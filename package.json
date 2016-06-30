@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "formsversion": "3.10.0",
   "main": "Gruntfile.js",
   "dependencies": {
@@ -44,7 +44,7 @@
     "h2o2": "^5.1.0",
     "hapi": "^13.0",
     "inert": "^4.0.0",
-    "karma": "^0.13.15",
+    "karma": "^1.1.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-detect-browsers": "^2.0",
     "karma-firefox-launcher": "^1.0.0",
