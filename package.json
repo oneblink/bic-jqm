@@ -1,8 +1,8 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "4.3.2",
-  "formsversion": "3.10.0",
+  "version": "4.3.3",
+  "formsversion": "3.10.1",
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
