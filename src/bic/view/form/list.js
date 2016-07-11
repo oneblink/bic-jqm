@@ -3,7 +3,6 @@ define(function (require) {
 
   // foreign modules
 
-  var _ = require('underscore');
   var Backbone = require('backbone');
   var Mustache = require('mustache');
 
@@ -22,16 +21,17 @@ define(function (require) {
     return headers;
   };
 
+  // extractValues (whitelist: String[]) => (formRecordModel: Backbone.Model) => Object
   var extractValues = function (whitelist) {
-    whitelist = whitelist || _.identity;
+    whitelist = whitelist || [];
 
     return function (formRecordModel) {
+      var listData = formRecordModel.get('list') || {}; // Object
       return {
         id: formRecordModel.get('id'),
-        contents: _.chain(formRecordModel.get('list'))
-                    .pick(whitelist)
-                    .values()
-                    .value()
+        contents: whitelist.map(function (columnName) {
+          return listData[columnName] || listData[columnName.toLowerCase()] || '';
+        }, [])
       };
     };
   };
@@ -50,7 +50,7 @@ define(function (require) {
           window.BMP.Forms.getDefinition(objectName, view.model.get('blinkFormAction'))
             .then(function (definition) {
               var templateData = {
-                headers: _.reduce(definition._elements, extractNames, []),
+                headers: definition._elements.reduce(extractNames, []),
                 interactions: app.interactions.getFormActions(objectName, extractId)
               };
 
