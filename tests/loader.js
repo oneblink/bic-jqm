@@ -78,6 +78,7 @@ require([
   'tests/unit/view-form',
   'tests/unit/view-form-action',
   'tests/unit/view-form-controls',
+  'tests/unit/view-form-list',
   'tests/unit/view-error-summary-list',
   'tests/unit/model-form-record',
   'tests/unit/collection-form-records',
