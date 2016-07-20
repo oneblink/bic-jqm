@@ -1,7 +1,19 @@
 # Changelog
 
 
-## 4.3.3 - 2016-06.30
+## 4.3.4 - 2016-07-20
+
+
+### Fixed
+
+- BIC-244: populate "list" Forms even when data has field names that don't match case (#62, @jokeyrhyme)
+
+    - note: an accompanying change to Forms library is needed for "edit" Forms, too
+
+    - HelpDesk: 4002-UDJX-6616
+
+
+## 4.3.3 - 2016-06-30
 
 
 ### Changed
