@@ -38,7 +38,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
   window.BMP.BIC3 = app;
 
-  window.BMP.BIC.version = '4.3.4';
+  window.BMP.BIC.version = '4.3.5';
 
   window.BMP.console = require('bic/console');
 
