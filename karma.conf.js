@@ -18,7 +18,7 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       { pattern: 'node_modules/chai/chai.js', included: false },
-      { pattern: 'node_modules/is-indexeddb-reliable/dist/index.js', included: false },
+      { pattern: 'node_modules/@blinkmobile/is-indexeddb-reliable/dist/index.js', included: false },
       { pattern: 'node_modules/amd-feature/feature.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/deadline/dist/index.js', included: false },
       { pattern: 'node_modules/@jokeyrhyme/promised-requirejs/dist/index.js', included: false },

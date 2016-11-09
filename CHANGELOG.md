@@ -1,6 +1,14 @@
 # Changelog
 
 
+## Unreleased
+
+
+### Fixed
+
+-   update to [sjcl 1.0.6](https://github.com/bitwiseshiftleft/sjcl) for fixes
+
+
 ## 4.3.5 - 2016-07-20
 
 

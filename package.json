@@ -8,17 +8,17 @@
   },
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
+    "@blinkmobile/is-indexeddb-reliable": "1.0.1",
     "@jokeyrhyme/deadline": "1.1.1",
     "@jokeyrhyme/promised-requirejs": "^1.0.0",
     "amd-feature": "github:jensarps/AMD-feature#295cb395fe",
     "blinkgap-utils": "github:blinkmobile/blinkgap-utils#500774457d",
     "domReady": "github:requirejs/domReady#449478e133",
-    "is-indexeddb-reliable": "github:blinkmobile/is-indexeddb-reliable#v1.0.1",
     "js-typed-errors": "github:simonmarklar/js-typed-errors",
     "node-uuid": "1.4.7",
     "offlineLogin": "github:blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "1.0.0",
-    "sjcl": "1.0.3",
+    "sjcl": "1.0.6",
     "text": "github:requirejs/text#2.0.14"
   },
   "devDependencies": {

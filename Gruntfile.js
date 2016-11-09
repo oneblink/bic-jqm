@@ -85,7 +85,7 @@ module.exports = function (grunt) {
             pollUntil: '../node_modules/poll-until/poll-until',
             BlinkGap: '../node_modules/blinkgap-utils/BMP.BlinkGap',
             '@blinkmobile/geolocation': '../node_modules/@blinkmobile/geolocation/geolocation',
-            'is-indexeddb-reliable': '../node_modules/is-indexeddb-reliable/dist/index',
+            '@blinkmobile/is-indexeddb-reliable': '../node_modules/@blinkmobile/is-indexeddb-reliable/dist/index',
             '@jokeyrhyme/deadline': '../node_modules/@jokeyrhyme/deadline/dist/index',
             '@jokeyrhyme/promised-requirejs': '../node_modules/@jokeyrhyme/promised-requirejs/dist/index',
             'generic-middleware': '../vendor/generic-middleware',
