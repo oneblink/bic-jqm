@@ -4,7 +4,7 @@ define(function (require) {
   var $ = require('jquery');
   var _ = require('underscore');
 
-  var XMLSerialiser = new XMLSerializer();
+  var XMLSerialiser = new window.XMLSerializer();
 
   function xmlNodeReducer (memo, node) {
     return memo + XMLSerialiser.serializeToString(node);

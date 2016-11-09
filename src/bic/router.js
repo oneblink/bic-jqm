@@ -200,7 +200,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         return;
       }
       // Store current URL
-      localStorage.setItem('pauseURL', url.hrefNoHash);
+      window.localStorage.setItem('pauseURL', url.hrefNoHash);
 
       /**
         Application pause event. Any unsaved form interactions
@@ -235,7 +235,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
             var search = url.search;
             search += search.substring(0, 1) !== '?' ? '?' : '&';
             search += 'args[pid]=' + model.id;
-            localStorage.setItem('pauseURL', url.hrefNoSearch + search);
+            window.localStorage.setItem('pauseURL', url.hrefNoSearch + search);
           });
       }
     },
@@ -248,7 +248,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       @fires global#app:resume
     */
     resumeApplication: function () {
-      var pauseURL = localStorage.getItem('pauseURL');
+      var pauseURL = window.localStorage.getItem('pauseURL');
 
       c.info('router.resumeApplication()...');
 
@@ -259,7 +259,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       if ($.mobile.path.parseLocation().href !== pauseURL) {
         $.mobile.changePage(pauseURL, {showLoadMsg: false, transition: 'none', reloadPage: false});
       }
-      localStorage.removeItem('pauseURL');
+      window.localStorage.removeItem('pauseURL');
 
       /**
         Application resume event. Listen for this event if you need to restart any

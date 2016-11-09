@@ -147,14 +147,14 @@ define([
       afterEach(function () {
         router = undefined;
         expectation = undefined;
-        localStorage.clear();
+        window.localStorage.clear();
         parseLocationStub.restore();
         changeMock.restore();
-        localStorage.removeItem('pauseURL');
+        window.localStorage.removeItem('pauseURL');
       });
 
       it('should not call $.mobile.changePage', function () {
-        localStorage.setItem('pauseURL', testUrl);
+        window.localStorage.setItem('pauseURL', testUrl);
         parseLocationStub.returns({href: testUrl});
         expectation.never();
 
@@ -164,7 +164,7 @@ define([
       });
 
       it('should not call $.mobile.changePage', function () {
-        localStorage.removeItem('pauseURL');
+        window.localStorage.removeItem('pauseURL');
         parseLocationStub.returns({href: testUrl});
         expectation.never();
 
@@ -175,7 +175,7 @@ define([
 
       it('should call $.mobile.changePage', function () {
         parseLocationStub.returns({href: testUrl + '1234'});
-        localStorage.setItem('pauseURL', testUrl);
+        window.localStorage.setItem('pauseURL', testUrl);
         expectation.once();
 
         router.resumeApplication();
@@ -325,7 +325,7 @@ define([
               }
             }
           },
-          path: $mobile.path.parseUrl(location.href)
+          path: $mobile.path.parseUrl(window.location.href)
         }, function () {
           done();
         });

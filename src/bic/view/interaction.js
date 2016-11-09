@@ -1,4 +1,4 @@
-/*globals google:false*/
+/* globals google:false */
 define(function (require) {
   'use strict';
 
@@ -155,7 +155,7 @@ define(function (require) {
 
     back: function (e) {
       e.preventDefault();
-      history.back();
+      window.history.back();
     },
 
     home: function () {

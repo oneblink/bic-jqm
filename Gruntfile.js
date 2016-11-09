@@ -1,5 +1,5 @@
 /* eslint-env node */
-/* eslint-disable no-console */
+/* eslint-disable no-console, node/no-unpublished-require */
 'use strict';
 
 var pkg = require('./package.json');
