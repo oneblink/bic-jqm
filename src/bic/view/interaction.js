@@ -122,20 +122,12 @@ define(function (require) {
 
       path = '';
       pathParts = $.mobile.path.parseLocation().pathname;
-      if (app.router.isOfflineFirst) {
-          // Remove file path
-        pathParts = app.router.getRootRelativePath(pathParts);
-      }
       pathParts = pathParts.split('/');
       pathParts.shift();
 
         // account for file:/// with triple slash, or leading slashes
       if (pathParts[pathParts.length - 1] === '') {
         pathParts.pop();
-      }
-
-      if (app.router.isOfflineFirst && pathParts[0] === 'index.html') {
-        pathParts = [ window.BMP.BIC.siteVars.answerSpace.toLowerCase() ];
       }
 
       for (count = pathParts.length - 1; count !== -1; count = count - 1) {

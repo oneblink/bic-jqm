@@ -4,6 +4,13 @@
 ## Unreleased
 
 
+### Changed
+
+-   **BREAKING**: drop features related to old `cordova.offline` in favour of using hash-based routing and [ionic-plugin-deploy](https://github.com/driftyco/ionic-plugin-deploy) instead
+
+-   **BREAKING**: the following are no longer available: `require('bic/api/native')`, `require(['bic/api/native'])`, `window.BMP.BIC.router.isOfflineFirst`, `window.BMP.BIC.router.offlineDirectory`, `window.BMP.BIC.router.getRootRelativePath()`
+
+
 ### Fixed
 
 -   update to [sjcl 1.0.6](https://github.com/bitwiseshiftleft/sjcl) for fixes

@@ -27,7 +27,6 @@ define(function (require) {
 
   Router = Backbone.Router.extend({
     initialize: function () {
-      var location = window.location;
       c.log('bic/router: initialize()...');
       window.BMP.FileInput.initialize();
 
@@ -45,16 +44,6 @@ define(function (require) {
       this.middleware.use(Middleware.resolve);
 
       this.middleware.addErrorHandler(Middleware.errorHandler);
-
-      this.isOfflineFirst = (function () {
-        var isLocalProtocol = ['file:', 'ms-appx:', 'ms-appx-web:'].indexOf(location.protocol) > -1;
-        return isLocalProtocol &&
-          /\/www\/index\.html$/.test(location.pathname);
-      }());
-
-      this.offlineDirectory = (function (me) {
-        return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
-      }(this));
 
       if (Modernizr.localstorage) {
         if (window.BMP.isBlinkGap) {
@@ -87,22 +76,9 @@ define(function (require) {
           return app.setup();
         })
         .then(function () {
-          // Need to hang around until native offline is ready
-          return new Promise(function (resolve, reject) {
-            var bg = window.BMP.BlinkGap;
-            if (bg.isHere() && bg.hasOffline()) {
-              bg.waitForOffline(
-                function () {
-                  resolve();
-                },
-                function () {
-                  reject();
-                }
-             );
-            } else {
-              resolve();
-            }
-          });
+          var bg = window.BMP.BlinkGap;
+          // Need to hang around until Cordova is ready
+          return bg.isHere() ? bg.whenReady() : Promise.resolve();
         })
         .then(function () {
           return app.populate();
@@ -144,7 +120,7 @@ define(function (require) {
       parent = path.length ? path[path.length - 1] : app.siteVars.answerSpace.toLowerCase();
       usedPathItems = [];
 
-      if (this.isOfflineFirst && !path.length) {
+      if (!path.length) {
         path = [app.siteVars.answerSpace.toLowerCase()];
       }
 
@@ -268,15 +244,6 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         @event global#app:resume
       */
       Backbone.trigger('app:resume');
-    },
-
-    getRootRelativePath: function (path) {
-      var parsed;
-      if (!this.isOfflineFirst) {
-        return path;
-      }
-      parsed = $.mobile.path.parseUrl(this.offlineDirectory);
-      return path.replace(parsed.pathname, '/');
     }
   });
 
