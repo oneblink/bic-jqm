@@ -121,7 +121,7 @@ define(function (require) {
       usedPathItems = [];
 
       if (!path.length) {
-        path = [app.siteVars.answerSpace.toLowerCase()];
+        path = [ app.get('siteName') ];
       }
 
       _.each(path, function (element, index) {

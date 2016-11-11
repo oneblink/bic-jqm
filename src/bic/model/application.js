@@ -32,9 +32,11 @@ define(function (require) {
 
   // this module
 
-  var singleton, Application;
+  var singleton, Application, siteName;
 
   require('jquerymobile');
+
+  siteName = window.BMP.BIC.siteVars.answerSpace.toLowerCase();
 
   /**
     The Blink Intelligent Client
@@ -55,10 +57,10 @@ define(function (require) {
      * @property {string} recordNotFoundMessage - A Message to display to the user when a requested record is not found on the server.
      */
     defaults: {
-      _id: window.BMP.BIC.siteVars.answerSpace.toLowerCase(),
+      _id: siteName,
       loginStatus: '',
       displayErrorSummary: true,
-      siteName: '',
+      siteName: siteName,
 
       homeScreen: null,
       homeInteraction: null,
