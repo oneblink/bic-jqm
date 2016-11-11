@@ -40,7 +40,7 @@ define(function (require) {
 
     // http://api.jquerymobile.com/1.3/pagebeforeload/
     // data.deferred.resolve|reject is expected after data.preventDefault()
-    jqmData.deferred.reject(jqmData.absUrl, jqmData.options);
+    jqmData.deferred.reject(jqmData.url, jqmData.options);
 
     if (err instanceof NotFoundError) {
       return handleFormRecordNotExisting(jqmData, bicData);

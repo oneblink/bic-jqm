@@ -14,9 +14,9 @@ define(function (require) {
   return function (jqmData, bicData, next) {
     var path;
 
-    c.debug('Router.Middleware.path()... ' + jqmData.absUrl);
+    c.debug('Router.Middleware.path()... ' + jqmData.url);
 
-    path = $mobile.path.parseUrl(jqmData.absUrl);
+    path = $mobile.path.parseUrl(jqmData.url);
     bicData.path = path;
 
     next(null, jqmData, bicData);

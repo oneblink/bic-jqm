@@ -107,7 +107,7 @@ define(function (require) {
       */
       bicData.stopRoute = function () {
         // http://api.jquerymobile.com/1.3/pagebeforeload/
-        jqmData.deferred.reject(jqmData.absUrl, jqmData.options);
+        jqmData.deferred.reject(jqmData.url, jqmData.options);
       };
       this.middleware.init(jqmData, bicData);
     },

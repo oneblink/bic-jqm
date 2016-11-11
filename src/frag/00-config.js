@@ -77,6 +77,9 @@
         deps: ['underscore', 'jquery'],
         exports: 'Backbone'
       },
+      jquerymobile: {
+        deps: ['jquery', 'bic/jquery-mobileinit']
+      },
       modernizr: {
         exports: 'Modernizr'
       },

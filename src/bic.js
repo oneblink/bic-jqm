@@ -20,6 +20,7 @@ define(function (require) {
   require('bic/backbone-fix');
   require('bic/debug-jquery');
   require('bic/fix-animation');
+  require('bic/jquery-mobileinit');
 
   // this module
 

@@ -18,7 +18,7 @@ define(function (require) {
       next(null, jqmData, bicData);
     };
 
-    c.debug('Router.Middleware.view()', jqmData.absUrl);
+    c.debug('Router.Middleware.view()', jqmData.url);
 
     if (model.get('type') === 'form') {
       require(['bic/view/interaction/form'], onRequire);
