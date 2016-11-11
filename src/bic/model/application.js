@@ -320,12 +320,22 @@ define(function (require) {
     initialRender: function () {
       var app = this;
 
-      $.mobile.defaultPageTransition = app.get('defaultTransition');
-      $.mobile.changePage($.mobile.path.parseLocation().href, {
+      var isFileProtocol = !!~['file:', 'ms-appx:', 'ms-appx-web:'].indexOf(window.location.protocol);
+
+      var changePageOptions = {
         changeHash: false,
         reloadPage: true,
         transition: 'fade'
-      });
+      };
+
+      $.mobile.defaultPageTransition = app.get('defaultTransition');
+
+      if (isFileProtocol) {
+        $.mobile.changePage('/' + app.get('siteName'), changePageOptions);
+      } else {
+        $.mobile.changePage($.mobile.path.parseLocation().href, changePageOptions);
+      }
+
       $(document).one('pageshow', function () {
         $('#temp').remove();
       });

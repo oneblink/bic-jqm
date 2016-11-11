@@ -10,8 +10,13 @@
 
 -   **BREAKING**: the following are no longer available: `require('bic/api/native')`, `require(['bic/api/native'])`, `window.BMP.BIC.router.isOfflineFirst`, `window.BMP.BIC.router.offlineDirectory`, `window.BMP.BIC.router.getRootRelativePath()`
 
-
 ### Fixed
+
+-   BIC-250: use hash-based routing in "file:///" environments
+
+    -   corrects issues when BIC is running offline within a webview
+
+    -   HelpDesk: 6283-TPZC-9929
 
 -   update to [sjcl 1.0.6](https://github.com/bitwiseshiftleft/sjcl) for fixes
 

@@ -55,7 +55,11 @@ define(function (require) {
       }
       // if we've gotten here it means that the user has typed in an invalid url
       // and we've not fully initialized, so go to the root answerSpace.
-      window.location.pathname = window.location.pathname.split('/')[1];
+      if (app.get('siteName')) {
+        $.mobile.changePage('/' + app.get('siteName'));
+      } else {
+        window.location.pathname = window.location.pathname.split('/')[1];
+      }
     }, 2500);
   };
 });
