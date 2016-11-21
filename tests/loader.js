@@ -5,7 +5,7 @@ require.config({
     bic: 'src/bic',
     implementations: 'src/implementations',
     chai: 'node_modules/chai/chai',
-    'is-indexeddb-reliable': 'node_modules/is-indexeddb-reliable/dist/index',
+    '@blinkmobile/is-indexeddb-reliable': 'node_modules/@blinkmobile/is-indexeddb-reliable/dist/index',
     feature: 'node_modules/amd-feature/feature',
     '@blinkmobile/geolocation': 'node_modules/@blinkmobile/geolocation/geolocation',
     '@jokeyrhyme/deadline': 'node_modules/@jokeyrhyme/deadline/dist/index',

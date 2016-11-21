@@ -177,7 +177,7 @@ define(function (require) {
         return app.view.home();
       }
 
-      history.back();
+      window.history.back();
     },
 
     formSubmit: function () {

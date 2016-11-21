@@ -5,7 +5,7 @@ define(['jquery', 'Squire', 'chai'], function ($, Squire, chai) {
 
   describe('parseFormChildXML', function () {
     var injector, parseFormChildXML;
-    var DOMparser = new DOMParser();
+    var DOMparser = new window.DOMParser();
     var xmlDoctype = 'text/xml';
 
     var formWithSubformXML;

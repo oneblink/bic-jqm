@@ -1,10 +1,11 @@
 {
-  "extends": ["eslint:recommended", "semistandard"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "semistandard"
+  ],
   "env": {
-    "amd": true,
-    "browser": true,
-    "mocha": true,
-    "node": false
+    "amd": true
   },
   "globals": {
     /* Blink */
@@ -13,5 +14,12 @@
   },
   "parserOptions": {
     "ecmaVersion": 5
+  },
+  "plugins": [
+    "node"
+  ],
+  "rules": {
+    "node/no-missing-require": 0,
+    "node/no-unpublished-require": 0
   }
 }

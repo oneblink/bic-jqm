@@ -14,7 +14,7 @@ define(function (require) {
   return function (jqmData, bicData, next) {
     var view = bicData.view;
 
-    c.debug('Router.Middleware.viewRender()', jqmData.absUrl);
+    c.debug('Router.Middleware.viewRender()', jqmData.url);
 
     view.once('render', function () {
       view.$el.attr('data-url', jqmData.dataUrl);

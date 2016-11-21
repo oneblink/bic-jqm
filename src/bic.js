@@ -1,4 +1,4 @@
-/*eslint-disable vars-on-top*/ // feature!es5
+/* eslint-disable vars-on-top */ // feature!es5
 define(function (require) {
   'use strict';
 
@@ -20,6 +20,7 @@ define(function (require) {
   require('bic/backbone-fix');
   require('bic/debug-jquery');
   require('bic/fix-animation');
+  require('bic/jquery-mobileinit');
 
   // this module
 

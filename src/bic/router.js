@@ -27,7 +27,6 @@ define(function (require) {
 
   Router = Backbone.Router.extend({
     initialize: function () {
-      var location = window.location;
       c.log('bic/router: initialize()...');
       window.BMP.FileInput.initialize();
 
@@ -45,16 +44,6 @@ define(function (require) {
       this.middleware.use(Middleware.resolve);
 
       this.middleware.addErrorHandler(Middleware.errorHandler);
-
-      this.isOfflineFirst = (function () {
-        var isLocalProtocol = ['file:', 'ms-appx:', 'ms-appx-web:'].indexOf(location.protocol) > -1;
-        return isLocalProtocol &&
-          /\/www\/index\.html$/.test(location.pathname);
-      }());
-
-      this.offlineDirectory = (function (me) {
-        return me.isOfflineFirst ? location.href.replace(/\/www\/index\.html$/, '/www/') : '';
-      }(this));
 
       if (Modernizr.localstorage) {
         if (window.BMP.isBlinkGap) {
@@ -87,22 +76,9 @@ define(function (require) {
           return app.setup();
         })
         .then(function () {
-          // Need to hang around until native offline is ready
-          return new Promise(function (resolve, reject) {
-            var bg = window.BMP.BlinkGap;
-            if (bg.isHere() && bg.hasOffline()) {
-              bg.waitForOffline(
-                function () {
-                  resolve();
-                },
-                function () {
-                  reject();
-                }
-             );
-            } else {
-              resolve();
-            }
-          });
+          var bg = window.BMP.BlinkGap;
+          // Need to hang around until Cordova is ready
+          return bg.isHere() ? bg.whenReady() : Promise.resolve();
         })
         .then(function () {
           return app.populate();
@@ -131,7 +107,7 @@ define(function (require) {
       */
       bicData.stopRoute = function () {
         // http://api.jquerymobile.com/1.3/pagebeforeload/
-        jqmData.deferred.reject(jqmData.absUrl, jqmData.options);
+        jqmData.deferred.reject(jqmData.url, jqmData.options);
       };
       this.middleware.init(jqmData, bicData);
     },
@@ -144,8 +120,8 @@ define(function (require) {
       parent = path.length ? path[path.length - 1] : app.siteVars.answerSpace.toLowerCase();
       usedPathItems = [];
 
-      if (this.isOfflineFirst && !path.length) {
-        path = [app.siteVars.answerSpace.toLowerCase()];
+      if (!path.length) {
+        path = [ app.get('siteName') ];
       }
 
       _.each(path, function (element, index) {
@@ -200,7 +176,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         return;
       }
       // Store current URL
-      localStorage.setItem('pauseURL', url.hrefNoHash);
+      window.localStorage.setItem('pauseURL', url.hrefNoHash);
 
       /**
         Application pause event. Any unsaved form interactions
@@ -235,7 +211,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
             var search = url.search;
             search += search.substring(0, 1) !== '?' ? '?' : '&';
             search += 'args[pid]=' + model.id;
-            localStorage.setItem('pauseURL', url.hrefNoSearch + search);
+            window.localStorage.setItem('pauseURL', url.hrefNoSearch + search);
           });
       }
     },
@@ -248,7 +224,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       @fires global#app:resume
     */
     resumeApplication: function () {
-      var pauseURL = localStorage.getItem('pauseURL');
+      var pauseURL = window.localStorage.getItem('pauseURL');
 
       c.info('router.resumeApplication()...');
 
@@ -259,7 +235,7 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
       if ($.mobile.path.parseLocation().href !== pauseURL) {
         $.mobile.changePage(pauseURL, {showLoadMsg: false, transition: 'none', reloadPage: false});
       }
-      localStorage.removeItem('pauseURL');
+      window.localStorage.removeItem('pauseURL');
 
       /**
         Application resume event. Listen for this event if you need to restart any
@@ -268,15 +244,6 @@ Deprecated. Delegates to {@link Interaction.setArgsFromQueryString model.setArgs
         @event global#app:resume
       */
       Backbone.trigger('app:resume');
-    },
-
-    getRootRelativePath: function (path) {
-      var parsed;
-      if (!this.isOfflineFirst) {
-        return path;
-      }
-      parsed = $.mobile.path.parseUrl(this.offlineDirectory);
-      return path.replace(parsed.pathname, '/');
     }
   });
 
