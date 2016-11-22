@@ -4,6 +4,9 @@
 ## Unreleased
 
 
+## 5.0.0 - 2016-11-22
+
+
 ### Changed
 
 -   **BREAKING**: drop features related to old `cordova.offline` in favour of using hash-based routing and [ionic-plugin-deploy](https://github.com/driftyco/ionic-plugin-deploy) instead
