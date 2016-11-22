@@ -88,7 +88,7 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         });
       });
 
-      it('should reject the promise on fail', function (done) {
+      it('should reject the promise on fail', function () {
          /* eslint-disable new-cap */
         var deferred = $.Deferred();
         /* eslint-enable new-cap */
@@ -99,9 +99,7 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
               .then(function () {
                 assert.fail(arguments, 'This should not be hit');
               })
-              .then(undefined, function () {
-                done();
-              });
+              .catch(function () {}); // swallow expected error
       });
 
       it('should trigger the "processed" event with itself as an argument, on successful submission', function (done) {

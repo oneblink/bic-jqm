@@ -1,33 +1,37 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "4.3.5",
-  "formsversion": "3.10.2",
-  "main": "Gruntfile.js",
+  "version": "5.0.0",
+  "author": "Ron Waldon <jokeyrhyme@gmail.com> (https://github.com/jokeyrhyme)",
+  "bugs": {
+    "url": "https://github.com/blinkmobile/bic-jqm/issues"
+  },
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
+    "@blinkmobile/is-indexeddb-reliable": "1.0.1",
     "@jokeyrhyme/deadline": "1.1.1",
     "@jokeyrhyme/promised-requirejs": "^1.0.0",
-    "amd-feature": "jensarps/AMD-feature#295cb395fe",
-    "blinkgap-utils": "blinkmobile/blinkgap-utils#500774457d",
-    "domReady": "requirejs/domReady#449478e133",
-    "is-indexeddb-reliable": "blinkmobile/is-indexeddb-reliable#v1.0.1",
-    "js-typed-errors": "simonmarklar/js-typed-errors",
+    "amd-feature": "github:jensarps/AMD-feature#295cb395fe",
+    "blinkgap-utils": "github:blinkmobile/blinkgap-utils#500774457d",
+    "domReady": "github:requirejs/domReady#449478e133",
+    "js-typed-errors": "github:simonmarklar/js-typed-errors",
     "node-uuid": "1.4.7",
-    "offlineLogin": "blinkmobile/offlineLogin#v1.0.0",
+    "offlineLogin": "github:blinkmobile/offlineLogin#v1.0.0",
     "poll-until": "1.0.0",
-    "sjcl": "1.0.3",
-    "text": "requirejs/text#2.0.14"
+    "sjcl": "1.0.6",
+    "text": "github:requirejs/text#2.0.14"
   },
-  "repository": "git@github.com:blinkmobile/bic-jqm.git",
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "^3.4",
-    "eslint": "^3.1.1",
-    "eslint-config-semistandard": "^6.0.1",
-    "eslint-config-standard": "^5.1.0",
-    "eslint-plugin-promise": "^2.0.0",
-    "eslint-plugin-standard": "^2.0.0",
+    "eslint": "^3.9.1",
+    "eslint-config-semistandard": "^7.0.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-node": "^3.0.3",
+    "eslint-plugin-promise": "^3.3.1",
+    "eslint-plugin-standard": "^2.0.1",
+    "fixpack": "^2.3.1",
+    "flow-bin": "^0.35.0",
     "glob": "^7.0.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
@@ -45,7 +49,7 @@
     "hapi": "^13.0",
     "inert": "^4.0.0",
     "karma": "^1.1.0",
-    "karma-chrome-launcher": "^1.0.1",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
@@ -53,9 +57,10 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-requirejs": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
-    "mocha": "^2.3",
+    "karma-safaritechpreview-launcher": "^0.0.5",
+    "mocha": "^3.1.2",
     "mustache": "^2.0",
-    "npm-run-all": "^2.1.1",
+    "npm-run-all": "^3.1.1",
     "phantomjs-prebuilt": "^2.1",
     "request": "^2.63",
     "requirejs": "^2.1",
@@ -64,13 +69,35 @@
     "tape": "^4.0",
     "tape-chai": "^1.1"
   },
-  "scripts": {
-    "testgrunt": "grunt test",
-    "testgulp": "gulp test",
-    "build": "grunt build",
-    "lint": "eslint --fix --cache .",
-    "test": "npm-run-all testgrunt testgulp",
-    "posttest": "npm run lint"
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
   },
-  "license": "BSD-3-Clause"
+  "engines": {
+    "node": ">=4",
+    "npm": ">=3"
+  },
+  "formsversion": "3.10.2",
+  "homepage": "https://github.com/blinkmobile/bic-jqm#readme",
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "main": "Gruntfile.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/blinkmobile/bic-jqm.git"
+  },
+  "scripts": {
+    "build": "grunt build",
+    "eslint": "eslint --fix --cache .",
+    "fixpack": "fixpack",
+    "flow_check": "flow check",
+    "mocha": "mocha",
+    "posttest": "npm-run-all eslint flow_check fixpack",
+    "test": "npm-run-all testgrunt testgulp",
+    "testgrunt": "grunt test",
+    "testgulp": "gulp test"
+  }
 }

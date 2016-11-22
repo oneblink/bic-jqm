@@ -1,7 +1,7 @@
 /**
  * Created by ashish on 8/05/2015.
  */
-/*eslint-disable vars-on-top*/ // jquerymobile
+/* eslint-disable vars-on-top */ // jquerymobile
 
 define(function (require) {
   'use strict';

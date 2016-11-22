@@ -40,7 +40,7 @@ define(function (require) {
 
     // http://api.jquerymobile.com/1.3/pagebeforeload/
     // data.deferred.resolve|reject is expected after data.preventDefault()
-    jqmData.deferred.reject(jqmData.absUrl, jqmData.options);
+    jqmData.deferred.reject(jqmData.url, jqmData.options);
 
     if (err instanceof NotFoundError) {
       return handleFormRecordNotExisting(jqmData, bicData);
@@ -55,7 +55,11 @@ define(function (require) {
       }
       // if we've gotten here it means that the user has typed in an invalid url
       // and we've not fully initialized, so go to the root answerSpace.
-      window.location.pathname = window.location.pathname.split('/')[1];
+      if (app.get('siteName')) {
+        $.mobile.changePage('/' + app.get('siteName'));
+      } else {
+        window.location.pathname = window.location.pathname.split('/')[1];
+      }
     }, 2500);
   };
 });

@@ -97,7 +97,7 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         var record;
 
         api.getFormList = function () {
-          var parser = new DOMParser();
+          var parser = new window.DOMParser();
           var formRecord;
 
           formRecord = '<xml>';
@@ -185,7 +185,7 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         return collection.pull('firstLevel').then(function () {
           var subformXML;
           var xmlDOM;
-          var parser = new DOMParser();
+          var parser = new window.DOMParser();
 
           assert.strictEqual(collection.length, 1);
           subformXML = collection.at(0).get('list').second_level_test;

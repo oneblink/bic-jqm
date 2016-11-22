@@ -1,4 +1,4 @@
-/*eslint-disable vars-on-top*/ // feature!es5
+/* eslint-disable vars-on-top */ // feature!es5
 define(function (require) {
   'use strict';
 
@@ -20,6 +20,7 @@ define(function (require) {
   require('bic/backbone-fix');
   require('bic/debug-jquery');
   require('bic/fix-animation');
+  require('bic/jquery-mobileinit');
 
   // this module
 
@@ -38,7 +39,7 @@ define(function (require) {
   // keep BMP.BIC and BMP.BIC3 the same (for now, "BIC3" is deprecated)
   window.BMP.BIC3 = app;
 
-  window.BMP.BIC.version = '4.3.5';
+  window.BMP.BIC.version = '5.0.0';
 
   window.BMP.console = require('bic/console');
 

@@ -62,7 +62,7 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         var record;
 
         api.getFormRecord = function () {
-          var parser = new DOMParser();
+          var parser = new window.DOMParser();
           var formRecord;
 
           formRecord = '<?xml version="1.0" encoding="utf-8"?><test><id>1</id><Text1>1</Text1><Text2>2</Text2><Text3>3</Text3></test>';
@@ -124,7 +124,7 @@ define(['jquery', 'Squire', 'backbone', 'chai'], function ($, Squire, Backbone, 
         model.on('change', function () {
           var subformXML;
           var xmlDOM;
-          var parser = new DOMParser();
+          var parser = new window.DOMParser();
 
           subformXML = model.get('record').second_level_test;
           assert.isString(subformXML);

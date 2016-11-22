@@ -1,8 +1,6 @@
-# BlinkMobile Intelligent Client
+# BlinkMobile Intelligent Client [![Travis CI Status](https://travis-ci.org/blinkmobile/bic-jqm.svg?branch=master)](https://travis-ci.org/blinkmobile/bic-jqm)
 
 execute a platform-agnostic definition, becoming a ready-to-use app
-
-[![Build Status](https://travis-ci.org/blinkmobile/bic-jqm.png)](https://travis-ci.org/blinkmobile/bic-jqm)
 
 
 ## Core Technologies
