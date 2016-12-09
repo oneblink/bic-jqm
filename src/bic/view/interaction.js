@@ -1,4 +1,4 @@
-/*globals google:false*/
+/* globals google:false */
 define(function (require) {
   'use strict';
 

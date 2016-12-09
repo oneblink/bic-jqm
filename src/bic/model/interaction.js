@@ -34,12 +34,12 @@ define(function (require) {
                   .value();
 
     // normalize the keys if they are in name[] format and set
-    return [ key.replace(/\[\]/g, ''), values.length > 1 ? values : values[0] ];
+    return [ key.replace(/\[]/g, ''), values.length > 1 ? values : values[0] ];
   };
 
   // ensures that the passed in property name is in the form 'args[argName]'
   makeArgId = function (argName) {
-    if (!/^args\[.+\]$/.test(argName)) {
+    if (!/^args\[.+]$/.test(argName)) {
       argName = 'args[' + argName + ']';
     }
 
@@ -48,7 +48,7 @@ define(function (require) {
 
   // gets the property name out of a name run through makeArgId
   extractArgProp = function (keyName) {
-    var match = keyName.match(/^args\[(.+)\]$/);
+    var match = keyName.match(/^args\[(.+)]$/);
 
     return match ? match[1] : keyName;
   };
@@ -425,7 +425,7 @@ The argument change event.
       if (this.has('args')) {
         args = this.get('args');
         xsl = this.get('xsl');
-        placeholders = xsl.match(/\$args\[[\w:][\w:\-\.]*\]/g);
+        placeholders = xsl.match(/\$args\[[\w:][\w:\-.]*]/g);
         pLength = placeholders ? placeholders.length : 0;
         for (p = 0; p < pLength; p = p + 1) {
           value = typeof args[placeholders[p].substring(1)] === 'string' ? args[placeholders[p].substring(1)] : '';

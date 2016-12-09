@@ -1,4 +1,4 @@
-/*eslint-disable vars-on-top*/ // feature!es5
+/* eslint-disable vars-on-top */ // feature!es5
 define(function (require) {
   'use strict';
 

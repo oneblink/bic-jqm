@@ -1,4 +1,4 @@
-/*globals cordova:false*/
+/* globals cordova:false */
 define(function (require) {
   'use strict';
 

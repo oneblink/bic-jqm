@@ -95,7 +95,7 @@ define(['Squire', 'chai', 'jquery', 'backbone', 'bic/enum-model-status'], functi
         deferred.reject();
         apiStub.returns(deferred);
 
-        return model.process()
+        model.process()
               .then(function () {
                 assert.fail(arguments, 'This should not be hit');
               })

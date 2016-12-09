@@ -1,4 +1,4 @@
-/*eslint-disable global-strict*/
+/* eslint-disable global-strict */
 'use strict';
 
 // 3rd-party modules

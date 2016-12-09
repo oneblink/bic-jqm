@@ -26,7 +26,7 @@
       s -= 1;
       script = scripts[s];
       if (script.src && /\/blink\/require\/\d+\/require\.min\.js/.test(script.src)) {
-        cloudfront = script.src.replace(/blink\/require\/\d+\/require\.min\.js[\w\.]*$/, '');
+        cloudfront = script.src.replace(/blink\/require\/\d+\/require\.min\.js[\w.]*$/, '');
         break; // exit early
       }
     }
