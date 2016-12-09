@@ -4,6 +4,19 @@
 ## Unreleased
 
 
+## 5.0.1 - 2016-12-09
+
+
+### Changed
+
+- update to Forms 3.10.3 for fixes
+
+    - see https://github.com/blinkmobile/forms/releases/tag/v3.10.3
+
+
+## 5.0.0 - 2016-11-22
+
+
 ### Changed
 
 -   **BREAKING**: drop features related to old `cordova.offline` in favour of using hash-based routing and [ionic-plugin-deploy](https://github.com/driftyco/ionic-plugin-deploy) instead

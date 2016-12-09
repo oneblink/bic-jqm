@@ -54,7 +54,7 @@ Now the Git project is up to date and everything.
 
 1. `git checkout master`
 
-2. `grunt build; npm test`
+2. `npm test`
 
 Follow directions from here:
 https://github.com/blinkmobile/docs/wiki/Process:-Updating-CDN
@@ -65,11 +65,13 @@ The "desired additions" are:
 
 - double-check that it follows similar patterns to previous releases
 
-4. modify blink/bic/versions.json based on blink/bic/3/latest/versions.json
+4. `node ./blink/scripts/bump-versions-json.js`
 
-5. `npm test`
+5. promote older "testing" versions if desired
 
-6. add, commit, push, etc
+6. `npm test`
+
+7. add, commit, push, etc
 
 Complete the rest of the process as directed.
 

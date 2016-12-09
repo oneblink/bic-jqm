@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "author": "Ron Waldon <jokeyrhyme@gmail.com> (https://github.com/jokeyrhyme)",
   "bugs": {
     "url": "https://github.com/blinkmobile/bic-jqm/issues"
@@ -31,7 +31,7 @@
     "eslint-plugin-promise": "^3.3.1",
     "eslint-plugin-standard": "^2.0.1",
     "fixpack": "^2.3.1",
-    "flow-bin": "^0.35.0",
+    "flow-bin": "^0.36.0",
     "glob": "^7.0.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
@@ -77,7 +77,7 @@
     "node": ">=4",
     "npm": ">=3"
   },
-  "formsversion": "3.10.2",
+  "formsversion": "3.10.3",
   "homepage": "https://github.com/blinkmobile/bic-jqm#readme",
   "keywords": [],
   "license": "BSD-3-Clause",
