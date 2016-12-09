@@ -2,7 +2,6 @@
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
   "version": "4.3.5",
-  "formsversion": "3.10.2",
   "main": "Gruntfile.js",
   "dependencies": {
     "@blinkmobile/geolocation": "1.0.0",
@@ -19,7 +18,6 @@
     "sjcl": "1.0.3",
     "text": "requirejs/text#2.0.14"
   },
-  "repository": "git@github.com:blinkmobile/bic-jqm.git",
   "devDependencies": {
     "@jokeyrhyme/appcache": "^1.0",
     "chai": "^3.4",
@@ -67,6 +65,25 @@
     "tape": "^4.0",
     "tape-chai": "^1.1"
   },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "engines": {
+    "node": ">=4",
+    "npm": ">=3"
+  },
+  "formsversion": "3.10.3",
+  "homepage": "https://github.com/blinkmobile/bic-jqm#readme",
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/blinkmobile/bic-jqm.git"
+  },
   "scripts": {
     "testgrunt": "grunt test",
     "testgulp": "gulp test",
@@ -74,6 +91,5 @@
     "lint": "eslint --fix --cache .",
     "test": "npm-run-all testgrunt testgulp",
     "posttest": "npm run lint"
-  },
-  "license": "BSD-3-Clause"
+  }
 }
