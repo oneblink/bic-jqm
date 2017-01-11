@@ -7,8 +7,9 @@ define([
   var should = chai.should();
 
   describe('View - Form Controls ', function () {
-    var injector, View, apiStub, errorStub;
+    var injector, View, apiStub;
     var mockApp;
+    var mockAPI;
     var Forms;
     var pageid = 0;
     var pageObject = {
@@ -28,23 +29,19 @@ define([
       injector = new Squire(CONTEXT);
 
       Forms = {
-        current: new Backbone.Model({})
+        current: new Backbone.Model({
+          pages: pageObject,
+          _view: { goToElement: function () {} }
+        })
       };
       _.extend(Forms.current, {
         data: function () { return; },
-        getErrors: function () { return; },
-        getInvalidElements: function () { return; },
-        get: function () {
-          return pageObject;
-        }
+        getInvalidElements: function () { return; }
       });
       injector.mock('bic/promise-forms', function () {
         return Promise.resolve(Forms);
       });
 
-      errorStub = sinon.stub(Forms.current, 'getErrors', function () {
-        return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
-      });
       apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
         Promise.resolve({
@@ -81,10 +78,20 @@ define([
       mockApp = new Backbone.Model();
       mockApp.attributes.currentForm = Forms.current;
 
+      mockAPI = {
+        setPendingItem: function () {}
+      };
+
       injector.mock('bic/model/application', mockApp);
       injector.mock('bic/model/pending', Backbone.Model);
       injector.mock('text!bic/template/form/controls.mustache', 'string');
-      injector.mock('bic/api', function () { return null; });
+      injector.mock('bic/api', mockAPI);
+      injector.mock('bic/lib/ui-tools', {
+        disableElement: function () {},
+        enableElement: function () {},
+        hideLoadingAnimation: function () {},
+        showLoadingAnimation: function () {}
+      });
       injector.require(['bic/view/form/controls'], function (required) {
         View = required;
         done();
@@ -170,6 +177,7 @@ define([
 
     describe('addToQueue', function () {
       var view, processQueueStub;
+      var errorStub;
 
       before(function (done) {
         injector.require(['bic/model/application'], function (app) {
@@ -191,6 +199,16 @@ define([
             done();
           });
         });
+      });
+
+      beforeEach(function () {
+        errorStub = sinon.stub(Forms.current, 'getInvalidElements', function () {
+          return [ 1, 2, 3 ];
+        });
+      });
+
+      afterEach(function () {
+        errorStub.restore();
       });
 
       it('functions on view', function () {
@@ -284,7 +302,6 @@ define([
     });
 
     describe('formLeave', function () {
-      var origGet;
       var viewInstance;
       var modelGetStub;
       var interactionGetStub;
@@ -292,17 +309,11 @@ define([
       beforeEach(function () {
         var mockModel;
 
-        origGet = Forms.current.get;
-        Forms.current.get = function () {};
-
         interactionGetStub = sinon.stub(Forms.current, 'get');
 
-        mockModel = {
-          get: function () {},
-          attributes: {
-            currentForm: Forms.current
-          }
-        };
+        mockModel = new Backbone.Model({
+          currentForm: Forms.current
+        });
 
         modelGetStub = sinon.stub(mockModel, 'get')
                             .returns('add');
@@ -311,7 +322,6 @@ define([
       });
 
       afterEach(function () {
-        Forms.current.get = origGet;
         modelGetStub.restore();
         interactionGetStub.restore();
       });
@@ -356,6 +366,56 @@ define([
         afterInteractionExpectation.verify();
 
         afterInteractionMock.restore();
+      });
+    });
+
+    describe('formSubmit', function () {
+      var oldGetInvalidElements;
+      var setPendingItemStub;
+      var view;
+
+      beforeEach(function () {
+        var mockModel;
+
+        mockModel = new Backbone.Model({
+          currentForm: Forms.current
+        });
+        _.extend(mockModel, {
+          trigger: function () {}
+        });
+
+        oldGetInvalidElements = Forms.current.getInvalidElements;
+        Forms.current.getInvalidElements = function () {
+          return [ 1, 2, 3 ];
+        };
+
+        mockApp.hasStorage = function () { return false; };
+
+        setPendingItemStub = sinon.stub(mockAPI, 'setPendingItem');
+
+        view = new View({ model: mockModel });
+      });
+
+      afterEach(function () {
+        Forms.current.getInvalidElements = oldGetInvalidElements;
+        setPendingItemStub.restore();
+      });
+
+      it('should not call formLeave() when validation failed', function (done) {
+        var formLeaveStub = sinon.stub(view, 'formLeave');
+
+        // Forms.current is already wired to have a validation error
+        assert(Forms.current.getInvalidElements().length);
+
+        view.formSubmit();
+
+        setTimeout(function () {
+          console.log('formLeaveStub.called', formLeaveStub.called);
+          expect(formLeaveStub.called).to.equal(false);
+          console.log('setPendingItemStub.called', setPendingItemStub.called);
+          expect(setPendingItemStub.called).to.equal(false);
+          done();
+        }, 1e3);
       });
     });
   });
