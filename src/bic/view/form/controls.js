@@ -186,20 +186,35 @@ define(function (require) {
       var formErrors;
       var currentForm = this.model.attributes.currentForm;
 
+      // called when process is blocked by validation errors
+      var endWithErrors = function (errors) {
+        model.trigger('showErrors');
+        enableSubmit();
+        currentForm.get('_view').goToElement(errors[0]);
+      };
+
       if ($('#submit').attr('disabled')) {
         return;
       }
 
       uiTools.disableElement('#submit');
 
+      formErrors = currentForm.getInvalidElements();
+
+      if (formErrors && formErrors.length) {
+        // stop if we have validation errors
+        if (app.hasStorage()) {
+          this.formSave2();
+        }
+        endWithErrors(formErrors);
+        return;
+      }
+
       if (app.hasStorage()) {
-        formErrors = currentForm.getInvalidElements();
-        this.addToQueue(formErrors && formErrors.length ? MODEL_STATUS.DRAFT : MODEL_STATUS.PENDING)
+        this.addToQueue(MODEL_STATUS.PENDING)
             .then(leaveViewBy(this, USER_ACTIONS.SUBMIT))
             .catch(function (invalidElements) {
-              me.model.trigger('showErrors');
-              enableSubmit();
-              currentForm.get('_view').goToElement(invalidElements.errors[0]);
+              endWithErrors(invalidElements.errors);
             });
       } else {
         uiTools.showLoadingAnimation();
@@ -247,9 +262,7 @@ define(function (require) {
           })
           .then(uiTools.hideLoadingAnimation)
           .catch(function (invalidElements) {
-            me.model.trigger('showErrors');
-            enableSubmit();
-            currentForm.get('_view').goToElement(invalidElements.errors[0]);
+            endWithErrors(invalidElements.errors);
           });
       }
     },

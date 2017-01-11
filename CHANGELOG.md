@@ -4,6 +4,11 @@
 ## Unreleased
 
 
+### Fixed
+
+-   BIC-251: submit button stops if there are form validation errors
+
+
 ## 4.3.6 - 2016-12-09
 
 
