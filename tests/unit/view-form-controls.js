@@ -7,7 +7,7 @@ define([
   var should = chai.should();
 
   describe('View - Form Controls ', function () {
-    var injector, View, apiStub, errorStub;
+    var injector, View, apiStub;
     var mockApp;
     var Forms;
     var pageid = 0;
@@ -32,7 +32,6 @@ define([
       };
       _.extend(Forms.current, {
         data: function () { return; },
-        getErrors: function () { return; },
         getInvalidElements: function () { return; },
         get: function () {
           return pageObject;
@@ -42,9 +41,6 @@ define([
         return Promise.resolve(Forms);
       });
 
-      errorStub = sinon.stub(Forms.current, 'getErrors', function () {
-        return {'text_box': [{'code': 'MAXLENGTH', 'MAX': '5'}]};
-      });
       apiStub = sinon.stub(Forms.current, 'data');
       apiStub.onCall(0).returns(
         Promise.resolve({
@@ -170,6 +166,7 @@ define([
 
     describe('addToQueue', function () {
       var view, processQueueStub;
+      var errorStub;
 
       before(function (done) {
         injector.require(['bic/model/application'], function (app) {
@@ -191,6 +188,16 @@ define([
             done();
           });
         });
+      });
+
+      beforeEach(function () {
+        errorStub = sinon.stub(Forms.current, 'getInvalidElements', function () {
+          return [ 1, 2, 3 ];
+        });
+      });
+
+      afterEach(function () {
+        errorStub.restore();
       });
 
       it('functions on view', function () {
