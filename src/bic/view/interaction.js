@@ -73,12 +73,12 @@ define(function (require) {
 
     blinklink: function (e) {
       var $element;
-      var location;
+      var destination;
       var attributes = '';
       var first = true;
       var count;
-      var path;
-      var pathParts;
+      var currentPath;
+      var nextPath;
 
       e.preventDefault();
 
@@ -90,8 +90,8 @@ define(function (require) {
         return;
       }
 
-      location = links.destinationFromElement($element, app);
-      if (!location) {
+      destination = links.destinationFromElement($element, app);
+      if (!destination) {
         /* eslint-disable no-console */ // useful for debugging
         console.error('BIC navigation attribute specifies no destination');
         /* eslint-enable no-console */
@@ -112,29 +112,18 @@ define(function (require) {
         }
       }
 
-      path = '';
-      pathParts = $.mobile.path.parseLocation().pathname;
-      pathParts = pathParts.split('/');
-      pathParts.shift();
-
-        // account for file:/// with triple slash, or leading slashes
-      if (pathParts[pathParts.length - 1] === '') {
-        pathParts.pop();
+      if ($.mobile.pushStateEnabled) {
+        // URL is like https://HOST/ANSWERSPACE/...
+        currentPath = $.mobile.path.parseLocation().pathname;
+      } else {
+        // URL is like file:///HTMLFILE#/ANSWERSPACE/...
+        // or URL is like https://HOST/ANSWERSPACE/#/ANSWERSPACE/...
+        currentPath = $.mobile.path.parseLocation().hash.replace(/^#/, '');
       }
 
-      for (count = pathParts.length - 1; count !== -1; count = count - 1) {
-        if (!app.interactions.get(pathParts[count].toLowerCase()).get('type') && path.indexOf(pathParts[count]) === -1 && path.indexOf(pathParts[count].toLowerCase()) === -1 && pathParts[count] !== location && pathParts[count] !== location.toLowerCase()) {
-          if (path !== '') {
-            path = pathParts[count] + '/' + path;
-          } else {
-            path = pathParts[count];
-          }
-        }
-      }
+      nextPath = links.nextPagePath(currentPath, destination, app);
 
-      path = '/' + path;
-
-      $.mobile.changePage(path + '/' + location + attributes);
+      $.mobile.changePage(nextPath + attributes);
     },
 
     back: function (e) {

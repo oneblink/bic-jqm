@@ -8,7 +8,7 @@ define(function (require) {
   function destinationFromElement (
     $element /* : any */,
     app /* : any */
-  ) /* : ?String */ {
+  ) /* : ?string */ {
     if ($element.attr('keyword')) {
       return $element.attr('keyword');
     }
@@ -38,7 +38,52 @@ define(function (require) {
     return null;
   }
 
+  function nextPagePath (
+    current /* : string */,
+    destination /* : string */,
+    app /* : any */
+  ) /* : string */ {
+    var pathParts = current.split('/');
+    var siteName = app.get('siteName');
+
+    // if path begins with a "/", then there will be an empty string post-split
+    // also accounts for file:/// with triple slash, or leading slashes
+    pathParts = pathParts.filter(function (p) {
+      return p.trim();
+    });
+
+    // add new location to end
+    pathParts.push(destination);
+
+    // cull duplicates, preferring right-most occurrences
+    // e.g. [ 'dog', 'cat', 'dog' ] => [ 'cat', 'dog' ]
+    pathParts.reverse();
+    pathParts = pathParts
+      .map(function (pathPart) { return pathPart.toLowerCase(); })
+      .filter(function (pathPart) {
+        var model = app.interactions.get(pathPart);
+        // segment has valid type
+        // segment is not site-root (we prepend it later)
+        return model && (model.get('type') || model.id !== siteName);
+      })
+      .reduce(function (result, pathPart) {
+        if (result.indexOf(pathPart) === -1) {
+          result.push(pathPart);
+        }
+        return result;
+      }, []);
+    pathParts.reverse();
+
+    // account for first-time through hash-based process
+    if (pathParts[0] !== siteName) {
+      pathParts.unshift(siteName);
+    }
+
+    return '/' + pathParts.join('/');
+  }
+
   return {
-    destinationFromElement: destinationFromElement
+    destinationFromElement: destinationFromElement,
+    nextPagePath: nextPagePath
   };
 });

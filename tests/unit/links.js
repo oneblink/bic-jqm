@@ -55,5 +55,46 @@ define([
         assert.equal(result, 'test');
       });
     });
+
+    describe('nextPagePath()', function () {
+      var mockApp;
+
+      beforeEach(function () {
+        mockApp = new Backbone.Model({
+          siteName: 'test'
+        });
+        mockApp.interactions = new Backbone.Collection([
+          new Backbone.Model({ id: 'abc', type: 'message' }),
+          new Backbone.Model({ id: 'def', type: 'message' }),
+          new Backbone.Model({ id: 'ghi', type: 'message' }),
+          new Backbone.Model({ id: 'test' }) // siteName must be represented
+        ]);
+      });
+
+      it('returns /siteName if empty location and destination', function () {
+        var result = links.nextPagePath('', '', mockApp);
+        assert.equal(result, '/test');
+      });
+
+      it('appends destination to location', function () {
+        var result = links.nextPagePath('/test/abc', 'def', mockApp);
+        assert.equal(result, '/test/abc/def');
+      });
+
+      it('de-duplicates path segments, favouring right-most occurrences', function () {
+        var result = links.nextPagePath('/test/abc/def', 'abc', mockApp);
+        assert.equal(result, '/test/def/abc');
+      });
+
+      it('de-duplicates path segments, keeping site-root left-most', function () {
+        var result = links.nextPagePath('/test/abc/test', 'def', mockApp);
+        assert.equal(result, '/test/abc/def');
+      });
+
+      it('drops invalid / unknown / empty path segments', function () {
+        var result = links.nextPagePath('/test//def/jkl', 'mno', mockApp);
+        assert.equal(result, '/test/def');
+      });
+    });
   });
 });
