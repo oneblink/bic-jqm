@@ -81,10 +81,12 @@ define(function (require) {
 
       e.preventDefault();
 
-      if (e.target.tagName !== 'A') {
-        $element = $(e.target).parents('a');
-      } else {
-        $element = $(e.target);
+      $element = $(e.target).closest('a');
+      if (!$element.length) {
+        /* eslint-disable no-console */
+        console.error('"a" element not found for BIC navigation attribute');
+        /* eslint-enable no-console */
+        return;
       }
 
       location = '';
