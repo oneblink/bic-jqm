@@ -17,6 +17,7 @@ define(function (require) {
   var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
   var categoryTemplate = require('text!bic/template/category-list.mustache');
   var popupTemplate = require('text!bic/template/popup.mustache');
+  var links = require('bic/lib/links');
   var app = require('bic/model/application');
   var StarModel = require('bic/model/star');
   var StarView = require('bic/view/star');
@@ -83,29 +84,18 @@ define(function (require) {
 
       $element = $(e.target).closest('a');
       if (!$element.length) {
-        /* eslint-disable no-console */
+        /* eslint-disable no-console */ // useful for debugging
         console.error('"a" element not found for BIC navigation attribute');
         /* eslint-enable no-console */
         return;
       }
 
-      location = '';
-      if ($element.attr('keyword')) {
-        location = $element.attr('keyword');
-      } else if ($element.attr('interaction')) {
-        location = $element.attr('interaction');
-      } else if ($element.attr('category')) {
-        location = $element.attr('category');
-      } else if ($element.attr('masterCategory')) {
-        location = $element.attr('masterCategory');
-      } else if ($element.attr('home') === '') {
-        location = app.get('siteName');
-      } else if ($element.attr('login') === '') {
-        if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
-          location = app.get('loginPromptInteraction');
-        } else {
-          location = app.get('siteName');
-        }
+      location = links.destinationFromElement($element, app);
+      if (!location) {
+        /* eslint-disable no-console */ // useful for debugging
+        console.error('BIC navigation attribute specifies no destination');
+        /* eslint-enable no-console */
+        return;
       }
 
 // see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes.

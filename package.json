@@ -12,6 +12,7 @@
     "@jokeyrhyme/deadline": "1.1.1",
     "@jokeyrhyme/promised-requirejs": "^1.0.0",
     "amd-feature": "github:jensarps/AMD-feature#295cb395fe",
+    "backbone": "1.2.1",
     "blinkgap-utils": "github:blinkmobile/blinkgap-utils#500774457d",
     "domReady": "github:requirejs/domReady#449478e133",
     "js-typed-errors": "github:simonmarklar/js-typed-errors",

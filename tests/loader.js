@@ -64,6 +64,7 @@ require([
   'tests/unit/collection-stars',
   'tests/unit/data-pouch',
   'tests/unit/form-expressions',
+  'tests/unit/links',
   'tests/unit/model-application',
   'tests/unit/model-datasuitcase',
   'tests/unit/model-form',
