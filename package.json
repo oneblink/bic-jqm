@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/bic-jqm",
   "description": "execute a platform-agnostic definition, becoming a ready-to-use app",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "author": "Ron Waldon <jokeyrhyme@gmail.com> (https://github.com/jokeyrhyme)",
   "bugs": {
     "url": "https://github.com/blinkmobile/bic-jqm/issues"
@@ -12,6 +12,7 @@
     "@jokeyrhyme/deadline": "1.1.1",
     "@jokeyrhyme/promised-requirejs": "^1.0.0",
     "amd-feature": "github:jensarps/AMD-feature#295cb395fe",
+    "backbone": "1.2.1",
     "blinkgap-utils": "github:blinkmobile/blinkgap-utils#500774457d",
     "domReady": "github:requirejs/domReady#449478e133",
     "js-typed-errors": "github:simonmarklar/js-typed-errors",
@@ -27,11 +28,11 @@
     "eslint": "^3.9.1",
     "eslint-config-semistandard": "^7.0.0",
     "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-node": "^3.0.3",
+    "eslint-plugin-node": "^4.0.0",
     "eslint-plugin-promise": "^3.3.1",
     "eslint-plugin-standard": "^2.0.1",
     "fixpack": "^2.3.1",
-    "flow-bin": "^0.37.4",
+    "flow-bin": "^0.39.0",
     "glob": "^7.0.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",

@@ -4,6 +4,25 @@
 ## Unreleased
 
 
+## 5.0.3 - 2017-02-22
+
+
+### Changed
+
+-   BIC-252: re-arrange BIC navigation attributes code
+
+    -   improved legibility, and testability
+
+
+### Fixed
+
+-   BIC-252: BIC navigation attributes work in Cordova apps again
+
+    -   fixed regression from 5.0.0
+
+    -   HelpDesk: 8631-QACM-3751
+
+
 ## 5.0.2 - 2017-01-12
 
 

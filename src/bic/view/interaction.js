@@ -17,6 +17,7 @@ define(function (require) {
   var inputPromptTemplate = require('text!bic/template/inputPrompt.mustache');
   var categoryTemplate = require('text!bic/template/category-list.mustache');
   var popupTemplate = require('text!bic/template/popup.mustache');
+  var links = require('bic/lib/links');
   var app = require('bic/model/application');
   var StarModel = require('bic/model/star');
   var StarView = require('bic/view/star');
@@ -72,38 +73,29 @@ define(function (require) {
 
     blinklink: function (e) {
       var $element;
-      var location;
+      var destination;
       var attributes = '';
       var first = true;
       var count;
-      var path;
-      var pathParts;
+      var currentPath;
+      var nextPath;
 
       e.preventDefault();
 
-      if (e.target.tagName !== 'A') {
-        $element = $(e.target).parents('a');
-      } else {
-        $element = $(e.target);
+      $element = $(e.target).closest('a');
+      if (!$element.length) {
+        /* eslint-disable no-console */ // useful for debugging
+        console.error('"a" element not found for BIC navigation attribute');
+        /* eslint-enable no-console */
+        return;
       }
 
-      location = '';
-      if ($element.attr('keyword')) {
-        location = $element.attr('keyword');
-      } else if ($element.attr('interaction')) {
-        location = $element.attr('interaction');
-      } else if ($element.attr('category')) {
-        location = $element.attr('category');
-      } else if ($element.attr('masterCategory')) {
-        location = $element.attr('masterCategory');
-      } else if ($element.attr('home') === '') {
-        location = app.get('siteName');
-      } else if ($element.attr('login') === '') {
-        if (app.has('loginAccess') && app.has('loginUseInteractions') && app.has('loginUseInteractions') && app.has('loginPromptInteraction')) {
-          location = app.get('loginPromptInteraction');
-        } else {
-          location = app.get('siteName');
-        }
+      destination = links.destinationFromElement($element, app);
+      if (!destination) {
+        /* eslint-disable no-console */ // useful for debugging
+        console.error('BIC navigation attribute specifies no destination');
+        /* eslint-enable no-console */
+        return;
       }
 
 // see https://api.jquerymobile.com/data-attribute/ for info on jquery mobile and urls with quotes and apostrophes.
@@ -120,29 +112,18 @@ define(function (require) {
         }
       }
 
-      path = '';
-      pathParts = $.mobile.path.parseLocation().pathname;
-      pathParts = pathParts.split('/');
-      pathParts.shift();
-
-        // account for file:/// with triple slash, or leading slashes
-      if (pathParts[pathParts.length - 1] === '') {
-        pathParts.pop();
+      if ($.mobile.pushStateEnabled) {
+        // URL is like https://HOST/ANSWERSPACE/...
+        currentPath = $.mobile.path.parseLocation().pathname;
+      } else {
+        // URL is like file:///HTMLFILE#/ANSWERSPACE/...
+        // or URL is like https://HOST/ANSWERSPACE/#/ANSWERSPACE/...
+        currentPath = $.mobile.path.parseLocation().hash.replace(/^#/, '');
       }
 
-      for (count = pathParts.length - 1; count !== -1; count = count - 1) {
-        if (!app.interactions.get(pathParts[count].toLowerCase()).get('type') && path.indexOf(pathParts[count]) === -1 && path.indexOf(pathParts[count].toLowerCase()) === -1 && pathParts[count] !== location && pathParts[count] !== location.toLowerCase()) {
-          if (path !== '') {
-            path = pathParts[count] + '/' + path;
-          } else {
-            path = pathParts[count];
-          }
-        }
-      }
+      nextPath = links.nextPagePath(currentPath, destination, app);
 
-      path = '/' + path;
-
-      $.mobile.changePage(path + '/' + location + attributes);
+      $.mobile.changePage(nextPath + attributes);
     },
 
     back: function (e) {
