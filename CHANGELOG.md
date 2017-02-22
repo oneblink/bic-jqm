@@ -4,6 +4,9 @@
 ## Unreleased
 
 
+## 5.0.3 - 2017-02-22
+
+
 ### Changed
 
 -   BIC-252: re-arrange BIC navigation attributes code

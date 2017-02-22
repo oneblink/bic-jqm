@@ -2,12 +2,9 @@
 
 ## BIC Project
 
-Follow directions from here:
-https://github.com/blinkmobile/docs/wiki/Process:-JIRA-Versions-Releases
-
 Update your local working copy when directed:
 
-1. `git checkout develop && git pull`
+-   `git checkout develop && git pull`
 
 
 Now we do our Git Flow process and our testing:
