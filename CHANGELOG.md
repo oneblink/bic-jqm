@@ -4,6 +4,15 @@
 ## Unreleased
 
 
+### Fixed
+
+-   BIC-253: increase IndexedDB reliability test timeout to 5sec
+
+    -   better accommodates fluctuations in boot speed
+
+    -   HelpDesk: 1425-WDXM-4987
+
+
 ## 5.0.3 - 2017-02-22
 
 
