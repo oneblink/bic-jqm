@@ -4,6 +4,9 @@
 ## Unreleased
 
 
+## 5.0.4 - 2017-03-06
+
+
 ### Fixed
 
 -   BIC-253: increase IndexedDB reliability test timeout to 5sec
