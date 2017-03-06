@@ -11,21 +11,21 @@ Now we do our Git Flow process and our testing:
 
 1. `git flow release start vx.x.x`
 
-2. `npm install; npm update`
+2. bump version in package.json
 
-3. `grunt build; npm test`, confirm everything passes
+3. `npm install; npm update`
 
-4. `npm outdated`, keep devDependencies up to date in package.json
+4. `grunt build; npm test`, confirm everything passes
 
-5. `npm install; npm update` (if you changed package.json)
+5. `npm outdated`, keep devDependencies up to date in package.json
 
-6. `grunt build; npm test`, confirm everything passes (if you changed package.json)
+6. `npm install; npm update` (if you changed package.json)
 
-7. execute [MANUAL-TESTS.md](MANUAL-TESTS.md), fix issues until everything PASSes
+7. `grunt build; npm test`, confirm everything passes (if you changed package.json)
 
-8. (from above JIRA guide) update CHANGELOG.md based on Issues Done (and commit)
+8. execute [MANUAL-TESTS.md](MANUAL-TESTS.md), fix issues until everything PASSes
 
-9. bump version in package.json AND main.js (and commit)
+9. update CHANGELOG.md (and commit)
 
 10. `git flow release finish vx.x.x`, using "vx.x.x" as the tag's message
 

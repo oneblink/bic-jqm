@@ -30,6 +30,8 @@ If this occurs, manually run the tests in one browser at a time to double-check.
 
 ## 5. sample answerSpace should function as expected in mBaaS app (Android)
 
+- https://play.google.com/store/apps/details?id=au.com.blinkmobile.android.master.pilot
+
 - start proxy with `grunt develop`
 
 - determine your machine's IP address
@@ -40,6 +42,8 @@ If this occurs, manually run the tests in one browser at a time to double-check.
 
 
 ## 6. sample answerSpace should function as expected in mBaaS app (iOS)
+
+- https://itunes.apple.com/au/app/mbaas-enterprise-pilot/id957258581
 
 - follow same steps as for the mBaaS app for Android (above)
 
