@@ -29,6 +29,8 @@ Now we do our Git Flow process and our testing:
 
 10. `git flow release finish vx.x.x`, using "vx.x.x" as the tag's message
 
+- or `git flow release finish -s vx.x.x` to sign with PGP
+
 - resolve any merge issues
 
 Perform the remote-repository steps below if this is the last release today.
