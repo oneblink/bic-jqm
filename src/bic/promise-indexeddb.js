@@ -14,7 +14,7 @@ define(function (require) {
 
   // this module
 
-  var TIMEOUT = 5000;
+  var TIMEOUT = 30 * 1000; // 30 seconds
 
   function isIt () {
     return new Promise(function (resolve) {

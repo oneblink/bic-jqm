@@ -15,19 +15,21 @@ Now we do our Git Flow process and our testing:
 
 3. `npm install; npm update`
 
-4. `grunt build; npm test`, confirm everything passes
+4. `rm -rf dist build; grunt build; npm test`, confirm everything passes
 
 5. `npm outdated`, keep devDependencies up to date in package.json
 
 6. `npm install; npm update` (if you changed package.json)
 
-7. `grunt build; npm test`, confirm everything passes (if you changed package.json)
+7. `rm -rf dist build; grunt build; npm test`, confirm everything passes (if you changed package.json)
 
 8. execute [MANUAL-TESTS.md](MANUAL-TESTS.md), fix issues until everything PASSes
 
 9. update CHANGELOG.md (and commit)
 
 10. `git flow release finish vx.x.x`, using "vx.x.x" as the tag's message
+
+- or `git flow release finish -s vx.x.x` to sign with PGP
 
 - resolve any merge issues
 
@@ -42,7 +44,7 @@ package.json.
 
 12. `git checkout master && git pull && git push && git push --tags`
 
-13. `grunt build; npm test`, just to trigger a fresh build
+13. `rm -rf dist build; grunt build; npm test`, just to trigger a fresh build
 
 Now the Git project is up to date and everything.
 
