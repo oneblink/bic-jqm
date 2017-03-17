@@ -8,7 +8,7 @@
 
 ## 2. automated tests should complete without errors
 
-`grunt build; npm test`
+`rm -rf dist build; grunt build; npm test`
 
 
 ## 3. automated tests in all browsers should complete without errors
@@ -23,7 +23,7 @@ If this occurs, manually run the tests in one browser at a time to double-check.
 
 - start proxy with `grunt develop`
 
-- navigate to http://localhost:9876/integration
+- navigate to a familiar answerSpace (e.g. "integration') http://localhost:9876/integration
 
 - confirm answerSpace functionality
 
@@ -36,7 +36,7 @@ If this occurs, manually run the tests in one browser at a time to double-check.
 
 - determine your machine's IP address
 
-- navigate mBaaS app to http://<IP>:9876/integration
+- navigate mBaaS app to the same answerSpace (e.g. "integration") http://<IP>:9876/integration
 
 - confirm answerSpace functionality as for the browser (above)
 
